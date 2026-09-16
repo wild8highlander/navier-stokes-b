@@ -37,9 +37,9 @@ python3 python/verify.py
 - [Framework root](../README.md)
 - [Root README — verification matrix](../README.md)
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🇷🇺 Brief Summary (Russian Summary)
 
-**verification/section5_klein_attractor/** — Python-референс раздела 5 (Klein Attractor — Ergodic Dynamics and the NSE Bridge): чистый stdlib, один verify.py, вывод PASS/JSON; результат — the attractor's invariant-measure behaviour and the bridge connecting its dynamics back to the Navier–Stokes setting.
+**verification/section5_klein_attractor/** — the Python reference of Section 5 (Klein Attractor — Ergodic Dynamics and the NSE Bridge): pure stdlib, a single verify.py, PASS/JSON output; result — the attractor's invariant-measure behaviour and the bridge connecting its dynamics back to the Navier–Stokes setting.
 
 ---
 
@@ -77,16 +77,16 @@ The invariant-statistics assertions compare against frozen reference values with
 
 Reports: [docs/klein-attractor](../../docs/klein-attractor/README.md) · Formal: [lean4](../lean4/README.md) · Related section: [Section 2 (the chain)](../section2_preprint/README.md).
 
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+## 🧭 Navigation and Quick Links (auto)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+- 🏠 [Repository root](../../../README.md)
+- 📖 [How the claims are verified](../../../verification/README.md)
+- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, a single backup copy, and citation with attribution are permitted; anything else requires the author's written consent.
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*This block was added automatically (`doc-enhancer v1`); it is unrelated to the license and does not modify it. Re-running the script does not duplicate the block.*
 

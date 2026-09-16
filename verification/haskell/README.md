@@ -85,9 +85,9 @@ cabal build && cabal run <section>
 ```
 Build step: `cabal build`.
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 📝 Summary
 
-**verification/haskell/** — слой верификации на Haskell (9.4): GHC-реализация на Double с выводом через Text.Printf по общему контракту. Шесть портов по разделам (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); единый контракт PASS/JSON; команды сборки — в разделе How to Run.
+**verification/haskell/** — the Haskell (9.4) verification layer: a GHC implementation on Double with Text.Printf output under the common contract. Six per-section ports (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); the uniform PASS/JSON contract; build commands — see the How to Run section.
 
 ---
 
@@ -138,16 +138,16 @@ The Haskell ports are the pure-functional witness: the section contracts express
 - the naming bridge table (dashes vs underscores);
 - the [verification contract](../README.md#-the-verification-contract) — what `cabal run` must print.
 
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+<!-- doc-enhancer:block v1 (auto-inserted block; license files are not touched) -->
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+## 🧭 Navigation and Quick Links (auto)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+- 🏠 [Repository root](../../../README.md)
+- 📖 [How the claims are verified](../../../verification/README.md)
+- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, one backup copy and citation with attribution are allowed; everything else only with the Author's written consent.
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Block inserted automatically (`doc-enhancer v1`); it is not part of the license and does not modify it. Re-running the script does not duplicate the block.*
 

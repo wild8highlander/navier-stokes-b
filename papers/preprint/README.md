@@ -2,11 +2,11 @@
 
 > **Navigation:** [`papers`](../README.md) › **`preprint`**
 
-![Papers](https://img.shields.io/badge/Content-Research%20Papers-blue?style=flat-square&logo=adobeacrobatreader&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![RU](https://img.shields.io/badge/RU-%D0%A0%D0%B5%D0%B7%D1%8E%D0%BC%D0%B5-blue?style=flat-square)
+![Papers](https://img.shields.io/badge/Content-Research%20Papers-blue?style=flat-square&logo=adobeacrobatreader&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![RU](https://img.shields.io/badge/RU-Summary-blue?style=flat-square)
 
-This folder holds the **compact preprint** stating the Navier–Stokes regularity result end-to-end in minimal form: *„Correction b as Polarization Twisting: Analytical Proof of 3D Navier–Stokes Regularity without Dissipation"* (author: Iskhak Hamzatovich Isaev, 2026). At roughly 120 KB per copy it is the **smallest complete document** in the repository and the recommended fifteen-minute entry point before the full paper in [`correction-b/`](../correction-b/README.md).
+This folder holds the **compact preprint** stating the Navier–Stokes regularity result end-to-end in minimal form: *"Correction b as Polarization Twisting: Analytical Proof of 3D Navier–Stokes Regularity without Dissipation"* (author: Iskhak Hamzatovich Isaev, 2026). At roughly 120 KB per copy it is the **smallest complete document** in the repository and the recommended fifteen-minute entry point before the full paper in [`correction-b/`](../correction-b/README.md).
 
-Two byte-identical copies are kept (`preprint_v1.pdf`, `preprint_v2.pdf`) so that links written against either filename keep working; both are the same final revision. The LaTeX source of exactly this text lives in [`src/preprint/preprint.tex`](../../src/preprint/README.md) — the `	itle` line there matches the title above, which makes the folder a convenient reference pair (typeset PDF + compilable source).
+Two byte-identical copies are kept (`preprint_v1.pdf`, `preprint_v2.pdf`) so that links written against either filename keep working; both are the same final revision. The LaTeX source of exactly this text lives in [`src/preprint/preprint.tex`](../../src/preprint/README.md) — the `      itle` line there matches the title above, which makes the folder a convenient reference pair (typeset PDF + compilable source).
 
 The preprint corresponds to **Section 2** of the verification framework: the argument chain (positivity and scale of *b*, the rotation mechanism, the BKM reduction) is exercised by every language port, and its structural lemmas are the ones machine-checked in Lean 4, Coq, Isabelle and Agda.
 
@@ -23,9 +23,9 @@ The preprint corresponds to **Section 2** of the verification framework: the arg
 - [Full paper — papers/correction-b/](../correction-b/README.md)
 - [Section 2 verification framework](../../verification/README.md)
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🇷🇺 Brief Summary
 
-**papers/preprint/** — компактный препринт «Correction b as Polarization Twisting: Analytical Proof of 3D Navier–Stokes Regularity without Dissipation» (~120 КБ). Самый короткий полный документ репозитория — рекомендуемая первая статья. Два файла — идентичные копии одного издания; LaTeX-исходник — `src/preprint/preprint.tex`; верификация — раздел 2 (`verification/`).
+**papers/preprint/** — the compact preprint *"Correction b as Polarization Twisting: Analytical Proof of 3D Navier–Stokes Regularity without Dissipation"* (~120 KB). The shortest complete document in the repository — the recommended first paper. Two files — identical copies of one edition; LaTeX source — `src/preprint/preprint.tex`; verification — Section 2 (`verification/`).
 
 ---
 
@@ -66,16 +66,15 @@ The preprint's chain is Section 2 of the verification framework: the twist unita
 - the full paper: [`../correction-b/`](../correction-b/README.md);
 - run the Section 2 port: `python3 verification/section2_preprint/python/verify.py` (from the repository root).
 
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+## 🧭 Navigation and Quick Links (auto)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+- 🏠 [Repository root](../../../README.md)
+- 📖 [How claims are verified](../../../verification/README.md)
+- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, one backup copy and citation with attribution are permitted; anything else only with the author's written consent.
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
-
+*Block added automatically (`doc-enhancer v1`); it is not related to the license and does not modify it. Re-running the script does not duplicate the block.*

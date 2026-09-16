@@ -65,9 +65,9 @@ isabelle jedit -l HOL <Theory>.thy  (or isabelle build)
 ```
 Build step: `isabelle build -D .`.
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 📝 Summary
 
-**verification/isabelle/** — слой верификации на Isabelle-HOL (2024): теоремы над Complex_Main, каждый раздел — отдельная теория. Шесть портов по разделам (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); единый контракт PASS/JSON; команды сборки — в разделе How to Run.
+**verification/isabelle/** — the Isabelle-HOL (2024) verification layer: theorems stated over Complex_Main, one standalone theory per section. Six section ports (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); a unified PASS/JSON contract; build commands are given in the How to Run section.
 
 ---
 
@@ -121,16 +121,16 @@ The Isabelle restatement is written to be *read*: Isar's structured blocks make 
 - [`lean4/`](../lean4/README.md) — statement-fidelity diffing partner;
 - Docker pinning: [`docker/isabelle/`](../docker/README.md).
 
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+<!-- doc-enhancer:block v1 (auto-generated block; license files are not touched) -->
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+## 🧭 Navigation and Quick Links (auto)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+- 🏠 [Repository root](../../../README.md)
+- 📖 [How the claims are verified](../../../verification/README.md)
+- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, a single backup copy, and citation with attribution are permitted; everything else requires the author's written permission.
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Block added automatically (`doc-enhancer v1`); it is unrelated to the license and does not modify it. Re-running the script does not duplicate the block.*
 

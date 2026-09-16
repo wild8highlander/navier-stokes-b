@@ -6,7 +6,7 @@
 
 This directory holds the **compilable LaTeX sources** behind the PDFs published in [`papers/`](../papers/README.md). Two groups live here:
 
-- **[`main/`](main/README.md)** — the source of the full correction-b paper: `main.tex` (~55 KB, the primary document) and `main_v2.tex` (the revision-stamped copy), complete with a custom accent-coloured sectioning setup (`	itleformat` with the `accent` colour) and running headers;
+- **[`main/`](main/README.md)** — the source of the full correction-b paper: `main.tex` (~55 KB, the primary document) and `main_v2.tex` (the revision-stamped copy), complete with a custom accent-coloured sectioning setup (`        itleformat` with the `accent` colour) and running headers;
 - **[`preprint/`](preprint/README.md)** — `preprint.tex`, the source of the compact NSE regularity preprint whose title page reads *"Correction b as Polarization Twisting: Analytical Proof of 3D Navier–Stokes Regularity without Dissipation"*.
 
 The sources are the authoritative textual record: any wording in the PDFs can be traced, diffed and quoted against them. They are intentionally plain LaTeX — no exotic packages beyond standard formatting needs — so the documents compile in any modern TeX distribution. The monograph figures referenced by the manuscripts are preserved with the Word editions in [`docs/`](../docs/README.md), and the two-language NS package monograph with the open-problems annexes lives in [`monograph/`](../monograph/).
@@ -32,9 +32,9 @@ src/
 └── README.md  (this file)
 ```
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🇷🇺 Brief Summary
 
-**src/** — компилируемые LaTeX-исходники статей: `main/` — полная статья о поправке b (main.tex ~55 КБ + main_v2.tex) и `preprint/` — препринт о регулярности NSE (preprint.tex). Позволяют проследить и процитировать любую формулировку из PDF.
+**src/** — the compilable LaTeX sources of the papers: `main/` — the full paper on the b-correction (main.tex ~55 KB + main_v2.tex) and `preprint/` — the preprint on NSE regularity (preprint.tex). They make it possible to trace and quote any wording from the PDFs.
 
 ---
 
@@ -118,16 +118,15 @@ A worked example of the traceability chain, starting from raw LaTeX:
 
 Four representations — prose, theorem, computation, table — of one mathematical object, all inside one repository. That is the standard every claim here is held to.
 
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+## 🧭 Navigation and Quick Links (auto)
 
-- 🏠 [Корень репозитория](../../README.md)
-- 📖 [Как верифицируются утверждения](../../verification/README.md)
-- 📄 [Статьи (PDF)](../../papers/README.md) · 📚 [Монографии](../../docs/README.md) · 🧾 [LaTeX](../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+- 🏠 [Repository root](../../README.md)
+- 📖 [How claims are verified](../../verification/README.md)
+- 📄 [Papers (PDF)](../../papers/README.md) · 📚 [Monographs](../../docs/README.md) · 🧾 [LaTeX](../../src/README.md)
+- ⚖️ [IPL-RP-1.0 License](../../LICENSE.md) — viewing, one backup copy and citation with attribution are permitted; anything else only with the author's written consent.
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
-
+*Block added automatically (`doc-enhancer v1`); it is not related to the license and does not modify it. Re-running the script does not duplicate the block.*

@@ -25,9 +25,9 @@ bash verification/scripts/start_api.sh
 - [REST API](../api/README.md)
 - [CI cross-language workflow](../../.github/workflows/README.md)
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🇷🇺 Brief Summary (Russian Summary)
 
-Два shell-скрипта: локальная кросс-валидация портов (аналог CI) и запуск REST-API (установка зависимостей + старт Flask).
+Two shell scripts: local cross-validation of the ports (a CI analogue) and starting the REST API (dependency installation + Flask launch).
 
 ---
 
@@ -39,16 +39,16 @@ bash verification/scripts/start_api.sh
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
 
 </div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+<!-- doc-enhancer:block v1 (auto-generated block; license files are not affected) -->
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+## 🧭 Navigation and Quick Links (auto)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+- 🏠 [Repository root](../../../README.md)
+- 📖 [How the claims are verified](../../../verification/README.md)
+- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, a single backup copy, and citation with attribution are permitted; everything else — only with the author's written consent.
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Block added automatically (`doc-enhancer v1`); it is unrelated to the license and does not modify it. Re-running the script does not duplicate the block.*
 

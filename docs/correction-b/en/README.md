@@ -17,9 +17,9 @@ English-language Word edition of the correction-b monograph with embedded figure
 - [Russian edition (sibling)](../ru/README.md)
 - [Parent folder](../README.md)
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🇷🇺 Brief Summary
 
-Английская Word-редакция монографии correction-b (один файл ~8.6 МБ, все рисунки встроены).
+English Word edition of the correction-b monograph (a single file, ~8.6 MB, with all figures embedded).
 
 ---
 
@@ -31,16 +31,15 @@ English-language Word edition of the correction-b monograph with embedded figure
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
 
 </div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+## 🧭 Navigation and Quick Links (auto)
 
-- 🏠 [Корень репозитория](../../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+- 🏠 [Repository root](../../../../README.md)
+- 📖 [How claims are verified](../../../../verification/README.md)
+- 📄 [Papers (PDF)](../../../../papers/README.md) · 📚 [Monographs](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
+- ⚖️ [IPL-RP-1.0 License](../../../../LICENSE.md) — viewing, one backup copy and citation with attribution are permitted; anything else only with the author's written consent.
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
-
+*Block added automatically (`doc-enhancer v1`); it is not related to the license and does not modify it. Re-running the script does not duplicate the block.*

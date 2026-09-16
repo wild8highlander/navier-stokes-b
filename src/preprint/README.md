@@ -4,7 +4,7 @@
 
 ![Format](https://img.shields.io/badge/Format-LaTeX-008080?style=flat-square&logo=latex) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-LaTeX source of the **compact NSE regularity preprint** — the typeset original of the ~120 KB PDFs in [`papers/preprint/`](../../papers/preprint/README.md). The `	itle` line matches the published preprint verbatim: *"Correction b as Polarization Twisting: Analytical Proof of 3D Navier–Stokes Regularity without Dissipation"*, authored by Iskhak Hamzatovich Isaev, dated 2026.
+LaTeX source of the **compact NSE regularity preprint** — the typeset original of the ~120 KB PDFs in [`papers/preprint/`](../../papers/preprint/README.md). The `      itle` line matches the published preprint verbatim: *"Correction b as Polarization Twisting: Analytical Proof of 3D Navier–Stokes Regularity without Dissipation"*, authored by Iskhak Hamzatovich Isaev, dated 2026.
 
 ## 📂 Contents — What Lives Here
 
@@ -17,9 +17,9 @@ LaTeX source of the **compact NSE regularity preprint** — the typeset original
 - [Typeset PDFs](../../papers/preprint/README.md)
 - [Parent folder](../README.md)
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🇷🇺 Brief Summary
 
-Исходник компактного препринта о регулярности NSE (~12 КБ); PDF — papers/preprint/.
+Source of the compact preprint on NSE regularity (~12 KB); the PDF is in papers/preprint/.
 
 ---
 
@@ -50,16 +50,15 @@ pdflatex preprint.tex
 
 **The title page claim** — *"Correction b as Polarization Twisting: Analytical Proof of 3D Navier–Stokes Regularity without Dissipation"* — is the shortest formal statement of Program 1, and Section 2 of the verification framework mirrors it: run `python3 verification/section2_preprint/python/verify.py` to see the chain asserted numerically.
 
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+## 🧭 Navigation and Quick Links (auto)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+- 🏠 [Repository root](../../../README.md)
+- 📖 [How claims are verified](../../../verification/README.md)
+- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, one backup copy and citation with attribution are permitted; anything else only with the author's written consent.
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
-
+*Block added automatically (`doc-enhancer v1`); it is not related to the license and does not modify it. Re-running the script does not duplicate the block.*

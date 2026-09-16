@@ -4,7 +4,7 @@
 
 ![Python](https://img.shields.io/badge/Python-3.10–3.12-informational?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **integration-test layer** of the framework: the tests that guard the *contract* between languages, not just individual implementations. `extended_cross_language_validator.py` runs the extended-language ports and asserts their verdict JSON matches the Python reference to tolerance — this is the automated form of the [Section × Language matrix](../../README.md#-верификация-на-11-языках). `test_extended_languages.py` carries the pytest suite for the extended toolchains themselves (availability, build, run, verdict shape), so a toolchain regression is caught by tests rather than by a silently skipped CI job.
+The **integration-test layer** of the framework: the tests that guard the *contract* between languages, not just individual implementations. `extended_cross_language_validator.py` runs the extended-language ports and asserts their verdict JSON matches the Python reference to tolerance — this is the automated form of the [Section × Language matrix](../../README.md#-verification-in-11-languages). `test_extended_languages.py` carries the pytest suite for the extended toolchains themselves (availability, build, run, verdict shape), so a toolchain regression is caught by tests rather than by a silently skipped CI job.
 
 ## 📂 Contents — What Lives Here
 
@@ -25,9 +25,9 @@ pytest verification/tests/test_extended_languages.py
 - [CI extended languages](../../.github/workflows/README.md)
 - [Framework root](../README.md)
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🇷🇺 Brief Summary (Russian Summary)
 
-Интеграционные тесты контракта: валидатор сверяет JSON-вердикты расширенных портов с Python-референсом; pytest-набор проверяет доступность и сборку тулчейнов.
+Integration tests of the contract: the validator diffs the JSON verdicts of the extended ports against the Python reference; the pytest suite checks toolchain availability and builds.
 
 ---
 
@@ -39,16 +39,16 @@ pytest verification/tests/test_extended_languages.py
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
 
 </div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+## 🧭 Navigation and Quick Links (auto)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+- 🏠 [Repository root](../../../README.md)
+- 📖 [How the claims are verified](../../../verification/README.md)
+- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, a single backup copy, and citation with attribution are permitted; anything else requires the author's written consent.
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*This block was added automatically (`doc-enhancer v1`); it is unrelated to the license and does not modify it. Re-running the script does not duplicate the block.*
 

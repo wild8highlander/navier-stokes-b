@@ -1,0 +1,69 @@
+name: 🐞 Bug report
+description: Something in the repository does not work or does not reproduce.
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. The more context you provide,
+        the faster the issue can be located and fixed.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - "code/ (P1–P6 runs)"
+        - "verification/ — Python (L1–L5)"
+        - "verification/ — Lean 4 / Coq / Isabelle / Agda"
+        - "verification/ — C++ / Rust / Haskell / Julia"
+        - "verification/api, demo, web-dashboard"
+        - "data/ (results, plots)"
+        - "papers/, src/, monograph/, docs/"
+        - "site/ (GitHub Pages)"
+        - "build system (Makefile, pyproject, Docker)"
+        - other
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Include the exact command you ran and the full output.
+      placeholder: |
+        $ python3 code/p2_grid_convergence.py
+        ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      description: Quote the expected value from the README / data/results JSON.
+    validations:
+      required: true
+  - type: input
+    id: commit
+    attributes:
+      label: Commit / version
+      description: "`git rev-parse HEAD` or the release tag."
+      placeholder: "main @ 1a2b3c4"
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Linux
+        - macOS
+        - Windows (native)
+        - Windows (WSL2)
+        - Android (Termux)
+        - Docker
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment
+      description: Python version, OS, relevant toolchain versions.
+      render: shell
+

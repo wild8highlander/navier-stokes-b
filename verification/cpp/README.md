@@ -65,9 +65,9 @@ cmake -S . -B build && cmake --build build && ./build/<target>
 ```
 Build step: `cmake -S . -B build && cmake --build build`.
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 📝 Summary
 
-**verification/cpp/** — слой верификации на C++ (C++17): лёгкий C++17 с единым харнессом check() и JSON-вердиктом. Шесть портов по разделам (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); единый контракт PASS/JSON; команды сборки — в разделе How to Run.
+**verification/cpp/** — the C++17 verification layer: lightweight C++17 with a single check() harness and a JSON verdict. Six per-section ports (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); the uniform PASS/JSON contract; build commands — see the How to Run section.
 
 ---
 
@@ -115,16 +115,16 @@ The C++ tier is the performance witness and the KdV workhorse: BLAS/LAPACK-backe
 - [`rust/`](../rust/README.md) — the std-only comparison point;
 - performance notes in the root README's [Appendix E](../../README.md#-appendix-e--performance-notes).
 
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+<!-- doc-enhancer:block v1 (auto-inserted block; license files are not touched) -->
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+## 🧭 Navigation and Quick Links (auto)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+- 🏠 [Repository root](../../../README.md)
+- 📖 [How the claims are verified](../../../verification/README.md)
+- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, one backup copy and citation with attribution are allowed; everything else only with the Author's written consent.
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Block inserted automatically (`doc-enhancer v1`); it is not part of the license and does not modify it. Re-running the script does not duplicate the block.*
 

@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and attach release archives
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Regenerate MANIFEST.json for the tagged tree
+        run: |
+          python - <<'PY'
+          import hashlib, json, pathlib
+          root = pathlib.Path(".")
+          manifest_path = root / "MANIFEST.json"
+          m = json.loads(manifest_path.read_text(encoding="utf-8"))
+          files = {}
+          skip = {".git", "site/node_modules"}
+          for p in sorted(root.rglob("*")):
+              if not p.is_file() or any(part in p.parts for part in skip):
+                  continue
+              rel = p.relative_to(root).as_posix()
+              if rel == "MANIFEST.json":
+                  continue
+              b = p.read_bytes()
+              files[rel] = {"sha256": hashlib.sha256(b).hexdigest(), "bytes": len(b)}
+          m["files"] = files
+          manifest_path.write_text(json.dumps(m, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          print(f"MANIFEST.json regenerated: {len(files)} files")
+          PY
+      - name: Pack archives (with and without verification toolchains)
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq zip
+          zip -qr navier-stokes-b-full.zip . -x ".git/*" -x "site/node_modules/*"
+          zip -qr navier-stokes-b-light.zip papers monograph docs code data verification/common verification/python_levels verification/section1_correction_b verification/section2_preprint verification/section3_ab_cloud verification/section4_kdv verification/section5_klein_attractor verification/section6_riemann_zeros verification/api verification/demo verification/notebooks verification/tests verification/scripts site assets src *.md *.json Makefile environment.yml pyproject.toml push_wild8highlander.sh 2>/dev/null || true
+          ls -lh navier-stokes-b-*.zip
+      - name: Compute checksums
+        run: |
+          sha256sum navier-stokes-b-*.zip > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          draft: true
+          generate_release_notes: true
+          files: |
+            navier-stokes-b-full.zip
+            navier-stokes-b-light.zip
+            SHA256SUMS.txt

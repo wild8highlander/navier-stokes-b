@@ -4,7 +4,7 @@
 
 ![Format](https://img.shields.io/badge/Format-LaTeX-008080?style=flat-square&logo=latex) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-LaTeX source of the **full correction-b paper** — the document typeset into the ~2.3 MB PDFs in [`papers/correction-b/`](../../papers/correction-b/README.md). Two files are kept: `main.tex` (the primary, ~55 KB) and `main_v2.tex` (the revision-stamped twin). The preamble sets up custom accent-coloured sectioning (`	itleformat{\section}{\Largefseries\color{accent}}…`), running headers («Колонтитулы» block), and the standard mathematical apparatus needed for the Kirchhoff-vortex derivation and the Navier–Stokes argument.
+LaTeX source of the **full correction-b paper** — the document typeset into the ~2.3 MB PDFs in [`papers/correction-b/`](../../papers/correction-b/README.md). Two files are kept: `main.tex` (the primary, ~55 KB) and `main_v2.tex` (the revision-stamped twin). The preamble sets up custom accent-coloured sectioning (`    itleformat{\section}{\Largebfseries\color{accent}}…`), running headers (the running-heads block), and the standard mathematical apparatus needed for the Kirchhoff-vortex derivation and the Navier–Stokes argument.
 
 ## 📂 Contents — What Lives Here
 
@@ -18,9 +18,9 @@ LaTeX source of the **full correction-b paper** — the document typeset into th
 - [Typeset PDFs](../../papers/correction-b/README.md)
 - [Parent folder](../README.md)
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🇷🇺 Brief Summary
 
-Исходник полной статьи (main.tex ~55 КБ + близнец main_v2.tex); компилируется любым современным TeX.
+Source of the full paper (main.tex ~55 KB + the twin main_v2.tex); compiles with any modern TeX distribution.
 
 ---
 
@@ -56,18 +56,17 @@ pdflatex main.tex        # second pass resolves cross-references
 
 The document is self-contained — figures referenced by the Word edition live with the manuscripts in [`docs/correction-b/`](../../docs/correction-b/README.md); the PDF needs only standard packages.
 
-**Tracing claims to verification.** While reading the source, the [Section × Language matrix](../../README.md#-верификация-на-11-языках) is the companion: every quantitative statement in the text maps onto a section port or a formal lemma, and the root README's deep dive ([Appendix W](../../README.md#-appendix-w--formal-verification-deep-dive)) shows the Lean foundation that corresponds to §3–4 of this paper.
+**Tracing claims to verification.** While reading the source, the [Section × Language matrix](../../README.md#-verification-on-11-languages) is the companion: every quantitative statement in the text maps onto a section port or a formal lemma, and the root README's deep dive ([Appendix W](../../README.md#-appendix-w--formal-verification-deep-dive)) shows the Lean foundation that corresponds to §3–4 of this paper.
 
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+## 🧭 Navigation and Quick Links (auto)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+- 🏠 [Repository root](../../../README.md)
+- 📖 [How claims are verified](../../../verification/README.md)
+- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, one backup copy and citation with attribution are permitted; anything else only with the author's written consent.
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
-
+*Block added automatically (`doc-enhancer v1`); it is not related to the license and does not modify it. Re-running the script does not duplicate the block.*

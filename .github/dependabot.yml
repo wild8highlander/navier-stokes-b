@@ -1,0 +1,29 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels: ["dependencies", "python"]
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: "pip"
+    directory: "/verification/api"
+    schedule:
+      interval: "monthly"
+    labels: ["dependencies", "python", "api"]
+    open-pull-requests-limit: 3
+
+  - package-ecosystem: "cargo"
+    directory: "/verification/rust"
+    schedule:
+      interval: "monthly"
+    labels: ["dependencies", "rust"]
+    open-pull-requests-limit: 3
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels: ["dependencies", "ci"]
+    open-pull-requests-limit: 5

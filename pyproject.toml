@@ -3,8 +3,8 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "research-papers"
-description = "Multi-language computational verification of NSE regularity, AB-Cloud spectral theory, KdV integrability, and Riemann Hypothesis"
+name = "navier-stokes-b"
+description = "The universal b-correction program for the 3D Navier–Stokes equations: physics runs P1–P6, the L1–L5 verification chain, and an 11-language verification framework"
 readme = "README.md"
 license = {file = "LICENSE.md"}
 authors = [
@@ -37,10 +37,10 @@ docs = ["mkdocs>=1.5", "mkdocs-material>=9.0"]
 gpu = ["cupy-cuda12x>=13.0", "jax>=0.4"]
 
 [project.urls]
-Homepage = "https://github.com/wild8highlander/research-papers"
-Documentation = "https://wild8highlander.github.io/research-papers"
-Repository = "https://github.com/wild8highlander/research-papers"
-Issues = "https://github.com/wild8highlander/research-papers/issues"
+Homepage = "https://github.com/wild8highlander/navier-stokes-b"
+Documentation = "https://wild8highlander.github.io/navier-stokes-b"
+Repository = "https://github.com/wild8highlander/navier-stokes-b"
+Issues = "https://github.com/wild8highlander/navier-stokes-b/issues"
 
 [tool.ruff]
 line-length = 100

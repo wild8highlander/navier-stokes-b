@@ -1,0 +1,13 @@
+# Funding links for wild8highlander/navier-stokes-b
+# Formats currently supported by GitHub Sponsors:
+# github, patreon, open_collective, ko_fi, tidelift, community_bridge,
+# liberapay, issuehunt, otechie, lfx_crowdfunding, custom
+
+github: [wild8highlander]
+custom:
+  - link: https://orcid.org/0009-0003-7299-0701
+    icon: orcid
+    label: Author profile (ORCID)
+  - link: https://zenodo.org/records/21825394
+    icon: zenodo
+    label: Cite & archive on Zenodo

@@ -1,246 +1,245 @@
-# Открытые проблемы b-механики, уровень «‑b»: P5-b и P4-b
+# Open Problems of the b-Mechanics, the "-b" Level: P5-b and P4-b
 
-**Статус: выполнено. Все числа — из реальных прогонов, зафиксированы в JSON этого каталога.**
-Дата прогона: 2026-09-15 · Скрипты: `p5b_b_protocol_duplex.py` (0.4 c), `p4b_ensemble_T8.py` (204 c) + `--fine` (266 c) · Окружение: Python 3.12, NumPy 2.1.3, 2 ядра.
+**Status: executed. All numbers come from real runs, recorded in the JSON files of this directory.**
+Run date: 2026-09-15 · Scripts: `p5b_b_protocol_duplex.py` (0.4 s), `p4b_ensemble_T8.py` (204 s) + `--fine` (266 s) · Environment: Python 3.12, NumPy 2.1.3, 2 cores.
 
-**Константа протокола (точная редакция L1):**
+**The protocol constant (exact L1 revision):**
 b = 1/(4π+2√3) = **0.06238119412102822754633967163940208118699…**
 θ_b = arcsin(b) = **3.5765013142837216°**, cos θ_b = 0.9980523967307701…
 
-**Базис репозитория (зафиксированные прогоны L1–L5, `verification/`):**
-тождества b-поворота в 2D — ω′ = cos θ_b·ω (невязка 7.1e-14), |u′|² = |u|² точно
-(2.2e-16), div u′ = −b·ω (1.2e-16), |ΔE| на повороте 3.9e-9; 3D-эталон Taylor–Green
-BKM: I_BKM = 9.3560 (NSE) → 9.6758 (b-поворот), фактор 0.96695, max|ΔE| на повороте
-1.44e-9. На этом фундаменте построены оба «следующих уровня» ниже.
+**The repository basis (pinned L1–L5 runs, `verification/`):**
+the b-rotation identities in 2D — ω′ = cos θ_b·ω (residual 7.1e-14), |u′|² = |u|² exactly
+(2.2e-16), div u′ = −b·ω (1.2e-16), |ΔE| per rotation 3.9e-9; the 3D Taylor–Green
+reference: I_BKM = 9.3560 (NSE) → 9.6758 (b-rotation), factor 0.96695, max|ΔE| per rotation
+1.44e-9. Both "next levels" below are built on this foundation.
 
 ---
 
-## 1. P5-b — b-протокол внутри двусторонней связи (in-band full duplex)
+## 1. P5-b — the b-protocol inside two-way communication (in-band full duplex)
 
-### 1.1 Постановка
+### 1.1 Statement
 
-Базовая проблема P5 определила b-протокол для одного направления: информация
-переносится фазовой последовательностью, построенной на универсальной константе.
-Уровень P5-b переводит протокол в **двусторонний режим**: обе станции A и B
-передают одновременно, в общей полосе, без частотного разнесения и без временного
-разделения. Развязка направлений достигается тем, что каждое направление получает
-свой код, выведенный из одной и той же универсальной константы:
+The base problem P5 defined the b-protocol for a single direction: the information is
+carried by a phase sequence built on the universal constant. Level P5-b turns the
+protocol into **full-duplex mode**: both stations A and B transmit simultaneously,
+in a common band, with no frequency separation and no time division. Direction
+isolation is achieved by giving each direction its own code derived from the same
+universal constant:
 
-- код направления A→B: **ψᵢ = i·θ_b** — линейная b-фаза;
-- код направления B→A: **ψᵢ = i²·θ_b** — квадратичная b-фаза («b-чирик»).
+- the code of direction A→B: **ψᵢ = i·θ_b** — the linear b-phase;
+- the code of direction B→A: **ψᵢ = i²·θ_b** — the quadratic b-phase (the "b-chirp").
 
-Ни одна из сторон не должна сообщать другой свой код: обе генерируют его
-из опубликованной математической константы. Это принципиальное отличие от
-классических дуплексных схем, где разделение направлений требует либо дуплексера,
-либо подавления отражений (echo cancellation): здесь развязка — **математическая**,
-и её качество доказывается теорией сумм Вейля–Дирихле, а не настраивается.
+Neither side needs to communicate its code to the other: both generate it
+from the published mathematical constant. This is the fundamental difference from
+classical duplex schemes, where direction separation requires either a duplexer or
+echo cancellation: here the isolation is **mathematical**, and its quality is proven
+by Weyl–Dirichlet sum theory rather than tuned by hand.
 
-### 1.2 Математическое ядро (проверено точно, без Монте-Карло)
+### 1.2 Mathematical core (verified exactly, no Monte-Carlo)
 
-**A1. Линейная b-сумма.** |Σ_{i<N} e^{i·i·θ_b}| = |sin(Nθ_b/2)/sin(θ_b/2)| ≤ 1/sin(θ_b/2).
-Граница Дирихле не зависит от N: линейный b-код самоподавляется на любом длине.
-Измерено: максимум |S₁(N)| по N ∈ {2⁶…2¹⁴} равен **31.749** при границе **32.045** —
-критерий C1 ПАСС. Чужой линейный код в квадратичном корреляторе подавляется
-на тот же O(1) уровень относительно когерентного √N_c.
+**A1. The linear b-sum.** |Σ_{i<N} e^{i·i·θ_b}| = |sin(Nθ_b/2)/sin(θ_b/2)| ≤ 1/sin(θ_b/2).
+The Dirichlet bound does not depend on N: the linear b-code self-suppresses at any length.
+Measured: the maximum of |S₁(N)| over N ∈ {2⁶…2¹⁴} equals **31.749** against the bound **32.045** —
+criterion C1 PASS. A foreign linear code is suppressed in the quadratic correlator
+to the same O(1) level relative to the coherent √N_c.
 
-**A2. Автокорреляция b-чирика — точная форма.** Для c(m) = Σ_{i<N−m} e^{i((i+m)²−i²)θ_b}
-прямое вычисление и формула ядра Дирихле |c(m)| = |sin((N−m)·m·θ_b)/sin(m·θ_b)|
-совпадают с максимальной ошибкой **1.14e-10** на всех m = 1…255 (N=256) — критерий
-C2 ПАСС. Боковые лепестки немодулированного кода управляются диофантовой
-структурой θ_b/π: таблица ближайших резонансов mθ_b → πk даёт m = 151 (расстояние
-2.87e-4), m = 201 (6.24e-3), m = 50 (6.53e-3); максимальный боковой лепесток
-|c(m)| = 104.8 при m = 152 → PSLR = **0.4095** (−7.8 дБ). Это **характеристика**
-детерминированного кода: в дуплексе она не участвует, потому что реальная помеха
-от встречного направления модулирована данными (d_i = ±1) и после свёртки теряет
-когерентность (см. B) — что и подтверждает Монте-Карло.
+**A2. The autocorrelation of the b-chirp — an exact form.** For c(m) = Σ_{i<N−m} e^{i((i+m)²−i²)θ_b},
+direct computation and the Dirichlet-kernel formula |c(m)| = |sin((N−m)·m·θ_b)/sin(m·θ_b)|
+agree with a maximum error of **1.14e-10** over all m = 1…255 (N=256) — criterion
+C2 PASS. The side lobes of the unmodulated code are governed by the Diophantine
+structure of θ_b/π: the table of nearest resonances mθ_b → πk gives m = 151 (distance
+2.87e-4), m = 201 (6.24e-3), m = 50 (6.53e-3); the maximum side lobe
+|c(m)| = 104.8 at m = 152 → PSLR = **0.4095** (−7.8 dB). This is a **characteristic**
+of a deterministic code: it plays no role in the duplex, because the actual interference
+from the opposite direction is modulated by data (d_i = ±1) and loses coherence after
+convolution (see B) — which is exactly what the Monte-Carlo confirms.
 
-**A3. Взаимная сумма Вейля.** X(N) = |Σ_{i<N} e^{i(i²−i)θ_b}| — взаимная корреляция
-двух кодов направлений. Измерение по N = 64…4096 даёт степенной закон с
-показателем **p = 0.531** — классический закон √N для квадратичных сумм Вейля
-(критерий C3 ПАСС, окно 0.42–0.58). Отсюда худший случай (немодулированная
-помеха): подавление N/|X|²; рабочий случай (помеха с данными) — случайное
-блуждание с дисперсией N_c при сигнале √N_c.
+**A3. The mutual Weyl sum.** X(N) = |Σ_{i<N} e^{i(i²−i)θ_b}| — the cross-correlation
+of the two direction codes. Measurement over N = 64…4096 gives a power law with
+exponent **p = 0.531** — the classical √N law for quadratic Weyl sums
+(criterion C3 PASS, window 0.42–0.58). Hence the worst case (unmodulated
+interference): suppression N/|X|²; the working case (data-modulated interference) — a random
+walk with variance N_c against a signal of √N_c.
 
-### 1.3 Монте-Карло дуплекса (часть B)
+### 1.3 The Monte-Carlo of the duplex (part B)
 
-Схема: BPSK, N_c = 64 чипов на бит, SIR на входе = **0 дБ** (равные мощности
-направлений), AWGN, Eb/N0 от 0 до 12 дБ, 4·10⁵ бит на точку, остаточная фазовая
-ошибка кадра σ_φ = 2° (внесена только в b-схему — консервативно). Приёмник A
-коррелирует принятую сумму со «своим» квадратичным кодом; сигнал даёт когерентный
-√N_c·b, помеха встречного направления — случайное блуждание с дисперсией 1
-(обработанный SIR = N_c = **18.1 дБ**).
+Scheme: BPSK, N_c = 64 chips per bit, input SIR = **0 dB** (equal powers of the two
+directions), AWGN, Eb/N0 from 0 to 12 dB, 4·10⁵ bits per point, residual phase
+error of the frame σ_φ = 2° (introduced only into the b-scheme — conservatively). Receiver A
+correlates the received sum with "its own" quadratic code; the signal yields a coherent
+√N_c·b, the opposite-direction interference — a random walk with variance 1
+(processed SIR = N_c = **18.1 dB**).
 
-**Результаты BER (реальный прогон):**
+**BER results (a real run):**
 
-| Eb/N0, дБ | наивный дуплекс | b-протокол (дуплекс) | чистый BPSK (МК) | Q(√(2Eb/N0)) |
+| Eb/N0, dB | naive duplex | b-protocol (duplex) | clean BPSK (MC) | Q(√(2Eb/N0)) |
 |---|---|---|---|---|
 | 0 | 0.2613 | 8.02e-2 | 7.90e-2 | 7.86e-2 |
 | 2 | 0.2536 | 3.68e-2 | 3.74e-2 | 3.75e-2 |
 | 4 | 0.2501 | 1.42e-2 | 1.24e-2 | 1.25e-2 |
 | 6 | 0.2501 | 3.36e-3 | 2.47e-3 | 2.33e-3 |
 | 8 | 0.2498 | 4.80e-4 | 1.80e-4 | 1.32e-4 |
-| 10 | 0.2497 | **0 ошибок в 4·10⁵ бит** (< 2.5e-6) | 2.50e-6 | 3.87e-6 |
-| 12 | 0.2508 | 0 ошибок | 0 | 1.5e-8 |
+| 10 | 0.2497 | **0 errors in 4·10⁵ bits** (< 2.5e-6) | 2.50e-6 | 3.87e-6 |
+| 12 | 0.2508 | 0 errors | 0 | 1.5e-8 |
 
-Наивный дуплекс (без развязки направлений) сразу выходит на свой теоретический
-пол BER = 0.25 и не улучшается с ростом Eb/N0 — встречный поток неотличим от
-шума эха. b-протокол идёт вплотную к кривой чистого BPSK: на 8 дБ штраф от
-встречного потока — 2.7× по BER (4.8e-4 против 1.8e-4), на 10 дБ ошибок
-не обнаружено. Критерии **C4 и C5 ПАСС**: эффективная скорость на направление
-при Eb/N0 = 10 дБ — фактор **2.000** относительно полудуплекса TDD (оба
-направления работают одновременно против поочерёдной работы).
+The naive duplex (no direction isolation) immediately sits at its theoretical
+BER floor of 0.25 and does not improve with Eb/N0 — the opposite stream is
+indistinguishable from echo noise. The b-protocol runs right along the clean-BPSK
+curve: at 8 dB the penalty from the opposite stream is 2.7× in BER (4.8e-4 vs 1.8e-4);
+at 10 dB no errors were detected. Criteria **C4 and C5 PASS**: the effective per-direction
+rate at Eb/N0 = 10 dB is a factor of **2.000** relative to TDD half-duplex (both
+directions operate simultaneously versus alternating operation).
 
-Итог P5-b: **все пять критериев ПАСС**, время прогона 0.4 c.
-Графики: `fig_p5b_sync.png` (суммы Вейля–Дирихле, автокорреляция),
+P5-b summary: **all five criteria PASS**, run time 0.4 s.
+Plots: `fig_p5b_sync.png` (Weyl–Dirichlet sums, autocorrelation),
 `fig_p5b_duplex.png` (BER, goodput).
 
-### 1.4 Значение
+### 1.4 Significance
 
-1. **Фазовая синхронизация без пилот-обмена.** Обе станции восстанавливают
-   фазовое согласование из универсальной константы: ссылка не передаётся,
-   не стареет и не может быть потеряна вместе с каналом. Измеренная
-   √N-развязка кодов превращает это из лозунга в проверяемое число.
-2. **Полный дуплекс в общей полосе.** Фактор 2.000 по скорости на направление —
-   удвоение спектральной эффективности без дуплексера и без подавления эха.
-3. **Адронные коллайдеры.** Системы синхронизации ускорителя (RF-референсы,
-   распределение тайминга по тракту кольца, transverse-feedback-линии) — это
-   двусторонние каналы, где потеря пилот-сигнала означает расстройку фазы
-   всей цепочки. Протокол с математически гарантированной развязкой направлений
-   и фазовой ссылкой-константой даёт архитектурный резерв: подстройка фаз
-   ведётся против независимого математического эталона, а встречные потоки
-   (команды ↔ телеметрия в одной волоконной жиле) не глушат друг друга.
-   Измеренные здесь числа (подавление 18 дБ при N_c=64, BER на уровне чистого
-   канала) — это готовые проектные параметры для такой линии.
-4. **Микрофизика камеры Вильсона.** Плотная многоканальная регистрация
-   (совпадения треков, двусторонняя телеметрия камера ↔ регистратор) получает
-   схему, где каналы не развязываются аппаратно, а разделяются кодами.
+1. **Phase synchronization without pilot exchange.** Both stations recover
+   phase alignment from the universal constant: the reference is never transmitted,
+   never ages, and cannot be lost with the channel. The measured
+   √N-isolation of the codes turns this from a slogan into a checkable number.
+2. **Full duplex in a common band.** The factor of 2.000 in per-direction rate —
+   a doubling of spectral efficiency without a duplexer and without echo cancellation.
+3. **Hadron colliders.** Accelerator timing systems (RF references,
+   ring-wide timing distribution, transverse-feedback lines) are two-way channels
+   where losing the pilot means detuning the phase of the whole chain. A protocol with a
+   mathematically guaranteed direction isolation and a constant-as-reference gives an
+   architectural reserve: phase adjustments are made against an independent mathematical
+   reference, and the opposite streams (commands ↔ telemetry in the same optical fiber)
+   do not jam each other.
+   The numbers measured here (18 dB of suppression at N_c=64, BER at the level of a clean
+   channel) are ready-made design parameters for such a link.
+4. **Wilson-chamber microphysics.** Dense multi-channel recording
+   (track coincidences, two-way camera ↔ recorder telemetry) gains a scheme
+   in which channels are not separated by hardware but by codes.
 
 ---
 
-## 2. P4-b — ансамбль T=8: дисперсия σ_y при Re=2000 с парной проверкой b-поворота
+## 2. P4-b — the T=8 ensemble: σ_y dispersion at Re=2000 with a paired check of the b-rotation
 
-### 2.1 Постановка
+### 2.1 Statement
 
-Базовая проблема P4 требовала ансамблевого усреднения латеральной дисперсии σ_y
-трассеров в турбулентности при Re = 2000 минимум на T = 2 реализации. Уровень
-P4-b поднимает ансамбль до **T = 8** и встраивает в него **парную проверку
-инвариантности**: каждое зерно прогоняется дважды — в исходном поле и в поле
-после точного b-поворота формы L4, u′ = R(θ_b)·u, R = [[cosθ_b, −sinθ_b],[sinθ_b, cosθ_b]],
-с теми же модами, фазами, sweeping-частотами и стартовыми точками частиц.
-Дивергентная компонента (div u′ = −b·ω) сохраняется в поле — её влияние
-на статистики ансамбля и есть предмет измерения.
+The base problem P4 required ensemble averaging of the lateral dispersion σ_y
+of tracers in turbulence at Re = 2000 over at least T = 2 realizations. Level
+P4-b raises the ensemble to **T = 8** and embeds a **paired invariance check**
+into it: every seed is run twice — in the original field and in the field
+after the exact L4-form b-rotation, u′ = R(θ_b)·u, R = [[cosθ_b, −sinθ_b],[sinθ_b, cosθ_b]],
+with the same modes, phases, sweeping frequencies and particle starting points.
+The divergent component (div u′ = −b·ω) is retained in the field — its effect
+on the ensemble statistics is precisely the subject of the measurement.
 
-### 2.2 Модель (зафиксированный протокол)
+### 2.2 Model (the pinned protocol)
 
-Кинематическая симуляция 2D турбулентности: E(k) ~ k^(−5/3)·exp(−(k/k_η)⁴/2),
-k ∈ [1, 299], где k_η = 2000^(3/4) = 299 фиксирует Re = (k_η/k_min)^(4/3) = **2000**;
-случайное проскальзывание ω_k = k·U_s·g_k, U_s = 0.8; u_rms = 1 точно.
-Сетка 768², частиц 10 000, стартовый клубок Гаусса σ₀ = 0.08, RK2 с билинейной
-интерполяцией, dt = 0.004, T = 8, 80 контрольных точек, 8 зёрен (paired: база + b-поворот).
-Fine-цепочка для сходимости: те же 8 зёрен при dt = 0.002 (база).
+A kinematic simulation of 2D turbulence: E(k) ~ k^(−5/3)·exp(−(k/k_η)⁴/2),
+k ∈ [1, 299], where k_η = 2000^(3/4) = 299 pins Re = (k_η/k_min)^(4/3) = **2000**;
+random sweeping ω_k = k·U_s·g_k, U_s = 0.8; u_rms = 1 exactly.
+Grid 768², 10,000 particles, a Gaussian starting blob σ₀ = 0.08, RK2 with bilinear
+interpolation, dt = 0.004, T = 8, 80 checkpoints, 8 seeds (paired: baseline + b-rotation).
+The fine chain for convergence: the same 8 seeds at dt = 0.002 (baseline).
 
-**Тождества L4 на KS-поле (проверены в спектре при t=0, все зерна):**
-|E′/E − 1|max = **2.22e-16** (K1 ПАСС — энергия сохраняется машинно точно);
-max|div u′ + b·ω| = **6.0e-11**, max|ω′ − cosθ_b·ω| = **8.9e-11** при спектральном
-масштабе 1.87e5 — относительная невязка ≈ 5e-15 (K2 ПАСС). Тождества б-поворота
-монографии воспроизводятся на широкополосном турбулентном поле без потерь.
+**The L4 identities on the KS field (verified in the spectrum at t=0, all seeds):**
+|E′/E − 1|max = **2.22e-16** (K1 PASS — the energy is conserved to machine exactness);
+max|div u′ + b·ω| = **6.0e-11**, max|ω′ − cosθ_b·ω| = **8.9e-11** against a spectral
+scale of 1.87e5 — a relative residual ≈ 5e-15 (K2 PASS). The monograph's b-rotation
+identities reproduce on a broadband turbulent field without loss.
 
-### 2.3 Результаты (реальный прогон: 204 c + fine 266 c)
+### 2.3 Results (a real run: 204 s + fine 266 s)
 
-**Ансамбль:** σ̄_y(T=8) = **1.0227 ± 0.0469** (SE по 8 зёрнам). Разброс зёрен
-0.80…1.27 — честная картина хаотической адвекции, загнанная в ошибку средней.
+**The ensemble:** σ̄_y(T=8) = **1.0227 ± 0.0469** (SE over 8 seeds). The seed spread
+0.80…1.27 — an honest picture of chaotic advection, folded into the error of the mean.
 
-**Сходимость по dt (K3, ансамблевый уровень — ПАСС):** среднее при dt = 0.002 —
-1.0218, при dt = 0.004 — 1.0227; относительная разница **0.09%** при пороге
-2·SE/mean = 9.2%. Численная схема сошлась: статистика не зависит от шага.
-(Пер-зерновые σ_y к dt не сходятся по построению — траектории хаотичны; сходится
-именно ансамблевая статистика, что и есть предмет проблемы.)
+**Convergence in dt (K3, the ensemble level — PASS):** the mean at dt = 0.002 is
+1.0218, at dt = 0.004 — 1.0227; the relative difference is **0.09%** against the threshold
+2·SE/mean = 9.2%. The numerical scheme has converged: the statistics do not depend on the step.
+(Per-seed σ_y does not converge in dt by construction — the trajectories are chaotic;
+it is the ensemble statistics that converges, which is exactly the subject of the problem.)
 
-**Масштабирование ошибки ансамбля (K5 — ПАСС):**
+**Scaling of the ensemble error (K5 — PASS):**
 
-| T | SE(T)/SE(8) — измерено | CLT √(8/T) |
+| T | SE(T)/SE(8) — measured | CLT √(8/T) |
 |---|---|---|
 | 1 | **2.828** | 2.828 |
 | 2 | 1.700 | 2.000 |
 | 4 | 1.253 | 1.414 |
 | 8 | 1 | 1 |
 
-Точка T=1 совпала с законом 1/√T до третьего знака. Точки T=2, 4 лежат в
-зарегистрированной полосе [1.6, 2.4] для SE(2)/SE(8) = 1.700 (теория 2.0) —
-нормальное флуктуационное поведение малых ансамблей, сам закон подтверждён.
+The T=1 point matches the 1/√T law to the third digit. The T=2, 4 points lie inside the
+registered band [1.6, 2.4] for SE(2)/SE(8) = 1.700 (theory 2.0) —
+the normal fluctuation behavior of small ensembles; the law itself is confirmed.
 
-**b-инвариантность ансамбля (K4):** парная разность Δ_s(t) = σ_base − σ_b имеет
-среднее **+0.0466 ± 0.0277** в момент T=8 (z = **+1.685**, |z| < 2) и максимальный
-относительный эффект в окне t ≥ 2, равный **5.12%** (при зарегистрированной
-границе 5.0%). Итог честный и содержательный: **ансамблевая дисперсия не строго
-инвариантна относительно непроектированного b-поворота — измерен систематический
-след ≈ 5%** (b-поворот слегка уменьшает ансамблевую дисперсию к концу прогона).
-Это первая количественная оценка динамического следа b-механизма в дисперсионных
-статистиках: эффект на уровне границы чувствительности 8-зёренного ансамбля,
-знак устойчив по зёрнам, величина зафиксирована с контролируемой ошибкой.
+**The b-invariance of the ensemble (K4):** the paired difference Δ_s(t) = σ_base − σ_b has
+a mean of **+0.0466 ± 0.0277** at T=8 (z = **+1.685**, |z| < 2) and a maximum
+relative effect in the window t ≥ 2 of **5.12%** (against the registered
+bound of 5.0%). The outcome is honest and meaningful: **the ensemble dispersion is not
+strictly invariant under the unprojected b-rotation — a systematic trace of ≈ 5% is
+measured** (the b-rotation slightly decreases the ensemble dispersion towards the end of the run).
+This is the first quantitative estimate of the dynamical trace of the b-mechanism in
+dispersion statistics: an effect at the sensitivity bound of an 8-seed ensemble,
+the sign is stable across seeds, and the magnitude is recorded with a controlled error.
 
-**Закон роста:** показатель σ̄_y ~ t^p на окне t∈[2,8]: p = **0.646** (разброс
-зёрен 0.38…1.00) — переход от баллистики к ускоренному (ричардсоновскому)
-режиму дисперсии, как и ожидается для клубка σ₀ = 0.08 в поле с инерционным
-интервалом.
+**The growth law:** the exponent of σ̄_y ~ t^p on the window t∈[2,8]: p = **0.646** (seed
+spread 0.38…1.00) — the transition from ballistic to accelerated (Richardson)
+dispersion, as expected for a blob with σ₀ = 0.08 in a field with an inertial range.
 
-График: `fig_p4b_ensemble.png` (8 кривых + ансамбль ± SE; z(t) парной
-инвариантности; сходимость SE(T) против CLT).
+Plot: `fig_p4b_ensemble.png` (8 curves + the ensemble ± SE; the paired-invariance
+z(t); the convergence of SE(T) against the CLT).
 
-### 2.4 Значение
+### 2.4 Significance
 
-1. **Ансамблевый стандарт для микрофизики камеры Вильсона.** σ̄_y(T=8) с явной
-   ошибкой ±0.047 и проверенной сходимостью по dt — это готовый статистический
-   эталон для моделирования дисперсии капельной фазы: всякий следующий прогон
-   сравнивается с этим числом, а не «на глаз».
-2. **Измеренный след b-механизма.** Эффект ≈ 5% — величина, которую теперь можно
-   искать в реальной микрофизике (например, в анизотропии разбегания капель)
-   с заранее известной амплитудой. Проблема переведена из разряда «есть/нет»
-   в разряд «сколько именно».
-3. **Статистическая культура коллайдерных измерений.** Демонстрация на
-   реальном прогоне: ошибка среднего падает как 1/√T (точка T=1 — точное
-   совпадение), а инвариантность относительно преобразования поля проверяется
-   парным дизайном, а не постулатом. Это та же дисциплина, которой держатся
-   коллайдерные измерения: ансамбль → ошибка → систематика → граница применимости.
-4. **Тождества монографии на новом поле.** L4-тождества, ранее проверенные на
-   гладком Тейлоре–Грине, воспроизведены на широкополосном турбулентном спектре
-   с относительной невязкой 5e-15 — универсальность тождеств расширена.
+1. **An ensemble standard for Wilson-chamber microphysics.** σ̄_y(T=8) with an explicit
+   error of ±0.047 and a verified dt-convergence is a ready-made statistical reference
+   for droplet-dispersion modeling: any subsequent run is compared against this number,
+   not judged "by eye".
+2. **The measured trace of the b-mechanism.** The ≈ 5% effect is now a quantity one can
+   look for in real microphysics (for example, in the anisotropy of droplet separation)
+   with a known expected amplitude. The problem has moved from the "yes/no" category
+   to the "exactly how much" category.
+3. **The statistical culture of collider measurements.** A demonstration on
+   a real run: the error of the mean falls as 1/√T (the T=1 point is an exact
+   match), and invariance under a field transformation is verified by a paired
+   design rather than postulated. This is the same discipline that holds up
+   collider measurements: ensemble → error → systematics → applicability bound.
+4. **The monograph identities on a new field.** The L4 identities, previously verified on
+   the smooth Taylor–Green flow, are reproduced on a broadband turbulent spectrum
+   with a relative residual of 5e-15 — the universality of the identities is extended.
 
 ---
 
-## 3. Сводная таблица уровня «‑b»
+## 3. Summary table of the "-b" level
 
-| Проблема | Ключевое число | Критерии | Статус |
+| Problem | Key number | Criteria | Status |
 |---|---|---|---|
-| **P5-b** дуплекс | подавление встречного потока 18.1 дБ (N_c=64); фактор goodput **2.000**; Вейль-показатель **0.531**; граница Дирихле 31.749 ≤ 32.045 | C1–C5 | **все ПАСС** |
-| **P4-b** ансамбль T=8 | σ̄_y(T=8) = **1.0227 ± 0.0469** при Re=2000; dt-сходимость 0.09%; SE(1)/SE(8) = **2.828** = √8; след b-поворота **+5.12%** (z=+1.69) | K1,K2,K3,K5,K6 ПАСС; K4 зафиксировал измеряемый след ≈5% | **выполнено** |
+| **P5-b** duplex | opposite-stream suppression 18.1 dB (N_c=64); goodput factor **2.000**; Weyl exponent **0.531**; Dirichlet bound 31.749 ≤ 32.045 | C1–C5 | **all PASS** |
+| **P4-b** ensemble T=8 | σ̄_y(T=8) = **1.0227 ± 0.0469** at Re=2000; dt-convergence 0.09%; SE(1)/SE(8) = **2.828** = √8; the b-rotation trace **+5.12%** (z=+1.69) | K1,K2,K3,K5,K6 PASS; K4 recorded a measurable trace ≈5% | **executed** |
 
-## 4. Воспроизводимость
+## 4. Reproducibility
 
 ```bash
-python3 open-problems/p5b_b_protocol_duplex.py      # ~1 с → results_p5b.json + 2 рис.
-python3 open-problems/p4b_ensemble_T8.py --fine     # ~4.5 мин → results_p4b_fine.json
-python3 open-problems/p4b_ensemble_T8.py            # ~3.5 мин → results_p4b.json + рис.
+python3 open-problems/p5b_b_protocol_duplex.py      # ~1 s → results_p5b.json + 2 figures
+python3 open-problems/p4b_ensemble_T8.py --fine     # ~4.5 min → results_p4b_fine.json
+python3 open-problems/p4b_ensemble_T8.py            # ~3.5 min → results_p4b.json + figures
 ```
 
-Протокол зафиксирован в докстрингах скриптов: параметры, критерии успеха
-(зарегистрированы до прогона), форматы JSON. Два технических исправления
-протокола внесены до финального зарегистрированного прогона (транспонирование
-осей в интерполяции поля; перенос критерия dt-сходимости с траекторий на
-ансамбль — на хаотических траекториях пер-зерновая сходимость невозможна
-по построению) и документированы здесь же. Финальные числа — только из
-финального прогона; промежуточные прогоны в документацию не включены.
+The protocol is pinned in the docstrings of the scripts: parameters, success criteria
+(registered before the run), JSON formats. Two technical corrections
+to the protocol were made before the final registered run (the transposition of
+axes in the field interpolation; moving the dt-convergence criterion from trajectories to
+the ensemble — on chaotic trajectories per-seed convergence is impossible
+by construction) and are documented here. The final numbers come only from
+the final run; intermediate runs are not included in the documentation.
 
-## 5. Следующий уровень линейки
+## 5. The next levels of the line
 
-1. **P1-b — обратная связь капель (истощение пара).** Следующий шаг микрофизики:
-   связать испарение капель с локальным пересыщением в 3D-прогоне P1; предсказание —
-   отрицательная обратная связь на ширину распределения радиусов; критерий —
-   сужение спектра при фиксированном жидком содержании.
-2. **P4-c — предел T→∞.** Проверка асимптотики SE(T) на T = 16/32 с тем же парным
-   дизайном; вопрос — стабилизируется ли измеренный след b-поворота около 5%
-   или растёт с горизонтом.
-3. **P5-c — многолучевой дуплекс.** Расширение кодов направлений с 2 до K = 4/8
-   станций: взаимные суммы Вейля попарно и порог деградации BER при K→8.
-4. **Публикация пакета.** Пуш папки в репозиторий: `bash open-problems/push_open_problems.sh`
-   (Termux/POSIX), после чего вся эта секция доступна по постоянной ссылке GitHub.
+1. **P1-b — droplet feedback (vapor depletion).** The next step of the microphysics:
+   to couple droplet evaporation with the local supersaturation in the 3D P1 run; the prediction —
+   a negative feedback on the width of the radius distribution; the criterion —
+   a narrowing of the spectrum at a fixed liquid water content.
+2. **P4-c — the T→∞ limit.** A check of the SE(T) asymptotics at T = 16/32 with the same paired
+   design; the question — does the measured trace of the b-rotation stabilize near 5%
+   or grow with the horizon.
+3. **P5-c — multi-beam duplex.** Extending the direction codes from 2 to K = 4/8
+   stations: pairwise mutual Weyl sums and the BER degradation threshold at K→8.
+4. **Publishing the package.** Pushing the folder to the repository: `bash open-problems/push_open_problems.sh`
+   (Termux/POSIX), after which this whole section is available at a permanent GitHub link.

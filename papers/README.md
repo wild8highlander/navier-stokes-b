@@ -1,40 +1,40 @@
-# 📄 Papers — готовые PDF-статьи
+# 📄 Papers — Final Typeset PDF Papers
 
-> **Навигация:** **`papers`**
+> **Navigation:** **`papers`**
 
 ![Papers](https://img.shields.io/badge/Content-Research%20Papers-blue?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-Здесь собраны **финальные типографские PDF-статьи** программы b-коррекции.
-Каждая подпапка — одна статья (или одна статья в двух языковых редакциях),
-хранится ровно в том виде, в каком циркулирует. LaTeX-исходники — в [`src/`](../src/README.md),
-Word-монографии — в [`docs/`](../docs/README.md), численные протоколы — в [`data/results/`](../data/results/).
+This is where the **final typeset PDF papers** of the b-correction program are collected.
+Each subfolder is one paper (or one paper in two language editions),
+stored exactly as it circulated. LaTeX sources are in [`src/`](../src/README.md),
+Word monographs in [`docs/`](../docs/README.md), numerical protocols in [`data/results/`](../data/results/).
 
-## 📑 Коллекции
+## 📑 Collections
 
-| Коллекция | Редакции | Программа |
+| Collection | Editions | Program |
 |---|---|---|
-| **correction-b** | `main.pdf`, `main_v2.pdf` (~2.3 МБ, идентичные) | Регулярность 3D NSE через поляризационную коррекцию b |
-| **preprint** | `preprint_v1.pdf`, `preprint_v2.pdf` (~120 КБ, идентичные) | Компактное изложение результата регулярности — лучшее первое чтение |
-| **kdv** | `KdV_b_correction_Chapter16_EN.pdf`, `..._RU.pdf` | Продолжение программы: солитоны Кортевега–де Фриза при b-коррекции |
+| **correction-b** | `main.pdf`, `main_v2.pdf` (~2.3 MB, identical) | 3D NSE regularity via the polarization correction b |
+| **preprint** | `preprint_v1.pdf`, `preprint_v2.pdf` (~120 KB, identical) | Compact exposition of the regularity result — the best first read |
+| **kdv** | `KdV_b_correction_Chapter16_EN.pdf`, `..._RU.pdf` | Continuation of the program: Korteweg–de Vries solitons under the b-correction |
 
-Пары PDF внутри `correction-b/` и `preprint/` — байт-идентичные близнецы под
-разными именами (`main` / `main_v2`, `v1` / `v2`) для удобства цитирования;
-KdV-глава поставляется в двух реально независимых языковых редакциях.
+The PDF pairs inside `correction-b/` and `preprint/` are byte-identical twins under
+different names (`main` / `main_v2`, `v1` / `v2`) for citation convenience;
+the KdV chapter ships in two genuinely independent language editions.
 
-## 🧭 Порядок чтения
+## 🧭 Reading Order
 
-1. **`preprint/preprint_v2.pdf`** — ~120 КБ, самое короткое полное изложение
-   результата НС: коррекция b, угол поворота, снижение критерия BKM в 3.5 раза.
-2. **`correction-b/main_v2.pdf`** — полная статья: вывод b из системы
-   Кирхгофа, доказательство регулярности, численные стресс-тесты.
-3. **`kdv/KdV_b_correction_Chapter16_RU.pdf`** (или `_EN.pdf`) — интегрируемое
-   продолжение: та же константа в солитонных взаимодействиях.
+1. **`preprint/preprint_v2.pdf`** — ~120 KB, the shortest complete exposition
+   of the NS result: the b-correction, the rotation angle, the 3.5× reduction of the BKM criterion.
+2. **`correction-b/main_v2.pdf`** — the full paper: the derivation of b from the
+   Kirchhoff system, the regularity proof, numerical stress-tests.
+3. **`kdv/KdV_b_correction_Chapter16_RU.pdf`** (or `_EN.pdf`) — the integrable
+   continuation: the same constant in soliton interactions.
 
-## 🔬 Верификационная поддержка
+## 🔬 Verification Support
 
-Каждое количественное утверждение статей отображается на секцию
-11-язычного фреймворка [`verification/`](../verification/README.md):
-секция 1 — значение и границы b; секция 2 — цепочка аргумента регулярности;
-секция 4 — KdV-солитоны (псевдоспектральный порт на C++).
+Every quantitative claim of the papers maps onto a section of the
+11-language framework [`verification/`](../verification/README.md):
+Section 1 — the value and bounds of b; Section 2 — the chain of the regularity argument;
+Section 4 — KdV solitons (the C++ pseudospectral port).
 
-*Часть [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Лицензия [IPL-RP-1.0](../LICENSE.md) — All Rights Reserved*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · License [IPL-RP-1.0](../LICENSE.md) — All Rights Reserved*
