@@ -1,0 +1,68 @@
+cff-version: 1.2.0
+message: "If you use this software or reference these results, please cite it as below."
+title: "navier-stokes-b: the Universal b-Correction Program for the Navier-Stokes Equations"
+type: software
+authors:
+  - family-names: Isaev
+    given-names: Iskhak Khamzatovich
+    email: aslan08_05@mail.ru
+    affiliation: Independent Researcher
+    country: RU
+    orcid: "https://orcid.org/0009-0003-7299-0701"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.21825394"
+    description: "Zenodo DOI for this specific version (v1.3.0)"
+  - type: doi
+    value: "10.5281/zenodo.21825393"
+    description: "Zenodo Concept DOI (all versions)"
+  - type: url
+    value: "https://github.com/wild8highlander/navier-stokes-b"
+    description: "GitHub repository URL (this repository)"
+  - type: url
+    value: "https://github.com/wild8highlander/research-papers"
+    description: "Origin repository (research-papers)"
+  - type: url
+    value: "https://zenodo.org/records/21825394"
+    description: "Zenodo record page"
+repository-code: "https://github.com/wild8highlander/navier-stokes-b"
+url: "https://github.com/wild8highlander/navier-stokes-b"
+abstract: >
+  This repository collects the complete universal b-correction research program
+  for the Navier-Stokes equations in one place: the analytical proof of global
+  regularity of 3D NSE without artificial dissipation via the polarization
+  correction b = 1/(4π+2√3) ≈ 0.0623812 (rotation angle θ_b = arcsin(b) ≈
+  3.5765°), the full L1-L5 verification chain, the executed seven-open-problems
+  program (P1-P7) with real JSON-protocol runs, a two-language monograph
+  (RU/EN × DOCX/PDF), typeset papers with LaTeX sources, the KdV continuation
+  chapter, and an eleven-language verification framework (Lean 4, Coq, Isabelle,
+  Agda, C++, Rust, Haskell, Python, Julia and more).
+keywords:
+  - Navier-Stokes
+  - Navier-Stokes-regularity
+  - polarization-b
+  - BKM-criterion
+  - Kirchhoff-vortices
+  - Leray-projection
+  - KdV-equation
+  - formal-verification
+  - Lean4
+  - Coq
+  - Isabelle
+  - Agda
+  - reproducible-research
+  - mathematical-physics
+license: LicenseRef-Proprietary-Wild8Highlander-1.0
+version: "1.0.0"
+date-released: "2026-09-16"
+preferred-citation:
+  type: article
+  authors:
+    - family-names: Isaev
+      given-names: Iskhak Khamzatovich
+      orcid: "https://orcid.org/0009-0003-7299-0701"
+  title: "Correction b as Polarization Twisting: Analytical Proof of 3D Navier-Stokes Regularity without Dissipation"
+  year: 2026
+  journal: "Independent Research (Preprint)"
+  doi: "10.5281/zenodo.21825394"
+  url: "https://zenodo.org/records/21825394"

@@ -1,0 +1,224 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# .gitignore — Comprehensive ignore rules for research-papers
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# ─── Python ───
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+.eggs/
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+.Python
+develop-eggs/
+.installed.cfg
+*.pth
+.python-version
+pyrightconfig.json
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+.conda/
+
+# Testing and coverage
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+*.cover
+.hypothesis/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_metadata.json
+
+# ─── Julia ───
+*.jl.cov
+*.jl.*.cov
+*.jl.mem
+LocalPreferences.toml
+Manifest.toml
+
+# ─── Rust ───
+target/
+**/*.rs.bk
+Cargo.lock
+
+# ─── C/C++ ───
+*.o
+*.obj
+*.exe
+*.out
+*.app
+*.so.*
+*.dylib
+*.dll
+*.lib
+*.a
+*.la
+*.lo
+*.slo
+*.d
+*.ko
+*.mod
+*.mod.c
+*.cmd
+*.gcno
+*.gcda
+*.gcov
+verification/cpp/build/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile.bak
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+# ─── Haskell ───
+*.hi
+*.hie
+*.o
+*.p_o
+*.dyn_o
+*.dyn_hi
+.hie/
+dist-newstyle/
+cabal.project.local
+.ghc.environment.*
+
+# ─── Lean 4 ───
+.lake/
+lake-manifest.json
+lean-toolchain
+**/lean_packages/
+
+# ─── Coq/Rocq ───
+*.vo
+*.vio
+*.vok
+*.vos
+*.glob
+*.aux
+*.d
+.coq-native/
+_Makefile
+_Makefile.md
+
+# ─── Isabelle ───
+output/
+.browser_info/
+.heaps/
+
+# ─── Agda ───
+*.agdai
+MAlonzo/
+
+# ─── LaTeX ───
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.pdf
+*.snm
+*.synctex.gz
+*.toc
+*.nav
+*.run.xml
+*.bcf
+*.cut
+*.idx
+*.ilg
+*.ind
+*.ist
+*.lof
+*.lot
+*.maf
+*.mtc
+*.mtc1
+*.mw
+*.xdy
+_minted-*/
+src/_build/
+
+# ─── Docker ───
+.docker/
+
+# ─── Documentation ───
+site/
+docs/_build/
+
+# ─── IDE and Editors ───
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-project
+*.sublime-workspace
+.clangd/
+.cache/
+
+# ─── OS ───
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ─── Security ───
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.cert
+*.p12
+*.pfx
+id_rsa*
+.ssh/
+
+# ─── Build artifacts (keep sources, ignore compiled) ───
+*.pyc
+*.pyo
+*.bytecode
+
+# ─── Archives (prefer Git LFS or releases for large files) ───
+# *.tar.gz
+# *.zip
+
+# ─── Temporary ───
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig
+*.rej

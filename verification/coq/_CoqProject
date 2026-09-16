@@ -1,0 +1,8 @@
+-Q . ResearchPapersVerification
+
+section1_correction_b/CorrectionB.v
+section2_preprint/ProofChain.v
+section3_ab_cloud/Hofstadter.v
+section4_kdv/KdV.v
+section5_klein_attractor/Klein.v
+section6_riemann_zeros/RiemannZeros.v

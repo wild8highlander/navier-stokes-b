@@ -1,0 +1,132 @@
+{
+  "module": "p2_track_momentum",
+  "run_date": "2026-09-16",
+  "parameters": {
+    "B_T": 0.5,
+    "L_m": 0.05,
+    "n_seg": 8,
+    "n_mc": 10000,
+    "theta_b_deg": 3.5765013142837216,
+    "lambda_bead_m": 0.001,
+    "w_bead_um": 62.38119412102824,
+    "halo_FWHM_mm_from_P1b": 2.812
+  },
+  "sigma_pos": {
+    "b_beading_1mm": 1.8007899609072978e-05,
+    "diffuse_halo_P1b": 0.0011940552016985136,
+    "fine_reference": 5e-06
+  },
+  "resolution_table": {
+    "b_beading_1mm": [
+      {
+        "p_GeV": 0.05,
+        "sigma_dp_over_p": 0.01819524964108687,
+        "sagitta_um": 937.5000000000001
+      },
+      {
+        "p_GeV": 0.1,
+        "sigma_dp_over_p": 0.03673817465602817,
+        "sagitta_um": 468.75000000000006
+      },
+      {
+        "p_GeV": 0.2,
+        "sigma_dp_over_p": 0.07410200433094692,
+        "sagitta_um": 234.37500000000003
+      },
+      {
+        "p_GeV": 0.5,
+        "sigma_dp_over_p": 0.21240512118907431,
+        "sagitta_um": 93.75000000000001
+      },
+      {
+        "p_GeV": 1.0,
+        "sigma_dp_over_p": 11.568533176432728,
+        "sagitta_um": 46.87500000000001
+      },
+      {
+        "p_GeV": 2.0,
+        "sigma_dp_over_p": 142.05796062198027,
+        "sagitta_um": 23.437500000000004
+      },
+      {
+        "p_GeV": 5.0,
+        "sigma_dp_over_p": 48.14205901525249,
+        "sagitta_um": 9.375
+      }
+    ],
+    "diffuse_halo_P1b": [
+      {
+        "p_GeV": 0.05,
+        "sigma_dp_over_p": 86.73135736465633,
+        "sagitta_um": 937.5000000000001
+      },
+      {
+        "p_GeV": 0.1,
+        "sigma_dp_over_p": 40.40404917422468,
+        "sagitta_um": 468.75000000000006
+      },
+      {
+        "p_GeV": 0.2,
+        "sigma_dp_over_p": 9.895785805070222,
+        "sagitta_um": 234.37500000000003
+      },
+      {
+        "p_GeV": 0.5,
+        "sigma_dp_over_p": 65.29190857225458,
+        "sagitta_um": 93.75000000000001
+      },
+      {
+        "p_GeV": 1.0,
+        "sigma_dp_over_p": 6.784405113116365,
+        "sagitta_um": 46.87500000000001
+      },
+      {
+        "p_GeV": 2.0,
+        "sigma_dp_over_p": 4.589311585051982,
+        "sagitta_um": 23.437500000000004
+      },
+      {
+        "p_GeV": 5.0,
+        "sigma_dp_over_p": 0.4815549353733289,
+        "sagitta_um": 9.375
+      }
+    ],
+    "fine_reference": [
+      {
+        "p_GeV": 0.05,
+        "sigma_dp_over_p": 0.00505942346543307,
+        "sagitta_um": 937.5000000000001
+      },
+      {
+        "p_GeV": 0.1,
+        "sigma_dp_over_p": 0.010062113541390473,
+        "sagitta_um": 468.75000000000006
+      },
+      {
+        "p_GeV": 0.2,
+        "sigma_dp_over_p": 0.02026408644394467,
+        "sagitta_um": 234.37500000000003
+      },
+      {
+        "p_GeV": 0.5,
+        "sigma_dp_over_p": 0.05100115892234795,
+        "sagitta_um": 93.75000000000001
+      },
+      {
+        "p_GeV": 1.0,
+        "sigma_dp_over_p": 0.10466924808981425,
+        "sagitta_um": 46.87500000000001
+      },
+      {
+        "p_GeV": 2.0,
+        "sigma_dp_over_p": 0.24865010635830315,
+        "sagitta_um": 23.437500000000004
+      },
+      {
+        "p_GeV": 5.0,
+        "sigma_dp_over_p": 1547.3763199055634,
+        "sagitta_um": 9.375
+      }
+    ]
+  }
+}

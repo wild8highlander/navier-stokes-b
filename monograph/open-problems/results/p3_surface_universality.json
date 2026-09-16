@@ -1,0 +1,22 @@
+{
+  "module": "p3_surface_universality",
+  "run_date": "2026-09-16",
+  "parameters": {
+    "theta_b_deg": 3.5765013142837216,
+    "frames": 200000,
+    "surfaces": [
+      "sphere",
+      "torus",
+      "fourier",
+      "saddle"
+    ]
+  },
+  "max_angle_deviation": 1.0894063429134349e-15,
+  "max_norm_deviation": 9.103828801926284e-15,
+  "max_det_deviation": 0.0,
+  "sin_theta_b_minus_b": 0.0,
+  "surface_point_checks": {
+    "torus_radius_maxdev": 4.440892098500626e-16
+  },
+  "pass": true
+}
