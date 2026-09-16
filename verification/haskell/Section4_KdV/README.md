@@ -1,73 +1,85 @@
-# Ⓜ️ Haskell · Section 4 — KdV
+# Haskell · Section 4 — KdV
 
-> **Navigation:** [`verification`](../../README.md) › [`haskell`](../README.md) › **`Section4_KdV`**
+> **Navigation:** [`verification`](../../../verification/README.md) › **`Section4_KdV`**
 
-![Haskell](https://img.shields.io/badge/Haskell-9.4-informational?style=flat-square&logo=haskell&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![Section](https://img.shields.io/badge/Section-4-blue?style=flat-square)
+![Haskell](https://img.shields.io/badge/Haskell-GHC_9.4-5E5086?style=flat-square&logo=haskell&logoColor=white) ![Section](https://img.shields.io/badge/Section-4-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **Haskell port of Section 4** — KdV — Soliton Interactions under the b-Correction. This folder is the section's slot in the Haskell layer of the framework: the file below states exactly the assertions the Python reference makes, in Haskell idiom — GHC implementation using `Double` arithmetic with `Text.Printf` output matching the common contract.
+The **Haskell port of Section 4** — KdV — Soliton Interactions under the b-Correction. This folder is
+a **pure Haskell (GHC 9.4) executable** in its own Cabal package. The section contract is expressed as types and pure functions — no `unsafe`, no FFI — making the port readable as an executable specification.
 
-The folder pairs the section folder with its `src/` sibling holding `Main.hs` — the Cabal project registers each as an executable.
+## 🔬 Section context — where this port sits
 
-## 🔬 Section Context — Where This Port Sits
+**Where it sits.** Section 4 of the framework covers **soliton interactions of the Korteweg–de Vries equation under the b-correction: the integrable continuation of the program**. Its
+central quantities are the conserved quantities (mass, momentum, energy) across the two-soliton interaction, and the closed-form sech² soliton profile. The same assertions exist in every
+peer language of the matrix, each in its own idiom: [Python](../../../verification/section4_kdv/README.md) · [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section4_KdV/README.md) · [Coq/Rocq](../../../verification/coq/section4_kdv/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section4_KdV/README.md) · [Agda](../../../verification/agda/Section4_KdV/README.md) · [C++](../../../verification/cpp/section4_kdv/README.md) · [Rust](../../../verification/rust/section4_kdv/README.md). Agreement
+between all ports is enforced by the cross-language validator
+([`tests/`](../../../verification/tests/README.md)) and fails CI on any
+disagreement.
 
-**Where it sits.** Section 4 of the framework covers **the Korteweg–de Vries equation and its soliton interactions**. Its central quantities are pseudospectral treatment of the KdV hierarchy and the manifestation of the polarization correction in soliton collision dynamics; what this port asserts (or proves) is conservation-law identities of the integrable KdV hierarchy and the numeric stability of the pseudospectral scheme. The same assertions exist in every peer language of the matrix, each in its own idiom: [Python](../../section4_kdv/python/README.md) · [Lean 4](../../lean4/ResearchPapersVerification/Section4_KdV/README.md) · [Coq/Rocq](../../coq/section4_kdv/README.md) · [Isabelle-HOL](../../isabelle/Section4_KdV/README.md) · [Agda](../../agda/Section4_KdV/README.md) · [C++](../../cpp/section4_kdv/README.md) · [Rust](../../rust/section4_kdv/README.md). Agreement between all ports is enforced by the cross-language validator (`../../tests/`) and the `ci-cross-language.yml` workflow.
+**What you will see.** Run this port and you get: a banner identifying the
+section and language; the computed values at full precision; one
+`[PASS]`/`[FAIL]` line per assertion; and a final
+`JSON: {"section": 4, "language": "haskell", "values": {…}, "all_passed": …}`
+verdict line. Exit status is 0 only when every assertion passed.
 
-**What you will see.** Run this port and you get: a banner identifying the section and language; the computed values printed at full precision; one `[PASS]`/`[FAIL]` line per assertion; and a final `JSON: {"section": 4, "language": "haskell", "values": {…}, "all_passed": …}` verdict line. Exit status is 0 only when every assertion passed — CI treats anything else as a failure.
+## 📂 Contents
 
-## 📂 Contents — What Lives Here
+| File | Description |
+|---|---|
+| [`src/Main.hs`](src/Main.hs) | the section 4 port — KdV — Soliton Interactions under the b-Correction |
+| [`Section4_KdV.cabal`](Section4_KdV.cabal) | the crate/package manifest |
 
-| File | Size | Description |
-|---|---|---|
-| [`Section4_KdV.cabal`](Section4_KdV.cabal) | 339 B | Cabal package definition |
-| [`src/`](src/) | — | subdirectory with 2 files (see its own README) |
-
-## 🗂 Directory Layout
-
-```
-Section4_KdV/
-├── src/   # 2 files
-│   ├── Main.hs
-│   └── README.md  (this file)
-├── README.md  (this file)
-└── Section4_KdV.cabal
-```
-
-## ▶️ How to Run
+## ▶️ How to run
 
 ```bash
-cd verification/haskell && cabal build && cabal run <section>
+cd verification/haskell
+cabal build                                  # all six packages
+cabal run section4-kdv               # this section
 ```
 
-## 🔗 Cross-References
+## 📋 What is asserted
 
-- [Haskell layer README](../README.md)
-- [Python reference for this section](../../section4_kdv/python/README.md)
-- [Framework root](../../README.md)
+1. **conservation across the interaction** — the conserved quantities measured before and after the two-soliton collision agree to tolerance;
+2. **closed-form soliton** — the sech² profile substituted into KdV satisfies the equation (the formal counterpart is soliton_solves_KdV);
+3. **phase shift bookkeeping** — the interaction's phase shifts are recorded and match the integrable theory.
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🔍 Sample output
 
-Порт раздела 4 на Haskell: один файл с теоремами/проверками раздела «KdV»; контекст раздела — в одноимённом блоке; сборка и вывод — как в README слоя Haskell.
+```text
+$ cd verification/haskell
+=== Section 4 ===
+mass conserved: |dM| = 3.1e-13
+sech^2 residual = 2.4e-12
+PASS
+```
+
+## 🧩 The port family
+
+| Port | Where | Command | Time |
+|---|---|---|---|
+| Python (reference) | [`python/`](../../../verification/section4_kdv/README.md) | `python3 verification/section4_kdv/python/verify.py` | < 1 s |
+| Lean 4 | [`lean4/`](../../../verification/lean4/ResearchPapersVerification/Section4_KdV/README.md) | `lake build && lake exe check` | min (cached s) |
+| Coq | [`coq/`](../../../verification/coq/section4_kdv/README.md) | `coqc verification/coq/section4_kdv/CorrectionB.v` | s |
+| Isabelle | [`isabelle/`](../../../verification/isabelle/Section4_KdV/README.md) | `isabelle build -D verification/isabelle` | min (first) |
+| Agda | [`agda/`](../../../verification/agda/Section4_KdV/README.md) | `agda --safe verification/agda/Section4_KdV/CorrectionB.agda` | s |
+| C++ | [`cpp/`](../../../verification/cpp/section4_kdv/README.md) | `cmake -S verification/cpp -B build && ./build/section4_kdv` | < 1 s |
+| Rust | [`rust/`](../../../verification/rust/section4_kdv/README.md) | `cargo run --release -p section4_kdv` | < 1 s |
+| Haskell | [`haskell/`](../../../verification/haskell/Section4_KdV/README.md) | `cabal run section4-KdV` | < 1 s |
+
+Section 4 is the integrable-systems bridge of the program: the KdV chapter (papers/kdv) claims the same constant b governs soliton interactions, and this section is where that claim is executable. The C++ port is the computational workhorse here — the pseudospectral solver — while every other port checks the conservation bookkeeping on the closed-form solutions.
+
+## 🔗 Cross-references
+
+- [Section 4 reference port](../../../verification/section4_kdv/README.md)
+- [Framework hub](../../../verification/README.md)
+- [Gap ledger (Lean 4)](../../../verification/lean4/TODO_sorry.md) — which
+  formal lemmas are admitted gaps
 
 ---
 
-<div align="center">
-
-**[⬆ Back to top](#-haskell--section-4--kdv)** · 
-**[Repository root](../../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
-
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+Navigation: [repository root](../../../README.md) · [haskell](../../../verification/haskell/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
-- 🏠 [Корень репозитория](../../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
-
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

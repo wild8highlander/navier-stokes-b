@@ -1,19 +1,42 @@
-# `verification/python_levels/results/` — Recorded Outputs of the L1–L5 Chain
+# `verification/python_levels/results/` — Fresh Outputs of the Chain
 
-Reference outputs of the Python verification chain
-([`../README.md`](../README.md), entry point `verify_all.py`), recorded on
-2026-09-16 and mirrored at [`data/results/baseline/`](../../data/results/baseline/README.md).
+> **Navigation:** [`python_levels`](../README.md) › **`results`**
 
-| File | Level | Content |
-|---|---|---|
-| `l1_exact_constants.json` | L1 | exact constants: b, θ_b, cos θ_b |
-| `l2_rotation_algebra.json` | L2 | Rodrigues rotation identities |
-| `l3_kirchhoff_vortices.json` | L3 | Kirchhoff vortex system → b |
+![Fresh](https://img.shields.io/badge/Role-Latest_run_outputs-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-These copies exist so that each verification level is self-contained: a reader who
-runs a single level can diff their output against the recorded verdict without
-touching the data tree. The authoritative copies live in `data/results/baseline/` and
-are pinned by [`MANIFEST.json`](../../MANIFEST.json).
+The working outputs of the most recent
+[`verify_all.py`](../README.md) run — overwritten in place each time the
+chain executes. They are the *live* counterpart of the pinned baselines in
+[`data/results/baseline/`](../../../data/results/baseline/README.md): diff
+the two after a rerun, and "the chain still holds" becomes a mechanical
+check instead of a claim.
+
+## Files
+
+| File | Level |
+|---|---|
+| `l1_exact_constants.json` | L1 — the exact constants (mpmath, 50 digits) + float64 cross-checks |
+| `l2_rotation_algebra.json` | L2 — the rotation-algebra identities and residuals |
+| `l3_kirchhoff_vortices.json` | L3 — the Kirchhoff chain: RK4 order, drift, isometry |
+| `l4_nse_2d.json` | L4 — the 2D NSE identities: ω′ = cos θ_b·ω, energy, div, max principle |
+| `l5_nse_3d_bkm.json` | L5 — the 3D Taylor–Green BKM verdict of the latest run |
+
+## Contract
+
+```bash
+python3 ../verify_all.py        # regenerate (NSE3D_SKIP=1 to skip L5)
+diff . ../../../data/results/baseline/    # compare against the pinned baselines
+```
+
+Only the pinned baselines are quoted by documentation and CI-pinned via
+[`MANIFEST.json`](../../../MANIFEST.json); this directory is the bench,
+not the archive.
 
 ---
-Navigation: [python_levels](../README.md) · [baseline (authoritative)](../../data/results/baseline/README.md) · [IPL-RP-1.0](../../LICENSE.md)
+
+---
+
+Navigation: [python_levels](../README.md) · [pinned baselines](../../../data/results/baseline/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
+
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
+

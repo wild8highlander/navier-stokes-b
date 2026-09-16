@@ -1,153 +1,117 @@
-# Ⓜ️ Rust — Formal/Numerical Verification Layer
+# Ⓜ️ `rust/` — the Rust Numerical Verification Layer
 
 > **Navigation:** [`verification`](../README.md) › **`rust`**
 
-![Rust](https://img.shields.io/badge/Rust-1.75+-informational?style=flat-square&logo=rust&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![Sections](https://img.shields.io/badge/Sections-6-blue?style=flat-square)
+![Rust](https://img.shields.io/badge/Rust-1.75%2B-DEA584?style=flat-square&logo=rust&logoColor=white)
+![Sections](https://img.shields.io/badge/Sections-6-9558B2?style=flat-square)
+![Dependencies](https://img.shields.io/badge/Crates-zero_std_only-2EA043?style=flat-square&logo=rust&logoColor=white)
+![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-This directory carries the **Rust (1.75+) numerical-verification layer**: one crate for the whole framework, with a separate binary per research section (`src/bin`-style section folders), built with Cargo. The ports use `std` only — no external crates — so the dependency graph is trivial and auditable, and the memory-safety guarantees come for free.
+This directory carries the **Rust (1.75+) numerical-verification layer**:
+one Cargo workspace, with a separate crate and binary per research
+section, built with Cargo. The ports use **`std` only — no external
+crates** — so the dependency graph is trivial and auditable, and the
+memory-safety guarantees come for free.
 
-Every section binary implements the framework's output contract: a `check(name, expected, actual)` helper printing `[PASS]`/`[FAIL]` at `{:15e}` precision, the `JSON:` verdict line, and `exit(1)` semantics on failure. Section 1 computes `b` from `std::f64::consts::PI`, checks positivity/bounds, and verifies the trigonometric identity chain via `asin`/`cos`/`sin`.
+Every section binary implements the framework's output contract: a
+`check(name, expected, actual)` helper printing `[PASS]`/`[FAIL]` at
+`{:15e}` precision, the final `JSON: {...}` verdict line, and `exit(1)`
+semantics on any failure. Section 1 computes `b` from
+`std::f64::consts::PI` via the closed form `b = π/(4π² + 2π√3)`
+(algebraically identical to `1/(4π + 2√3)` = 0.06238119…), checks
+positivity and bounds, and verifies the trigonometric identity chain via
+`asin`/`cos`/`sin`.
 
-Run a section with `cargo run --release --bin <section>` (or `cargo run --release` for the default); `Cargo.toml` wires the release profile for speed. CI builds the crate in `ci-extended-languages.yml` and runs it under `ci-cross-language.yml`.
+## The six section ports
 
-Each section folder carries its own `src/` with the binary's `main.rs`.
+| Crate | Directory | Section | Binary |
+|---|---|---|---|
+| `section1_correction_b` | [`section1_correction_b/`](section1_correction_b/README.md) | 1 | prints b, asserts the four properties |
+| `section2_preprint` | [`section2_preprint/`](section2_preprint/README.md) | 2 | twist unitarity chain |
+| `section3_ab_cloud` | [`section3_ab_cloud/`](section3_ab_cloud/README.md) | 3 | Hofstadter structural checks |
+| `section4_kdv` | [`section4_kdv/`](section4_kdv/README.md) | 4 | soliton conservation (std-only, FFT-free formulation) |
+| `section5_klein_attractor` | [`section5_klein_attractor/`](section5_klein_attractor/README.md) | 5 | invariant statistics |
+| `section6_riemann_zeros` | [`section6_riemann_zeros/`](section6_riemann_zeros/README.md) | 6 | gap-ratio diagnostics |
 
-## 🗂 The Six Section Ports
+Each section folder carries its own `src/` with the binary's `main.rs`
+(and a README), plus its own `Cargo.toml`.
 
-- [`section1_correction_b/`](section1_correction_b/README.md) — Correction b — the Universal Polarization Constant
-- [`section2_preprint/`](section2_preprint/README.md) — Preprint NSE — the Regularity Argument Chain
-- [`section3_ab_cloud/`](section3_ab_cloud/README.md) — AB-Cloud — the Non-Hermitian Hofstadter Hamiltonian
-- [`section4_kdv/`](section4_kdv/README.md) — KdV — Soliton Interactions under the b-Correction
-- [`section5_klein_attractor/`](section5_klein_attractor/README.md) — Klein Attractor — Ergodic Dynamics and the NSE Bridge
-- [`section6_riemann_zeros/`](section6_riemann_zeros/README.md) — Riemann Zeros — the Hilbert–Pólya Programme
+## Contents
 
-## 📂 Contents — What Lives Here
+| File | Description |
+|---|---|
+| [`Cargo.toml`](Cargo.toml) | the workspace: resolver "2", the six member crates |
 
-| File | Size | Description |
-|---|---|---|
-| [`Cargo.toml`](Cargo.toml) | 240 B | [workspace] resolver = "2" members = [ "section1_correction_b", "section2_preprint", "section3_ab_cloud", "section4_kdv", "section5_klein_attractor", "section6_riemann_zeros", ] [w… |
-| [`section1_correction_b/`](section1_correction_b/) | — | Section 1 port — Correction b — the Universal Polarization Constant |
-| [`section2_preprint/`](section2_preprint/) | — | Section 2 port — Preprint NSE — the Regularity Argument Chain |
-| [`section3_ab_cloud/`](section3_ab_cloud/) | — | Section 3 port — AB-Cloud — the Non-Hermitian Hofstadter Hamiltonian |
-| [`section4_kdv/`](section4_kdv/) | — | Section 4 port — KdV — Soliton Interactions under the b-Correction |
-| [`section5_klein_attractor/`](section5_klein_attractor/) | — | Section 5 port — Klein Attractor — Ergodic Dynamics and the NSE Bridge |
-| [`section6_riemann_zeros/`](section6_riemann_zeros/) | — | Section 6 port — Riemann Zeros — the Hilbert–Pólya Programme |
-
-## 🗂 Directory Layout
-
-```
-rust/
-├── section1_correction_b/   # 4 files
-│   ├── src/   # 2 files
-│   │   ├── main.rs
-│   │   └── README.md  (this file)
-│   ├── Cargo.toml
-│   └── README.md  (this file)
-├── section2_preprint/   # 4 files
-│   ├── src/   # 2 files
-│   │   ├── main.rs
-│   │   └── README.md  (this file)
-│   ├── Cargo.toml
-│   └── README.md  (this file)
-├── section3_ab_cloud/   # 4 files
-│   ├── src/   # 2 files
-│   │   ├── main.rs
-│   │   └── README.md  (this file)
-│   ├── Cargo.toml
-│   └── README.md  (this file)
-├── section4_kdv/   # 4 files
-│   ├── src/   # 2 files
-│   │   ├── main.rs
-│   │   └── README.md  (this file)
-│   ├── Cargo.toml
-│   └── README.md  (this file)
-├── section5_klein_attractor/   # 4 files
-│   ├── src/   # 2 files
-│   │   ├── main.rs
-│   │   └── README.md  (this file)
-│   ├── Cargo.toml
-│   └── README.md  (this file)
-├── section6_riemann_zeros/   # 4 files
-│   ├── src/   # 2 files
-│   │   ├── main.rs
-│   │   └── README.md  (this file)
-│   ├── Cargo.toml
-│   └── README.md  (this file)
-├── Cargo.toml
-└── README.md  (this file)
-```
-
-## ▶️ How to Run
+## How to run
 
 ```bash
 cd verification/rust
-cargo run --release
-```
-Build step: `cargo build --release`.
-
-## 🇷🇺 Краткое резюме (Russian Summary)
-
-**verification/rust/** — слой верификации на Rust (1.75+): memory-safe порт только на std; каждый раздел — отдельный бинарник. Шесть портов по разделам (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); единый контракт PASS/JSON; команды сборки — в разделе How to Run.
-
----
-
-<div align="center">
-
-**[⬆ Back to top](#-rust--formalnumerical-verification-layer)** · 
-**[Repository root](../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-
----
-## 🦀 Workspace Anatomy
-
-One workspace ([`Cargo.toml`](Cargo.toml)), six packages, zero external crates:
-
-| Package | Section | Binary |
-|---|---|---|
-| `section1_correction_b` | 1 | prints b, asserts the four properties |
-| `section2_preprint` | 2 | twist unitarity chain |
-| `section3_ab_cloud` | 3 | Hofstadter structural checks |
-| `section4_kdv` | 4 | soliton conservation (std-only FFT-free formulation) |
-| `section5_klein_attractor` | 5 | invariant statistics |
-| `section6_riemann_zeros` | 6 | gap-ratio diagnostics |
-
-The std-only policy is the Rust face of the framework's hermeticity: no `ndarray`, no `num_cpus`, nothing — the ports are auditable by reading them, and supply-chain risk is zero by construction.
-
-## 🔁 Running Patterns
-
-```bash
 cargo run --release                              # whole chain, all six sections
 cargo run --release -p section1_correction_b     # one section
 cargo test --release                             # unit tests alongside the contract checks
 ```
 
-`--release` is the supported mode everywhere in the documentation; debug builds are noticeably slower on the heavier sections and are only useful when debugging the ports themselves.
+`--release` is the supported mode everywhere in the documentation; debug
+builds are noticeably slower on the heavier sections and are only useful
+when debugging the ports themselves. CI builds the workspace in the
+extended-languages workflow and runs it under the cross-language
+workflow; the pinned image lives at
+[`docker/rust/`](../docker/README.md).
 
----
-## 🎯 What Rust Proves
+## 🎯 What Rust proves
 
-The Rust ports prove the sections do not need *anything* — no BLAS, no NumPy, no standard scientific stack. Six packages, std-only, and the contract still holds. That makes Rust the supply-chain audit's favourite witness: with zero dependencies, there is nothing to trust but the code and the standard library.
+The Rust ports prove that the sections do not need *anything* — no BLAS,
+no NumPy, no standard scientific stack. Six crates, std-only, and the
+contract still holds. That makes Rust the **supply-chain audit's favourite
+witness**: with zero dependencies there is nothing to trust but the code
+and the standard library, and `cargo vet`-style reviews reduce to reading
+six small `main.rs` files. Combined with the memory guarantees, the Rust
+tier also demonstrates that the framework's claims do not depend on
+undefined behaviour anywhere in the arithmetic path.
 
----
-## 🔗 See Also
+## 🔗 See also
 
-- the workspace [`Cargo.toml`](Cargo.toml) — package registry;
+- [the framework hub](../README.md) — the two-tier picture and the
+  contract;
 - [`cpp/`](../cpp/README.md) — the BLAS-backed counterpart;
-- [`tests/`](../tests/README.md) — the validator that consumes these ports' JSON.
+- [`haskell/`](../haskell/README.md) — the pure-functional witness;
+- [`tests/`](../tests/README.md) — the validator that consumes these
+  ports' JSON verdicts.
 
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+
+## The check() helper, annotated
+
+```rust
+fn check(name: &str, expected: f64, actual: f64, tol: f64) -> bool {
+    let ok = (actual - expected).abs() <= tol;
+    println!("[{}] {}: expected={:.15e}, actual={:.15e}",
+             if ok { "PASS" } else { "FAIL" }, name, expected, actual);
+    ok
+}
+```
+
+Accumulate the booleans, print the `JSON:` verdict with `all_passed`, and
+`std::process::exit(1)` on any failure — that is the whole harness, and
+every port's `main` is a straight-line script of `check` calls. Reading a
+Rust port end-to-end takes about the same time as running it.
+
+## CI wiring
+
+The extended-languages workflow builds the workspace (`cargo build
+--release --locked`-equivalent semantics with zero deps to lock); the
+cross-language workflow runs each binary and feeds the verdicts to the
+[validator](../tests/README.md). Because there are no external crates,
+neither workflow needs a registry cache — cold runners build the ring in
+seconds.
+
+## When to reach for the Rust port
+
+- auditing the **supply chain** of a claim (zero deps is the answer);
+- checking that a claim survives **memory-safety** discipline;
+- diffing against C++ where performance differs but values must not.
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+Navigation: [verification](../README.md) · [repository root](../../README.md) · [IPL-RP-1.0](../../LICENSE.md)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
-
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
-
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) — © 2026 Isaev Iskhak Khamzatovich, all rights reserved.*

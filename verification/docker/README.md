@@ -1,92 +1,55 @@
-# 🐳 verification · docker — Pinned Toolchain Images (×7)
+# 🐳 `verification/docker/` — Pinned Toolchain Images
 
 > **Navigation:** [`verification`](../README.md) › **`docker`**
 
-![Type](https://img.shields.io/badge/Type-Docker-2496ED?style=flat-square&logo=docker&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Docker](https://img.shields.io/badge/Images-7-2496ED?style=flat-square&logo=docker&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-One **Docker image per extended toolchain** — seven subfolders, each with its own `Dockerfile` pinning the exact environment a formal or compiled port needs. This is how a reviewer reproduces a result without installing Lean, Coq, Isabelle, Agda or the compiled toolchains locally: pull the base image, build the folder, run the verification inside the container.
+One pinned container per formal/extended toolchain, so container runs are
+the closest match to CI: the images pin the toolchain versions, copy the
+verification sources, and default to running the verification — `docker
+run` reproduces exactly what CI runs, byte-for-byte at the toolchain level.
 
-The images are wired into `docker.yml` (build) and referenced by the verification workflows; each `Dockerfile` is minimal — official base image, toolchain install, the verification source copied in, and the section run as the default command. Image sizes are dominated by the proof assistants (Isabelle and Lean being the largest); the compiled-language images are small.
+## The images
 
-## 📂 Contents — What Lives Here
-
-| File | Size | Description |
+| Folder | Toolchain | Default entrypoint |
 |---|---|---|
-| [`agda/`](agda/) | — | Agda 2.6 with the standard library preinstalled |
-| [`coq/`](coq/) | — | Coq/Rocq 8.18 with the standard Reals stack |
-| [`cpp/`](cpp/) | — | GCC/Clang + CMake for the C++17 ports |
-| [`haskell/`](haskell/) | — | GHC 9.4 + Cabal for the Haskell project |
-| [`isabelle/`](isabelle/) | — | Isabelle-HOL 2024 session environment |
-| [`lean4/`](lean4/) | — | Lean 4 + elan/lake, toolchain pinned by lean-toolchain |
-| [`rust/`](rust/) | — | Rust stable (1.75+) for the Cargo crate |
+| [`agda/`](agda/README.md) | Agda (2.6) | `agda --safe verification/agda/Section1_CorrectionB/CorrectionB.agda` |
+| [`coq/`](coq/README.md) | Coq/Rocq (8.18) | `coqc verification/coq/section1_correction_b/CorrectionB.v` |
+| [`cpp/`](cpp/README.md) | C++17 + CMake | `./build/section1_correction_b` |
+| [`haskell/`](haskell/README.md) | Haskell (GHC 9.4) | `cabal run section1-correction-b` |
+| [`isabelle/`](isabelle/README.md) | Isabelle-HOL (2024) | `isabelle build -D verification/isabelle` |
+| [`lean4/`](lean4/README.md) | Lean 4 (v4.14) | `lake exe check` |
+| [`rust/`](rust/README.md) | Rust (1.75+) | `cargo run --release --manifest-path verification/rust/Cargo.toml` |
 
-## 🗂 Directory Layout
-
-```
-docker/
-├── agda/   # 2 files
-│   ├── Dockerfile
-│   └── README.md  (this file)
-├── coq/   # 2 files
-│   ├── Dockerfile
-│   └── README.md  (this file)
-├── cpp/   # 2 files
-│   ├── Dockerfile
-│   └── README.md  (this file)
-├── haskell/   # 2 files
-│   ├── Dockerfile
-│   └── README.md  (this file)
-├── isabelle/   # 2 files
-│   ├── Dockerfile
-│   └── README.md  (this file)
-├── lean4/   # 2 files
-│   ├── Dockerfile
-│   └── README.md  (this file)
-├── rust/   # 2 files
-│   ├── Dockerfile
-│   └── README.md  (this file)
-└── README.md  (this file)
-```
-
-## ▶️ How to Run
+## Build and run everything
 
 ```bash
-# Example — build and run the Lean image:
-docker build -t rp-lean verification/docker/lean4
-docker run --rm rp-lean
-# Or run the whole matrix from the root:
-make docker-up
+make docker-build     # all 7 toolchain images
+make docker-up        # run the verification services (docker compose)
+make docker-down      # stop them again
 ```
 
-## 🔗 Cross-References
+or per image (from the repository root):
 
-- [Root README — Quick Start](../../README.md)
-- [CI workflow docker.yml](../../.github/workflows/README.md)
+```bash
+docker build -t rp-lean4 verification/docker/lean4
+docker run --rm -v "$PWD":/work rp-lean4 lake exe check
+```
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## Why pinned images matter
 
-**verification/docker/** — семь Docker-образов, по одному на расширенный тулчейн (Lean 4, Coq, Isabelle, Agda, C++, Rust, Haskell); в каждом Dockerfile зафиксирована среда, команда по умолчанию — запуск верификации. Сборка — docker.yml / make docker-up.
-
----
-
-<div align="center">
-
-**[⬆ Back to top](#-verification--docker--pinned-toolchain-images-7)** · 
-**[Repository root](../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+A formal proof is only as reproducible as its kernel version; a numerical
+verdict only as reproducible as its libm. Pinning the toolchain turns
+"works on my machine" into a byte-level property, and lets the CI matrix
+and any external audit execute the *same* environment. When a toolchain
+upstream changes, the fix is a one-line base-image bump plus a re-run —
+see the [hub's maintenance map](../README.md).
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+---
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+Navigation: [repository root](../../README.md) · [extended-languages notes](docs/extended-languages/README.md) · [IPL-RP-1.0](../../LICENSE.md)
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

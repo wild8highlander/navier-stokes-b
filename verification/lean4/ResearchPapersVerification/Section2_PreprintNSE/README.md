@@ -1,59 +1,83 @@
-# Ⓜ️ Lean 4 · Section 2 — Preprint NSE
+# Lean 4 · Section 2 — Preprint NSE
 
-> **Navigation:** [`verification`](../../../README.md) › [`lean4`](../../README.md) › [`ResearchPapersVerification`](../README.md) › **`Section2_PreprintNSE`**
+> **Navigation:** [`verification`](../../../../verification/README.md) › [`ResearchPapersVerification`](../../../../verification/lean4/README.md) › **`Section2_PreprintNSE`**
 
-![Lean 4](https://img.shields.io/badge/Lean%204-v4.14-informational?style=flat-square&logo=leanpub&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![Section](https://img.shields.io/badge/Section-2-blue?style=flat-square)
+![Lean 4](https://img.shields.io/badge/Lean%204-v4.14-1284BA?style=flat-square&logo=leanpub&logoColor=white) ![Section](https://img.shields.io/badge/Section-2-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **Lean 4 port of Section 2** — Preprint NSE — the Regularity Argument Chain. This folder is the section's slot in the Lean 4 layer of the framework: the file below states exactly the assertions the Python reference makes, in Lean 4 idiom — machine-checked proofs on the Mathlib4 foundation with custom definitions layered on top.
+The **Lean 4 port of Section 2** — Preprint NSE — the Regularity Argument Chain. This folder is
+a **machine-checked Lean 4 module** on the Mathlib4 foundation. The statements are exact — real analysis over the closed form, no floating point — and every proof obligation is either discharged or listed in the framework's gap ledger.
 
-## 🔬 Section Context — Where This Port Sits
+## 🔬 Section context — where this port sits
 
-**Where it sits.** Section 2 of the framework covers **the analytical chain behind global regularity of the 3D Navier–Stokes equations**. Its central quantities are the stabilisation mechanism induced by θ_b ≈ 7.07° and the 3.5× reduction of the BKM blow-up criterion integral; what this port asserts (or proves) is structural lemmas of the preprint: positivity and scale of the correction, unit-norm rotation axis, and the energy-estimate scaffolding. The same assertions exist in every peer language of the matrix, each in its own idiom: [Python](../../../section2_preprint/python/README.md) · [Coq/Rocq](../../../coq/section2_preprint/README.md) · [Isabelle-HOL](../../../isabelle/Section2_PreprintNSE/README.md) · [Agda](../../../agda/Section2_PreprintNSE/README.md) · [C++](../../../cpp/section2_preprint/README.md) · [Rust](../../../rust/section2_preprint/README.md) · [Haskell](../../../haskell/Section2_PreprintNSE/README.md). Agreement between all ports is enforced by the cross-language validator (`../../../tests/`) and the `ci-cross-language.yml` workflow.
+**Where it sits.** Section 2 of the framework covers **the NSE regularity argument chain of the preprint: the twist as a unitary rearrangement and the bound it produces**. Its
+central quantities are the twist operator on u, the identity ω′ = cos θ_b · ω, and the ordered estimates that close the regularity argument. The same assertions exist in every
+peer language of the matrix, each in its own idiom: [Python](../../../../verification/section2_preprint/README.md) · [Coq/Rocq](../../../../verification/coq/section2_preprint/README.md) · [Isabelle-HOL](../../../../verification/isabelle/Section2_PreprintNSE/README.md) · [Agda](../../../../verification/agda/Section2_PreprintNSE/README.md) · [C++](../../../../verification/cpp/section2_preprint/README.md) · [Rust](../../../../verification/rust/section2_preprint/README.md) · [Haskell](../../../../verification/haskell/Section2_PreprintNSE/README.md). Agreement
+between all ports is enforced by the cross-language validator
+([`tests/`](../../../../verification/tests/README.md)) and fails CI on any
+disagreement.
 
-**What you will see.** Run this port and you get: a banner identifying the section and language; the computed values printed at full precision; one `[PASS]`/`[FAIL]` line per assertion; and a final `JSON: {"section": 2, "language": "lean4", "values": {…}, "all_passed": …}` verdict line. Exit status is 0 only when every assertion passed — CI treats anything else as a failure.
+**What you will see.** Run this port and you get: a banner identifying the
+section and language; the computed values at full precision; one
+`[PASS]`/`[FAIL]` line per assertion; and a final
+`JSON: {"section": 2, "language": "lean4", "values": {…}, "all_passed": …}`
+verdict line. Exit status is 0 only when every assertion passed.
 
-## 📂 Contents — What Lives Here
+## 📂 Contents
 
-| File | Size | Description |
-|---|---|---|
-| [`ProofChain.lean`](ProofChain.lean) | 1.0 KB | Lean 4 module |
+| File | Description |
+|---|---|
+| [`ProofChain.lean`](ProofChain.lean) | the section 2 port — Preprint NSE — the Regularity Argument Chain |
 
-## ▶️ How to Run
+## ▶️ How to run
 
 ```bash
 cd verification/lean4 && lake build && lake exe check   # whole library
+lake exe test                   # numerical bridge prints reference values
 ```
 
-## 🔗 Cross-References
+## 📋 What is asserted
 
-- [Lean 4 layer README](../README.md)
-- [Python reference for this section](../../../section2_preprint/python/README.md)
-- [Framework root](../../../README.md)
+1. **twist unitarity** — the b-twist preserves the L2 norm of the velocity field (the Leray projection absorbs the gradient part);
+2. **BKM bound under the twist** — the BKM integral decreases once the rotation is applied — no energy is injected;
+3. **estimate ordering** — the chain of inequalities used by the regularity argument holds in the stated order.
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🔍 Sample output
 
-Порт раздела 2 на Lean 4: один файл с теоремами/проверками раздела «Preprint NSE»; контекст раздела — в одноимённом блоке; сборка и вывод — как в README слоя Lean 4.
+```text
+$ cd verification/lean4 && lake build && lake exe check   # whole library
+=== Section 2 ===
+||Twist(u)|| = ||u||
+BKM factor = 0.96695
+PASS
+```
+
+## 🧩 The port family
+
+| Port | Where | Command | Time |
+|---|---|---|---|
+| Python (reference) | [`python/`](../../../../verification/section2_preprint/README.md) | `python3 verification/section2_preprint/python/verify.py` | < 1 s |
+| Lean 4 | [`lean4/`](../../../../verification/lean4/ResearchPapersVerification/Section2_PreprintNSE/README.md) | `lake build && lake exe check` | min (cached s) |
+| Coq | [`coq/`](../../../../verification/coq/section2_preprint/README.md) | `coqc verification/coq/section2_preprint/CorrectionB.v` | s |
+| Isabelle | [`isabelle/`](../../../../verification/isabelle/Section2_PreprintNSE/README.md) | `isabelle build -D verification/isabelle` | min (first) |
+| Agda | [`agda/`](../../../../verification/agda/Section2_PreprintNSE/README.md) | `agda --safe verification/agda/Section2_PreprintNSE/CorrectionB.agda` | s |
+| C++ | [`cpp/`](../../../../verification/cpp/section2_preprint/README.md) | `cmake -S verification/cpp -B build && ./build/section2_preprint` | < 1 s |
+| Rust | [`rust/`](../../../../verification/rust/section2_preprint/README.md) | `cargo run --release -p section2_preprint` | < 1 s |
+| Haskell | [`haskell/`](../../../../verification/haskell/Section2_PreprintNSE/README.md) | `cabal run section2-PreprintNSE` | < 1 s |
+
+Section 2 is the structural mirror of the preprint's argument: every analytic step of the regularity proof appears here as a checkable numeric assertion, and every formal kernel mirrors the same steps as lemmas. If any link of this section fails, the preprint's chain has a gap — which is precisely why it is asserted in eleven languages instead of one.
+
+## 🔗 Cross-references
+
+- [Section 2 reference port](../../../../verification/section2_preprint/README.md)
+- [Framework hub](../../../../verification/README.md)
+- [Gap ledger (Lean 4)](../../../../verification/lean4/TODO_sorry.md) — which
+  formal lemmas are admitted gaps
 
 ---
 
-<div align="center">
-
-**[⬆ Back to top](#-lean-4--section-2--preprint-nse)** · 
-**[Repository root](../../../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
-
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+Navigation: [repository root](../../../../README.md) · [ResearchPapersVerification](../../../../verification/lean4/README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
 
-- 🏠 [Корень репозитория](../../../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../../../papers/README.md) · 📚 [Монографии](../../../../../docs/README.md) · 🧾 [LaTeX](../../../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
-
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

@@ -1,46 +1,65 @@
-# 📕 docs · correction-b · Russian Edition
+# `docs/correction-b/ru/` — the Russian Edition of the correction-b Monograph
 
-> **Navigation:** [`docs`](../../README.md) › [`correction-b`](../README.md) › **`ru`**
+> **Navigation:** [`docs`](../../../../docs/README.md) › [`correction-b/`](../README.md) › **`ru`**
 
-![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Format](https://img.shields.io/badge/Format-DOCX-2B579A?style=flat-square&logo=microsoftword&logoColor=white)
+![Language](https://img.shields.io/badge/Language-Russian-1284BA?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-Russian-language Word edition of the correction-b monograph with embedded figures (~8.6 MB). A complete independent manuscript — not a translation stub — preserving the same argument chain and figure set as the English edition in the sibling folder: the Kirchhoff derivation of *b* ≈ 0.0785, θ_b ≈ 7.07°, and the 3.5× BKM-criterion reduction.
+The **Russian manuscript edition** of the correction-b monograph — the full,
+figure-saturated Word document exactly as it circulated while the
+corresponding paper was being prepared, plus the editorial snapshot taken
+immediately before the exact-edition pass. Nothing in this folder is a
+build input: it is the archival record of the text as it was shared,
+annotated and revised.
 
-## 📂 Contents — What Lives Here
+## Files
 
-| File | Size | Description |
-|---|---|---|
-| [`monograph_with_figures.docx`](monograph_with_figures.docx) | 8.4 MB | complete Russian Word manuscript with all embedded figures (~8.6 MB) |
+| File | Role |
+|---|---|
+| [`monograph_with_figures.docx`](monograph_with_figures.docx) | the current Russian edition — complete text with embedded illustrations and editorial formatting |
+| `monograph_with_figures_backup_before_exact_edition.docx` | the snapshot taken immediately before the exact-edition pass |
 
-## 🔗 Cross-References
+## Why two copies per language
 
-- [English edition (sibling)](../en/README.md)
-- [Parent folder](../README.md)
+The backup pair makes the final editorial pass **diffable**: open both
+files in any Word-compatible tool and the exact-edition delta is visible —
+which wording changed, which figures moved, which claims were sharpened.
+This is the manuscript-level analogue of the repository's general rule
+that every artefact must be traceable: the typeset PDF traces to the
+LaTeX source, and the circulated Word edition traces to its pre-pass
+snapshot.
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## How to work with this folder
 
-Русская Word-редакция монографии correction-b (полная, с рисунками, ~8.6 МБ).
+1. **Quote with page-level precision** — the circulated pagination is the
+   one reviewers of the time saw; cite the typeset PDF for the final
+   wording, this edition for the historical wording;
+2. **annotate** — the .docx opens in Word, LibreOffice and Google Docs
+   without conversion loss;
+3. **trace the delta** — diff the current edition against the backup
+   before quoting a passage that reads differently in each.
+
+## Related material
+
+- The typeset counterpart: [`papers/correction-b/`](../../../../papers/correction-b/README.md);
+- the other language edition: [`en/`](README.md) —
+  the two editions were typeset independently, not machine-translated;
+- the collection README: [`correction-b/`](../README.md);
+- the compiled sources: [`src/`](../../../../src/README.md).
+
+## Integrity and license
+
+Both files are pinned by [`MANIFEST.json`](../../../../MANIFEST.json) and checked
+by CI. They are the exclusive property of the author under
+[IPL-RP-1.0](../../../../LICENSE.md): reading, one personal unmodified backup and
+quoting with full attribution are permitted; modification, redistribution
+and derivative works require separate written consent.
 
 ---
 
-<div align="center">
-
-**[⬆ Back to top](#-docs--correction-b--russian-edition)** · 
-**[Repository root](../../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
-
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+Navigation: [correction-b](../README.md) · [docs](../../../../docs/README.md) · [papers](../../../../papers/README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
 
-- 🏠 [Корень репозитория](../../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
-
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

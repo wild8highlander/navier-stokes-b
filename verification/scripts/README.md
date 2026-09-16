@@ -1,54 +1,36 @@
-# 📜 verification · scripts — Cross-Validation & API Bootstrap
+# 🐚 `verification/scripts/` — Cross-Validation and API Bootstrap
 
 > **Navigation:** [`verification`](../README.md) › **`scripts`**
 
-![Type](https://img.shields.io/badge/Type-Shell-89E051?style=flat-square&logo=gnubash&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Type](https://img.shields.io/badge/Type-Shell_scripts-4EAA25?style=flat-square&logo=gnubash&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-Operational **shell scripts** for the framework's two composed workflows. `run_cross_validation.sh` drives the cross-language validation locally — invoking the section ports across the available toolchains and collecting their verdicts, the same duty `ci-cross-language.yml` performs in CI. `start_api.sh` bootstraps the REST API: installs the pinned requirements, exports the environment and launches [`api/server.py`](../api/README.md).
+The one-liner shell entry points for the two most common maintenance
+operations: running the whole cross-language validation and booting the
+REST API. They exist so the operations are copy-pasteable from CI logs and
+issue comments without re-reading the framework hub.
 
-## 📂 Contents — What Lives Here
+## Contents
 
-| File | Size | Description |
-|---|---|---|
-| [`run_cross_validation.sh`](run_cross_validation.sh) | 48 B | local cross-language validation driver — runs ports, collects verdicts |
-| [`start_api.sh`](start_api.sh) | 77 B | API bootstrap — installs requirements, launches the Flask verifier service |
+| File | Description |
+|---|---|
+| [`run_cross_validation.sh`](run_cross_validation.sh) | runs every computational port and the validator — the cross-language gate in one command |
+| [`start_api.sh`](start_api.sh) | installs the API requirements and boots the Flask server |
 
-## ▶️ How to Run
+## Usage
 
 ```bash
 bash verification/scripts/run_cross_validation.sh
 bash verification/scripts/start_api.sh
 ```
 
-## 🔗 Cross-References
-
-- [REST API](../api/README.md)
-- [CI cross-language workflow](../../.github/workflows/README.md)
-
-## 🇷🇺 Краткое резюме (Russian Summary)
-
-Два shell-скрипта: локальная кросс-валидация портов (аналог CI) и запуск REST-API (установка зависимостей + старт Flask).
+Both scripts are thin wrappers (set -e, cd to the repo root, invoke the
+documented entry points) — read them in ten seconds, trust them in one.
 
 ---
 
-<div align="center">
-
-**[⬆ Back to top](#-verification--scripts--cross-validation--api-bootstrap)** · 
-**[Repository root](../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
-
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+Navigation: [repository root](../../README.md) · [tests](../tests/README.md) · [api](../api/README.md) · [IPL-RP-1.0](../../LICENSE.md)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
-
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

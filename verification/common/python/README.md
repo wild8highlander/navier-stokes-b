@@ -1,49 +1,35 @@
-# 🧰 common · python — the Utility Package
+# 🧰 `common/python/` — the Utility Package
 
-> **Navigation:** [`verification`](../../README.md) › [`common`](../README.md) › **`python`**
+> **Navigation:** [`common`](../README.md) › **`python`**
 
-![Python](https://img.shields.io/badge/Python-3.10–3.12-informational?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **utility package** itself: four modules totalling ~2 KB. `verifier_base.py` (the heart) implements the shared verifier protocol; `config.py` the settings; `main.py` the aggregate CLI; `__init__.py` the exports. Imported by the API, the demos and the notebooks — see the parent README for the design notes.
+The **utility package itself**: four modules totalling ~2 KB. Imported by
+the [API](../../api/README.md), the [demos](../../demo/README.md) and the
+[notebooks](../../notebooks/README.md); the design notes live in the
+[parent README](../README.md).
 
-## 📂 Contents — What Lives Here
+## Modules
 
-| File | Size | Description |
-|---|---|---|
-| [`__init__.py`](__init__.py) | 48 B | package exports |
-| [`config.py`](config.py) | 766 B | central configuration — section paths, tolerances, output options |
-| [`main.py`](main.py) | 617 B | aggregate CLI — runs multiple sections through the shared base |
-| [`verifier_base.py`](verifier_base.py) | 714 B | base verifier class — banner, assertion ledger, JSON verdict emission |
+| File | Description |
+|---|---|
+| [`__init__.py`](__init__.py) | package exports |
+| [`config.py`](config.py) | central configuration — section paths, tolerances, output options |
+| [`main.py`](main.py) | the aggregate CLI — runs sections through the shared base (`--section N --preset …`) |
+| [`verifier_base.py`](verifier_base.py) | the base verifier class — banner, assertion ledger, JSON verdict emission; the single implementation of the framework's output contract |
 
-## 🔗 Cross-References
+## Extend
 
-- [Parent — common/](../README.md)
-- [Framework root](../../README.md)
-
-## 🇷🇺 Краткое резюме (Russian Summary)
-
-Пакет утилит: verifier_base (протокол верификатора), config, main (агрегатор CLI), __init__.
-
----
-
-<div align="center">
-
-**[⬆ Back to top](#-common--python--the-utility-package)** · 
-**[Repository root](../../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+Adding a section to the aggregate flow: append its path and tolerances in
+`config.py`; the base class handles banner, ledger and verdict. Adding a
+new output surface (API route, demo widget): import `verifier_base` — do
+not re-implement the protocol.
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+---
 
-- 🏠 [Корень репозитория](../../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+Navigation: [common](../README.md) · [framework hub](../../README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

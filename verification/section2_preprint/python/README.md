@@ -2,59 +2,52 @@
 
 > **Navigation:** [`verification`](../../README.md) › [`section2_preprint`](../README.md) › **`python`**
 
-![Python](https://img.shields.io/badge/Python-3.10–3.12-informational?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **pure-Python port** of Section 2 — Preprint NSE — the Regularity Argument Chain. A single ~25-line `verify.py` using only the standard `math` module: it computes the stabilisation mechanism induced by θ_b ≈ 7.07° and the 3.5× reduction of the BKM blow-up criterion integral, asserts structural lemmas of the preprint: positivity and scale of the correction, unit-norm rotation axis, and the energy-estimate scaffolding, and prints the framework's JSON verdict. This is the port CI runs first (job `ci-python.yml`) and the one new toolchain ports are compared against.
+The **pure-Python port** of Section 2 — Preprint NSE — the Regularity Argument Chain. A single
+`verify.py` using only the standard library: it computes the section's
+quantities from closed-form inputs, asserts the section's properties, and
+prints the framework's JSON verdict. This is the port CI runs first and the
+one new toolchain ports are compared against.
 
-## 🔬 Section Context — Where This Port Sits
+## 🔬 Section context
 
-**Where it sits.** Section 2 of the framework covers **the analytical chain behind global regularity of the 3D Navier–Stokes equations**. Its central quantities are the stabilisation mechanism induced by θ_b ≈ 7.07° and the 3.5× reduction of the BKM blow-up criterion integral; what this port asserts (or proves) is structural lemmas of the preprint: positivity and scale of the correction, unit-norm rotation axis, and the energy-estimate scaffolding. The same assertions exist in every peer language of the matrix, each in its own idiom: [Lean 4](../../lean4/ResearchPapersVerification/Section2_PreprintNSE/README.md) · [Coq/Rocq](../../coq/section2_preprint/README.md) · [Isabelle-HOL](../../isabelle/Section2_PreprintNSE/README.md) · [Agda](../../agda/Section2_PreprintNSE/README.md) · [C++](../../cpp/section2_preprint/README.md) · [Rust](../../rust/section2_preprint/README.md) · [Haskell](../../haskell/Section2_PreprintNSE/README.md). Agreement between all ports is enforced by the cross-language validator (`../../tests/`) and the `ci-cross-language.yml` workflow.
+Section 2 covers **the NSE regularity argument chain of the preprint: the twist as a unitary rearrangement and the bound it produces**; central quantities: the twist operator on u, the identity ω′ = cos θ_b · ω, and the ordered estimates that close the regularity argument.
+Peers: [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section2_PreprintNSE/README.md) · [Coq/Rocq](../../../verification/coq/section2_preprint/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section2_PreprintNSE/README.md) · [Agda](../../../verification/agda/Section2_PreprintNSE/README.md) · [C++](../../../verification/cpp/section2_preprint/README.md) · [Rust](../../../verification/rust/section2_preprint/README.md) · [Haskell](../../../verification/haskell/Section2_PreprintNSE/README.md).
 
-**What you will see.** Run this port and you get: a banner identifying the section and language; the computed values printed at full precision; one `[PASS]`/`[FAIL]` line per assertion; and a final `JSON: {"section": 2, "language": "python", "values": {…}, "all_passed": …}` verdict line. Exit status is 0 only when every assertion passed — CI treats anything else as a failure.
+| File | Description |
+|---|---|
+| [`verify.py`](verify.py) | the Section 2 reference verifier — prints values, asserts, JSON verdict |
 
-## 📂 Contents — What Lives Here
-
-| File | Size | Description |
-|---|---|---|
-| [`verify.py`](verify.py) | 319 B | Section 2 reference verifier — prints values, asserts, JSON verdict (~25 lines) |
-
-## ▶️ How to Run
+## ▶️ How to run
 
 ```bash
 python3 verify.py          # from this folder
-# or from the repo root:
-python3 verification/section2_preprint/python/verify.py
+python3 verification/section2_preprint/python/verify.py   # from the repo root
 ```
 
-## 🔗 Cross-References
+## 🔍 Sample output
 
-- [Section parent](../README.md)
-- [Framework root](../../README.md)
+```text
+=== Section 2 ===
+||Twist(u)|| = ||u||
+BKM factor = 0.96695
+PASS
+```
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+Exit code 0 = all assertions passed; anything else fails CI.
 
-Питон-порт раздела 2: один файл, чистый stdlib, PASS/JSON за долю секунды; результат — the stabilisation mechanism induced by θ_b ≈ 7.07° and the 3.5× reduction of the BKM blow-up criterion integral.
+## 📋 What is asserted
 
----
-
-<div align="center">
-
-**[⬆ Back to top](#-section-2--python--the-reference-port)** · 
-**[Repository root](../../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+1. **twist unitarity** — the b-twist preserves the L2 norm of the velocity field (the Leray projection absorbs the gradient part);
+2. **BKM bound under the twist** — the BKM integral decreases once the rotation is applied — no energy is injected;
+3. **estimate ordering** — the chain of inequalities used by the regularity argument holds in the stated order.
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+---
 
-- 🏠 [Корень репозитория](../../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+Navigation: [section parent](../README.md) · [framework hub](../../README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

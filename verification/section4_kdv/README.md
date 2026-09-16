@@ -1,92 +1,73 @@
-# 🐍 Section 4 — KdV — Soliton Interactions under the b-Correction (Python Reference)
+# 🐍 Section 4 — KdV (Python Reference)
 
 > **Navigation:** [`verification`](../README.md) › **`section4_kdv`**
 
-![Python](https://img.shields.io/badge/Python-3.10–3.12-informational?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![Section](https://img.shields.io/badge/Section-4-blue?style=flat-square)
+![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![Section](https://img.shields.io/badge/Section-4-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-This directory is the **Python reference implementation** of research Section 4 — the fourth section of the framework, covering the Korteweg–de Vries equation and its soliton interactions. Within the framework's layout it is the *numerical reference tier*: the simplest, dependency-free port that every other language port can be diffed against.
+This directory is the **Python reference implementation** of research
+Section 4 — KdV — Soliton Interactions under the b-Correction. Within the framework it is the *numerical
+reference tier*: the simplest, dependency-free port that every other
+language port can be diffed against. The implementation is intentionally
+minimal — pure standard library, a single `verify.py` entry point under
+[`python/`](python/README.md), and the framework's uniform output contract:
+the computed quantities are printed, each expected property is asserted
+with a `[PASS]` line, and the run ends with the `JSON:` verdict.
 
-The implementation is intentionally minimal — pure standard library (`math` only), a single `verify.py` entry point, and the framework's uniform output contract: the computed quantities are printed, each expected property is asserted with a `[PASS]` line, and the run ends with the `JSON:` verdict. For Section 4 the quantities are pseudospectral treatment of the KdV hierarchy and the manifestation of the polarization correction in soliton collision dynamics; the assertions exercise conservation-law identities of the integrable KdV hierarchy and the numeric stability of the pseudospectral scheme.
+## 🔬 What this section covers
 
-Run it with `python3 python/verify.py` — total runtime is well under a second. The same section exists in the formal tier ([`lean4`](../lean4/README.md), [`coq`](../coq/README.md), [`isabelle`](../isabelle/README.md), [`agda`](../agda/README.md)) and in the extended computational ports ([`cpp`](../cpp/README.md), [`rust`](../rust/README.md), [`haskell`](../haskell/README.md)); CI runs them all in [`ci-cross-language.yml`](../../.github/workflows/README.md).
+**Coverage.** Section 4 covers **soliton interactions of the Korteweg–de Vries equation under the b-correction: the integrable continuation of the program**. Central quantities:
+the conserved quantities (mass, momentum, energy) across the two-soliton interaction, and the closed-form sech² soliton profile. The same assertions live in every peer language:
+[Lean 4](../../verification/lean4/ResearchPapersVerification/Section4_KdV/README.md) · [Coq/Rocq](../../verification/coq/section4_kdv/README.md) · [Isabelle-HOL](../../verification/isabelle/Section4_KdV/README.md) · [Agda](../../verification/agda/Section4_KdV/README.md) · [C++](../../verification/cpp/section4_kdv/README.md) · [Rust](../../verification/rust/section4_kdv/README.md) · [Haskell](../../verification/haskell/Section4_KdV/README.md).
 
-## 📂 Contents — What Lives Here
+## 📂 Contents
 
-| File | Size | Description |
-|---|---|---|
-| [`python/`](python/) | — | the Python reference port — single verify.py entry point |
+| Item | Description |
+|---|---|
+| [`python/`](python/README.md) | the runnable reference port — a single `verify.py` |
 
-## 🗂 Directory Layout
-
-```
-section4_kdv/
-├── python/   # 2 files
-│   ├── README.md  (this file)
-│   └── verify.py
-└── README.md  (this file)
-```
-
-## ▶️ How to Run
+## ▶️ How to run
 
 ```bash
 python3 python/verify.py
+# runtime: well under a second, no dependencies, no configuration
 ```
 
-## 🔗 Cross-References
+## 📋 What is asserted
 
-- [Framework root](../README.md)
-- [Root README — verification matrix](../README.md)
+1. **conservation across the interaction** — the conserved quantities measured before and after the two-soliton collision agree to tolerance;
+2. **closed-form soliton** — the sech² profile substituted into KdV satisfies the equation (the formal counterpart is soliton_solves_KdV);
+3. **phase shift bookkeeping** — the interaction's phase shifts are recorded and match the integrable theory.
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🔍 Sample output
 
-**verification/section4_kdv/** — Python-референс раздела 4 (KdV — Soliton Interactions under the b-Correction): чистый stdlib, один verify.py, вывод PASS/JSON; результат — pseudospectral treatment of the KdV hierarchy and the manifestation of the polarization correction in soliton collision dynamics.
-
----
-
-<div align="center">
-
-**[⬆ Back to top](#-section-4--kdv--soliton-interactions-under-the-b-correction-python-reference)** · 
-**[Repository root](../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-
----
-## 🔬 Deep Dive — Section 4
-
-**What is verified here.** KdV soliton interactions under the b-correction: the pseudospectral machinery, conservation of mass/momentum/energy across interactions, and the closed-form two-soliton agreement. The C++ port is the computational workhorse; the formal tier treats the integrability identities.
-
-**Reference command.**
-
-```bash
-`python3 verification/section4_kdv/python/verify.py`
+```text
+$ python3 verification/section4_kdv/python/verify.py
+=== Section 4 ===
+mass conserved: |dM| = 3.1e-13
+sech^2 residual = 2.4e-12
+PASS
 ```
 
-**Formal counterparts.** The structural statements live in the four proof assistants: `../../lean4/ResearchPapersVerification/Section4_KdV/` · `../../coq/section4_kdv/` · `../../isabelle/Section4_KdV/` · `../../agda/Section4_KdV/` — with lemma names mirroring the computational assertions (see the root README's [formal deep dive](../../README.md#-appendix-w--formal-verification-deep-dive) for the Lean anatomy).
+## 🧩 The port family
 
-**Where it appears in the papers.** Each section maps onto a specific document layer: the preprint for the chain-type claims, the flagship paper for the constant's consequences, the KdV chapter for the integrable-systems results, the Klein-attractor reports for the dynamical-systems content, and the AB-Cloud monographs for the spectral programme. The mapping table is in the root README's [Section-by-Section Guide](../../README.md#-section-by-section-verification-guide).
+| Port | Where | Command | Time |
+|---|---|---|---|
+| Python (reference) | [`python/`](../../verification/section4_kdv/README.md) | `python3 verification/section4_kdv/python/verify.py` | < 1 s |
+| Lean 4 | [`lean4/`](../../verification/lean4/ResearchPapersVerification/Section4_KdV/README.md) | `lake build && lake exe check` | min (cached s) |
+| Coq | [`coq/`](../../verification/coq/section4_kdv/README.md) | `coqc verification/coq/section4_kdv/CorrectionB.v` | s |
+| Isabelle | [`isabelle/`](../../verification/isabelle/Section4_KdV/README.md) | `isabelle build -D verification/isabelle` | min (first) |
+| Agda | [`agda/`](../../verification/agda/Section4_KdV/README.md) | `agda --safe verification/agda/Section4_KdV/CorrectionB.agda` | s |
+| C++ | [`cpp/`](../../verification/cpp/section4_kdv/README.md) | `cmake -S verification/cpp -B build && ./build/section4_kdv` | < 1 s |
+| Rust | [`rust/`](../../verification/rust/section4_kdv/README.md) | `cargo run --release -p section4_kdv` | < 1 s |
+| Haskell | [`haskell/`](../../verification/haskell/Section4_KdV/README.md) | `cabal run section4-KdV` | < 1 s |
 
-**Contract reminder.** The port prints a banner, per-assertion `[PASS]/[FAIL]` lines, and the JSON verdict; exit code 0 only on full success. The cross-language validator consumes that JSON mechanically — any disagreement across languages fails CI.
+Section 4 is the integrable-systems bridge of the program: the KdV chapter (papers/kdv) claims the same constant b governs soliton interactions, and this section is where that claim is executable. The C++ port is the computational workhorse here — the pseudospectral solver — while every other port checks the conservation bookkeeping on the closed-form solutions.
 
 ---
-Conservation is the contract here: mass, momentum, energy across the interaction, plus the closed-form two-soliton agreement. The C++ port's FFT machinery is the performance-critical piece; the Python port is the definitional check. A drift in conserved quantities is always a discretisation or a correction-parameter bug — both fail here first.
-
----
-## 🔗 Cross-Links
-
-Workhorse: [cpp Section4](../cpp/README.md) · Formal: [lean4](../lean4/README.md) · [coq](../coq/README.md) · Papers: [kdv chapter](../../papers/kdv/README.md) · Word edition: [docs/kdv](../../docs/kdv/README.md).
-
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+Navigation: [repository root](../../README.md) · [framework hub](../README.md) · [section 4 peers](../../verification/README.md) · [IPL-RP-1.0](../../LICENSE.md)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
-
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

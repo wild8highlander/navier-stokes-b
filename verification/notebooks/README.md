@@ -1,53 +1,48 @@
-# 📓 verification · notebooks — the Jupyter Entry Point
+# 📓 `verification/notebooks/` — the Jupyter Entry Point
 
-> **Navigation:** [`verification`](../README.md) › **`notebooks`**
+> **Navigation:** [`verification`](../README.md) › **`notebook`**
 
-![Type](https://img.shields.io/badge/Type-Jupyter-F37626?style=flat-square&logo=jupyter&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Jupyter](https://img.shields.io/badge/Tool-Jupyter-F37626?style=flat-square&logo=jupyter&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **Jupyter notebook entry point** of the framework. The pinned `requirements.txt` installs the notebook stack plus the framework's Python dependencies so a notebook session can import the section verifiers and the shared utilities from [`common/`](../common/README.md), run them cell-by-cell, and visualise the output. This layer is for exploration and teaching — the authoritative results remain the CLI ports and their CI runs.
+The notebook-based access layer to the verification ports: launch Jupyter
+from this directory and drive the verifiers interactively — run a section,
+inspect the JSON verdict, plot the residuals, compare languages cell by
+cell.
 
-## 📂 Contents — What Lives Here
+## Contents
 
-| File | Size | Description |
-|---|---|---|
-| [`requirements.txt`](requirements.txt) | 40 B | pinned notebook-stack dependencies (jupyter + framework deps) |
+| File | Description |
+|---|---|
+| [`requirements.txt`](requirements.txt) | pinned Jupyter + scientific dependencies |
 
-## ▶️ How to Run
+## How to use
 
 ```bash
 pip install -r verification/notebooks/requirements.txt
-jupyter lab
+cd verification/notebooks && jupyter lab
 ```
 
-## 🔗 Cross-References
+Suggested first cells:
 
-- [Shared utilities](../common/README.md)
-- [Framework root](../README.md)
+```python
+import subprocess, json, pathlib
+root = pathlib.Path("../..").resolve()
+out = subprocess.run(
+    ["python3", str(root / "verification/section1_correction_b/python/verify.py")],
+    capture_output=True, text=True)
+print(out.stdout)
+```
 
-## 🇷🇺 Краткое резюме (Russian Summary)
-
-Вход для Jupyter: закреплённые зависимости ноутбука + фреймворка; импортируйте верификаторы разделов и запускайте по ячейкам.
-
----
-
-<div align="center">
-
-**[⬆ Back to top](#-verification--notebooks--the-jupyter-entry-point)** · 
-**[Repository root](../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+The notebook path is intentionally thin: it adds no logic of its own, it
+just shells into the same contract-based ports — everything the notebook
+shows, the CLI shows identically, and the
+[validator](../tests/README.md) consumes.
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+---
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+Navigation: [repository root](../../README.md) · [framework hub](../README.md) · [IPL-RP-1.0](../../LICENSE.md)
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

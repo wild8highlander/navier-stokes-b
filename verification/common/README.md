@@ -1,61 +1,44 @@
-# 🧰 verification · common — Shared Python Utilities
+# 🧰 `verification/common/` — Shared Utilities
 
 > **Navigation:** [`verification`](../README.md) › **`common`**
 
-![Python](https://img.shields.io/badge/Python-3.10–3.12-informational?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **shared utility layer** of the Python side of the framework: the pieces that every front-end (API, demos, notebooks) reuse instead of re-implementing. `python/verifier_base.py` defines the common verifier behaviour — banner printing, assertion bookkeeping and the final JSON verdict — so all front-ends speak the same output contract as the standalone ports; `config.py` centralises paths and tolerances; `main.py` provides a CLI aggregation entry point; `__init__.py` exposes the package surface.
+The shared plumbing of the Python tier: the verifier base class that
+implements the framework's output protocol (banner → assertions → JSON
+verdict → exit code), the central configuration, and the aggregate CLI
+that runs sections through the shared base. Everything user-facing — the
+[REST API](../api/README.md), the [demos](../demo/README.md), the
+[notebooks](../notebooks/README.md) — is a thin shell over this package.
 
-The layer is intentionally tiny (~2 KB total) and pure standard library where possible, matching the framework's "no hidden dependencies" rule. The reference implementations in `section*/python/` do not import it (they are single-file by design); this layer exists for the composed front-ends.
+## Design notes
 
-## 📂 Contents — What Lives Here
+- **The protocol lives in one place.** The PASS/JSON/exit-code contract is
+  implemented once, in `verifier_base.py`; a change to the contract is a
+  one-file diff plus the atomic validator update — not a sweep over ports.
+- **Configuration is data.** Section paths, tolerances and output options
+  sit in `config.py`, so adding a section to the aggregate CLI is a data
+  change.
+- **The CLI is for humans and CI.** `main.py` runs one or all sections with
+  the same output the standalone ports produce.
 
-| File | Size | Description |
-|---|---|---|
-| [`python/`](python/) | — | the package itself — base classes, config, CLI aggregate |
+## Contents
 
-## 🗂 Directory Layout
+| Item | Contents |
+|---|---|
+| [`python/`](python/README.md) | the package itself: `verifier_base`, `config`, `main`, `__init__` |
 
+## Usage
+
+```bash
+python3 verification/common/python/main.py --section 1 --preset default
 ```
-common/
-├── python/   # 5 files
-│   ├── __init__.py
-│   ├── config.py
-│   ├── main.py
-│   ├── README.md  (this file)
-│   └── verifier_base.py
-└── README.md  (this file)
-```
-
-## 🔗 Cross-References
-
-- [Framework root](../README.md)
-- [API layer](../api/README.md)
-
-## 🇷🇺 Краткое резюме (Russian Summary)
-
-**verification/common/** — общие утилиты Python-стороны: базовый класс верификатора (баннер, PASS-книга, JSON-вердикт), конфиг путей и допусков, CLI-агрегатор. Используется API/демо/ноутбуками; референс-порты сознательно самодостаточны.
 
 ---
 
-<div align="center">
-
-**[⬆ Back to top](#-verification--common--shared-python-utilities)** · 
-**[Repository root](../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
-
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+Navigation: [repository root](../../README.md) · [python package](python/README.md) · [api](../api/README.md) · [IPL-RP-1.0](../../LICENSE.md)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
-
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

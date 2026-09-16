@@ -1,59 +1,83 @@
-# Ⓜ️ Agda · Section 1 — Correction b
+# Agda · Section 1 — Correction b
 
-> **Navigation:** [`verification`](../../README.md) › [`agda`](../README.md) › **`Section1_CorrectionB`**
+> **Navigation:** [`verification`](../../../verification/README.md) › **`Section1_CorrectionB`**
 
-![Agda](https://img.shields.io/badge/Agda-2.6-informational?style=flat-square&logo=agda&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![Section](https://img.shields.io/badge/Section-1-blue?style=flat-square)
+![Agda](https://img.shields.io/badge/Agda-2.6-CB6BA7?style=flat-square&logo=agda&logoColor=white) ![Section](https://img.shields.io/badge/Section-1-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **Agda port of Section 1** — Correction b — the Universal Polarization Constant. This folder is the section's slot in the Agda layer of the framework: the file below states exactly the assertions the Python reference makes, in Agda idiom — dependently-typed constructive development; π and √3 are explicit postulates, keeping the trust base minimal and visible.
+The **Agda port of Section 1** — Correction b — the Universal Polarization Constant. This folder is
+a **dependently-typed Agda module** compiled with `--safe`. π and √3 are explicit `postulate`s — the minimal trust base — and everything else is constructed, so the file enumerates exactly what the formal layer assumes.
 
-## 🔬 Section Context — Where This Port Sits
+## 🔬 Section context — where this port sits
 
-**Where it sits.** Section 1 of the framework covers **the universal polarization correction derived from the Kirchhoff point-vortex system**. Its central quantities are b = π / (4·π² + 2·π·√3) ≈ 0.0785, the rotation angle θ_b = arcsin(b) ≈ 7.07°, and the stabilisation identity cos²θ_b + sin²θ_b = 1; what this port asserts (or proves) is 0 < b < 1 (both bounds), sin θ_b = b, cos²θ_b + sin²θ_b = 1, and the reference interval 0.07 < b < 0.08 against the published value 0.0785. The same assertions exist in every peer language of the matrix, each in its own idiom: [Python](../../section1_correction_b/python/README.md) · [Lean 4](../../lean4/ResearchPapersVerification/Section1_CorrectionB/README.md) · [Coq/Rocq](../../coq/section1_correction_b/README.md) · [Isabelle-HOL](../../isabelle/Section1_CorrectionB/README.md) · [C++](../../cpp/section1_correction_b/README.md) · [Rust](../../rust/section1_correction_b/README.md) · [Haskell](../../haskell/Section1_CorrectionB/README.md). Agreement between all ports is enforced by the cross-language validator (`../../tests/`) and the `ci-cross-language.yml` workflow.
+**Where it sits.** Section 1 of the framework covers **the universal polarization correction derived from the Kirchhoff point-vortex system**. Its
+central quantities are b = 1/(4π + 2√3) = 0.062381194121028…, the rotation angle θ_b = arcsin(b) ≈ 3.5765°, and the stabilisation identity cos²θ_b + sin²θ_b = 1. The same assertions exist in every
+peer language of the matrix, each in its own idiom: [Python](../../../verification/section1_correction_b/README.md) · [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section1_CorrectionB/README.md) · [Coq/Rocq](../../../verification/coq/section1_correction_b/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section1_CorrectionB/README.md) · [C++](../../../verification/cpp/section1_correction_b/README.md) · [Rust](../../../verification/rust/section1_correction_b/README.md) · [Haskell](../../../verification/haskell/Section1_CorrectionB/README.md). Agreement
+between all ports is enforced by the cross-language validator
+([`tests/`](../../../verification/tests/README.md)) and fails CI on any
+disagreement.
 
-**What you will see.** Run this port and you get: a banner identifying the section and language; the computed values printed at full precision; one `[PASS]`/`[FAIL]` line per assertion; and a final `JSON: {"section": 1, "language": "agda", "values": {…}, "all_passed": …}` verdict line. Exit status is 0 only when every assertion passed — CI treats anything else as a failure.
+**What you will see.** Run this port and you get: a banner identifying the
+section and language; the computed values at full precision; one
+`[PASS]`/`[FAIL]` line per assertion; and a final
+`JSON: {"section": 1, "language": "agda", "values": {…}, "all_passed": …}`
+verdict line. Exit status is 0 only when every assertion passed.
 
-## 📂 Contents — What Lives Here
+## 📂 Contents
 
-| File | Size | Description |
-|---|---|---|
-| [`CorrectionB.agda`](CorrectionB.agda) | 323 B | Section 1 Agda module — Correction b — the Universal Polarization Constant (--safe, explicit postulates) |
+| File | Description |
+|---|---|
+| [`CorrectionB.agda`](CorrectionB.agda) | the section 1 port — Correction b — the Universal Polarization Constant |
 
-## ▶️ How to Run
+## ▶️ How to run
 
 ```bash
-cd verification/agda && agda --safe <Module>.agda   # per module
+cd verification/agda
+agda --safe Section1_CorrectionB/CorrectionB.agda                 # type-check this module
 ```
 
-## 🔗 Cross-References
+## 📋 What is asserted
 
-- [Agda layer README](../README.md)
-- [Python reference for this section](../../section1_correction_b/python/README.md)
-- [Framework root](../../README.md)
+1. **b well-defined and positive** — the closed form evaluates and satisfies 0 < b;
+2. **b < 1** — the twist stays within the physical range;
+3. **sin θ_b = b** — holds for θ_b = arcsin b (the trigonometric bridge);
+4. **rotation sanity** — the associated Rodrigues rotation is orthogonal with det 1 (the numeric echo of the formal R_b_orthogonal / R_b_det_one).
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🔍 Sample output
 
-Порт раздела 1 на Agda: один файл с теоремами/проверками раздела «Correction b»; контекст раздела — в одноимённом блоке; сборка и вывод — как в README слоя Agda.
+```text
+$ cd verification/agda
+=== Section 1 ===
+b = 0.062381194121028
+PASS
+```
+
+## 🧩 The port family
+
+| Port | Where | Command | Time |
+|---|---|---|---|
+| Python (reference) | [`python/`](../../../verification/section1_correction_b/README.md) | `python3 verification/section1_correction_b/python/verify.py` | < 1 s |
+| Lean 4 | [`lean4/`](../../../verification/lean4/ResearchPapersVerification/Section1_CorrectionB/README.md) | `lake build && lake exe check` | min (cached s) |
+| Coq | [`coq/`](../../../verification/coq/section1_correction_b/README.md) | `coqc verification/coq/section1_correction_b/CorrectionB.v` | s |
+| Isabelle | [`isabelle/`](../../../verification/isabelle/Section1_CorrectionB/README.md) | `isabelle build -D verification/isabelle` | min (first) |
+| Agda | [`agda/`](../../../verification/agda/Section1_CorrectionB/README.md) | `agda --safe verification/agda/Section1_CorrectionB/CorrectionB.agda` | s |
+| C++ | [`cpp/`](../../../verification/cpp/section1_correction_b/README.md) | `cmake -S verification/cpp -B build && ./build/section1_correction_b` | < 1 s |
+| Rust | [`rust/`](../../../verification/rust/section1_correction_b/README.md) | `cargo run --release -p section1_correction_b` | < 1 s |
+| Haskell | [`haskell/`](../../../verification/haskell/Section1_CorrectionB/README.md) | `cabal run section1-CorrectionB` | < 1 s |
+
+Section 1 is the framework's keystone: every other section references the constant it fixes. Its four assertions are the minimal complete characterisation of b for the framework's purposes — anything more belongs to the papers, anything less breaks the chain. When porting to a new language, Section 1 is the correct first target: fastest to write, easiest to diff, and it immediately joins the new language into the validator's matrix.
+
+## 🔗 Cross-references
+
+- [Section 1 reference port](../../../verification/section1_correction_b/README.md)
+- [Framework hub](../../../verification/README.md)
+- [Gap ledger (Lean 4)](../../../verification/lean4/TODO_sorry.md) — which
+  formal lemmas are admitted gaps
 
 ---
 
-<div align="center">
-
-**[⬆ Back to top](#-agda--section-1--correction-b)** · 
-**[Repository root](../../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
-
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+Navigation: [repository root](../../../README.md) · [agda](../../../verification/agda/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
-- 🏠 [Корень репозитория](../../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
-
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

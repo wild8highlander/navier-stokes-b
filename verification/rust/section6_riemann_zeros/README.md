@@ -1,73 +1,85 @@
-# Ⓜ️ Rust · Section 6 — Riemann Zeros
+# Rust · Section 6 — Riemann Zeros
 
-> **Navigation:** [`verification`](../../README.md) › [`rust`](../README.md) › **`section6_riemann_zeros`**
+> **Navigation:** [`verification`](../../../verification/README.md) › **`section6_riemann_zeros`**
 
-![Rust](https://img.shields.io/badge/Rust-1.75+-informational?style=flat-square&logo=rust&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![Section](https://img.shields.io/badge/Section-6-blue?style=flat-square)
+![Rust](https://img.shields.io/badge/Rust-1.75%2B-DEA584?style=flat-square&logo=rust&logoColor=white) ![Section](https://img.shields.io/badge/Section-6-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **Rust port of Section 6** — Riemann Zeros — the Hilbert–Pólya Programme. This folder is the section's slot in the Rust layer of the framework: the file below states exactly the assertions the Python reference makes, in Rust idiom — memory-safe port using `std` only; the crate builds each section as its own binary.
+The **Rust port of Section 6** — Riemann Zeros — the Hilbert–Pólya Programme. This folder is
+a **std-only Rust binary** — one crate in the Cargo workspace, zero external dependencies. The supply-chain is trivially auditable by reading one `main.rs`; memory safety comes from the language, not from discipline.
 
-The folder pairs the manifest with `src/` (see sibling folder) — Cargo expects the binary source under `src/main.rs`; the parent crate's `Cargo.toml` wires it as a section binary.
+## 🔬 Section context — where this port sits
 
-## 🔬 Section Context — Where This Port Sits
+**Where it sits.** Section 6 of the framework covers **the ζ-correspondence skeleton: the frozen-data embedding and the spectral statistics of the zeros**. Its
+central quantities are the frozen-data embedding, the GUE-class gap statistics of the zeros, and the Σ²(L) diagnostics. The same assertions exist in every
+peer language of the matrix, each in its own idiom: [Python](../../../verification/section6_riemann_zeros/README.md) · [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section6_RiemannZeros/README.md) · [Coq/Rocq](../../../verification/coq/section6_riemann_zeros/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section6_RiemannZeros/README.md) · [Agda](../../../verification/agda/Section6_RiemannZeros/README.md) · [C++](../../../verification/cpp/section6_riemann_zeros/README.md) · [Haskell](../../../verification/haskell/Section6_RiemannZeros/README.md). Agreement
+between all ports is enforced by the cross-language validator
+([`tests/`](../../../verification/tests/README.md)) and fails CI on any
+disagreement.
 
-**Where it sits.** Section 6 of the framework covers **the spectral correspondence between the AB-Cloud and the non-trivial zeros of the Riemann zeta function**. Its central quantities are the Hilbert–Pólya realisation, the Montgomery–Dyson GUE correspondence and the statistical identity of the two spectra; what this port asserts (or proves) is spectral-correspondence identities and the statistical machinery (⟨r⟩, KS, permutation tests) in constructive and classical form. The same assertions exist in every peer language of the matrix, each in its own idiom: [Python](../../section6_riemann_zeros/python/README.md) · [Lean 4](../../lean4/ResearchPapersVerification/Section6_RiemannZeros/README.md) · [Coq/Rocq](../../coq/section6_riemann_zeros/README.md) · [Isabelle-HOL](../../isabelle/Section6_RiemannZeros/README.md) · [Agda](../../agda/Section6_RiemannZeros/README.md) · [C++](../../cpp/section6_riemann_zeros/README.md) · [Haskell](../../haskell/Section6_RiemannZeros/README.md). Agreement between all ports is enforced by the cross-language validator (`../../tests/`) and the `ci-cross-language.yml` workflow.
+**What you will see.** Run this port and you get: a banner identifying the
+section and language; the computed values at full precision; one
+`[PASS]`/`[FAIL]` line per assertion; and a final
+`JSON: {"section": 6, "language": "rust", "values": {…}, "all_passed": …}`
+verdict line. Exit status is 0 only when every assertion passed.
 
-**What you will see.** Run this port and you get: a banner identifying the section and language; the computed values printed at full precision; one `[PASS]`/`[FAIL]` line per assertion; and a final `JSON: {"section": 6, "language": "rust", "values": {…}, "all_passed": …}` verdict line. Exit status is 0 only when every assertion passed — CI treats anything else as a failure.
+## 📂 Contents
 
-## 📂 Contents — What Lives Here
+| File | Description |
+|---|---|
+| [`src/main.rs`](src/main.rs) | the section 6 port — Riemann Zeros — the Hilbert–Pólya Programme |
+| [`Cargo.toml`](Cargo.toml) | the crate/package manifest |
 
-| File | Size | Description |
-|---|---|---|
-| [`Cargo.toml`](Cargo.toml) | 146 B | [package] name = "section6_riemann_zeros" version = "2.0.0" edition = "2021" [[bin]] name = "verify_section6_riemann_zeros" path = "src/main.rs" |
-| [`src/`](src/) | — | subdirectory with 2 files (see its own README) |
-
-## 🗂 Directory Layout
-
-```
-section6_riemann_zeros/
-├── src/   # 2 files
-│   ├── main.rs
-│   └── README.md  (this file)
-├── Cargo.toml
-└── README.md  (this file)
-```
-
-## ▶️ How to Run
+## ▶️ How to run
 
 ```bash
-cargo run --release --manifest-path verification/rust/Cargo.toml --bin <section>
+cd verification/rust
+cargo run --release -p section6_riemann_zeros      # this section
+cargo run --release             # the whole chain
 ```
 
-## 🔗 Cross-References
+## 📋 What is asserted
 
-- [Rust layer README](../README.md)
-- [Python reference for this section](../../section6_riemann_zeros/python/README.md)
-- [Framework root](../../README.md)
+1. **frozen-data embedding** — the embedding of the frozen data is compatible with the required structure (the formal counterpart: embedding_compatibility);
+2. **GUE-class gaps** — the normalised gap statistics fall in the GUE class;
+3. **Σ²(L) diagnostics** — the variance statistic matches the declared reference curve.
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🔍 Sample output
 
-Порт раздела 6 на Rust: один файл с теоремами/проверками раздела «Riemann Zeros»; контекст раздела — в одноимённом блоке; сборка и вывод — как в README слоя Rust.
+```text
+$ cd verification/rust
+=== Section 6 ===
+embedding compatible
+GUE class confirmed
+PASS
+```
+
+## 🧩 The port family
+
+| Port | Where | Command | Time |
+|---|---|---|---|
+| Python (reference) | [`python/`](../../../verification/section6_riemann_zeros/README.md) | `python3 verification/section6_riemann_zeros/python/verify.py` | < 1 s |
+| Lean 4 | [`lean4/`](../../../verification/lean4/ResearchPapersVerification/Section6_RiemannZeros/README.md) | `lake build && lake exe check` | min (cached s) |
+| Coq | [`coq/`](../../../verification/coq/section6_riemann_zeros/README.md) | `coqc verification/coq/section6_riemann_zeros/CorrectionB.v` | s |
+| Isabelle | [`isabelle/`](../../../verification/isabelle/Section6_RiemannZeros/README.md) | `isabelle build -D verification/isabelle` | min (first) |
+| Agda | [`agda/`](../../../verification/agda/Section6_RiemannZeros/README.md) | `agda --safe verification/agda/Section6_RiemannZeros/CorrectionB.agda` | s |
+| C++ | [`cpp/`](../../../verification/cpp/section6_riemann_zeros/README.md) | `cmake -S verification/cpp -B build && ./build/section6_riemann_zeros` | < 1 s |
+| Rust | [`rust/`](../../../verification/rust/section6_riemann_zeros/README.md) | `cargo run --release -p section6_riemann_zeros` | < 1 s |
+| Haskell | [`haskell/`](../../../verification/haskell/Section6_RiemannZeros/README.md) | `cabal run section6-RiemannZeros` | < 1 s |
+
+Section 6 is the framework's outlook section: the Hilbert–Pólya programme is where the b-geometry and the spectral theory of the zeta function touch. The assertions here are scaffolding, not a proof of the Riemann hypothesis — they record exactly which structural facts the embedding needs, which is what makes an honest open problem auditable.
+
+## 🔗 Cross-references
+
+- [Section 6 reference port](../../../verification/section6_riemann_zeros/README.md)
+- [Framework hub](../../../verification/README.md)
+- [Gap ledger (Lean 4)](../../../verification/lean4/TODO_sorry.md) — which
+  formal lemmas are admitted gaps
 
 ---
 
-<div align="center">
-
-**[⬆ Back to top](#-rust--section-6--riemann-zeros)** · 
-**[Repository root](../../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
-
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+Navigation: [repository root](../../../README.md) · [rust](../../../verification/rust/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
-- 🏠 [Корень репозитория](../../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
-
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

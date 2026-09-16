@@ -1,73 +1,46 @@
-# 🧾 src · main — the Correction-b Paper Source
+# `src/main/` — Source of the Full Correction-b Paper
 
 > **Navigation:** [`src`](../README.md) › **`main`**
 
-![Format](https://img.shields.io/badge/Format-LaTeX-008080?style=flat-square&logo=latex) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Format](https://img.shields.io/badge/Format-LaTeX-008080?style=flat-square&logo=latex&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-LaTeX source of the **full correction-b paper** — the document typeset into the ~2.3 MB PDFs in [`papers/correction-b/`](../../papers/correction-b/README.md). Two files are kept: `main.tex` (the primary, ~55 KB) and `main_v2.tex` (the revision-stamped twin). The preamble sets up custom accent-coloured sectioning (`	itleformat{\section}{\Largefseries\color{accent}}…`), running headers («Колонтитулы» block), and the standard mathematical apparatus needed for the Kirchhoff-vortex derivation and the Navier–Stokes argument.
+The compilable LaTeX source of the full paper: the Kirchhoff derivation of
+the constant, the polarization twist, the regularity proof and the
+numerical section — everything behind
+[`papers/correction-b/main_v2.pdf`](../../papers/correction-b/README.md).
 
-## 📂 Contents — What Lives Here
-
-| File | Size | Description |
-|---|---|---|
-| [`main.tex`](main.tex) | 54.3 KB | primary LaTeX source of the paper (~55 KB, full document) |
-| [`main_v2.tex`](main_v2.tex) | 54.3 KB | revision-stamped twin of main.tex (same text, versioned name) |
-
-## 🔗 Cross-References
-
-- [Typeset PDFs](../../papers/correction-b/README.md)
-- [Parent folder](../README.md)
-
-## 🇷🇺 Краткое резюме (Russian Summary)
-
-Исходник полной статьи (main.tex ~55 КБ + близнец main_v2.tex); компилируется любым современным TeX.
-
----
-
-<div align="center">
-
-**[⬆ Back to top](#-src--main--the-correction-b-paper-source)** · 
-**[Repository root](../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-
-
----
-
-## 📄 The Main Article Source
-
-Two files, one content:
+## Files
 
 | File | Size | Role |
 |---|---|---|
-| `main.tex` | ~55 KB | the primary source document |
-| `main_v2.tex` | ~55 KB | the revision-stamped copy matching `papers/correction-b/main_v2.pdf` |
+| [`main.tex`](main.tex) | ~55 KB | the primary document |
+| [`main_v2.tex`](main_v2.tex) | ~55 KB | the revision-stamped copy matching the published `main_v2.pdf` |
+| [`main_v3.tex`](main_v3.tex) | — | the working revision |
 
-**Structure of the document.** The preamble sets up the accent-coloured sectioning (`titleformat` with a custom `accent` colour), running headers (`fancyhdr`), and the mathematical apparatus. The body follows the paper's arc: the Kirchhoff derivation of *b*, the polarization twist construction (Rodrigues rotation about a unit axis), the BKM criterion reduction, the regularity proof, and the numerical stress-test section.
+The preamble is self-contained: the accent colour for `titleformat`
+sectioning and the `fancyhdr` running heads are defined inside the
+document — no external style files to install.
 
-**Compiling:**
+## Compile
 
 ```bash
-pdflatex main.tex
-pdflatex main.tex        # second pass resolves cross-references
+cd src/main
+pdflatex main_v2.tex && pdflatex main_v2.tex    # two passes for refs/headers
 ```
 
-The document is self-contained — figures referenced by the Word edition live with the manuscripts in [`docs/correction-b/`](../../docs/correction-b/README.md); the PDF needs only standard packages.
+## Versioning convention
 
-**Tracing claims to verification.** While reading the source, the [Section × Language matrix](../../README.md#-верификация-на-11-языках) is the companion: every quantitative statement in the text maps onto a section port or a formal lemma, and the root README's deep dive ([Appendix W](../../README.md#-appendix-w--formal-verification-deep-dive)) shows the Lean foundation that corresponds to §3–4 of this paper.
-
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+`main.tex` and `main_v2.tex` are near-identical by design — the revision
+stamp is the delta (`diff main.tex main_v2.tex`). Real content changes take
+a *new* filename (v3, v4, …), never a silent edit of an existing pair:
+published PDFs must remain traceable to the exact source that produced
+them.
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+---
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+Navigation: [repository root](../README.md) · [src](../README.md) · [papers/correction-b](../../papers/correction-b/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

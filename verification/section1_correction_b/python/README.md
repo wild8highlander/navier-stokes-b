@@ -2,59 +2,52 @@
 
 > **Navigation:** [`verification`](../../README.md) › [`section1_correction_b`](../README.md) › **`python`**
 
-![Python](https://img.shields.io/badge/Python-3.10–3.12-informational?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **pure-Python port** of Section 1 — Correction b — the Universal Polarization Constant. A single ~25-line `verify.py` using only the standard `math` module: it computes b = π / (4·π² + 2·π·√3) ≈ 0.0785, the rotation angle θ_b = arcsin(b) ≈ 7.07°, and the stabilisation identity cos²θ_b + sin²θ_b = 1, asserts 0 < b < 1 (both bounds), sin θ_b = b, cos²θ_b + sin²θ_b = 1, and the reference interval 0.07 < b < 0.08 against the published value 0.0785, and prints the framework's JSON verdict. This is the port CI runs first (job `ci-python.yml`) and the one new toolchain ports are compared against.
+The **pure-Python port** of Section 1 — Correction b — the Universal Polarization Constant. A single
+`verify.py` using only the standard library: it computes the section's
+quantities from closed-form inputs, asserts the section's properties, and
+prints the framework's JSON verdict. This is the port CI runs first and the
+one new toolchain ports are compared against.
 
-## 🔬 Section Context — Where This Port Sits
+## 🔬 Section context
 
-**Where it sits.** Section 1 of the framework covers **the universal polarization correction derived from the Kirchhoff point-vortex system**. Its central quantities are b = π / (4·π² + 2·π·√3) ≈ 0.0785, the rotation angle θ_b = arcsin(b) ≈ 7.07°, and the stabilisation identity cos²θ_b + sin²θ_b = 1; what this port asserts (or proves) is 0 < b < 1 (both bounds), sin θ_b = b, cos²θ_b + sin²θ_b = 1, and the reference interval 0.07 < b < 0.08 against the published value 0.0785. The same assertions exist in every peer language of the matrix, each in its own idiom: [Lean 4](../../lean4/ResearchPapersVerification/Section1_CorrectionB/README.md) · [Coq/Rocq](../../coq/section1_correction_b/README.md) · [Isabelle-HOL](../../isabelle/Section1_CorrectionB/README.md) · [Agda](../../agda/Section1_CorrectionB/README.md) · [C++](../../cpp/section1_correction_b/README.md) · [Rust](../../rust/section1_correction_b/README.md) · [Haskell](../../haskell/Section1_CorrectionB/README.md). Agreement between all ports is enforced by the cross-language validator (`../../tests/`) and the `ci-cross-language.yml` workflow.
+Section 1 covers **the universal polarization correction derived from the Kirchhoff point-vortex system**; central quantities: b = 1/(4π + 2√3) = 0.062381194121028…, the rotation angle θ_b = arcsin(b) ≈ 3.5765°, and the stabilisation identity cos²θ_b + sin²θ_b = 1.
+Peers: [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section1_CorrectionB/README.md) · [Coq/Rocq](../../../verification/coq/section1_correction_b/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section1_CorrectionB/README.md) · [Agda](../../../verification/agda/Section1_CorrectionB/README.md) · [C++](../../../verification/cpp/section1_correction_b/README.md) · [Rust](../../../verification/rust/section1_correction_b/README.md) · [Haskell](../../../verification/haskell/Section1_CorrectionB/README.md).
 
-**What you will see.** Run this port and you get: a banner identifying the section and language; the computed values printed at full precision; one `[PASS]`/`[FAIL]` line per assertion; and a final `JSON: {"section": 1, "language": "python", "values": {…}, "all_passed": …}` verdict line. Exit status is 0 only when every assertion passed — CI treats anything else as a failure.
+| File | Description |
+|---|---|
+| [`verify.py`](verify.py) | the Section 1 reference verifier — prints values, asserts, JSON verdict |
 
-## 📂 Contents — What Lives Here
-
-| File | Size | Description |
-|---|---|---|
-| [`verify.py`](verify.py) | 319 B | Section 1 reference verifier — prints values, asserts, JSON verdict (~25 lines) |
-
-## ▶️ How to Run
+## ▶️ How to run
 
 ```bash
 python3 verify.py          # from this folder
-# or from the repo root:
-python3 verification/section1_correction_b/python/verify.py
+python3 verification/section1_correction_b/python/verify.py   # from the repo root
 ```
 
-## 🔗 Cross-References
+## 🔍 Sample output
 
-- [Section parent](../README.md)
-- [Framework root](../../README.md)
+```text
+=== Section 1 ===
+b = 0.062381194121028
+PASS
+```
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+Exit code 0 = all assertions passed; anything else fails CI.
 
-Питон-порт раздела 1: один файл, чистый stdlib, PASS/JSON за долю секунды; результат — b = π / (4·π² + 2·π·√3) ≈ 0.0785, the rotation angle θ_b = arcsin(b) ≈ 7.07°, and the stabilisation identity cos²θ_b + sin²θ_b = 1.
+## 📋 What is asserted
 
----
-
-<div align="center">
-
-**[⬆ Back to top](#-section-1--python--the-reference-port)** · 
-**[Repository root](../../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+1. **b well-defined and positive** — the closed form evaluates and satisfies 0 < b;
+2. **b < 1** — the twist stays within the physical range;
+3. **sin θ_b = b** — holds for θ_b = arcsin b (the trigonometric bridge);
+4. **rotation sanity** — the associated Rodrigues rotation is orthogonal with det 1 (the numeric echo of the formal R_b_orthogonal / R_b_det_one).
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+---
 
-- 🏠 [Корень репозитория](../../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+Navigation: [section parent](../README.md) · [framework hub](../../README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

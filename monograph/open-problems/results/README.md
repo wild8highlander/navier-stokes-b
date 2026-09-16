@@ -1,22 +1,38 @@
-# `monograph/open-problems/results/` — JSON Protocols of P1–P7
+# `monograph/open-problems/results/` — the JSON Protocols
 
-Machine-readable verdicts of the executable open-problems program
-([`../code/`](../code/README.md)). One file per problem, one line of headline in each —
-these are the exact numbers printed in the open-problems appendix of the monograph.
+> **Navigation:** [`open-problems`](../README.md) › **`results`**
 
-| File | Problem | Headline |
-|---|---|---|
-| `core_b.json` | core | pinned values of b, θ_b and the rotation map |
-| `p1b_droplet_feedback.json` | P1b | feedback on supersaturation S(t) |
-| `p2_track_momentum.json` | P2 | momentum conservation through the b-rotation |
-| `p3_surface_universality.json` | P3 | worst θ_b residual across geometries |
-| `p4_ensemble.json` | P4 | ensemble spread vs threshold |
-| `p5_bprotocol.json` | P5 | b-protocol growth control |
-| `p6_taylor_green_bkm.json` | P6 | BKM integral: NSE vs b-rotation |
-| `p7_collider_scale.json` | P7 | collider-scale scaling of the effect |
+![Pinned](https://img.shields.io/badge/Status-Immutable_evidence-2EA043?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-All files are pinned by sha256 in [`MANIFEST.json`](../../../MANIFEST.json); regenerate
-with `python3 ../code/run_all.py` and refresh the manifest in the same change.
+The JSON protocols of the open-problems program: every number quoted in
+[`OPEN_PROBLEMS_7.md`](../OPEN_PROBLEMS_7.md) lives here with its command,
+parameters, criteria and tolerances. Regenerate with
+`python3 ../code/run_all.py`, then update the master document **in the same
+change** and refresh the manifest.
+
+## Files
+
+| File | Problem |
+|---|---|
+| `core_b.json` | the closed-form constants shared by all problems (b, θ_b, cos θ_b at full precision) |
+| `p1b_droplet_feedback.json` | P1b — paired-seed droplet feedback protocol and outcomes |
+| `p2_track_momentum.json` | P2 — track momentum bookkeeping results |
+| `p3_surface_universality.json` | P3 — per-surface universality residuals of θ_b |
+| `p4_ensemble.json` | P4 — ensemble dispersion statistics and the visibility verdict |
+| `p5_bprotocol.json` | P5 — the b-protocol communication run (BER, sync) |
+| `p6_taylor_green_bkm.json` | P6 — Taylor–Green BKM integrals, NSE vs b-rotation |
+| `p7_collider_scale.json` | P7 — the collider-scale extrapolation numbers |
+
+The repository-wide twin of this evidence layer is
+[`data/results/`](../../../data/results/README.md) (the P1–P6 physics runs
+and the L1–L5 baselines); both are pinned by
+[`MANIFEST.json`](../../../MANIFEST.json) and checked by CI.
 
 ---
-Navigation: [open-problems](../README.md) · [code](../code/README.md) · [figures](../figures/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
+
+---
+
+Navigation: [open-problems](../README.md) · [code](../code/README.md) · [data/results](../../../data/results/README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
+
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
+

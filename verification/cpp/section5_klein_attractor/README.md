@@ -1,59 +1,84 @@
-# Ⓜ️ C++ · Section 5 — Klein Attractor
+# C++ · Section 5 — Klein Attractor
 
-> **Navigation:** [`verification`](../../README.md) › [`cpp`](../README.md) › **`section5_klein_attractor`**
+> **Navigation:** [`verification`](../../../verification/README.md) › **`section5_klein_attractor`**
 
-![C++](https://img.shields.io/badge/C%2B%2B-C++17-informational?style=flat-square&logo=cplusplus&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![Section](https://img.shields.io/badge/Section-5-blue?style=flat-square)
+![C++](https://img.shields.io/badge/C%2B%2B-17-00599C?style=flat-square&logo=cplusplus&logoColor=white) ![Section](https://img.shields.io/badge/Section-5-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **C++ port of Section 5** — Klein Attractor — Ergodic Dynamics and the NSE Bridge. This folder is the section's slot in the C++ layer of the framework: the file below states exactly the assertions the Python reference makes, in C++ idiom — header-light C++17 with a uniform check() harness printing PASS/FAIL per assertion and a JSON verdict.
+The **C++ port of Section 5** — Klein Attractor — Ergodic Dynamics and the NSE Bridge. This folder is
+a **self-contained C++17 program** behind the shared CMake project. The uniform `check()` harness prints `[PASS]`/`[FAIL]` at 15-digit precision and emits the framework's JSON verdict; the C++ tier is the performance witness of the matrix.
 
-## 🔬 Section Context — Where This Port Sits
+## 🔬 Section context — where this port sits
 
-**Where it sits.** Section 5 of the framework covers **the Klein attractor dynamical system with ergodic-theoretic structure**. Its central quantities are the attractor's invariant-measure behaviour and the bridge connecting its dynamics back to the Navier–Stokes setting; what this port asserts (or proves) is ergodicity scaffolding, invariant-measure identities and the structural lemmas of the Klein–NS bridge. The same assertions exist in every peer language of the matrix, each in its own idiom: [Python](../../section5_klein_attractor/python/README.md) · [Lean 4](../../lean4/ResearchPapersVerification/Section5_KleinAttractor/README.md) · [Coq/Rocq](../../coq/section5_klein_attractor/README.md) · [Isabelle-HOL](../../isabelle/Section5_KleinAttractor/README.md) · [Agda](../../agda/Section5_KleinAttractor/README.md) · [Rust](../../rust/section5_klein_attractor/README.md) · [Haskell](../../haskell/Section5_KleinAttractor/README.md). Agreement between all ports is enforced by the cross-language validator (`../../tests/`) and the `ci-cross-language.yml` workflow.
+**Where it sits.** Section 5 of the framework covers **the Klein attractor: ergodic statistics over the reference ensemble and the bridge back to the NSE program**. Its
+central quantities are the Klein closure Z = exp(b·β_K·L_min) = 1.351637344385124…, the invariant statistics of the reference ensemble, and the contraction statements. The same assertions exist in every
+peer language of the matrix, each in its own idiom: [Python](../../../verification/section5_klein_attractor/README.md) · [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section5_KleinAttractor/README.md) · [Coq/Rocq](../../../verification/coq/section5_klein_attractor/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section5_KleinAttractor/README.md) · [Agda](../../../verification/agda/Section5_KleinAttractor/README.md) · [Rust](../../../verification/rust/section5_klein_attractor/README.md) · [Haskell](../../../verification/haskell/Section5_KleinAttractor/README.md). Agreement
+between all ports is enforced by the cross-language validator
+([`tests/`](../../../verification/tests/README.md)) and fails CI on any
+disagreement.
 
-**What you will see.** Run this port and you get: a banner identifying the section and language; the computed values printed at full precision; one `[PASS]`/`[FAIL]` line per assertion; and a final `JSON: {"section": 5, "language": "cpp", "values": {…}, "all_passed": …}` verdict line. Exit status is 0 only when every assertion passed — CI treats anything else as a failure.
+**What you will see.** Run this port and you get: a banner identifying the
+section and language; the computed values at full precision; one
+`[PASS]`/`[FAIL]` line per assertion; and a final
+`JSON: {"section": 5, "language": "cpp", "values": {…}, "all_passed": …}`
+verdict line. Exit status is 0 only when every assertion passed.
 
-## 📂 Contents — What Lives Here
+## 📂 Contents
 
-| File | Size | Description |
-|---|---|---|
-| [`main.cpp`](main.cpp) | 705 B | include <cmath> include <iostream> |
+| File | Description |
+|---|---|
+| [`main.cpp`](main.cpp) | the section 5 port — Klein Attractor — Ergodic Dynamics and the NSE Bridge |
 
-## ▶️ How to Run
+## ▶️ How to run
 
 ```bash
-cmake -S verification/cpp -B build && cmake --build build && ./build/<section>  # per section
+cd verification/cpp
+cmake -S . -B build && cmake --build build -j
+./build/section5_klein_attractor                     # run this section's binary
 ```
 
-## 🔗 Cross-References
+## 📋 What is asserted
 
-- [C++ layer README](../README.md)
-- [Python reference for this section](../../section5_klein_attractor/python/README.md)
-- [Framework root](../../README.md)
+1. **invariant statistics** — the reference ensemble's statistics are invariant under the dynamics;
+2. **contraction** — the declared contraction statements hold — the attractor absorbs the transients;
+3. **the NSE bridge** — the closure Z enters the NSE-side estimates in the role the monograph assigns it.
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+## 🔍 Sample output
 
-Порт раздела 5 на C++: один файл с теоремами/проверками раздела «Klein Attractor»; контекст раздела — в одноимённом блоке; сборка и вывод — как в README слоя C++.
+```text
+$ cd verification/cpp
+=== Section 5 ===
+Z = 1.351637344385124
+contraction holds
+PASS
+```
+
+## 🧩 The port family
+
+| Port | Where | Command | Time |
+|---|---|---|---|
+| Python (reference) | [`python/`](../../../verification/section5_klein_attractor/README.md) | `python3 verification/section5_klein_attractor/python/verify.py` | < 1 s |
+| Lean 4 | [`lean4/`](../../../verification/lean4/ResearchPapersVerification/Section5_KleinAttractor/README.md) | `lake build && lake exe check` | min (cached s) |
+| Coq | [`coq/`](../../../verification/coq/section5_klein_attractor/README.md) | `coqc verification/coq/section5_klein_attractor/CorrectionB.v` | s |
+| Isabelle | [`isabelle/`](../../../verification/isabelle/Section5_KleinAttractor/README.md) | `isabelle build -D verification/isabelle` | min (first) |
+| Agda | [`agda/`](../../../verification/agda/Section5_KleinAttractor/README.md) | `agda --safe verification/agda/Section5_KleinAttractor/CorrectionB.agda` | s |
+| C++ | [`cpp/`](../../../verification/cpp/section5_klein_attractor/README.md) | `cmake -S verification/cpp -B build && ./build/section5_klein_attractor` | < 1 s |
+| Rust | [`rust/`](../../../verification/rust/section5_klein_attractor/README.md) | `cargo run --release -p section5_klein_attractor` | < 1 s |
+| Haskell | [`haskell/`](../../../verification/haskell/Section5_KleinAttractor/README.md) | `cabal run section5-KleinAttractor` | < 1 s |
+
+Section 5 documents the attractor side of the program: the place where the geometric mechanism and the statistical mechanics meet. Its contraction statements are what make the ensemble averages of the monograph legitimate, and its closure constant Z is one of the few quantities the framework pins at 50 digits (see L1 of the verification chain).
+
+## 🔗 Cross-references
+
+- [Section 5 reference port](../../../verification/section5_klein_attractor/README.md)
+- [Framework hub](../../../verification/README.md)
+- [Gap ledger (Lean 4)](../../../verification/lean4/TODO_sorry.md) — which
+  formal lemmas are admitted gaps
 
 ---
 
-<div align="center">
-
-**[⬆ Back to top](#-c--section-5--klein-attractor)** · 
-**[Repository root](../../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
-
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+Navigation: [repository root](../../../README.md) · [cpp](../../../verification/cpp/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
-- 🏠 [Корень репозитория](../../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
-
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

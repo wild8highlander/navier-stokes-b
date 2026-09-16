@@ -1,53 +1,41 @@
-# 🐳 docker · Lean 4 — Pinned Toolchain Image
+# 🐳 docker · lean4 — Pinned Toolchain Image
 
-> **Navigation:** [`verification`](../../README.md) › [`docker`](../README.md) › **`lean4`**
+> **Navigation:** [`verification`](../../../verification/README.md) › [`docker`](../README.md) › **`lean4`**
 
 ![Type](https://img.shields.io/badge/Type-Dockerfile-2496ED?style=flat-square&logo=docker&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **Dockerfile pinning the Lean 4 (v4.14) environment** for this framework layer. The image installs the toolchain (lake build as the in-container flow), copies the verification sources, and defaults to running the Lean 4 verification — so `docker run` reproduces exactly what CI runs, byte-for-byte at toolchain level.
+The **Dockerfile pinning the Lean 4 (v4.14) environment** for the verification
+framework. The image installs elan + the pinned Lean toolchain, copies the verification sources, and defaults to `lake build && lake exe check` — so `docker run` reproduces exactly what CI
+runs, byte-for-byte at the toolchain level. Mathlib4 artifacts are cached in the image layer, so the first run does not download them
 
-## 📂 Contents — What Lives Here
+## 📂 Contents
 
-| File | Size | Description |
-|---|---|---|
-| [`Dockerfile`](Dockerfile) | 147 B | Lean 4 v4.14 environment — install + source copy + verification entrypoint |
+| File | Description |
+|---|---|
+| [`Dockerfile`](Dockerfile) | the Lean 4 (v4.14) environment — install + source copy + verification entrypoint |
 
-## ▶️ How to Run
+## ▶️ How to run
 
 ```bash
 docker build -t rp-lean4 verification/docker/lean4
-docker run --rm rp-lean4
+docker run --rm -v "$PWD":/work rp-lean4 lake exe check
 ```
 
-## 🔗 Cross-References
+The bind-mount (`-v "$PWD":/work`) lets you verify the repository you are
+standing in rather than the copy baked into the image; omit it to run the
+pinned snapshot.
 
-- [Docker layer](../README.md)
-- [Language layer](../../lean4/README.md)
+## 🔗 Cross-references
 
-## 🇷🇺 Краткое резюме (Russian Summary)
-
-Dockerfile со средой Lean 4 v4.14: установка тулчейна + запуск верификации по умолчанию.
-
----
-
-<div align="center">
-
-**[⬆ Back to top](#-docker--lean-4--pinned-toolchain-image)** · 
-**[Repository root](../../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+- [Docker layer](../README.md) — the full image table and the compose flow
+- [Lean 4 (v4.14) language layer](../../../verification/lean4/README.md)
+- [Verification contract](../../../verification/README.md)
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+---
 
-- 🏠 [Корень репозитория](../../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+Navigation: [docker](../README.md) · [verification](../../../verification/README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

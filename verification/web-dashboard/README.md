@@ -1,45 +1,40 @@
-# 🖥 verification · web-dashboard — the Dashboard Package Manifest
+# 📊 `verification/web-dashboard/` — the Dashboard Package Manifest
 
 > **Navigation:** [`verification`](../README.md) › **`web-dashboard`**
 
-![Type](https://img.shields.io/badge/Type-Node%20Package-339933?style=flat-square&logo=nodedotjs&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Type](https://img.shields.io/badge/Type-JS_package-CB3837?style=flat-square&logo=npm&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **package manifest of the web dashboard** — the Node/Next.js front-end that visualises verification results. This folder currently carries `package. Treat this directory as the in-framework hook for dashboard builds; `package.json` pins the tooling so `npm install && npm run build` is reproducible.
+The package manifest of the JS dashboard — the browser front-end that
+visualises verification verdicts (per-section, per-language OK/FAIL
+matrix, value tables). This directory pins the package; the dashboard
+consumes the same JSON verdicts as the
+[validator](../tests/README.md), so what the browser shows is what CI
+asserted.
 
-## 📂 Contents — What Lives Here
+## Contents
 
-| File | Size | Description |
-|---|---|---|
-| [`package.json`](package.json) | 456 B | dashboard package manifest — pinned tooling and build scripts |
+| File | Description |
+|---|---|
+| [`package.json`](package.json) | the npm manifest — name, scripts, dependencies |
 
-## 🔗 Cross-References
+## Usage
 
-- [Framework root](../README.md)
+```bash
+cd verification/web-dashboard
+npm install        # or: npm ci
+npm run build
+```
 
-## 🇷🇺 Краткое резюме (Russian Summary)
-
-Манифест веб-дашборда (package.json): зафиксированные зависимости и скрипты сборки визуальной части.
-
----
-
-<div align="center">
-
-**[⬆ Back to top](#-verification--web-dashboard--the-dashboard-package-manifest)** · 
-**[Repository root](../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+`make install` at the repository root runs the npm step for you
+(`cd verification/web-dashboard && npm ci || true`) — the dashboard is an
+optional surface; the CLI and the [API](../api/README.md) do not depend on
+it.
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+---
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+Navigation: [repository root](../../README.md) · [api](../api/README.md) · [tests](../tests/README.md) · [IPL-RP-1.0](../../LICENSE.md)
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

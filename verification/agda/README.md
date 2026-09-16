@@ -1,134 +1,122 @@
-# Ⓜ️ Agda — Formal/Numerical Verification Layer
+# Ⓜ️ `agda/` — the Agda Formal Verification Layer
 
 > **Navigation:** [`verification`](../README.md) › **`agda`**
 
-![Agda](https://img.shields.io/badge/Agda-2.6-informational?style=flat-square&logo=agda&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![Sections](https://img.shields.io/badge/Sections-6-blue?style=flat-square)
+![Agda](https://img.shields.io/badge/Agda-2.6-CB6BA7?style=flat-square&logo=agda&logoColor=white)
+![Sections](https://img.shields.io/badge/Sections-6-9558B2?style=flat-square)
+![Safe](https://img.shields.io/badge/Flags---safe-2EA043?style=flat-square)
+![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-This directory carries the **Agda (2.6) formal-verification layer**: a dependently-typed, constructive development with one module per research section, compiled with `--safe`. Agda's contribution to the framework is the **minimal trust base**: π and √3 are explicit `postulate`s rather than library imports, so the axioms a reader must accept are visible in the first lines of each file.
+This directory carries the **Agda (2.6) formal-verification layer**: a
+dependently-typed, constructive development with one module per research
+section, compiled with `--safe`. Agda's contribution to the framework is
+the **minimal trust base** made literal: π and √3 are explicit
+`postulate`s rather than library imports, so the axioms a reader must
+accept are visible in the first lines of each file — an honest, two-line
+trust base beats an implicit one.
 
-The modules define `b-correction` as a rational-expression division over `Data.Rational`, carry postulated positivity/bound lemmas (`b-pos`, `b-lt-one`), and develop the per-section constructions (PSL(2,7) proof chain in Section 2, Hofstadter scaffolding in Section 3, and so on). The `agda.agda-lib` file registers the include roots so `agda` resolves `SectionN_*` modules from anywhere.
+The modules define `b-correction` as a rational-expression division over
+`Data.Rational`, carry the postulated positivity/bound lemmas (`b-pos`,
+`b-lt-one`), and develop the per-section constructions (the PSL(2,7) proof
+chain in Section 2, Hofstadter scaffolding in Section 3, and so on). The
+[`agda.agda-lib`](agda.agda-lib) file registers the include roots so
+`agda` resolves the `SectionN_*` modules from anywhere.
 
-Check any module with `agda Section1_CorrectionB/CorrectionB.agda` (or `--safe` for the CI configuration). CI type-checks the modules in `ci-extended-languages.yml`.
+Check any module with `agda Section1_CorrectionB/CorrectionB.agda` (with
+`--safe` for the CI configuration). CI type-checks the modules in the
+extended-languages workflow.
 
-## 🗂 The Six Section Ports
+## The six section ports
 
-- [`Section1_CorrectionB/`](Section1_CorrectionB/README.md) — Correction b — the Universal Polarization Constant
-- [`Section2_PreprintNSE/`](Section2_PreprintNSE/README.md) — Preprint NSE — the Regularity Argument Chain
-- [`Section3_ABCloud/`](Section3_ABCloud/README.md) — AB-Cloud — the Non-Hermitian Hofstadter Hamiltonian
-- [`Section4_KdV/`](Section4_KdV/README.md) — KdV — Soliton Interactions under the b-Correction
-- [`Section5_KleinAttractor/`](Section5_KleinAttractor/README.md) — Klein Attractor — Ergodic Dynamics and the NSE Bridge
-- [`Section6_RiemannZeros/`](Section6_RiemannZeros/README.md) — Riemann Zeros — the Hilbert–Pólya Programme
-
-## 📂 Contents — What Lives Here
-
-| File | Size | Description |
+| Port | Module | Notes |
 |---|---|---|
-| [`Section1_CorrectionB/`](Section1_CorrectionB/) | — | Section 1 port — Correction b — the Universal Polarization Constant |
-| [`Section2_PreprintNSE/`](Section2_PreprintNSE/) | — | Section 2 port — Preprint NSE — the Regularity Argument Chain |
-| [`Section3_ABCloud/`](Section3_ABCloud/) | — | Section 3 port — AB-Cloud — the Non-Hermitian Hofstadter Hamiltonian |
-| [`Section4_KdV/`](Section4_KdV/) | — | Section 4 port — KdV — Soliton Interactions under the b-Correction |
-| [`Section5_KleinAttractor/`](Section5_KleinAttractor/) | — | Section 5 port — Klein Attractor — Ergodic Dynamics and the NSE Bridge |
-| [`Section6_RiemannZeros/`](Section6_RiemannZeros/) | — | Section 6 port — Riemann Zeros — the Hilbert–Pólya Programme |
-| [`agda.agda-lib`](agda.agda-lib) | 60 B | Agda library file — include roots and module list |
+| [Section 1](Section1_CorrectionB/README.md) | `Section1_CorrectionB/CorrectionB.agda` | π and √3 postulated explicitly |
+| [Section 2](Section2_PreprintNSE/README.md) | `Section2_PreprintNSE/ProofChain.agda` | the chain as an indexed structure |
+| [Section 3](Section3_ABCloud/README.md) | `Section3_ABCloud/Hofstadter.agda` | flux structure as inductive data |
+| [Section 4](Section4_KdV/README.md) | `Section4_KdV/KdV.agda` | conservation as type-level identity |
+| [Section 5](Section5_KleinAttractor/README.md) | `Section5_KleinAttractor/Klein.agda` | contraction statements |
+| [Section 6](Section6_RiemannZeros/README.md) | `Section6_RiemannZeros/RiemannZeros.agda` | embedding compatibility |
 
-## 🗂 Directory Layout
+## Contents
 
-```
-agda/
-├── Section1_CorrectionB/   # 2 files
-│   ├── CorrectionB.agda
-│   └── README.md  (this file)
-├── Section2_PreprintNSE/   # 2 files
-│   ├── ProofChain.agda
-│   └── README.md  (this file)
-├── Section3_ABCloud/   # 2 files
-│   ├── Hofstadter.agda
-│   └── README.md  (this file)
-├── Section4_KdV/   # 2 files
-│   ├── KdV.agda
-│   └── README.md  (this file)
-├── Section5_KleinAttractor/   # 2 files
-│   ├── Klein.agda
-│   └── README.md  (this file)
-├── Section6_RiemannZeros/   # 2 files
-│   ├── README.md  (this file)
-│   └── RiemannZeros.agda
-├── agda.agda-lib
-└── README.md  (this file)
-```
+| File | Description |
+|---|---|
+| [`agda.agda-lib`](agda.agda-lib) | library file — include roots and module list |
+| `Section1_CorrectionB/` … `Section6_RiemannZeros/` | the six modules, each with its `.agda` file and README |
 
-## ▶️ How to Run
+## How to run
 
 ```bash
 cd verification/agda
-agda <Module>.agda
+agda --safe Section1_CorrectionB/CorrectionB.agda     # one module
+# or, all modules in dependency order:
+agda --safe Section6_RiemannZeros/RiemannZeros.agda
 ```
-Build step: `agda --safe <Module>.agda`.
 
-## 🇷🇺 Краткое резюме (Russian Summary)
+Run from the repository root or set the include path per
+`agda.agda-lib`. Without installing Agda, use the pinned image
+([`docker/agda/`](../docker/README.md)) or the CI job, which compiles
+every module with `--safe` on each push.
 
-**verification/agda/** — слой верификации на Agda (2.6): конструктивная разработка с зависимыми типами; π и √3 — явные постулаты. Шесть портов по разделам (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); единый контракт PASS/JSON; команды сборки — в разделе How to Run.
+## 🔬 What Agda proves about the trust base
 
----
+Because π and √3 are the **only** postulates, everything else in the Agda
+development is *constructed* — including the order relations and the
+algebraic identities the other systems take from their standard libraries.
+Reading the Agda files is therefore the fastest way to see exactly which
+properties of π and √3 the whole framework's formal layer actually needs:
+read the postulate block, and you have enumerated the formal trust base.
+This is the same honesty policy that keeps the Lean gap ledger public —
+the framework's contract with its reader is that trust is always
+enumerable, never ambient.
 
-<div align="center">
+The constructive idiom also has a practical consequence: where a classical
+development might prove a disjunction by excluded middle, the Agda modules
+carry the constructive content (witnesses, not just existence), which
+occasionally sharpens the statements themselves.
 
-**[⬆ Back to top](#-agda--formalnumerical-verification-layer)** · 
-**[Repository root](../README.md)**
+## 🔗 See also
 
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
+- [the framework hub](../README.md) — the two-tier picture and the
+  contract;
+- [`lean4/`](../lean4/README.md) — the primary formal development;
+- [`coq/`](../coq/README.md) · [`isabelle/`](../isabelle/README.md) — the
+  other kernels;
+- [`docker/agda/`](../docker/README.md) — the pinned toolchain image.
 
-</div>
 
----
-## 🧱 Development Anatomy
+## The postulate block, precisely
 
-Six modules, dependently typed:
+Every section module opens with the same two-line trust base:
 
-| Module | Section | Notes |
+- `postulate π : ℝ` with the positivity/order properties the development
+  actually uses;
+- `postulate √3 : ℝ` likewise.
+
+That is the entire axiom set. Everything else — the rational arithmetic,
+the order relations, the algebraic identities — is constructed. This is
+why the Agda folder is the fastest read in the formal tier: the postulate
+block *is* the framework's formal trust base, enumerated.
+
+## Compilation flags and what they buy
+
+`--safe` disables unsafe pragmas — a module that compiled with `--safe`
+cannot have switched off the termination or positivity checkers. CI
+compiles with `--safe` for exactly this reason; a local build without the
+flag is fine for exploration but proves nothing.
+
+## Where Agda is the right witness
+
+| Question | Best answered by | Why |
 |---|---|---|
-| `Section1_CorrectionB/CorrectionB.agda` | 1 | π and √3 postulated explicitly |
-| `Section2_PreprintNSE/ProofChain.agda` | 2 | chain as indexed structure |
-| `Section3_ABCloud/Hofstadter.agda` | 3 | flux structure as inductive data |
-| `Section4_KdV/KdV.agda` | 4 | conservation as type-level identity |
-| `Section5_KleinAttractor/Klein.agda` | 5 | contraction statements |
-| `Section6_RiemannZeros/RiemannZeros.agda` | 6 | embedding compatibility |
-
-## 🔬 The Minimal Trust Base
-
-The Agda development's defining choice is the **explicit postulation policy**: π and √3 enter as postulates at the top of each development, with their essential properties (positivity, the needed bounds) stated — and everything else is constructed. This keeps the trust base *visible and enumerable*: a reviewer can read the postulate block and know exactly what is being taken on faith. The repository's philosophy is that an honest, two-line trust base beats an implicit one; the same policy is why the gap ledger of the Lean development is public (see the root README's [deep dive](../README.md#-appendix-w--formal-verification-deep-dive)).
-
-## 🐳 Running Agda Without Installing It
-
-```bash
-docker build -t rp-agda verification/docker/agda
-docker run --rm -v "$PWD":/work rp-agda agda verification/agda/Section1_CorrectionB/CorrectionB.agda
-```
-
-Run from the repository root or set the include path per `agda.agda-lib`.
-
----
-## 🎯 What Agda Proves About the Trust Base
-
-Because π and √3 are the only postulates, everything else in the Agda development is *constructed* — including the order relations and the algebraic identities other systems get from their standard libraries. Reading the Agda files is therefore the fastest way to see exactly which properties of π and √3 the whole framework's formal layer actually needs: read the postulate block, and you have enumerated the formal trust base.
-
----
-## 🔗 See Also
-
-- the postulate blocks in each module — the enumerated trust base;
-- [`agda.agda-lib`](agda.agda-lib) — include-path configuration;
-- the formal deep dive in the root README for the cross-system comparison table.
-
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+| what does the formal layer assume? | Agda | the postulate block enumerates it |
+| is the statement constructive? | Agda | witnesses are extracted by construction |
+| is the proof classical-routine? | Coq | `lra` closes it — routine is signal too |
+| is the statement faithful to the paper? | Isabelle | Isar blocks read like the paper |
+| is everything integrated? | Lean | the aggregator + the gap ledger |
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+Navigation: [verification](../README.md) · [repository root](../../README.md) · [IPL-RP-1.0](../../LICENSE.md)
 
-- 🏠 [Корень репозитория](../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
-
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
-
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) — © 2026 Isaev Iskhak Khamzatovich, all rights reserved.*

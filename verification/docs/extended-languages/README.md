@@ -1,44 +1,37 @@
-# 📚 docs · extended-languages — the Decision Record
+# 📚 `verification/docs/extended-languages/` — the Extended Toolchain Ring
 
-> **Navigation:** [`verification`](../../README.md) › [`docs`](../README.md) › **`extended-languages`**
+> **Navigation:** [`docs`](../README.md) › **`extended-languages`**
 
-![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Scope](https://img.shields.io/badge/Scope-Extended_languages-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **extended-languages decision record**: why the framework grew beyond its original language set to Lean 4, Coq, Isabelle-HOL, Agda, Rust, C++ and Haskell, and what each addition buys (independence of foundations, memory safety, classically-checked real analysis, constructive types). Reads as the rationale behind the [Section × Language matrix](../../../README.md#-верификация-на-11-языках).
+Notes on the **extended ring** — the languages beyond the stdlib-Python
+reference: C++17, Rust, Haskell and Julia on the computational side, plus
+the four formal kernels (Lean 4, Coq, Isabelle, Agda). What "extended"
+means operationally: toolchain-pinned, Docker-imaged, CI-built, and
+toolchain-locked in the test suite (auto-skip when absent locally).
 
-## 📂 Contents — What Lives Here
+## The ring at a glance
 
-_This directory currently contains no files._
+| Language | Build entry | Pinned by | Docker image |
+|---|---|---|---|
+| C++17 | `cmake -S verification/cpp -B build` | CMake ≥ 3.18 | [`docker/cpp/`](../../docker/README.md) |
+| Rust | `cargo run --release` | rust 1.75+ | [`docker/rust/`](../../docker/README.md) |
+| Haskell | `cabal build` | GHC 9.4 | [`docker/haskell/`](../../docker/README.md) |
+| Julia | `julia verify_all.jl` | stdlib-only | (no image needed) |
+| Lean 4 | `lake build` | `lean-toolchain` pin | [`docker/lean4/`](../../docker/README.md) |
+| Coq | `coq_makefile && make` | 8.18 | [`docker/coq/`](../../docker/README.md) |
+| Isabelle | `isabelle build -D .` | 2024 | [`docker/isabelle/`](../../docker/README.md) |
+| Agda | `agda --safe` | 2.6 | [`docker/agda/`](../../docker/README.md) |
 
-## 🔗 Cross-References
-
-- [Parent — docs/](../README.md)
-- [Verification root](../../README.md)
-
-## 🇷🇺 Краткое резюме (Russian Summary)
-
-Историческое решение о расширении набора языков: мотивации по каждому добавлению и enforcement контракта.
-
----
-
-<div align="center">
-
-**[⬆ Back to top](#-docs--extended-languages--the-decision-record)** · 
-**[Repository root](../../README.md)**
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
-
-</div>
-<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
+CI compiles the ring where runners allow and always runs the stdlib
+subset; the [validator](../../tests/README.md) consumes whatever verdicts
+exist and reports the covered matrix.
 
 ---
 
-## 🧭 Навигация и быстрые ссылки (auto)
+---
 
-- 🏠 [Корень репозитория](../../../../README.md)
-- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
-- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
+Navigation: [docs](../README.md) · [docker](../../docker/README.md) · [tests](../../tests/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
-*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

@@ -1,34 +1,48 @@
-# `monograph/open-problems/code/` — Executable P1–P7 Program
+# `monograph/open-problems/code/` — the Runnable Scripts of P1–P7
 
-Python implementation of the seven-open-problem program described in
-[`OPEN_PROBLEMS_7.md`](../OPEN_PROBLEMS_7.md). Each script solves one problem and
-writes its JSON protocol to [`../results/`](../results/README.md); the figures land in
-[`../figures/`](../figures/README.md).
+> **Navigation:** [`open-problems`](../README.md) › **`code`**
 
-| Script | Problem | Output protocol |
-|---|---|---|
-| `core_b.py` | shared core: the constant b, the rotation map | `core_b.json` |
-| `p1b_droplet_feedback.py` | P1b — droplet feedback on supersaturation | `p1b_droplet_feedback.json` |
-| `p2_track_momentum.py` | P2 — momentum tracking of the b-rotation | `p2_track_momentum.json` |
-| `p3_surface_universality.py` | P3 — universality of θ_b across geometries | `p3_surface_universality.json` |
-| `p4_ensemble.py` | P4 — ensemble statistics at Re = 2000 | `p4_ensemble.json` |
-| `p5_bprotocol.py` | P5 — the b-protocol for growth control | `p5_bprotocol.json` |
-| `p6_taylor_green_bkm.py` | P6 — Taylor–Green BKM integral reduction | `p6_taylor_green_bkm.json` |
-| `p7_collider_scale.py` | P7 — collider-scale implications | `p7_collider_scale.json` |
-| `make_figures.py` | regenerates all figures from the protocols | `../figures/*.png` |
-| `run_all.py` | runs the whole program in order | — |
+![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-## Usage
+One script per problem plus the aggregator — all deterministic (fixed
+seeds), all idempotent (each run overwrites its own JSON in
+[`results/`](../results/README.md)), all self-auditing (each prints its
+pre-registered success criteria and marks each achieved/failed).
+
+## Scripts
+
+| Script | Role |
+|---|---|
+| [`core_b.py`](core_b.py) | the shared core: closed-form b, θ_b, the Rodrigues rotation and the Leray projection used by every problem |
+| [`run_all.py`](run_all.py) | the aggregator — runs P1b…P7 in dependency order and prints the registered criteria |
+| [`make_figures.py`](make_figures.py) | regenerates every figure in [figures/](../figures/README.md) from the JSONs in [results/](../results/README.md) |
+| [`p1b_droplet_feedback.py`](p1b_droplet_feedback.py) | P1b — the droplet-feedback follow-up of P1 (paired seeds, two-way coupling) |
+| [`p2_track_momentum.py`](p2_track_momentum.py) | P2 — track momentum bookkeeping under the b-protocol |
+| [`p3_surface_universality.py`](p3_surface_universality.py) | P3 — universality of θ_b across surfaces |
+| [`p4_ensemble.py`](p4_ensemble.py) | P4 — the ensemble dispersion study (the T = 2+ baseline) |
+| [`p5_bprotocol.py`](p5_bprotocol.py) | P5 — the b-protocol communication experiment (Weyl–Dirichlet sums) |
+| [`p6_taylor_green_bkm.py`](p6_taylor_green_bkm.py) | P6 — the Taylor–Green BKM integration under the continuous rotation |
+| [`p7_collider_scale.py`](p7_collider_scale.py) | P7 — the collider-scale extrapolation chapter's numbers |
+
+## Run
 
 ```bash
-python3 run_all.py                    # full program
-python3 p6_taylor_green_bkm.py        # a single problem
-python3 make_figures.py               # figures only
+python3 run_all.py             # everything, ~10 min on 2 cores
+python3 p5_bprotocol.py        # a single problem
+python3 make_figures.py        # regenerate the figures afterwards
 ```
 
-The same problems are mirrored by the formal/verification layer — see
-[`verification/section1_correction_b/`](../../../verification/section1_correction_b/README.md)
-and the P7 Lean 4 registry at the repository root.
+Every number in the [master document](../OPEN_PROBLEMS_7.md) comes from
+these scripts — no hand-written values anywhere. If a rerun on your
+platform disagrees with the pinned JSON in
+[`results/`](../results/README.md), that is a
+[verification request](https://github.com/wild8highlander/navier-stokes-b/issues/new?template=verification_request.yml).
 
 ---
-Navigation: [open-problems](../README.md) · [results](../results/README.md) · [figures](../figures/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
+
+---
+
+Navigation: [open-problems](../README.md) · [results](../results/README.md) · [figures](../figures/README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
+
+*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
+
