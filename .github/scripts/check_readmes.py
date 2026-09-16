@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Docs hygiene: every directory must have a README; no Cyrillic in any README."""
+"""Docs hygiene: every directory must have a README; no Cyrillic in any README.
+
+Note: the top-level .github/ directory is exempt from the README requirement.
+GitHub renders .github/README.md on the repository homepage INSTEAD of the
+root README.md, so .github/ carries AUTOMATION.md (not a README) on purpose.
+"""
 import pathlib
 import re
 import sys
@@ -12,6 +17,8 @@ def main() -> int:
     no_readme, cyr = [], []
     for d in sorted(p for p in ROOT.rglob("*") if p.is_dir()):
         if any(part in {".git", "node_modules", "__pycache__"} for part in d.parts):
+            continue
+        if d == ROOT / ".github":
             continue
         if not any(d.glob("README*")):
             no_readme.append(d.relative_to(ROOT).as_posix() or ".")
