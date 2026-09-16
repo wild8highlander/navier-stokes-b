@@ -76,20 +76,96 @@
       "bytes": 1222
     },
     ".github/workflows/ci.yml": {
-      "sha256": "f699d519dfb73b4803822e78d48a116b369e7f881da155edf9d81f0478b18b98",
-      "bytes": 1923
+      "sha256": "a45a1118f43afe16fa6c9378e4d8e30db1076d37333c588d0fee4f96517d88a8",
+      "bytes": 2299
     },
     ".github/workflows/pages.yml": {
-      "sha256": "59f07b786341c735c101e08763e670f8ba393e1419946211c5479ed6b4bcfd47",
-      "bytes": 668
+      "sha256": "4046481f1496403149fd7391d5b2baba83e2583f31dcb8cc7637596976560ba0",
+      "bytes": 856
     },
     ".github/workflows/release.yml": {
-      "sha256": "b74451a1d85eafe1e42c602422c23b2ab8747a214b96fa1e8275c248cf09deb1",
-      "bytes": 2491
+      "sha256": "73d1daf146bb08a461da113387720035a9e3f29badbeb873832f82dab9b02b79",
+      "bytes": 2632
     },
     ".gitignore": {
       "sha256": "8b765b7a496a465f947c3235a718ec163a05f1fd56c5c4eabd7bd8634f20d6c1",
       "bytes": 3269
+    },
+    ".ruff_cache/.gitignore": {
+      "sha256": "9e3a60f1e6ec4ae60215c11d54b171392745ec25e9dded433d5bd921363af316",
+      "bytes": 35
+    },
+    ".ruff_cache/0.16.8/10453979184559213124": {
+      "sha256": "a14fb080400b03c49219ff5118fce9aad2cef6566e8d18fffba4c0d6c9358980",
+      "bytes": 204
+    },
+    ".ruff_cache/0.16.8/11362665934587754057": {
+      "sha256": "805328cd0220c9dcbe9991179699ee5a5bd13d5c911769e3633ad578833918de",
+      "bytes": 572
+    },
+    ".ruff_cache/0.16.8/11500569829920800067": {
+      "sha256": "cf4eaf65ebb22daca0310490fc7fd358f3b0749d81f335bd31530417fe0259cd",
+      "bytes": 492
+    },
+    ".ruff_cache/0.16.8/1261598820973716160": {
+      "sha256": "e1f04675dccfa842ef50c80f1098bba36b5bfa496de3c87c94c506e86f93dbca",
+      "bytes": 284
+    },
+    ".ruff_cache/0.16.8/12709668889211218109": {
+      "sha256": "ae1e00afeab6a9b9375fcd845c364a064816cf7eae3eda7bca3b9a49d7273b4d",
+      "bytes": 268
+    },
+    ".ruff_cache/0.16.8/12844703344157211658": {
+      "sha256": "1f6520ba6182f6208b8dc94efb41b4aa4d47398e32c464ffe4c4ca5d895d9df7",
+      "bytes": 236
+    },
+    ".ruff_cache/0.16.8/13899631686903662758": {
+      "sha256": "bfce9b6e290088e2e8f6f3c7b26aeb2e1d09c49882d7c23475a77b062caf0647",
+      "bytes": 196
+    },
+    ".ruff_cache/0.16.8/15959563537236770443": {
+      "sha256": "034589f5b30b5d103121598388d7a8952a53b38e108bbeee2e8c65e00d2eba2f",
+      "bytes": 180
+    },
+    ".ruff_cache/0.16.8/17617070125070107722": {
+      "sha256": "d63c2ffd5698b4ca5556a8c51f6c629893b5debb66d98ca1a4b94cfc5637582c",
+      "bytes": 316
+    },
+    ".ruff_cache/0.16.8/3041098894975787157": {
+      "sha256": "29518c8439adf22b996a062410ef36ebd56969c35cd02e5990d7703e317803b3",
+      "bytes": 204
+    },
+    ".ruff_cache/0.16.8/3409967157408030014": {
+      "sha256": "ef6a3b88b20afcd86cf18cf7adc8d8a0397aabb73a1e3bfbafd89bcefa38908f",
+      "bytes": 252
+    },
+    ".ruff_cache/0.16.8/4776626996328726613": {
+      "sha256": "ac50be7709a9b8ca0e21a7bb58bf080662c98d664456980a361b9f3a182f33ae",
+      "bytes": 204
+    },
+    ".ruff_cache/0.16.8/4825417143571824688": {
+      "sha256": "0cf160558abd29ef3ebf293e8b5614be7572ad1db0fe8cd74b109b83c8046d85",
+      "bytes": 180
+    },
+    ".ruff_cache/0.16.8/5376968635747919153": {
+      "sha256": "224ea9c91f703d3f3ede90644f603dc94a239a2c8b1c649b85d112e4044123dc",
+      "bytes": 644
+    },
+    ".ruff_cache/0.16.8/6848270348439078847": {
+      "sha256": "a37498c79aae144199d1a175fb8f2827a5b82f51829bb0ba8d2b45f286c7e1f5",
+      "bytes": 204
+    },
+    ".ruff_cache/0.16.8/9208274712925626313": {
+      "sha256": "1afbafd858c4a36118d23d80e3c0d9b3229edd145285a3b115ebdb708427ccc6",
+      "bytes": 204
+    },
+    ".ruff_cache/CACHEDIR.TAG": {
+      "sha256": "5953156d7e0c564a427251316eaf26f8870e6483ae2197f916b630e4f93e31ae",
+      "bytes": 43
+    },
+    "0001-fix-homepage.patch": {
+      "sha256": "431d9c56e2c4c90ef48e64d51b222b2cea8950606627e62ffac5fd29f0910fa9",
+      "bytes": 323438
     },
     "CHANGELOG.md": {
       "sha256": "1062d5d32320fdf412e456f13b1357d2fec92b2ff546f7e2dc6433f68702922d",
@@ -648,8 +724,8 @@
       "bytes": 6903
     },
     "pyproject.toml": {
-      "sha256": "ba2fc0ff36c07cfd367a72cb8ce181535d75a35117c1217e64877dda2d127ee2",
-      "bytes": 1878
+      "sha256": "c3a9245b6ee7be8105d1a384c7de327487aa4c3644ef971394004c5d42a39a90",
+      "bytes": 1904
     },
     "site/README.md": {
       "sha256": "9776b5bfe3cccc67b5631f6136b9ba5b6756bf68f2022fd39237d11579881cf0",
