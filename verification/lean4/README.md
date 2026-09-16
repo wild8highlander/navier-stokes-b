@@ -31,7 +31,7 @@ Build with `lake build`; run the type-check executable with `lake exe check` and
 |---|---|---|
 | [`Main.lean`](Main.lean) | 160 B | type-check entry point — imports and elaborates the whole library |
 | [`ResearchPapersVerification/`](ResearchPapersVerification/) | — | subdirectory with 16 files (see its own README) |
-| [`TODO_sorry.md`](TODO_sorry.md) | 6.5 KB | # List of Incomplete Lean 4 Proofs > This file contains the complete list of all `sorry` (theorems with omitted > proofs) and `axiom` (axiomatized statements)… |
+| [`TODO_sorry.md`](TODO_sorry.md) | 6.5 KB | # Список незавершённых доказательств Lean 4 > Этот файл содержит полный перечень всех `sorry` (теорем с пропущенными > доказательствами) и `axiom` (аксиоматизированных утверждений)… |
 | [`Test.lean`](Test.lean) | 169 B | numerical bridge executable — prints reference values |
 | [`lakefile.lean`](lakefile.lean) | 508 B | Lake package manifest — library/executable targets |
 | [`lean-toolchain`](lean-toolchain) | 25 B | Lean toolchain pin (elan reads this file) |
@@ -80,9 +80,9 @@ lake build && lake exe check
 ```
 Build step: `lake build`.
 
-## 🇷🇺 Brief Summary (Russian Summary)
+## 🇷🇺 Краткое резюме (Russian Summary)
 
-**verification/lean4/** — the Lean 4 (v4.14) verification layer: machine-checked proofs built on Mathlib4 with custom definitions. Six per-section ports (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); a single PASS/JSON contract; build commands — see the How to Run section.
+**verification/lean4/** — слой верификации на Lean 4 (v4.14): машинно проверяемые доказательства на базе Mathlib4 с собственными определениями. Шесть портов по разделам (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); единый контракт PASS/JSON; команды сборки — в разделе How to Run.
 
 ---
 
@@ -155,16 +155,16 @@ When working through the ledger, the expected closure order (by difficulty, per 
 - [`coq/`](../coq/README.md) · [`isabelle/`](../isabelle/README.md) · [`agda/`](../agda/README.md) — the same statements in three other kernels;
 - the [gap ledger](TODO_sorry.md) — the working list of admitted gaps.
 
-<!-- doc-enhancer:block v1 (auto-generated block; license files are not affected) -->
+<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Navigation and Quick Links (auto)
+## 🧭 Навигация и быстрые ссылки (auto)
 
-- 🏠 [Repository root](../../../README.md)
-- 📖 [How the claims are verified](../../../verification/README.md)
-- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, a single backup copy, and citation with attribution are permitted; everything else — only with the author's written consent.
+- 🏠 [Корень репозитория](../../../README.md)
+- 📖 [Как верифицируются утверждения](../../../verification/README.md)
+- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
 
-*Block added automatically (`doc-enhancer v1`); it is unrelated to the license and does not modify it. Re-running the script does not duplicate the block.*
+*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
 

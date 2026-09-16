@@ -63,9 +63,9 @@ make docker-up
 - [Root README — Quick Start](../../README.md)
 - [CI workflow docker.yml](../../.github/workflows/README.md)
 
-## 📝 Summary
+## 🇷🇺 Краткое резюме (Russian Summary)
 
-**verification/docker/** — seven Docker images, one per extended toolchain (Lean 4, Coq, Isabelle, Agda, C++, Rust, Haskell); each Dockerfile pins the environment, and the default command runs the verification. Build via docker.yml / make docker-up.
+**verification/docker/** — семь Docker-образов, по одному на расширенный тулчейн (Lean 4, Coq, Isabelle, Agda, C++, Rust, Haskell); в каждом Dockerfile зафиксирована среда, команда по умолчанию — запуск верификации. Сборка — docker.yml / make docker-up.
 
 ---
 
@@ -77,16 +77,16 @@ make docker-up
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
 
 </div>
-<!-- doc-enhancer:block v1 (auto-generated block; license files are not touched) -->
+<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Navigation and Quick Links (auto)
+## 🧭 Навигация и быстрые ссылки (auto)
 
-- 🏠 [Repository root](../../../README.md)
-- 📖 [How the claims are verified](../../../verification/README.md)
-- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, a single backup copy, and citation with attribution are permitted; everything else requires the author's written permission.
+- 🏠 [Корень репозитория](../../../README.md)
+- 📖 [Как верифицируются утверждения](../../../verification/README.md)
+- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
 
-*Block added automatically (`doc-enhancer v1`); it is unrelated to the license and does not modify it. Re-running the script does not duplicate the block.*
+*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
 

@@ -2,7 +2,7 @@
 
 > **Navigation:** [`docs`](../README.md) › **`correction-b`**
 
-![Format](https://img.shields.io/badge/Format-DOCX-blue?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![RU](https://img.shields.io/badge/RU-Summary-blue?style=flat-square)
+![Format](https://img.shields.io/badge/Format-DOCX-blue?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![RU](https://img.shields.io/badge/RU-%D0%A0%D0%B5%D0%B7%D1%8E%D0%BC%D0%B5-blue?style=flat-square)
 
 The Word-manuscript layer of the correction-b research program: two complete, figure-rich editions of the monograph — English (`en/`) and Russian (`ru/`) — each preserved exactly as circulated during the writing of the paper in [`papers/correction-b/`](../../papers/correction-b/README.md). Each `.docx` (≈ 8.6 MB) contains the full text with embedded figures, editorial formatting and the manuscript structure that the journal PDF was later produced from.
 
@@ -34,9 +34,9 @@ correction-b/
 - [LaTeX sources — src/main/](../../src/main/README.md)
 - [Verification — Section 1 & 2](../../verification/README.md)
 
-## 🇷🇺 Brief Summary
+## 🇷🇺 Краткое резюме (Russian Summary)
 
-**docs/correction-b/** — the Word monograph on the b-correction: two complete illustrated editions, English (`en/`) and Russian (`ru/`), ~8.6 MB each. Preserved exactly as circulated while the paper was being prepared. A convenient place for citing and annotating; the canonical PDF is `papers/correction-b/`, the LaTeX source is `src/main/`.
+**docs/correction-b/** — Word-монография о поправке b: две полные иллюстрированные редакции, английская (`en/`) и русская (`ru/`), по ~8.6 МБ. Сохранены в том виде, в каком circulated при подготовке статьи. Цитировать/аннотировать удобно здесь; канонический PDF — `papers/correction-b/`, LaTeX — `src/main/`.
 
 ---
 
@@ -48,15 +48,16 @@ correction-b/
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
 
 </div>
-<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
+<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Navigation and Quick Links (auto)
+## 🧭 Навигация и быстрые ссылки (auto)
 
-- 🏠 [Repository root](../../../README.md)
-- 📖 [How claims are verified](../../../verification/README.md)
-- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, one backup copy and citation with attribution are permitted; anything else only with the author's written consent.
+- 🏠 [Корень репозитория](../../../README.md)
+- 📖 [Как верифицируются утверждения](../../../verification/README.md)
+- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
 
-*Block added automatically (`doc-enhancer v1`); it is not related to the license and does not modify it. Re-running the script does not duplicate the block.*
+*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+

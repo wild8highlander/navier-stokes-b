@@ -30,9 +30,9 @@ cd verification/coq && coqc <section-file>.v         # per file
 - [Python reference for this section](../../section6_riemann_zeros/python/README.md)
 - [Framework root](../../README.md)
 
-## 🇷🇺 Brief Summary (Russian Summary)
+## 🇷🇺 Краткое резюме (Russian Summary)
 
-Coq/Rocq port of Section 6: a single file with the theorems/checks of the “Riemann Zeros” section; the section context is given in the block of the same name; build and output follow the Coq/Rocq layer README.
+Порт раздела 6 на Coq/Rocq: один файл с теоремами/проверками раздела «Riemann Zeros»; контекст раздела — в одноимённом блоке; сборка и вывод — как в README слоя Coq/Rocq.
 
 ---
 
@@ -44,16 +44,16 @@ Coq/Rocq port of Section 6: a single file with the theorems/checks of the “Rie
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
 
 </div>
-<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
+<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Navigation and Quick Links (auto)
+## 🧭 Навигация и быстрые ссылки (auto)
 
-- 🏠 [Repository root](../../../../README.md)
-- 📖 [How the claims are verified](../../../../verification/README.md)
-- 📄 [Papers (PDF)](../../../../papers/README.md) · 📚 [Monographs](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [IPL-RP-1.0 License](../../../../LICENSE.md) — viewing, a single backup copy, and citation with attribution are permitted; anything else requires the author's written consent.
+- 🏠 [Корень репозитория](../../../../README.md)
+- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
+- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
+- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
 
-*This block was added automatically (`doc-enhancer v1`); it is unrelated to the license and does not modify it. Re-running the script does not duplicate the block.*
+*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
 

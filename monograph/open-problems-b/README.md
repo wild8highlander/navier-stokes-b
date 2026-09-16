@@ -1,51 +1,51 @@
-# open-problems — the open-problems program of b-mechanics (NSE / microphysics / protocols)
+# open-problems — программа открытых задач b-механики (NSE / микрофизика / протоколы)
 
-**Repository:** `wild8highlander/navier-stokes-b` · **Branch:** `main`
-**Constant:** b = 1/(4π+2√3) = 0.06238119412102822754633967163940208118699…
-**Angle:** θ_b = arcsin(b) = 3.5765013142837216°
-**Base chain status:** L1–L5 — PASS (see `../verification/`, recorded runs:
-L4 — the b-rotation identities with residuals 7.1e-14 … 1.2e-16; L5 — the 3D Taylor–Green BKM run,
-I_BKM = 9.3560 (NSE) / 9.6758 (b-rotation), factor 0.96695).
+**Репозиторий:** `wild8highlander/navier-stokes-b` · **Ветка:** `main`
+**Константа:** b = 1/(4π+2√3) = 0.06238119412102822754633967163940208118699…
+**Угол:** θ_b = arcsin(b) = 3.5765013142837216°
+**Статус базовой цепочки:** L1–L5 — ПАСС (см. `../verification/`, зафиксированные прогоны:
+L4 — тождества b-поворота с невязками 7.1e-14 … 1.2e-16; L5 — Taylor–Green 3D BKM,
+I_BKM = 9.3560 (NSE) / 9.6758 (b-поворот), фактор 0.96695).
 
 ---
 
-## What lives here
+## Что здесь лежит
 
-| File | Purpose |
+| Файл | Назначение |
 |---|---|
-| `OPEN_PROBLEMS_EXT_B.md` | **Master document**: the full protocol, mathematics, criteria, and the results of P5-b and P4-b |
-| `p5b_b_protocol_duplex.py` | P5-b: the b-protocol over a duplex link — exact Weyl–Dirichlet sums + Monte Carlo BER |
-| `p4b_ensemble_T8.py` | P4-b: the T=8 ensemble at Re=2000 — kinematic simulation + paired check of the b-rotation |
-| `results_p5b.json` | P5-b results (a real run, timestamped) |
-| `results_p4b.json` | P4-b results — the main run (real, timestamped) |
-| `results_p4b_fine.json` | The P4-b fine chain: 8 seeds at dt=0.002 (ensemble convergence K3) |
-| `fig_p5b_sync.png` | Weyl–Dirichlet sums + autocorrelation of the b-chirp |
-| `fig_p5b_duplex.png` | Duplex: BER and goodput |
-| `fig_p4b_ensemble.png` | The T=8 ensemble: σ_y, b-invariance, 1/√T convergence |
-| `push_open_problems.sh` | Publishing this folder to GitHub (Termux/POSIX) |
+| `OPEN_PROBLEMS_EXT_B.md` | **Главный документ**: полный протокол, математика, критерии и результаты P5-b и P4-b |
+| `p5b_b_protocol_duplex.py` | P5-b: b-протокол в двусторонней связи — точные суммы Вейля–Дирихле + Монте-Карло BER |
+| `p4b_ensemble_T8.py` | P4-b: ансамбль T=8 при Re=2000 — кинематическая симуляция + парная проверка b-поворота |
+| `results_p5b.json` | Результаты P5-b (реальный прогон, с штампом времени) |
+| `results_p4b.json` | Результаты P4-b — основной прогон (реальный, с штампом времени) |
+| `results_p4b_fine.json` | Fine-цепочка P4-b: 8 зёрен при dt=0.002 (ансамблевая сходимость K3) |
+| `fig_p5b_sync.png` | Суммы Вейля–Дирихле + автокорреляция b-чирика |
+| `fig_p5b_duplex.png` | Дуплекс: BER и goodput |
+| `fig_p4b_ensemble.png` | Ансамбль T=8: σ_y, b-инвариантность, сходимость 1/√T |
+| `push_open_problems.sh` | Публикация этой папки в GitHub (Termux/POSIX) |
 
-## How to reproduce
+## Как воспроизвести
 
 ```bash
-python3 open-problems/p5b_b_protocol_duplex.py     # ~1 s
-python3 open-problems/p4b_ensemble_T8.py           # ~6–10 min, 2 cores
+python3 open-problems/p5b_b_protocol_duplex.py     # ~1 c
+python3 open-problems/p4b_ensemble_T8.py           # ~6–10 мин, 2 ядра
 ```
 
-Each script prints the protocol, checks the registered success criteria,
-and rewrites its own JSON + figures. All numbers in the documents come
-from these runs — there are no hand-entered values.
+Каждый скрипт печатает протокол, проверяет зарегистрированные критерии успеха
+и перезаписывает свой JSON + графики. Все числа в документах происходят
+из этих прогонов — ручных значений нет.
 
-## How to publish
+## Как опубликовать
 
 ```bash
 bash open-problems/push_open_problems.sh
 ```
 
-## Problem line-up
+## Линейка задач
 
-- **P1** — the 3D microphysics run (priority #1 of the line-up; a separate package)
-- **P4** → **P4-b** — ensemble averaging of σ_y at Re=2000: T≥2 → **T=8**
-  with a paired check of invariance under the exact b-rotation ✅ done
-- **P5** → **P5-b** — the b-communication protocol: one direction → **full duplex**
-  mode with decoupled directions and pilotless phase synchronization ✅ done
-- Next: P6 (the next-level program) — see `OPEN_PROBLEMS_EXT_B.md`, Section 5.
+- **P1** — 3D-прогон микрофизики (приоритет №1 линейки; отдельный пакет)
+- **P4** → **P4-b** — ансамблевое усреднение σ_y при Re=2000: T≥2 → **T=8**
+  с парной проверкой инвариантности относительно точного b-поворота ✅ выполнено
+- **P5** → **P5-b** — b-протокол связи: одно направление → **двусторонний (full duplex)**
+  режим с развязкой направлений и безпилотной фазовой синхронизацией ✅ выполнено
+- Далее: P6 (программа следующего уровня) — см. `OPEN_PROBLEMS_EXT_B.md`, раздел 5.

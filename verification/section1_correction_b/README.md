@@ -37,9 +37,9 @@ python3 python/verify.py
 - [Framework root](../README.md)
 - [Root README — verification matrix](../README.md)
 
-## 🇷🇺 Brief Summary (Russian Summary)
+## 🇷🇺 Краткое резюме (Russian Summary)
 
-**verification/section1_correction_b/** — the Python reference of Section 1 (Correction b — the Universal Polarization Constant): pure stdlib, a single verify.py, PASS/JSON output; result — b = π / (4·π² + 2·π·√3) ≈ 0.0785, the rotation angle θ_b = arcsin(b) ≈ 7.07°, and the stabilisation identity cos²θ_b + sin²θ_b = 1.
+**verification/section1_correction_b/** — Python-референс раздела 1 (Correction b — the Universal Polarization Constant): чистый stdlib, один verify.py, вывод PASS/JSON; результат — b = π / (4·π² + 2·π·√3) ≈ 0.0785, the rotation angle θ_b = arcsin(b) ≈ 7.07°, and the stabilisation identity cos²θ_b + sin²θ_b = 1.
 
 ---
 
@@ -92,16 +92,16 @@ Section 1 is the framework's keystone: every other section references the consta
 
 Formal: [lean4 Section1](../lean4/README.md) · [coq](../coq/README.md) · [isabelle](../isabelle/README.md) · [agda](../agda/README.md) · Computational: [cpp](../cpp/README.md) · [rust](../rust/README.md) · [haskell](../haskell/README.md) · Papers: [correction-b](../../papers/correction-b/README.md) · [preprint](../../papers/preprint/README.md).
 
-<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
+<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Navigation and Quick Links (auto)
+## 🧭 Навигация и быстрые ссылки (auto)
 
-- 🏠 [Repository root](../../../README.md)
-- 📖 [How the claims are verified](../../../verification/README.md)
-- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, a single backup copy, and citation with attribution are permitted; anything else requires the author's written consent.
+- 🏠 [Корень репозитория](../../../README.md)
+- 📖 [Как верифицируются утверждения](../../../verification/README.md)
+- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
 
-*This block was added automatically (`doc-enhancer v1`); it is unrelated to the license and does not modify it. Re-running the script does not duplicate the block.*
+*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
 

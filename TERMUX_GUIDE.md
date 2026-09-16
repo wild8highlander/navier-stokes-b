@@ -1,114 +1,114 @@
-# 📱 Guide: Publishing navier-stokes-b to GitHub from Android (Termux)
+# 📱 Инструкция: отправка navier-stokes-b на GitHub с Android (Termux)
 
-A step-by-step guide for the **wild8highlander** account. Time: ~10 minutes once;
-every later publish is a single command `./push_wild8highlander.sh`.
+Пошаговое руководство для аккаунта **wild8highlander**. Время: ~10 минут
+однократно; последующие отправки — одна команда `./push_wild8highlander.sh`.
 
 ---
 
-## Step 0. One-time preparation on GitHub (from any device)
+## Шаг 0. Подготовка на GitHub (однократно, с любого устройства)
 
-1. Sign in at https://github.com as `wild8highlander`.
-2. Create an **empty** repository: **New repository** →
-   name `navier-stokes-b` → do **not** add a README, .gitignore or a license
-   (the folder already ships all of them) → **Create repository**.
-3. Create an access token: **Settings → Developer settings →
+1. Зайдите на https://github.com под логином `wild8highlander`.
+2. Создайте **пустой** репозиторий: кнопка **New repository** →
+   имя `navier-stokes-b` → **не** добавляйте README, .gitignore и лицензию
+   (всё это уже есть в папке) → **Create repository**.
+3. Создайте токен доступа: **Settings → Developer settings →
    Personal access tokens → Tokens (classic) → Generate new token (classic)**:
    - Note: `termux-push`;
-   - Expiration: as you prefer (90 days);
-   - Scope: ☑ **repo** (full);
-   - **Generate token** and **copy it immediately**
-     (`ghp_…`) — the page will not show it again.
+   - Expiration: по вкусу (90 дней);
+   - Scope: ☑ **repo** (полностью);
+   - **Generate token** и **сразу скопируйте** токен
+     (`ghp_…`) — после закрытия страницы он больше не показывается.
 
-## Step 1. Install Termux
+## Шаг 1. Установите Termux
 
-Install **from F-Droid only** (the Play Market build is outdated):
+Устанавливайте **только с F-Droid** (версия из Play Market устарела):
 https://f-droid.org/packages/com.termux/
 
-After installing, open Termux and update packages:
+После установки откройте Termux и обновите пакеты:
 
 ```bash
 pkg update && pkg upgrade -y
 pkg install git unzip -y
 ```
 
-## Step 2. Move the archive to the phone
+## Шаг 2. Перенесите архив на телефон
 
-Option A — the archive is already on the phone:
+Вариант А — архив уже скачан на телефон:
 
 ```bash
-termux-setup-storage          # grant storage access (creates ~/storage)
-cd ~/storage/downloads        # or ~/storage/shared — wherever you saved it
+termux-setup-storage          # разрешите доступ к хранилищу (появится ~/storage)
+cd ~/storage/downloads        # или ~/storage/shared — куда скачали
 unzip navier-stokes-b.zip -d ~
 cd ~/navier-stokes-b
 ```
 
-Option B — download straight from Termux (if the archive is behind a direct link):
+Вариант Б — скачать прямо из Termux (если архив лежит по прямой ссылке):
 
 ```bash
 pkg install wget -y
-wget <DIRECT_LINK_TO_navier-stokes-b.zip> -O ~/nsb.zip
+wget <ПРЯМАЯ_ССЫЛКА_НА_НАВИЕР-СТОКС-b.zip> -O ~/nsb.zip
 unzip ~/nsb.zip -d ~
 cd ~/navier-stokes-b
 ```
 
-## Step 3. Initialize git (only if the folder is not a git repository yet)
+## Шаг 3. Инициализируйте git (только если папка ещё не git-репозиторий)
 
 ```bash
 git init -b main
 ```
 
-## Step 4. Push the repository
+## Шаг 4. Отправьте репозиторий
 
 ```bash
 chmod +x push_wild8highlander.sh
 ./push_wild8highlander.sh
 ```
 
-The script sets `origin` to `https://github.com/wild8highlander/navier-stokes-b.git`
-by itself, commits and pushes. On the first run you will be asked for:
+Скрипт сам настроит origin на `https://github.com/wild8highlander/navier-stokes-b.git`,
+сделает коммит и запушит. При первом запуске появится запрос:
 
 ```
 Username for 'https://github.com': wild8highlander
-Password for 'https://wild8highlander@github.com': <paste the PAT from Step 0.3>
+Password for 'https://wild8highlander@github.com': <вставьте PAT, Шаг 0.3>
 ```
 
-⚠️ Paste the **token** (`ghp_…`), not your GitHub password. To paste in Termux:
-long press → *Paste*. The characters are not displayed — that is normal, press Enter.
+⚠️ Вставляйте **токен** (`ghp_…`), а не пароль от GitHub. В Termux вставка —
+долгое нажатие → *Paste*. Символы не отображаются — это нормально, нажмите Enter.
 
-The credentials are remembered (`credential.helper store`) — later pushes ask nothing.
+Учётные данные запомнятся (`credential.helper store`) — дальше пуш идёт без вопросов.
 
-## Step 5. Verify the result
+## Шаг 5. Проверьте результат
 
-Open https://github.com/wild8highlander/navier-stokes-b — the files are there.
+Откройте https://github.com/wild8highlander/navier-stokes-b — файлы на месте.
 
 ---
 
-## Subsequent publishes
+## Повторные отправки
 
 ```bash
 cd ~/navier-stokes-b
-./push_wild8highlander.sh "one-sentence description of what changed"
+./push_wild8highlander.sh "что изменилось — одно предложение"
 ```
 
-## Troubleshooting
+## Частые проблемы
 
-| Symptom | Fix |
+| Симптом | Решение |
 |---|---|
-| `Authentication failed` | The token expired or was copied incompletely — create a new one (Step 0.3) |
-| `Repository not found` | The repository was not created or the name has a typo — recheck Step 0.2 |
-| `remote origin already exists` | Not an error: the script refreshes the origin URL itself |
-| `error: src refspec main…` | Run `git init -b main` first (Step 3), then retry |
-| Push "hangs" on a slow network | Retry the command; the repository is ~100 MB, mobile uploads may take minutes |
-| Termux dies in the background | Take **Acquire wakelock** in the notification bar before pushing |
+| `Authentication failed` | Токен просрочен/скопирован не полностью — создайте новый (Шаг 0.3) |
+| `Repository not found` | Репозиторий не создан или имя с опечаткой — проверьте Шаг 0.2 |
+| `remote origin already exists` | Не ошибка: скрипт сам обновляет URL origin |
+| `error: src refspec main…` | Сначала `git init -b main` (Шаг 3), затем повторите |
+| Push «висит» при медленной сети | Повторите команду; объём репозитория ~100 МБ, на мобильной сети может уходить несколько минут |
+| Termux закрывается в фоне | Возьмите в notification bar **Acquire wakelock** перед пушем |
 
-## Git cheat sheet (if you need it manually)
+## Шпаргалка git (если нужно вручную)
 
 ```bash
-git status                        # what changed
-git add -A                        # stage everything
-git commit -m "message"           # commit
-git push origin main              # publish
-git pull --rebase                 # fetch upstream changes
+git status                        # что изменилось
+git add -A                        # добавить всё
+git commit -m "сообщение"         # зафиксировать
+git push origin main              # отправить
+git pull --rebase                 # забрать чужие изменения
 ```
 
-*IPL-RP-1.0: the content is the property of Isaev Iskhak Khamzatovich (wild8highlander). All rights reserved.*
+*Лицензия IPL-RP-1.0: содержимое — собственность Isaev Iskhak Khamzatovich (wild8highlander). Все права защищены.*

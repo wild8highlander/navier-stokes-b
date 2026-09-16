@@ -65,9 +65,9 @@ coqc <file>.v (per section file)
 ```
 Build step: `coq_makefile or per-file coqc`.
 
-## 🇷🇺 Brief Summary (Russian Summary)
+## 🇷🇺 Краткое резюме (Russian Summary)
 
-**verification/coq/** — the Coq/Rocq (8.18) verification layer: proofs built on the standard Reals library with lra/nra automation. Six per-section ports (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); a uniform PASS/JSON contract; build commands are in the How to Run section.
+**verification/coq/** — слой верификации на Coq/Rocq (8.18): доказательства на стандартной библиотеке Reals с автоматизацией lra/nra. Шесть портов по разделам (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); единый контракт PASS/JSON; команды сборки — в разделе How to Run.
 
 ---
 
@@ -115,18 +115,18 @@ The Coq development is the classical-logic witness: where Agda constructs and Is
 
 - [`lean4/`](../lean4/README.md) — the primary formal development this mirrors;
 - the `_CoqProject` build order — the canonical compile sequence;
-- Section × Language [matrix](../../README.md#-verification-in-11-languages) — where each `v` file sits.
+- Section × Language [matrix](../../README.md#-верификация-на-11-языках) — where each `v` file sits.
 
-<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
+<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Navigation and Quick Links (auto)
+## 🧭 Навигация и быстрые ссылки (auto)
 
-- 🏠 [Repository root](../../../README.md)
-- 📖 [How the claims are verified](../../../verification/README.md)
-- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, a single backup copy, and citation with attribution are permitted; anything else requires the author's written consent.
+- 🏠 [Корень репозитория](../../../README.md)
+- 📖 [Как верифицируются утверждения](../../../verification/README.md)
+- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
 
-*This block was added automatically (`doc-enhancer v1`); it is unrelated to the license and does not modify it. Re-running the script does not duplicate the block.*
+*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
 

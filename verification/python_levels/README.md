@@ -1,33 +1,33 @@
-# Python verification, levels L1–L5
+# Python-верификация, уровни L1–L5
 
-An independent multi-level suite. Every check recomputes everything from scratch on each
-run; the results are saved to `results/*.json` (honest numbers, no manual edits).
+Независимый многоуровневый набор. Каждая проверка считает всё заново при каждом
+запуске; результаты сохраняются в `results/*.json` (честные числа, без ручной правки).
 
-| Level | What it verifies | Time |
+| Уровень | Что проверяет | Время |
 |---|---|---|
-| L1 | Constants from closed-form formulas (mpmath, 50 digits): b in two forms, sin θ_b = b — exact, cos θ_b, ln(1+b), Z = exp(b·β_K·L_min) — the Klein closure, Lilly's C_s, φ, e; float64 cross-check of every quantity | ~1 s |
-| L2 | Rotation algebra: the exact form u′ = u∥ + √(1−b²)u⊥ + b(ω̂×u⊥) = Rodrigues at θ_b: R^T·R = I (10⁵ vectors), det R = 1, |u′| = |u|, spectrum {1, e^{±iθ_b}} | ~10 s |
-| L3 | Kirchhoff vortices: Hamiltonian character (H drift → 0 as dt⁴), RK4 order = 4, isometry of the phase flow | ~30 s |
-| L4 | 2D NSE: the identity ω′ = cos θ_b·ω — exact; energy is preserved under rotation; div u′ = −b·ω; the energy identity; the max principle for ω; continuous rotation without energy injection | ~2–5 min |
-| L5 | 3D Taylor–Green N=48, ν=0.01, T=6: the BKM integral and max‖ω‖∞ for the true NSE versus the continuous b-rotation; |ΔE| per rotation | ~10–20 min |
+| L1 | Константы из замкнутых формул (mpmath, 50 знаков): b в двух формах, sin θ_b = b — точно, cos θ_b, ln(1+b), Z = exp(b·β_K·L_min) — замыкание Клейна, C_s Лилли, φ, e; float64-контроль каждой величины | ~1 c |
+| L2 | Алгебра поворота: точная форма u′ = u∥ + √(1−b²)u⊥ + b(ω̂×u⊥) = Родригес на θ_b: R^T·R = I (10⁵ векторов), det R = 1, |u′| = |u|, спектр {1, e^{±iθ_b}} | ~10 c |
+| L3 | Вихри Кирхгофа: гамильтоновость (дрейф H → 0 как dt⁴), порядок RK4 = 4, изометрия фазового потока | ~30 c |
+| L4 | 2D NSE: тождество ω′ = cos θ_b·ω — точно; энергия при повороте сохраняется; div u′ = −b·ω; энергетическое тождество; max-принцип ω; непрерывный поворот без инжекции энергии | ~2–5 мин |
+| L5 | 3D Тейлор–Грин N=48, ν=0.01, T=6: BKM-интеграл и max‖ω‖∞ для истинных NSE против непрерывного b-поворота; |ΔE| за поворот | ~10–20 мин |
 
-## How to Run
+## Запуск
 
 ```bash
-python3 verify_all.py                 # everything
-NSE3D_SKIP=1 python3 verify_all.py    # without L5 (~1 minute)
-NSE3D_SMALL=1 python3 verify_all.py   # L5 in the control regime N=24, T=1
+python3 verify_all.py                 # всё
+NSE3D_SKIP=1 python3 verify_all.py    # без L5 (~минута)
+NSE3D_SMALL=1 python3 verify_all.py   # L5 в контрольном режиме N=24, T=1
 ```
 
-Dependencies: `numpy`, `mpmath` (required), `sympy` (optional, for the symbolic
-proof of the equivalence of the two forms of b).
+Зависимости: `numpy`, `mpmath` (обязательно), `sympy` (опционально, символьное
+доказательство эквивалентности двух форм b).
 
-## The L5 Protocol (fixed)
+## Протокол L5 (зафиксирован)
 
-Taylor–Green in T³, 2/3-dealiasing, RK4, dt=0.004, T=6. Continuous rotation:
-the angle per step φ = dt·θ_b (cumulatively θ_b·T ≈ 21.459°), axis ω̂ = ω/‖ω‖,
-the vorticity is recomputed from the rotated velocity, Leray projection.
+Тейлор–Грин в T³, 2/3-dealiasing, RK4, dt=0.004, T=6. Непрерывный поворот:
+угол за шаг φ = dt·θ_b (кумулятивно θ_b·T ≈ 21,459°), ось ω̂ = ω/‖ω‖,
+вихрь пересчитывается из повёрнутой скорости, проекция Лерэ.
 
-The historical 3.5× factor refers to the under-resolved N=24 configuration (chapter 11
-of the monograph) and is NOT reproduced here; the fixed protocol yields its own factors
-(in the completed run: 1.032× on the BKM integral, 1.014× on max‖ω‖∞, |ΔE| ≤ 5.1·10⁻⁵).
+Исторический фактор 3,5× относится к недоразрешённой конфигурации N=24 (глава 11
+монографии) и здесь НЕ воспроизводится; фиксированный протокол даёт свои факторы
+(в выполненном прогоне: 1,032× по BKM-интегралу, 1,014× по max‖ω‖∞, |ΔE| ≤ 5,1·10⁻⁵).

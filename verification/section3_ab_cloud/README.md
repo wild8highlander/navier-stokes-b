@@ -37,9 +37,9 @@ python3 python/verify.py
 - [Framework root](../README.md)
 - [Root README — verification matrix](../README.md)
 
-## 🇷🇺 Brief Summary (Russian Summary)
+## 🇷🇺 Краткое резюме (Russian Summary)
 
-**verification/section3_ab_cloud/** — the Python reference of Section 3 (AB-Cloud — the Non-Hermitian Hofstadter Hamiltonian): pure stdlib, a single verify.py, PASS/JSON output; result — spectral construction with σ = 0.5 non-Hermiticity, α = 2.0 AB flux, disorder W = 1.0 and 5 000 embedded Riemann zeta zeros.
+**verification/section3_ab_cloud/** — Python-референс раздела 3 (AB-Cloud — the Non-Hermitian Hofstadter Hamiltonian): чистый stdlib, один verify.py, вывод PASS/JSON; результат — spectral construction with σ = 0.5 non-Hermiticity, α = 2.0 AB flux, disorder W = 1.0 and 5 000 embedded Riemann zeta zeros.
 
 ---
 
@@ -77,16 +77,16 @@ This section is deliberately *structural only*: it verifies what the heavy AB-Cl
 
 Formal: [lean4](../lean4/README.md) · [coq](../coq/README.md) · [isabelle](../isabelle/README.md) · [agda](../agda/README.md).
 
-<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
+<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Navigation and Quick Links (auto)
+## 🧭 Навигация и быстрые ссылки (auto)
 
-- 🏠 [Repository root](../../../README.md)
-- 📖 [How the claims are verified](../../../verification/README.md)
-- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, a single backup copy, and citation with attribution are permitted; anything else requires the author's written consent.
+- 🏠 [Корень репозитория](../../../README.md)
+- 📖 [Как верифицируются утверждения](../../../verification/README.md)
+- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
 
-*This block was added automatically (`doc-enhancer v1`); it is unrelated to the license and does not modify it. Re-running the script does not duplicate the block.*
+*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
 

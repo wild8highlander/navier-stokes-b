@@ -85,9 +85,9 @@ cargo run --release
 ```
 Build step: `cargo build --release`.
 
-## 📝 Summary
+## 🇷🇺 Краткое резюме (Russian Summary)
 
-**verification/rust/** — the Rust (1.75+) verification layer: a memory-safe std-only port; each section is a separate binary. Six per-section ports (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); the uniform PASS/JSON contract; build commands — see the How to Run section.
+**verification/rust/** — слой верификации на Rust (1.75+): memory-safe порт только на std; каждый раздел — отдельный бинарник. Шесть портов по разделам (1: Correction b, 2: Preprint NSE, 3: AB-Cloud, 4: KdV, 5: Klein Attractor, 6: Riemann Zeros); единый контракт PASS/JSON; команды сборки — в разделе How to Run.
 
 ---
 
@@ -138,16 +138,16 @@ The Rust ports prove the sections do not need *anything* — no BLAS, no NumPy, 
 - [`cpp/`](../cpp/README.md) — the BLAS-backed counterpart;
 - [`tests/`](../tests/README.md) — the validator that consumes these ports' JSON.
 
-<!-- doc-enhancer:block v1 (auto-inserted block; license files are not touched) -->
+<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Navigation and Quick Links (auto)
+## 🧭 Навигация и быстрые ссылки (auto)
 
-- 🏠 [Repository root](../../../README.md)
-- 📖 [How the claims are verified](../../../verification/README.md)
-- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, one backup copy and citation with attribution are allowed; everything else only with the Author's written consent.
+- 🏠 [Корень репозитория](../../../README.md)
+- 📖 [Как верифицируются утверждения](../../../verification/README.md)
+- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
 
-*Block inserted automatically (`doc-enhancer v1`); it is not part of the license and does not modify it. Re-running the script does not duplicate the block.*
+*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
 

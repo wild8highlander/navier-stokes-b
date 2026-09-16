@@ -29,7 +29,7 @@ This directory is the **independent verification framework** of the repository: 
 - [`docs/extended-languages/`](docs/README.md) — notes on the extended toolchains;
 - [`web-dashboard/`](web-dashboard/README.md) — dashboard package manifest.
 
-The six research sections map 1-to-1 onto the research programs described in the root README: **1** — the polarization correction *b*; **2** — the NSE regularity chain of the preprint; **3** — the AB-Cloud Hamiltonian; **4** — the KdV soliton interactions; **5** — the Klein attractor; **6** — the Riemann-zeros correspondence. The root README carries the full [Section × Language matrix](../README.md#-verification-in-11-languages) with direct links into every port.
+The six research sections map 1-to-1 onto the research programs described in the root README: **1** — the polarization correction *b*; **2** — the NSE regularity chain of the preprint; **3** — the AB-Cloud Hamiltonian; **4** — the KdV soliton interactions; **5** — the Klein attractor; **6** — the Riemann-zeros correspondence. The root README carries the full [Section × Language matrix](../README.md#-верификация-на-11-языках) with direct links into every port.
 
 Historical note: [`README_VERIFICATION.md`](README_VERIFICATION.md) is the original (short) framework description kept for provenance; this README supersedes it. Admitted gaps in the formal systems are tracked openly — see [`lean4/TODO_sorry.md`](lean4/TODO_sorry.md).
 
@@ -347,9 +347,9 @@ verification/
 └── README_VERIFICATION.md  (this file)
 ```
 
-## 🇷🇺 Brief Summary (Russian Summary)
+## 🇷🇺 Краткое резюме (Russian Summary)
 
-**verification/** — the independent 11-language verification framework: 4 proof assistants (Lean 4, Coq, Isabelle, Agda) machine-check the structural facts, while 7 computational languages re-derive the numbers under a single shared contract (PASS lines + a JSON verdict). The six sections correspond to the research programs; infrastructure — common/, api/, demo/, docker/, tests/, scripts/, notebooks/. The historical short README is preserved alongside.
+**verification/** — независимый фреймворк верификации на 11 языках: 4 пруф-ассистента (Lean 4, Coq, Isabelle, Agda) машинно проверяют структурные факты, 7 вычислительных языков пересчитывают числа по единому контракту (строки PASS + JSON-вердикт). Шесть разделов соответствуют программам исследований; инфраструктура — common/, api/, demo/, docker/, tests/, scripts/, notebooks/. Исторический короткий README сохранён рядом.
 
 ---
 
@@ -558,16 +558,16 @@ Ten minutes, one section, the entire evidence chain. Multiply by five other sect
 
 Extending the validator (new languages, new sections) is a config change *plus* the same-commit contract updates — the atomicity rule from the design rationale applies verbatim.
 
-<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
+<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Navigation and Quick Links (auto)
+## 🧭 Навигация и быстрые ссылки (auto)
 
-- 🏠 [Repository root](../../README.md)
-- 📖 [How the claims are verified](../../verification/README.md)
-- 📄 [Papers (PDF)](../../papers/README.md) · 📚 [Monographs](../../docs/README.md) · 🧾 [LaTeX](../../src/README.md)
-- ⚖️ [IPL-RP-1.0 License](../../LICENSE.md) — viewing, a single backup copy, and citation with attribution are permitted; anything else requires the author's written consent.
+- 🏠 [Корень репозитория](../../README.md)
+- 📖 [Как верифицируются утверждения](../../verification/README.md)
+- 📄 [Статьи (PDF)](../../papers/README.md) · 📚 [Монографии](../../docs/README.md) · 🧾 [LaTeX](../../src/README.md)
+- ⚖️ [Лицензия IPL-RP-1.0](../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
 
-*This block was added automatically (`doc-enhancer v1`); it is unrelated to the license and does not modify it. Re-running the script does not duplicate the block.*
+*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
 

@@ -24,9 +24,9 @@ docker run --rm rp-rust
 - [Docker layer](../README.md)
 - [Language layer](../../rust/README.md)
 
-## 📝 Summary
+## 🇷🇺 Краткое резюме (Russian Summary)
 
-Dockerfile with the Rust 1.75+ environment: toolchain installation + verification run as the default command.
+Dockerfile со средой Rust 1.75+: установка тулчейна + запуск верификации по умолчанию.
 
 ---
 
@@ -38,16 +38,16 @@ Dockerfile with the Rust 1.75+ environment: toolchain installation + verificatio
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
 
 </div>
-<!-- doc-enhancer:block v1 (auto-generated block; license files are not touched) -->
+<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Navigation and Quick Links (auto)
+## 🧭 Навигация и быстрые ссылки (auto)
 
-- 🏠 [Repository root](../../../../README.md)
-- 📖 [How the claims are verified](../../../../verification/README.md)
-- 📄 [Papers (PDF)](../../../../papers/README.md) · 📚 [Monographs](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [IPL-RP-1.0 License](../../../../LICENSE.md) — viewing, a single backup copy, and citation with attribution are permitted; everything else requires the author's written permission.
+- 🏠 [Корень репозитория](../../../../README.md)
+- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
+- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
+- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
 
-*Block added automatically (`doc-enhancer v1`); it is unrelated to the license and does not modify it. Re-running the script does not duplicate the block.*
+*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
 

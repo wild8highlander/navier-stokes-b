@@ -2,7 +2,7 @@
 
 > **Navigation:** [`papers`](../README.md) › **`correction-b`**
 
-![Papers](https://img.shields.io/badge/Content-Research%20Papers-blue?style=flat-square&logo=adobeacrobatreader&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![RU](https://img.shields.io/badge/RU-Summary-blue?style=flat-square)
+![Papers](https://img.shields.io/badge/Content-Research%20Papers-blue?style=flat-square&logo=adobeacrobatreader&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square) ![RU](https://img.shields.io/badge/RU-%D0%A0%D0%B5%D0%B7%D1%8E%D0%BC%D0%B5-blue?style=flat-square)
 
 This folder holds the **full-length research paper** on the universal polarization correction and its consequences for the 3D Navier–Stokes problem, as two typeset PDF editions of approximately 2.3 MB each. The two files are byte-identical twins: `main.pdf` is the original submission name and `main_v2.pdf` the revision-stamped copy — both carry the same final text, so either may be cited or shared.
 
@@ -30,9 +30,9 @@ The typeset figures, the closed-form derivation and the numerical stress-tests p
 - [Section 1 verification (all languages)](../../verification/README.md)
 - [Root README — Overview](../../README.md)
 
-## 🇷🇺 Brief Summary
+## 🇷🇺 Краткое резюме (Russian Summary)
 
-**papers/correction-b/** — the full paper on the polarization correction: the derivation of *b* = π/(4π² + 2π√3) ≈ 0.0785 from the Kirchhoff point-vortex system, the stabilization mechanism θ_b ≈ 7.07°, and the 3.5× reduction of the BKM criterion integral — the proof of global regularity of 3D Navier–Stokes without artificial dissipation. The two files (main.pdf, main_v2.pdf) are identical twins of one edition (~2.3 MB); either may be cited. LaTeX — in `src/main/`, the Word edition with figures — in `docs/correction-b/`.
+**papers/correction-b/** — полная статья о поляризационной поправке: вывод *b* = π/(4π² + 2π√3) ≈ 0.0785 из системы вихрей Кирхгофа, механизм стабилизации θ_b ≈ 7.07° и снижение интеграла критерия BKM в 3.5 раза — доказательство глобальной регулярности 3D Navier–Stokes без искусственной диссипации. Два файла (main.pdf, main_v2.pdf) — идентичные близнецы одного издания (~2.3 МБ), цитировать можно любой. LaTeX — в `src/main/`, Word-версия с рисунками — в `docs/correction-b/`.
 
 ---
 
@@ -79,15 +79,16 @@ Admitted gaps in the formal layer (numerical bound lemmas still open) are itemis
 - the figure-rich Word edition: [`../../docs/correction-b/`](../../docs/correction-b/README.md);
 - the machine-checked skeleton: [`../../verification/lean4/`](../../verification/lean4/README.md) and the other three assistants.
 
-<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
+<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Navigation and Quick Links (auto)
+## 🧭 Навигация и быстрые ссылки (auto)
 
-- 🏠 [Repository root](../../../README.md)
-- 📖 [How claims are verified](../../../verification/README.md)
-- 📄 [Papers (PDF)](../../../papers/README.md) · 📚 [Monographs](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
-- ⚖️ [IPL-RP-1.0 License](../../../LICENSE.md) — viewing, one backup copy and citation with attribution are permitted; anything else only with the author's written consent.
+- 🏠 [Корень репозитория](../../../README.md)
+- 📖 [Как верифицируются утверждения](../../../verification/README.md)
+- 📄 [Статьи (PDF)](../../../papers/README.md) · 📚 [Монографии](../../../docs/README.md) · 🧾 [LaTeX](../../../src/README.md)
+- ⚖️ [Лицензия IPL-RP-1.0](../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
 
-*Block added automatically (`doc-enhancer v1`); it is not related to the license and does not modify it. Re-running the script does not duplicate the block.*
+*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+

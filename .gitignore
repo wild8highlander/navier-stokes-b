@@ -1,5 +1,5 @@
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-# .gitignore — Comprehensive ignore rules for navier-stokes-b
+# .gitignore — Comprehensive ignore rules for research-papers
 # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 # ─── Python ───
@@ -166,9 +166,8 @@ src/_build/
 .docker/
 
 # ─── Documentation ───
+site/
 docs/_build/
-verification/web-dashboard/dist/
-# NOTE: /site is the SOURCE of the GitHub Pages site — it is tracked, not ignored
 
 # ─── IDE and Editors ───
 .idea/
@@ -224,9 +223,9 @@ temp/
 *.orig
 *.rej
 
-# ─── navier-stokes-b: research PDFs are part of the repository ───
-# (overrides the global *.pdf rule above: the papers, monographs and the KdV
-#  chapter are primary artifacts of this repository and must not be ignored)
+# ─── navier-stokes-b: исследовательские PDF — часть репозитория ───
+# (переопределяет глобальное правило *.pdf выше: статьи, монографии и KdV-глава
+#  являются основными артефактами этого репозитория и не должны игнорироваться)
 !papers/**/*.pdf
 !monograph/*.pdf
 !docs/**/*.pdf

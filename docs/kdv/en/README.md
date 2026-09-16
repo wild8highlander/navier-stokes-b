@@ -17,9 +17,9 @@ English Word manuscript of the KdV chapter (~7.3 MB), complete with figures — 
 - [Russian edition (sibling)](../ru/README.md)
 - [Parent folder](../README.md)
 
-## 🇷🇺 Brief Summary
+## 🇷🇺 Краткое резюме (Russian Summary)
 
-English Word manuscript of chapter 16 on the KdV equation (~7.3 MB).
+Английская Word-рукопись главы 16 о КдФ (~7.3 МБ).
 
 ---
 
@@ -31,15 +31,16 @@ English Word manuscript of chapter 16 on the KdV equation (~7.3 MB).
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
 
 </div>
-<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
+<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Navigation and Quick Links (auto)
+## 🧭 Навигация и быстрые ссылки (auto)
 
-- 🏠 [Repository root](../../../../README.md)
-- 📖 [How claims are verified](../../../../verification/README.md)
-- 📄 [Papers (PDF)](../../../../papers/README.md) · 📚 [Monographs](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [IPL-RP-1.0 License](../../../../LICENSE.md) — viewing, one backup copy and citation with attribution are permitted; anything else only with the author's written consent.
+- 🏠 [Корень репозитория](../../../../README.md)
+- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
+- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
+- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
 
-*Block added automatically (`doc-enhancer v1`); it is not related to the license and does not modify it. Re-running the script does not duplicate the block.*
+*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
+

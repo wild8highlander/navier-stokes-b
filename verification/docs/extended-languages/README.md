@@ -4,7 +4,7 @@
 
 ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
-The **extended-languages decision record**: why the framework grew beyond its original language set to Lean 4, Coq, Isabelle-HOL, Agda, Rust, C++ and Haskell, and what each addition buys (independence of foundations, memory safety, classically-checked real analysis, constructive types). Reads as the rationale behind the [Section × Language matrix](../../../README.md#-verification-in-11-languages).
+The **extended-languages decision record**: why the framework grew beyond its original language set to Lean 4, Coq, Isabelle-HOL, Agda, Rust, C++ and Haskell, and what each addition buys (independence of foundations, memory safety, classically-checked real analysis, constructive types). Reads as the rationale behind the [Section × Language matrix](../../../README.md#-верификация-на-11-языках).
 
 ## 📂 Contents — What Lives Here
 
@@ -15,9 +15,9 @@ _This directory currently contains no files._
 - [Parent — docs/](../README.md)
 - [Verification root](../../README.md)
 
-## 🇷🇺 Brief Summary (Russian Summary)
+## 🇷🇺 Краткое резюме (Russian Summary)
 
-The historical decision to extend the language set: the motivation for each addition and the enforcement of the contract.
+Историческое решение о расширении набора языков: мотивации по каждому добавлению и enforcement контракта.
 
 ---
 
@@ -29,16 +29,16 @@ The historical decision to extend the language set: the motivation for each addi
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) · Licensed under [IPL-RP-1.0](https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md) — All Rights Reserved*
 
 </div>
-<!-- doc-enhancer:block v1 (automatic block; license files are not affected) -->
+<!-- doc-enhancer:block v1 (автоматический блок; файлы лицензии не затрагиваются) -->
 
 ---
 
-## 🧭 Navigation and Quick Links (auto)
+## 🧭 Навигация и быстрые ссылки (auto)
 
-- 🏠 [Repository root](../../../../README.md)
-- 📖 [How the claims are verified](../../../../verification/README.md)
-- 📄 [Papers (PDF)](../../../../papers/README.md) · 📚 [Monographs](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
-- ⚖️ [IPL-RP-1.0 License](../../../../LICENSE.md) — viewing, a single backup copy, and citation with attribution are permitted; anything else requires the author's written consent.
+- 🏠 [Корень репозитория](../../../../README.md)
+- 📖 [Как верифицируются утверждения](../../../../verification/README.md)
+- 📄 [Статьи (PDF)](../../../../papers/README.md) · 📚 [Монографии](../../../../docs/README.md) · 🧾 [LaTeX](../../../../src/README.md)
+- ⚖️ [Лицензия IPL-RP-1.0](../../../../LICENSE.md) — просмотр, одна резервная копия и цитирование с атрибуцией разрешены; остальное — только с письменного согласия автора.
 
-*This block was added automatically (`doc-enhancer v1`); it is unrelated to the license and does not modify it. Re-running the script does not duplicate the block.*
+*Блок добавлен автоматически (`doc-enhancer v1`); к лицензии отношения не имеет и её не изменяет. Повторный запуск скрипта блок не дублирует.*
 

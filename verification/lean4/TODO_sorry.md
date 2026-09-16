@@ -1,119 +1,119 @@
-# Lean 4 Registry of Unfinished Proofs
+# Список незавершённых доказательств Lean 4
 
-> This file keeps the complete inventory of every `sorry` (theorems with missing
-> proofs) and every `axiom` (axiomatized statements) in the Lean 4 project.
-> Items are crossed out as the proofs are completed.
+> Этот файл содержит полный перечень всех `sorry` (теорем с пропущенными
+> доказательствами) и `axiom` (аксиоматизированных утверждений) в проекте
+> Lean 4. По мере доработки доказательств пункты вычёркиваются.
 
-## Summary
+## Сводка
 
-| Type | Count | Status |
+| Тип | Количество | Статус |
 |-----|-----------|--------|
-| `sorry` (unfinished proofs) | 13 | to be proven |
-| `axiom ... : True` (stubs) | 12 | replace with `theorem ... := trivial` |
-| `axiom ...` (open problems) | 4 | keep as is |
-| **Total** | **29** | |
+| `sorry` (незавершённые доказательства) | 13 | нужно доказать |
+| `axiom ... : True` (заглушки) | 12 | заменить на `theorem ... := trivial` |
+| `axiom ...` (открытые проблемы) | 4 | оставить как есть |
+| **Итого** | **29** | |
 
 ---
 
-## The complete list of `sorry`
+## Полный список `sorry`
 
 ### Common/Foundation.lean
 
-| # | Theorem | What needs to be proven | Difficulty |
+| № | Теорема | Что нужно доказать | Сложность |
 |---|---------|-------------------|-----------|
-| 1 | `Real.pi < 4` (inside `bCorrection_lt_one`) | a numerical estimate of π | easy |
+| 1 | `Real.pi < 4` (внутри `bCorrection_lt_one`) | Численная оценка π | легко |
 
 ### Section1_CorrectionB/Basic.lean
 
-| # | Theorem | What needs to be proven | Difficulty |
+| № | Теорема | Что нужно доказать | Сложность |
 |---|---------|-------------------|-----------|
-| 2 | `b_gt_007` | b > 0.07 | medium |
-| 3 | `b_lt_008` | b < 0.08 | medium |
-| 4 | `rodrigues_orthogonal` | Rᵀ·R = I (orthogonality) | hard |
-| 5 | `rodrigues_det` | det R = 1 (a proper rotation) | hard |
-| 6 | `R_b_preserves_norm` | ‖R·u‖ = ‖u‖ (energy preservation) | medium |
+| 2 | `b_gt_007` | b > 0.07 | средне |
+| 3 | `b_lt_008` | b < 0.08 | средне |
+| 4 | `rodrigues_orthogonal` | Rᵀ·R = I (ортогональность) | сложно |
+| 5 | `rodrigues_det` | det R = 1 (правильное вращение) | сложно |
+| 6 | `R_b_preserves_norm` | ‖R·u‖ = ‖u‖ (сохранение энергии) | средне |
 
 ### Section2_PreprintNSE/ProofChain.lean
 
-| # | Theorem | What needs to be proven | Difficulty |
+| № | Теорема | Что нужно доказать | Сложность |
 |---|---------|-------------------|-----------|
-| 7 | `α_bounds` | 2 < α < 2.1 | medium |
-| 8 | `L_min_lt_one` | L_min < 1 | medium |
+| 7 | `α_bounds` | 2 < α < 2.1 | средне |
+| 8 | `L_min_lt_one` | L_min < 1 | средне |
 
 ### Section3_ABCloud/HofstadterHamiltonian.lean
 
-| # | Theorem | What needs to be proven | Difficulty |
+| № | Теорема | Что нужно доказать | Сложность |
 |---|---------|-------------------|-----------|
-| 9 | `peierls_phase_unit_modulus` | \|e^(2πi/7)\| = 1 | easy |
-| 10 | `peierls_phase_order_7` | (e^(2πi/7))⁷ = 1 | easy |
-| 11 | `gue_spacing_normalized` | ∫ PDF = 1 | hard |
+| 9 | `peierls_phase_unit_modulus` | \|e^(2πi/7)\| = 1 | легко |
+| 10 | `peierls_phase_order_7` | (e^(2πi/7))⁷ = 1 | легко |
+| 11 | `gue_spacing_normalized` | ∫ PDF = 1 | сложно |
 
 ### Section4_KdV/Soliton.lean
 
-| # | Theorem | What needs to be proven | Difficulty |
+| № | Теорема | Что нужно доказать | Сложность |
 |---|---------|-------------------|-----------|
-| 12 | `soliton_solves_KdV` | sech² is a solution of the KdV equation | very hard |
+| 12 | `soliton_solves_KdV` | sech² — решение уравнения KdV | очень сложно |
 
 ---
 
-## The complete list of `axiom ... : True` (replace with `theorem ... := trivial`)
+## Полный список `axiom ... : True` (заменить на `theorem ... := trivial`)
 
-These are stubs — easy to replace:
+Это заглушки — их легко заменить:
 
 ### Section4_KdV/Soliton.lean
-- [ ] `miura_mkdv_to_kdv` — the Miura transform maps mKdV to KdV
-- [ ] `elastic_interaction` — the elastic interaction of solitons
-- [ ] `lax_pair` — the Lax pair for KdV
+- [ ] `miura_mkdv_to_kdv` — преобразование Миуры переводит mKdV в KdV
+- [ ] `elastic_interaction` — упругое взаимодействие солитонов
+- [ ] `lax_pair` — пара Лакса для KdV
 
 ### Section5_KleinAttractor/KleinQuartic.lean
-- [ ] `klein_smooth` — the Klein quartic is smooth
-- [ ] `klein_genus_three` — the genus of the Klein quartic equals 3
-- [ ] `klein_aut_is_PSL2_7` — the automorphism group = PSL(2,7)
-- [ ] `f_attractor_nonempty` — the F-attractor is nonempty
-- [ ] `f_attractor_compact` — the F-attractor is compact
+- [ ] `klein_smooth` — квартика Клейна гладкая
+- [ ] `klein_genus_three` — род квартики Клейна равен 3
+- [ ] `klein_aut_is_PSL2_7` — группа автоморфизмов = PSL(2,7)
+- [ ] `f_attractor_nonempty` — F-аттрактор непуст
+- [ ] `f_attractor_compact` — F-аттрактор компактен
 
 ### Section6_RiemannZeros/HilbertPolya.lean
-- [ ] `zeta_pole_at_one` — ζ(s) has a pole at s=1
-- [ ] `zeta_functional_equation` — the functional equation of ζ
-- [ ] `rh_implies_strong_pnt` — RH ⟹ the strong prime number theorem
-- [ ] `ab_cloud_is_hilbert_polya_candidate` — AB-Cloud as an HP candidate
+- [ ] `zeta_pole_at_one` — ζ(s) имеет полюс в s=1
+- [ ] `zeta_functional_equation` — функциональное уравнение ζ
+- [ ] `rh_implies_strong_pnt` — RH ⟹ усиленная теорема о простых числах
+- [ ] `ab_cloud_is_hilbert_polya_candidate` — AB-Cloud — кандидат на HP
 
 ---
 
-## Open mathematical problems (keep as `axiom`)
+## Открытые математические проблемы (оставить как `axiom`)
 
-These statements cannot be proven without a fundamental breakthrough:
+Эти утверждения не могут быть доказаны без фундаментального прорыва:
 
-| Axiom | Status | Description |
+| Аксиома | Статус | Описание |
 |---------|--------|----------|
-| `hilbert_polya_conjecture` | Open problem (since 1914) | The Hilbert–Pólya conjecture |
-| `bkmIntegral_if_bounded` | Needs a definition | Replace with a `def` carrying the real definition |
-| `KdV` (as Prop) | Needs a definition | Replace with the PDE formulation |
+| `hilbert_polya_conjecture` | Открытая проблема (с 1914) | Гипотеза Гильберта-Пойа |
+| `bkmIntegral_if_bounded` | Требует определения | Заменить на `def` с реальным определением |
+| `KdV` (как Prop) | Требует определения | Заменить на формулу PDE |
 
 ---
 
-## How to close a `sorry` — a short guide
+## Как закрыть `sorry` — краткое руководство
 
-### A simple example (the `nlinarith` tactic):
+### Простой пример (тактика `nlinarith`):
 
 ```lean
--- Before:
+-- Было:
 theorem b_gt_007 : (0.07 : ℝ) < bCorrection := by sorry
 
--- After:
+-- Стало:
 theorem b_gt_007 : (0.07 : ℝ) < bCorrection := by
   unfold bCorrection
   nlinarith [Real.pi_pos, Real.sqrt_pos 3 (by norm_num)]
 ```
 
-### A medium example (matrix expansion):
+### Средний пример (раскрытие матрицы):
 
 ```lean
--- Before:
+-- Было:
 theorem rodrigues_orthogonal (θ : ℝ) (n : Fin 3 → ℝ) (hn : ‖n‖ = 1) :
     (rodriguesRotation θ n)ᵀ * rodriguesRotation θ n = 1 := by sorry
 
--- After:
+-- Стало:
 theorem rodrigues_orthogonal (θ : ℝ) (n : Fin 3 → ℝ) (hn : ‖n‖ = 1) :
     (rodriguesRotation θ n)ᵀ * rodriguesRotation θ n = 1 := by
   ext i j
@@ -122,41 +122,41 @@ theorem rodrigues_orthogonal (θ : ℝ) (n : Fin 3 → ℝ) (hn : ‖n‖ = 1) :
   nlinarith [hn, Real.sin_sq_add_cos_sq θ]
 ```
 
-### Replacing an `axiom foo : True` stub:
+### Замена заглушки `axiom foo : True`:
 
 ```lean
--- Before:
+-- Было:
 axiom klein_genus_three : True
 
--- After (minimum):
+-- Стало (минимум):
 theorem klein_genus_three : True := trivial
 
--- Or (better — a real definition):
+-- Или (лучше — настоящее определение):
 def klein_genus : ℕ := 3
 theorem klein_genus_three : klein_genus = 3 := rfl
 ```
 
 ---
 
-## Useful tactics
+## Полезные тактики
 
-| Situation | Tactic |
+| Ситуация | Тактика |
 |----------|---------|
-| Numerical equality | `norm_num` |
-| Linear arithmetic | `linarith` |
-| Nonlinear arithmetic | `nlinarith` |
-| Positivity | `positivity` |
-| Algebraic simplification | `ring` / `field_simp` |
-| Matrix expansion | `ext i j; fin_cases i <;> fin_cases j` |
-| Lemma search in Mathlib | `apply?` |
+| Числовое равенство | `norm_num` |
+| Линейная арифметика | `linarith` |
+| Нелинейная арифметика | `nlinarith` |
+| Положительность | `positivity` |
+| Алгебраическое упрощение | `ring` / `field_simp` |
+| Раскрытие матриц | `ext i j; fin_cases i <;> fin_cases j` |
+| Поиск лемм в Mathlib | `apply?` |
 
 ---
 
-## Progress metrics
+## Метрики прогресса
 
-| Metric | Now | Target |
+| Метрика | Сейчас | Цель |
 |---------|--------|------|
 | `sorry` | 13 | 0 |
 | `axiom : True` | 12 | 0 |
-| `axiom` (open problems) | 4 | 4 |
-| Coverage | 80% | 100% |
+| `axiom` (открытые проблемы) | 4 | 4 |
+| Покрытие | 80% | 100% |
