@@ -38,7 +38,10 @@ def main() -> int:
     if cyr:
         print("READMEs containing Cyrillic:", *("  " + s for s in cyr), sep="\n")
     ok = not (no_readme or cyr)
-    print("DOCS HYGIENE: OK" if ok else f"DOCS HYGIENE: FAIL ({len(no_readme)} dirs, {len(cyr)} cyr)")
+    if ok:
+        print("DOCS HYGIENE: OK")
+    else:
+        print(f"DOCS HYGIENE: FAIL ({len(no_readme)} dirs, {len(cyr)} cyr)")
     return 0 if ok else 1
 
 

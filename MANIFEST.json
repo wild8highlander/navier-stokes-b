@@ -60,44 +60,36 @@
       "bytes": 1042
     },
     ".github/scripts/check_readmes.py": {
-      "sha256": "9ea8b6fb661177499ffd63a729f8537340e4fb064f829186af45ff487beefd84",
-      "bytes": 1804
+      "sha256": "cecf830330f197d8932210e59a975de8e18681444920cfbaa1d121557aae68da",
+      "bytes": 1833
     },
     ".github/scripts/regen_manifest.py": {
-      "sha256": "aabbd19ecb422b09c5e7b8ec5835eda770ee278b058345ae3f084f1e334133f1",
-      "bytes": 1490
+      "sha256": "8a6dbb86d6e895ad8d7a1c9696b5ee0e1ac5d324fb3395eed743d8d532083d83",
+      "bytes": 2009
     },
     ".github/scripts/verify_manifest.py": {
-      "sha256": "fc9e8e4c2b11af5607af8f279d232095bfd69f3e452c3e0a73f00ebe625ef959",
-      "bytes": 1052
+      "sha256": "04eb82fa5d3b1fef9537b455e249c2956b7cb17f68e6d39be46dc07127d9e172",
+      "bytes": 1574
     },
     ".github/workflows/README.md": {
       "sha256": "8a1d1d10582b068c841d1dc3809a8ce9667c433a1c99b5e7aaa56341551bd241",
       "bytes": 1226
     },
     ".github/workflows/ci.yml": {
-      "sha256": "a45a1118f43afe16fa6c9378e4d8e30db1076d37333c588d0fee4f96517d88a8",
-      "bytes": 2299
+      "sha256": "409ad165ea09455262b802e56f6d9cde0977f05d2be6dc8ced6799b174603364",
+      "bytes": 2274
     },
     ".github/workflows/pages.yml": {
-      "sha256": "4046481f1496403149fd7391d5b2baba83e2583f31dcb8cc7637596976560ba0",
-      "bytes": 856
+      "sha256": "0c3ac947afc751cdd71f4bf9e34c4382633fe20a4c6155c95c7836185790a37c",
+      "bytes": 855
     },
     ".github/workflows/release.yml": {
-      "sha256": "73bcf1d0e61fe896ae9ccd17b562894e9d8c8dcbf0013b45fadc9b87c9b0d4c2",
-      "bytes": 2772
+      "sha256": "ecb5bfb7e9e2bca855b38f5eb40388cec7910cc15fbb2b2a2b007937f2a8c254",
+      "bytes": 1787
     },
     ".gitignore": {
       "sha256": "746f5418b888e6897b45ff73afc77e578b0197137f5b70b7cda61352b7518977",
       "bytes": 3304
-    },
-    "0001-fix-homepage.patch": {
-      "sha256": "431d9c56e2c4c90ef48e64d51b222b2cea8950606627e62ffac5fd29f0910fa9",
-      "bytes": 323438
-    },
-    "0002-ci-pin-actions-to-commit-shas.patch": {
-      "sha256": "9a5fd844aba92209bcfc00ff0dd3e1f1b489af2097b1a766de4e3652d3af190a",
-      "bytes": 11054
     },
     "CHANGELOG.md": {
       "sha256": "1062d5d32320fdf412e456f13b1357d2fec92b2ff546f7e2dc6433f68702922d",
@@ -656,8 +648,8 @@
       "bytes": 6903
     },
     "pyproject.toml": {
-      "sha256": "c3a9245b6ee7be8105d1a384c7de327487aa4c3644ef971394004c5d42a39a90",
-      "bytes": 1904
+      "sha256": "63d1786b0972a9d21136ea2a73183792344fdd5355a676a6b27c01a9a7d58177",
+      "bytes": 2688
     },
     "site/README.md": {
       "sha256": "9776b5bfe3cccc67b5631f6136b9ba5b6756bf68f2022fd39237d11579881cf0",
@@ -812,8 +804,8 @@
       "bytes": 2956
     },
     "verification/common/python/verifier_base.py": {
-      "sha256": "b2ab4de53819e7b4acfef28ed00cefdb3b0b0616bcf98f9d2c415843de1133ab",
-      "bytes": 679
+      "sha256": "bee17677812c4d81ce021c27bca6b8cdb96d74d8d6de50dda3b5c102ae749a15",
+      "bytes": 680
     },
     "verification/coq/README.md": {
       "sha256": "3fb6b4f08171f575d2ce822213d53e5d711cfc10400c1caf03e5354ac169fc6e",
@@ -932,16 +924,16 @@
       "bytes": 1822
     },
     "verification/demo/gradio_app.py": {
-      "sha256": "45f68da48a5d7b0a574e8dcc2a579eb8abd547f0b7731a32bd3bd77cfee147b8",
-      "bytes": 306
+      "sha256": "ba9db3f08b4da1307cbbb9e5c66c6f3e1d7faeff4cd940825d336b9a77ee6aed",
+      "bytes": 308
     },
     "verification/demo/requirements.txt": {
       "sha256": "43345751ad1b00a6abfeee50770fd11e0a638594e5ecf0e1318a4943437263df",
       "bytes": 30
     },
     "verification/demo/streamlit_app.py": {
-      "sha256": "f6a81e9c53bd7d7de9028ed63ce56106fa7a11d6c5b0ca382ead0b691e9e8115",
-      "bytes": 213
+      "sha256": "b56bb0107d61ece34b79bf7d1d99e5fca001e07170fd011dfd4c1e4473d89691",
+      "bytes": 214
     },
     "verification/docker/README.md": {
       "sha256": "1a261c12d8345d00b101696d16ed0ec002252bfdaa82827aeb1a8dcaee918721",
@@ -1020,8 +1012,8 @@
       "bytes": 5463
     },
     "verification/haskell/Section1_CorrectionB/Section1_CorrectionB.cabal": {
-      "sha256": "6d39f7ff4ac5dd06458a09c97ec37f1b9b9eaec33dfaae7b8eee35486d55b515",
-      "bytes": 355
+      "sha256": "5286ad4d5921614de32f3e83cee3bb9ae7ea11456aa77b76896f1d30570fb4fb",
+      "bytes": 392
     },
     "verification/haskell/Section1_CorrectionB/src/Main.hs": {
       "sha256": "af79167cc802ae140e3d629d697e7b11babd17a1e439f96fa550e5426f9a3b6d",
@@ -1036,8 +1028,8 @@
       "bytes": 5331
     },
     "verification/haskell/Section2_PreprintNSE/Section2_PreprintNSE.cabal": {
-      "sha256": "9e8bed09939c4050817f2afd1ca7c3a01a8086fc37d39fc65362b0061d361688",
-      "bytes": 355
+      "sha256": "592d152e51d37602aabaa58b1edb7c499ebfdf8d239cd464bcb59813ef578d47",
+      "bytes": 392
     },
     "verification/haskell/Section2_PreprintNSE/src/Main.hs": {
       "sha256": "9287f012ab19621f8b77ce0b6bce67cbf708e8ecb7f828510e8ce81d2a69460c",
@@ -1052,8 +1044,8 @@
       "bytes": 5267
     },
     "verification/haskell/Section3_ABCloud/Section3_ABCloud.cabal": {
-      "sha256": "960cc0d56af6c696084c7c5c5a890f209349d92159f9b99ed61460cca8eb0f86",
-      "bytes": 347
+      "sha256": "bafd729baab7093d03800093b2f9fb4747b64558eda5f0328409955a5d4c45aa",
+      "bytes": 384
     },
     "verification/haskell/Section3_ABCloud/src/Main.hs": {
       "sha256": "a0d8d355886c030b10c694889a5cea812837497459ca049d5716d17cd7993d5c",
@@ -1068,8 +1060,8 @@
       "bytes": 5237
     },
     "verification/haskell/Section4_KdV/Section4_KdV.cabal": {
-      "sha256": "a34091927789a5ddc04812cf0bb57eae4dd94151cd902b59dbd63eb54dc065ff",
-      "bytes": 339
+      "sha256": "872a224f716cb273b646c0c0a2b0ca2ea1b0ffd75b0b2d10e3b97d264a4cd11d",
+      "bytes": 376
     },
     "verification/haskell/Section4_KdV/src/Main.hs": {
       "sha256": "73d8c4d0ea8af3d6cad23069dd7f6c8649f39fa722c13810c7b8d1525e81005f",
@@ -1084,8 +1076,8 @@
       "bytes": 5439
     },
     "verification/haskell/Section5_KleinAttractor/Section5_KleinAttractor.cabal": {
-      "sha256": "9e06adafdd03a8fcfc91a2a06d775c0948b3d8c193c75308f846361f35b2da0b",
-      "bytes": 361
+      "sha256": "0e52fbad4cd26dc90a43d64c1d40c17b3d7c4dd054cc5ccac93bf25c7343a683",
+      "bytes": 398
     },
     "verification/haskell/Section5_KleinAttractor/src/Main.hs": {
       "sha256": "16509c1eea4ed004636e1d9fc7016f9a4d733c793344fdfd85f87bb31fcf9d5b",
@@ -1100,8 +1092,8 @@
       "bytes": 5330
     },
     "verification/haskell/Section6_RiemannZeros/Section6_RiemannZeros.cabal": {
-      "sha256": "771eeee035649d999acf6ac6518ac74f317237dcd9f4825c79a377d11478c5d6",
-      "bytes": 357
+      "sha256": "5ab24c25c240f7c911e43e8bdb205e8499be9246dfa686e3c1b66893e4346828",
+      "bytes": 394
     },
     "verification/haskell/Section6_RiemannZeros/src/Main.hs": {
       "sha256": "8e385e96433bd549cf76435acdf5dc195c22260685480b19776534f27f20acd6",
@@ -1560,16 +1552,8 @@
       "bytes": 699
     },
     "verification/tests/test_extended_languages.py": {
-      "sha256": "8304325b544d8f7697753e7a48453adc4e09549e0877b1a331ca4bd2a5236f59",
-      "bytes": 2521
-    },
-    "verification/web-dashboard/README.md": {
-      "sha256": "01ed9ea855d69bb74106a1d40e5fc42c52a5d2912bf68471cc60100854c1a928",
-      "bytes": 1424
-    },
-    "verification/web-dashboard/package.json": {
-      "sha256": "2c46a783b791521a720be4ca728d4c06d26266f7cd71dcf482d75c19ee7f2eac",
-      "bytes": 456
+      "sha256": "d9b62cb838f299fbc3e1e846ada6a8e6c6dc5b97556febe0f201ca6ca9b1d34f",
+      "bytes": 2522
     },
     "НАЧНИ_ЗДЕСЬ.md": {
       "sha256": "ef39eb37c40b0f87d82e557dde9057c7e08f3f2ab4d92bd462b0ecf8afa83964",

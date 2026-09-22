@@ -15,6 +15,15 @@ SKIP_PARTS = {
     ".vscode", ".cache", "dist", "build", "target", "dist-newstyle",
     ".lake", "output", "site/node_modules",
 }
+# Dependency-managed subtrees excluded from the integrity manifest.
+# verification/web-dashboard is a Node app whose package.json is updated by
+# Dependabot PRs; pinning it into the sha256 manifest broke the
+# manifest-integrity job on every dependency PR (2026-09 CI failures #14-#16).
+# Integrity checking of hashes is meaningful only for the research artifact
+# (data, code, documents, workflows), not for dependency manifests.
+SKIP_PREFIXES = (
+    "verification/web-dashboard/",
+)
 
 
 def main() -> int:
@@ -25,7 +34,7 @@ def main() -> int:
         if not p.is_file() or any(part in SKIP_PARTS for part in p.parts):
             continue
         rel = p.relative_to(ROOT).as_posix()
-        if rel == "MANIFEST.json":
+        if rel == "MANIFEST.json" or rel.startswith(SKIP_PREFIXES):
             continue
         b = p.read_bytes()
         files[rel] = {"sha256": hashlib.sha256(b).hexdigest(), "bytes": len(b)}

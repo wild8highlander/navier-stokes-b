@@ -1,6 +1,8 @@
 """Gradio demo app."""
-import gradio as gr
 import math
+
+import gradio as gr
+
 
 def compute_b():
     return math.pi / (4 * math.pi**2 + 2 * math.pi * math.sqrt(3))

@@ -1,6 +1,7 @@
 """Base verifier class for all sections."""
 import time
 
+
 class BaseVerifier:
     """Base class for section verifiers."""
     def __init__(self, config):

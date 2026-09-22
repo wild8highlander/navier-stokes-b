@@ -45,6 +45,24 @@ Issues = "https://github.com/wild8highlander/navier-stokes-b/issues"
 [tool.ruff]
 line-length = 100
 target-version = "py310"
+# Legacy research code (physics verifiers, open-problems programs, monograph
+# scripts) intentionally keeps its original style: single-letter physics
+# symbols (N802/N803/N806), semicolon-packed derivation lines (E702), long
+# formulas (E501). Rewriting them risks changing published numbers, so they
+# are excluded from linting; everything else (CI scripts, common verifier,
+# tests, API, demo apps) is linted strictly in CI.
+extend-exclude = [
+    "code",
+    "monograph",
+    "verification/python_levels",
+    "verification/section1_correction_b",
+    "verification/section2_preprint",
+    "verification/section3_ab_cloud",
+    "verification/section4_kdv",
+    "verification/section5_klein_attractor",
+    "verification/section6_riemann_zeros",
+    "verification/patch_docx.py",
+]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "N", "UP"]

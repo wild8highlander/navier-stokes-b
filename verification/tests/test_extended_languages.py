@@ -1,7 +1,8 @@
 """Tests for new verification languages."""
-import pytest
 import shutil
 from pathlib import Path
+
+import pytest
 
 PROJECT_ROOT = Path(__file__).parent.parent
 

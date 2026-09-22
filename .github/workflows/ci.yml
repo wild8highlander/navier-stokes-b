@@ -14,7 +14,7 @@ concurrency:
 jobs:
   lint:
     name: Lint (ruff)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -22,13 +22,12 @@ jobs:
           python-version: "3.12"
       - name: Install ruff
         run: pip install ruff
-      - name: Ruff check (advisory on legacy research code)
+      - name: Ruff check (legacy research code excluded via pyproject)
         run: ruff check . --output-format=concise
-        continue-on-error: true
 
   tests:
     name: Tests (py${{ matrix.python-version }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -45,7 +44,7 @@ jobs:
 
   verification-smoke:
     name: Verification smoke (Python, section 1)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -58,7 +57,7 @@ jobs:
 
   manifest-integrity:
     name: Manifest integrity (sha256)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
