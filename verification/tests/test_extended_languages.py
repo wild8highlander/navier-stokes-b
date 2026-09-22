@@ -59,10 +59,33 @@ class TestCpp:
 
 class TestHaskell:
     def test_haskell_builds(self):
-        if not has_tool("cabal"):
-            pytest.skip("Haskell not installed")
+        if not (has_tool("cabal") and has_tool("ghc")):
+            pytest.skip("Haskell (cabal/ghc) not installed")
         import subprocess
+        from pathlib import Path
+
+        # Fresh environments (e.g. GitHub CI runners) have no Hackage package
+        # index yet, and `cabal build` then fails with Cabal-7160
+        # ("The package list for 'hackage.haskell.org' does not exist").
+        # Detect an existing index (both legacy ~/.cabal and XDG layouts) and
+        # run `cabal update` only when it is actually missing.
+        home = Path.home()
+        has_index = any(
+            (base / "packages" / "hackage.haskell.org").exists()
+            for base in (home / ".cabal", home / ".config" / "cabal")
+        )
+        if not has_index:
+            upd = subprocess.run(["cabal", "update"],
+                                 cwd=PROJECT_ROOT / "haskell",
+                                 capture_output=True, text=True, timeout=600)
+            assert upd.returncode == 0, (
+                "cabal update failed:\n"
+                f"stdout: {upd.stdout[-2000:]}\nstderr: {upd.stderr[-2000:]}"
+            )
         result = subprocess.run(["cabal", "build", "all"],
                                 cwd=PROJECT_ROOT / "haskell",
-                                capture_output=True, text=True, timeout=600)
-        assert result.returncode == 0
+                                capture_output=True, text=True, timeout=900)
+        assert result.returncode == 0, (
+            "cabal build all failed:\n"
+            f"stdout: {result.stdout[-4000:]}\nstderr: {result.stderr[-4000:]}"
+        )

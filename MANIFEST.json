@@ -1012,7 +1012,7 @@
       "bytes": 5463
     },
     "verification/haskell/Section1_CorrectionB/Section1_CorrectionB.cabal": {
-      "sha256": "5286ad4d5921614de32f3e83cee3bb9ae7ea11456aa77b76896f1d30570fb4fb",
+      "sha256": "c48946984476f5b7136788ca9d0dbb229f1da5b2633f94787c40a03b8d989a0f",
       "bytes": 392
     },
     "verification/haskell/Section1_CorrectionB/src/Main.hs": {
@@ -1028,7 +1028,7 @@
       "bytes": 5331
     },
     "verification/haskell/Section2_PreprintNSE/Section2_PreprintNSE.cabal": {
-      "sha256": "592d152e51d37602aabaa58b1edb7c499ebfdf8d239cd464bcb59813ef578d47",
+      "sha256": "cc80d01a971b1e7bc4a870080f7baf31e9f955a11b05868c29d181e39c665760",
       "bytes": 392
     },
     "verification/haskell/Section2_PreprintNSE/src/Main.hs": {
@@ -1044,7 +1044,7 @@
       "bytes": 5267
     },
     "verification/haskell/Section3_ABCloud/Section3_ABCloud.cabal": {
-      "sha256": "bafd729baab7093d03800093b2f9fb4747b64558eda5f0328409955a5d4c45aa",
+      "sha256": "010744683bf12a130fecd0028524675fe1b402de01d8b97ba167a65177531012",
       "bytes": 384
     },
     "verification/haskell/Section3_ABCloud/src/Main.hs": {
@@ -1060,7 +1060,7 @@
       "bytes": 5237
     },
     "verification/haskell/Section4_KdV/Section4_KdV.cabal": {
-      "sha256": "872a224f716cb273b646c0c0a2b0ca2ea1b0ffd75b0b2d10e3b97d264a4cd11d",
+      "sha256": "cf935f110832c3839aed8e32ffe3425ffcd3a4b105375591e7855c9edc2abf2a",
       "bytes": 376
     },
     "verification/haskell/Section4_KdV/src/Main.hs": {
@@ -1076,12 +1076,12 @@
       "bytes": 5439
     },
     "verification/haskell/Section5_KleinAttractor/Section5_KleinAttractor.cabal": {
-      "sha256": "0e52fbad4cd26dc90a43d64c1d40c17b3d7c4dd054cc5ccac93bf25c7343a683",
+      "sha256": "d26cb50c31e03b6eaa8d60556ae3d7afce5d525e045e61e2db6e819fdde3853a",
       "bytes": 398
     },
     "verification/haskell/Section5_KleinAttractor/src/Main.hs": {
-      "sha256": "16509c1eea4ed004636e1d9fc7016f9a4d733c793344fdfd85f87bb31fcf9d5b",
-      "bytes": 183
+      "sha256": "e90892b59717fbc59782640cc7601e73b7bee90161217c813c4327bc805b2c1a",
+      "bytes": 335
     },
     "verification/haskell/Section5_KleinAttractor/src/README.md": {
       "sha256": "d6e517d95e699f97297bee58d1e7b8baefb98f68d0fb33a3d7f01eabc28fdeb9",
@@ -1092,7 +1092,7 @@
       "bytes": 5330
     },
     "verification/haskell/Section6_RiemannZeros/Section6_RiemannZeros.cabal": {
-      "sha256": "5ab24c25c240f7c911e43e8bdb205e8499be9246dfa686e3c1b66893e4346828",
+      "sha256": "33807dc43bb805e6c4aee5d1cfc303b548657024906557a16c7bfdb39808d70a",
       "bytes": 394
     },
     "verification/haskell/Section6_RiemannZeros/src/Main.hs": {
@@ -1552,8 +1552,8 @@
       "bytes": 699
     },
     "verification/tests/test_extended_languages.py": {
-      "sha256": "d9b62cb838f299fbc3e1e846ada6a8e6c6dc5b97556febe0f201ca6ca9b1d34f",
-      "bytes": 2522
+      "sha256": "6134e9773f618aa0b75b46f7f6e5f643431f47ac9254ba84a4ee6b753fb09ae5",
+      "bytes": 3674
     },
     "НАЧНИ_ЗДЕСЬ.md": {
       "sha256": "ef39eb37c40b0f87d82e557dde9057c7e08f3f2ab4d92bd462b0ecf8afa83964",

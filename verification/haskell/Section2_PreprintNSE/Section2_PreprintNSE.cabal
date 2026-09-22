@@ -1,5 +1,5 @@
 cabal-version:      3.0
-name:               section2_preprintnse
+name:               section2-preprintnse
 version:            2.0.0
 license:            CC-BY-NC-SA-4.0
 build-type:         Simple
