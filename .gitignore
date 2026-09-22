@@ -109,6 +109,7 @@ cabal.project.local
 .lake/
 lake-manifest.json
 lean-toolchain
+!verification/lean4/lean-toolchain
 **/lean_packages/
 
 # ─── Coq/Rocq ───

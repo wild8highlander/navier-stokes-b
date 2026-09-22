@@ -31,14 +31,14 @@ cd verification/lean4 && lake build && lake exe check
 ```
 
 Per-file status (closed lemmas vs `sorry` vs axiom) is tracked in
-[`TODO_sorry.md`](../../TODO_sorry.md) — the ledger is the module map's
+[`TODO_sorry.md`](../TODO_sorry.md) — the ledger is the module map's
 second dimension.
 
 ---
 
 ---
 
-Navigation: [lean4](../../README.md) · [gap ledger](../../TODO_sorry.md) · [framework hub](../../../verification/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
+Navigation: [lean4](../../README.md) · [gap ledger](../TODO_sorry.md) · [framework hub](../../../verification/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

@@ -6,7 +6,7 @@ and the small verification scripts CI relies on.
 | Path | Purpose |
 |---|---|
 | [`workflows/ci.yml`](workflows/README.md) | lint + pytest matrix + verification smoke + sha256 manifest integrity |
-| [`workflows/pages.yml`](workflows/README.md) | deploys [`site/`](../../site/README.md) to GitHub Pages |
+| [`workflows/pages.yml`](workflows/README.md) | deploys [`site/`](../site/README.md) to GitHub Pages |
 | [`workflows/release.yml`](workflows/README.md) | on tags `v*`: regenerates the manifest, packs full/light archives, publishes a draft release with `SHA256SUMS.txt` |
 | [`ISSUE_TEMPLATE/`](ISSUE_TEMPLATE/) | bug report, feature request and verification request forms |
 | [`PULL_REQUEST_TEMPLATE.md`](PULL_REQUEST_TEMPLATE.md) | the reproducibility checklist every PR must satisfy |

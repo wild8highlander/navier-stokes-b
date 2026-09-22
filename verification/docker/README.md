@@ -49,7 +49,7 @@ see the [hub's maintenance map](../README.md).
 
 ---
 
-Navigation: [repository root](../../README.md) · [extended-languages notes](docs/extended-languages/README.md) · [IPL-RP-1.0](../../LICENSE.md)
+Navigation: [repository root](../../README.md) · [extended-languages notes](../docs/extended-languages/README.md) · [IPL-RP-1.0](../../LICENSE.md)
 
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

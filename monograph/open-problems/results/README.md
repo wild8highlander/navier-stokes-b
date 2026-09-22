@@ -32,7 +32,7 @@ and the L1–L5 baselines); both are pinned by
 
 ---
 
-Navigation: [open-problems](../README.md) · [code](../code/README.md) · [data/results](../../../data/results/README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
+Navigation: [open-problems](../README.md) · [code](../code/README.md) · [data/results](../../../data/results/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

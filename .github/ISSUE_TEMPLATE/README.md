@@ -15,4 +15,4 @@ Security-related reports must not go through public issues — see
 [`SECURITY.md`](../../SECURITY.md).
 
 ---
-Navigation: [.github](../README.md) · [repository root](../../README.md) · [IPL-RP-1.0](../../LICENSE.md)
+Navigation: [.github](../AUTOMATION.md) · [repository root](../../README.md) · [IPL-RP-1.0](../../LICENSE.md)

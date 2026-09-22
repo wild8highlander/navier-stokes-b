@@ -27,7 +27,7 @@ the repository ([`CITATION.cff`](../../../CITATION.cff)).
 
 ---
 
-Navigation: [open-problems](../README.md) · [results](../results/README.md) · [data/plots](../../../data/plots/README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
+Navigation: [open-problems](../README.md) · [results](../results/README.md) · [data/plots](../../../data/plots/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

@@ -1,6 +1,4 @@
 """Configuration system for all verification sections."""
-from dataclasses import dataclass, field
-from typing import Any, Dict, List
 
 PRESETS = {
     "quick":   {"N": 16,  "tolerance": 1e-3,  "max_iter": 1000},

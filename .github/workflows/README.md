@@ -16,4 +16,4 @@ Pages workflow serializes deployments. No runner-side caches are required — th
 scientific stack installs in under a minute.
 
 ---
-Navigation: [.github](../README.md) · [repository root](../../README.md) · [IPL-RP-1.0](../../LICENSE.md)
+Navigation: [.github](../AUTOMATION.md) · [repository root](../../README.md) · [IPL-RP-1.0](../../LICENSE.md)

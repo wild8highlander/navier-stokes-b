@@ -1,6 +1,5 @@
 """Base verifier class for all sections."""
 import time
-from typing import Any, Dict, List
 
 class BaseVerifier:
     """Base class for section verifiers."""

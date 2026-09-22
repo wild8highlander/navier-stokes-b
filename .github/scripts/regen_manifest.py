@@ -6,7 +6,15 @@ import json
 import pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-SKIP_PARTS = {".git", "node_modules", "__pycache__", ".pytest_cache"}
+# Cache / build / VCS directories that must never enter MANIFEST.json.
+# (.ruff_cache was the 2026-09 CI failure: ruff-created files listed in the
+# manifest but absent from any fresh checkout, so verify_manifest.py exited 1.)
+SKIP_PARTS = {
+    ".git", "node_modules", "__pycache__", ".pytest_cache", ".ruff_cache",
+    ".mypy_cache", ".pytype", ".hypothesis", ".venv", "venv", ".idea",
+    ".vscode", ".cache", "dist", "build", "target", "dist-newstyle",
+    ".lake", "output", "site/node_modules",
+}
 
 
 def main() -> int:

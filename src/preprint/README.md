@@ -30,7 +30,7 @@ running headers), standard article class, two-pass compilation.
 
 ---
 
-Navigation: [repository root](../README.md) · [src](../README.md) · [papers/preprint](../../papers/preprint/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
+Navigation: [repository root](../../README.md) · [src](../README.md) · [papers/preprint](../../papers/preprint/README.md) · [IPL-RP-1.0](../../LICENSE.md)
 
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

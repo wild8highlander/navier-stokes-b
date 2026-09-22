@@ -12,4 +12,4 @@ All three resolve paths relative to their own location, so they work from any wo
 directory and on any platform (Linux, macOS, Windows, Termux).
 
 ---
-Navigation: [.github](../README.md) · [VERIFICATION.md](../../VERIFICATION.md) · [repository root](../../README.md) · [IPL-RP-1.0](../../LICENSE.md)
+Navigation: [.github](../AUTOMATION.md) · [VERIFICATION.md](../../VERIFICATION.md) · [repository root](../../README.md) · [IPL-RP-1.0](../../LICENSE.md)

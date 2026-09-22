@@ -25,7 +25,7 @@ jobs:
           manifest_path = root / "MANIFEST.json"
           m = json.loads(manifest_path.read_text(encoding="utf-8"))
           files = {}
-          skip = {".git", "site/node_modules"}
+          skip = {".git", "node_modules", "__pycache__", ".pytest_cache", ".ruff_cache", ".mypy_cache", ".venv", "venv", ".idea", ".vscode", ".cache", "target", "dist-newstyle", ".lake"}
           for p in sorted(root.rglob("*")):
               if not p.is_file() or any(part in p.parts for part in skip):
                   continue

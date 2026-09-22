@@ -1,6 +1,6 @@
 # 🎩 `haskell/…/Section3_ABCloud/src/` — the Executable Source
 
-> **Navigation:** [`haskell`](../../../verification/haskell/README.md) › [`Section3_ABCloud`](../README.md) › **`src`**
+> **Navigation:** [`haskell`](../../README.md) › [`Section3_ABCloud`](../README.md) › **`src`**
 
 ![Haskell](https://img.shields.io/badge/Haskell-GHC_9.4-5E5086?style=flat-square&logo=haskell&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
@@ -22,13 +22,13 @@ cabal run section3-ab-cloud
 
 No `unsafe`, no FFI — the file is readable end-to-end in one sitting, which
 is the point of the Haskell witness. Peers of this port:
-[Python](../../../../../verification/section3_ab_cloud/README.md) · [Lean 4](../../../../../verification/lean4/ResearchPapersVerification/Section3_ABCloud/README.md) · [Coq/Rocq](../../../../../verification/coq/section3_ab_cloud/README.md) · [Isabelle-HOL](../../../../../verification/isabelle/Section3_ABCloud/README.md) · [Agda](../../../../../verification/agda/Section3_ABCloud/README.md) · [C++](../../../../../verification/cpp/section3_ab_cloud/README.md) · [Rust](../../../../../verification/rust/section3_ab_cloud/README.md).
+[Python](../../../section3_ab_cloud/README.md) · [Lean 4](../../../lean4/ResearchPapersVerification/Section3_ABCloud/README.md) · [Coq/Rocq](../../../coq/section3_ab_cloud/README.md) · [Isabelle-HOL](../../../isabelle/Section3_ABCloud/README.md) · [Agda](../../../agda/Section3_ABCloud/README.md) · [C++](../../../cpp/section3_ab_cloud/README.md) · [Rust](../../../rust/section3_ab_cloud/README.md).
 
 ---
 
 ---
 
-Navigation: [section 3](../README.md) · [haskell layer](../../../verification/haskell/README.md) · [IPL-RP-1.0](../../../../../LICENSE.md)
+Navigation: [section 3](../README.md) · [haskell layer](../../README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
 
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

@@ -12,7 +12,7 @@ authors:
 identifiers:
   - type: doi
     value: "10.5281/zenodo.21825394"
-    description: "Zenodo DOI for this specific version (v1.3.0)"
+    description: "Zenodo DOI (record v1.3.0 of the origin repository research-papers)"
   - type: doi
     value: "10.5281/zenodo.21825393"
     description: "Zenodo Concept DOI (all versions)"

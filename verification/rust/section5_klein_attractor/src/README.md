@@ -1,6 +1,6 @@
 # 🦀 `rust/…/section5_*/src/` — the Binary Source
 
-> **Navigation:** [`rust`](../../../verification/rust/README.md) › [section 5](../README.md) › **`src`**
+> **Navigation:** [`rust`](../../README.md) › [section 5](../README.md) › **`src`**
 
 ![Rust](https://img.shields.io/badge/Rust-1.75%2B-DEA584?style=flat-square&logo=rust&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
@@ -20,13 +20,13 @@ cd verification/rust
 cargo run --release -p section5_klein_attractor
 ```
 
-Peers of this port: [Python](../../../../../verification/section5_klein_attractor/README.md) · [Lean 4](../../../../../verification/lean4/ResearchPapersVerification/Section5_KleinAttractor/README.md) · [Coq/Rocq](../../../../../verification/coq/section5_klein_attractor/README.md) · [Isabelle-HOL](../../../../../verification/isabelle/Section5_KleinAttractor/README.md) · [Agda](../../../../../verification/agda/Section5_KleinAttractor/README.md) · [C++](../../../../../verification/cpp/section5_klein_attractor/README.md) · [Haskell](../../../../../verification/haskell/Section5_KleinAttractor/README.md).
+Peers of this port: [Python](../../../section5_klein_attractor/README.md) · [Lean 4](../../../lean4/ResearchPapersVerification/Section5_KleinAttractor/README.md) · [Coq/Rocq](../../../coq/section5_klein_attractor/README.md) · [Isabelle-HOL](../../../isabelle/Section5_KleinAttractor/README.md) · [Agda](../../../agda/Section5_KleinAttractor/README.md) · [C++](../../../cpp/section5_klein_attractor/README.md) · [Haskell](../../../haskell/Section5_KleinAttractor/README.md).
 
 ---
 
 ---
 
-Navigation: [section 5](../README.md) · [rust layer](../../../verification/rust/README.md) · [IPL-RP-1.0](../../../../../LICENSE.md)
+Navigation: [section 5](../README.md) · [rust layer](../../README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
 
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

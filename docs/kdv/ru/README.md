@@ -1,6 +1,6 @@
 # `docs/kdv/ru/` — the Russian Edition of the kdv Monograph
 
-> **Navigation:** [`docs`](../../../../docs/README.md) › [`kdv/`](../README.md) › **`ru`**
+> **Navigation:** [`docs`](../../README.md) › [`kdv/`](../README.md) › **`ru`**
 
 ![Format](https://img.shields.io/badge/Format-DOCX-2B579A?style=flat-square&logo=microsoftword&logoColor=white)
 ![Language](https://img.shields.io/badge/Language-Russian-1284BA?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
@@ -41,17 +41,17 @@ snapshot.
 
 ## Related material
 
-- The typeset counterpart: [`papers/kdv/`](../../../../papers/kdv/README.md);
+- The typeset counterpart: [`papers/kdv/`](../../../papers/kdv/README.md);
 - the other language edition: [`en/`](README.md) —
   the two editions were typeset independently, not machine-translated;
 - the collection README: [`kdv/`](../README.md);
-- the compiled sources: [`src/`](../../../../src/README.md).
+- the compiled sources: [`src/`](../../../src/README.md).
 
 ## Integrity and license
 
-Both files are pinned by [`MANIFEST.json`](../../../../MANIFEST.json) and checked
+Both files are pinned by [`MANIFEST.json`](../../../MANIFEST.json) and checked
 by CI. They are the exclusive property of the author under
-[IPL-RP-1.0](../../../../LICENSE.md): reading, one personal unmodified backup and
+[IPL-RP-1.0](../../../LICENSE.md): reading, one personal unmodified backup and
 quoting with full attribution are permitted; modification, redistribution
 and derivative works require separate written consent.
 
@@ -59,7 +59,7 @@ and derivative works require separate written consent.
 
 ---
 
-Navigation: [kdv](../README.md) · [docs](../../../../docs/README.md) · [papers](../../../../papers/README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
+Navigation: [kdv](../README.md) · [docs](../../README.md) · [papers](../../../papers/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

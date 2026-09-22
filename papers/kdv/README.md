@@ -36,7 +36,7 @@ pagination — not byte-identical copies.
 
 ---
 
-Navigation: [repository root](../README.md) · [papers](../README.md) · [docs/kdv](../../docs/kdv/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
+Navigation: [repository root](../../README.md) · [papers](../README.md) · [docs/kdv](../../docs/kdv/README.md) · [IPL-RP-1.0](../../LICENSE.md)
 
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

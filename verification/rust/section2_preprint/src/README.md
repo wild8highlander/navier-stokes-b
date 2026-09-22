@@ -1,6 +1,6 @@
 # 🦀 `rust/…/section2_*/src/` — the Binary Source
 
-> **Navigation:** [`rust`](../../../verification/rust/README.md) › [section 2](../README.md) › **`src`**
+> **Navigation:** [`rust`](../../README.md) › [section 2](../README.md) › **`src`**
 
 ![Rust](https://img.shields.io/badge/Rust-1.75%2B-DEA584?style=flat-square&logo=rust&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
@@ -20,13 +20,13 @@ cd verification/rust
 cargo run --release -p section2_preprint
 ```
 
-Peers of this port: [Python](../../../../../verification/section2_preprint/README.md) · [Lean 4](../../../../../verification/lean4/ResearchPapersVerification/Section2_PreprintNSE/README.md) · [Coq/Rocq](../../../../../verification/coq/section2_preprint/README.md) · [Isabelle-HOL](../../../../../verification/isabelle/Section2_PreprintNSE/README.md) · [Agda](../../../../../verification/agda/Section2_PreprintNSE/README.md) · [C++](../../../../../verification/cpp/section2_preprint/README.md) · [Haskell](../../../../../verification/haskell/Section2_PreprintNSE/README.md).
+Peers of this port: [Python](../../../section2_preprint/README.md) · [Lean 4](../../../lean4/ResearchPapersVerification/Section2_PreprintNSE/README.md) · [Coq/Rocq](../../../coq/section2_preprint/README.md) · [Isabelle-HOL](../../../isabelle/Section2_PreprintNSE/README.md) · [Agda](../../../agda/Section2_PreprintNSE/README.md) · [C++](../../../cpp/section2_preprint/README.md) · [Haskell](../../../haskell/Section2_PreprintNSE/README.md).
 
 ---
 
 ---
 
-Navigation: [section 2](../README.md) · [rust layer](../../../verification/rust/README.md) · [IPL-RP-1.0](../../../../../LICENSE.md)
+Navigation: [section 2](../README.md) · [rust layer](../../README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
 
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

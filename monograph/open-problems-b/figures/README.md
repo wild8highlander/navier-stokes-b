@@ -31,7 +31,7 @@ reference panels come from the base package
 
 ---
 
-Navigation: [open-problems-b](../README.md) · [base figures](../../open-problems/figures/README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
+Navigation: [open-problems-b](../README.md) · [base figures](../../open-problems/figures/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
 
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
 

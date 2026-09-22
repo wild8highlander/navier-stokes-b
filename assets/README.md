@@ -35,7 +35,7 @@ underlying geometry is the same Rodrigues construction the papers derive.
 Reference from markdown with a relative path — GitHub renders SVG inline:
 
 ```html
-<img src="assets/banner.svg" alt="navier-stokes-b" width="100%"/>
+<img src="banner.svg" alt="navier-stokes-b" width="100%"/>
 ```
 
 When editing, keep the files hand-diffable (one shape per line group) and
