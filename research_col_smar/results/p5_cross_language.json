@@ -1,0 +1,97 @@
+{
+  "analytic": {
+    "max_rel_dev": 2.3279956369252473e-12,
+    "pass": true,
+    "rows": [
+      {
+        "b_pow": 1.0,
+        "beta_b_rel_dev_cpp": 3.911909287490125e-13,
+        "beta_b_rel_dev_julia": 3.0681641470510785e-16,
+        "x_star_rel_dev_cpp": 1.1535035795457467e-12,
+        "x_star_rel_dev_julia": 1.156742458429349e-16
+      },
+      {
+        "b_pow": 1.25,
+        "beta_b_rel_dev_cpp": 2.3279956369252473e-12,
+        "beta_b_rel_dev_julia": 0.0,
+        "x_star_rel_dev_cpp": 5.345642773051666e-13,
+        "x_star_rel_dev_julia": 0.0
+      },
+      {
+        "b_pow": 1.5,
+        "beta_b_rel_dev_cpp": 1.1921973966673247e-12,
+        "beta_b_rel_dev_julia": 5.325479734964226e-16,
+        "x_star_rel_dev_cpp": 1.9624999121812126e-13,
+        "x_star_rel_dev_julia": 1.5674919426367514e-16
+      },
+      {
+        "b_pow": 2.0,
+        "beta_b_rel_dev_cpp": 1.0494053203765755e-13,
+        "beta_b_rel_dev_julia": 6.7791041367995845e-16,
+        "x_star_rel_dev_cpp": 4.844724324398526e-13,
+        "x_star_rel_dev_julia": 1.2084620415062427e-16
+      }
+    ],
+    "tolerance": 1e-11,
+    "tolerance_note": "mixed precision: Python/C++ double vs C++ long double vs Julia double + Lanczos gamma; 1e-11 is the appropriate band"
+  },
+  "date": "2026-09-29",
+  "languages": [
+    "python",
+    "cpp",
+    "julia"
+  ],
+  "mini_dns": {
+    "lyapunov_estimate_from_deviation_growth": 21.34763767808406,
+    "max_rel_dev_python_vs_cpp_final": 8.106375888827964e-06,
+    "max_rel_dev_python_vs_cpp_prechaotic_t0.1": 1.287560827779682e-08,
+    "max_rel_dev_python_vs_julia_final": 8.106373383428495e-06,
+    "max_rel_dev_python_vs_julia_prechaotic_t0.1": 1.2878061953651204e-08,
+    "note": "at t = 0 the three implementations agree to machine precision; the exponential deviation growth afterwards is the chaotic amplification of floating-point noise, not an implementation discrepancy",
+    "pass": true,
+    "prechaotic_note": "E and Omega agree pre-chaotically to <= 1e-11; the looser 1e-7 band is set by the sup-norm ||omega||_oo, whose argmax is nearly degenerate and therefore sensitive to last-digit differences between FFT implementations",
+    "tolerance_final": 0.0001,
+    "tolerance_prechaotic": 1e-07
+  },
+  "program": "P5_cross_language",
+  "snapshot": {
+    "max_rel_dev_cpp": 3.26388992145036e-12,
+    "max_rel_dev_julia": 0.0,
+    "pass": true,
+    "rows": {
+      "E_phys": {
+        "python_reference": 0.12248071019939977,
+        "rel_dev_cpp": 3.26388992145036e-12,
+        "rel_dev_julia": 0.0
+      },
+      "Omega_phys": {
+        "python_reference": 1.2297850072198049,
+        "rel_dev_cpp": 1.587083974705e-13,
+        "rel_dev_julia": 0.0
+      },
+      "omega_inf": {
+        "python_reference": 5.692074068422931,
+        "rel_dev_cpp": 5.149245687560923e-13,
+        "rel_dev_julia": 0.0
+      },
+      "u4_mean": {
+        "python_reference": 0.020029687124171407,
+        "rel_dev_cpp": 1.4274667474234212e-12,
+        "rel_dev_julia": 0.0
+      },
+      "u6_mean": {
+        "python_reference": 0.0038933708419071175,
+        "rel_dev_cpp": 7.404064121444998e-13,
+        "rel_dev_julia": 0.0
+      },
+      "u_inf": {
+        "python_reference": 0.6001877273567332,
+        "rel_dev_cpp": 4.4450524503786687e-13,
+        "rel_dev_julia": 0.0
+      }
+    },
+    "tolerance": 1e-11
+  },
+  "status": "PASS",
+  "title": "Three-language cross-validation of the P5 smoothness protocol"
+}

@@ -1,0 +1,402 @@
+{
+  "analytic_reference": {
+    "C_s_gaussian": 0.1696674621954832,
+    "C_s_sharp": 0.1732659558297058
+  },
+  "date": "2026-09-29",
+  "germano_correlation_gaussian_field": [
+    -0.0013712413739459773,
+    -0.0029356698771905694
+  ],
+  "integrity": {
+    "sha256_of_code": "301ee76a3790793b47c77b6c7c5b595c67823715650398ffca4061a0e961d249"
+  },
+  "measured": {
+    "gaussian_d16": {
+      "C_s_mean": 0.17685279491507241,
+      "C_s_std": 0.004831233299087091,
+      "Delta_over_eta": 25.132741228718338,
+      "n": 4,
+      "strain2_rel_err_max": 0.2371842894726592
+    },
+    "gaussian_d2": {
+      "C_s_mean": 0.3465082182262844,
+      "C_s_std": 0.006817558740200106,
+      "Delta_over_eta": 3.1415926535897922,
+      "n": 4,
+      "strain2_rel_err_max": 0.21130653287851456
+    },
+    "gaussian_d32": {
+      "C_s_mean": 0.2065180763379561,
+      "C_s_std": 0.0038366627642854026,
+      "Delta_over_eta": 50.265482457436676,
+      "n": 4,
+      "strain2_rel_err_max": 0.10007260685558433
+    },
+    "gaussian_d4": {
+      "C_s_mean": 0.2245375830692733,
+      "C_s_std": 0.004761369786548544,
+      "Delta_over_eta": 6.2831853071795845,
+      "n": 4,
+      "strain2_rel_err_max": 0.21570568239115256
+    },
+    "gaussian_d8": {
+      "C_s_mean": 0.18311699420225197,
+      "C_s_std": 0.004610699058756616,
+      "Delta_over_eta": 12.566370614359169,
+      "n": 4,
+      "strain2_rel_err_max": 0.22967859941985364
+    },
+    "sharp_d16": {
+      "C_s_mean": 0.16993883145601574,
+      "C_s_std": 0.010254026951497335,
+      "Delta_over_eta": 25.132741228718338,
+      "n": 4,
+      "strain2_rel_err_max": 0.12345932137090708
+    },
+    "sharp_d32": {
+      "C_s_mean": 0.17757546854822875,
+      "C_s_std": 0.011338914782140065,
+      "Delta_over_eta": 50.265482457436676,
+      "n": 4,
+      "strain2_rel_err_max": 0.5170340722108623
+    },
+    "sharp_d4": {
+      "C_s_mean": 0.2045317231444992,
+      "C_s_std": 0.0042565221859489815,
+      "Delta_over_eta": 6.2831853071795845,
+      "n": 4,
+      "strain2_rel_err_max": 0.16686337888104358
+    }
+  },
+  "method": {
+    "C_K": 1.5,
+    "field": "128^3 random-phase divergence-free K41-Pao field",
+    "note": "Gaussian random fields have vanishing third-order correlations: <L_ij S_ij> = 0 up to sampling noise (measured below). The Germano-based a priori C_s therefore requires real cascade dynamics and is measured in P4.",
+    "realizations": 4
+  },
+  "program": "P3_spectral_inputs",
+  "rows": [
+    {
+      "C_s_implied": 0.352683785316811,
+      "Delta_over_dx": 2.0,
+      "Delta_over_eta": 3.1415926535897922,
+      "filter": "gaussian",
+      "realization": 0,
+      "strain2_measured": 48.7855059827766,
+      "strain2_quadrature": 42.46227478853562,
+      "strain2_rel_err": 0.14891409435153913
+    },
+    {
+      "C_s_implied": 0.22933606669359463,
+      "Delta_over_dx": 4.0,
+      "Delta_over_eta": 6.2831853071795845,
+      "filter": "gaussian",
+      "realization": 0,
+      "strain2_measured": 34.366475729244776,
+      "strain2_quadrature": 30.065768340608145,
+      "strain2_rel_err": 0.14304332222329763
+    },
+    {
+      "C_s_implied": 0.18870484512313618,
+      "Delta_over_dx": 8.0,
+      "Delta_over_eta": 12.566370614359169,
+      "filter": "gaussian",
+      "realization": 0,
+      "strain2_measured": 17.688082217643533,
+      "strain2_quadrature": 15.629916433480075,
+      "strain2_rel_err": 0.1316811764747995
+    },
+    {
+      "C_s_implied": 0.18417213216096612,
+      "Delta_over_dx": 16.0,
+      "Delta_over_eta": 25.132741228718338,
+      "filter": "gaussian",
+      "realization": 0,
+      "strain2_measured": 7.250805701575266,
+      "strain2_quadrature": 6.488109096850814,
+      "strain2_rel_err": 0.11755298706284827
+    },
+    {
+      "C_s_implied": 0.21082375550438265,
+      "Delta_over_dx": 32.0,
+      "Delta_over_eta": 50.265482457436676,
+      "filter": "gaussian",
+      "realization": 0,
+      "strain2_measured": 2.4029907598218396,
+      "strain2_quadrature": 2.2763645537328703,
+      "strain2_rel_err": 0.05562650581662011
+    },
+    {
+      "C_s_implied": 0.2084540667315043,
+      "Delta_over_dx": 4.0,
+      "Delta_over_eta": 6.2831853071795845,
+      "filter": "sharp",
+      "realization": 0,
+      "strain2_measured": 39.03171623035815,
+      "strain2_quadrature": 35.39776252144394,
+      "strain2_rel_err": 0.1026605482963158
+    },
+    {
+      "C_s_implied": 0.18687829867978234,
+      "Delta_over_dx": 16.0,
+      "Delta_over_eta": 25.132741228718338,
+      "filter": "sharp",
+      "realization": 0,
+      "strain2_measured": 7.111147058612452,
+      "strain2_quadrature": 7.9572013875067285,
+      "strain2_rel_err": 0.10632561470954242
+    },
+    {
+      "C_s_implied": 0.18890577844629183,
+      "Delta_over_dx": 32.0,
+      "Delta_over_eta": 50.265482457436676,
+      "filter": "sharp",
+      "realization": 0,
+      "strain2_measured": 2.781748340286007,
+      "strain2_quadrature": 2.1941939458874207,
+      "strain2_rel_err": 0.2677768733706698
+    },
+    {
+      "C_s_implied": 0.33707891067333856,
+      "Delta_over_dx": 2.0,
+      "Delta_over_eta": 3.1415926535897922,
+      "filter": "gaussian",
+      "realization": 1,
+      "strain2_measured": 65.85176814056257,
+      "strain2_quadrature": 60.828957475175656,
+      "strain2_rel_err": 0.08257269027562615
+    },
+    {
+      "C_s_implied": 0.21828628447340995,
+      "Delta_over_dx": 4.0,
+      "Delta_over_eta": 6.2831853071795845,
+      "filter": "gaussian",
+      "realization": 1,
+      "strain2_measured": 46.644555303353826,
+      "strain2_quadrature": 43.070451429114456,
+      "strain2_rel_err": 0.08298273539393118
+    },
+    {
+      "C_s_implied": 0.17781133668288357,
+      "Delta_over_dx": 8.0,
+      "Delta_over_eta": 12.566370614359169,
+      "filter": "gaussian",
+      "realization": 1,
+      "strain2_measured": 24.332326310774466,
+      "strain2_quadrature": 22.390499020777895,
+      "strain2_rel_err": 0.08672550299993749
+    },
+    {
+      "C_s_implied": 0.17235033084484308,
+      "Delta_over_dx": 16.0,
+      "Delta_over_eta": 25.132741228718338,
+      "filter": "gaussian",
+      "realization": 1,
+      "strain2_measured": 10.066381949842112,
+      "strain2_quadrature": 9.294483498872607,
+      "strain2_rel_err": 0.08304909584950411
+    },
+    {
+      "C_s_implied": 0.20180097154704485,
+      "Delta_over_dx": 32.0,
+      "Delta_over_eta": 50.265482457436676,
+      "filter": "gaussian",
+      "realization": 1,
+      "strain2_measured": 3.2370685933101133,
+      "strain2_quadrature": 3.2609859770018543,
+      "strain2_rel_err": 0.007334402496796573
+    },
+    {
+      "C_s_implied": 0.19875458918609784,
+      "Delta_over_dx": 4.0,
+      "Delta_over_eta": 6.2831853071795845,
+      "filter": "sharp",
+      "realization": 1,
+      "strain2_measured": 52.854260592036006,
+      "strain2_quadrature": 50.708752695336614,
+      "strain2_rel_err": 0.04231040565304029
+    },
+    {
+      "C_s_implied": 0.16676270136235724,
+      "Delta_over_dx": 16.0,
+      "Delta_over_eta": 25.132741228718338,
+      "filter": "sharp",
+      "realization": 1,
+      "strain2_measured": 10.518593489288518,
+      "strain2_quadrature": 11.399018710903785,
+      "strain2_rel_err": 0.07723693099767372
+    },
+    {
+      "C_s_implied": 0.18878904372367444,
+      "Delta_over_dx": 32.0,
+      "Delta_over_eta": 50.265482457436676,
+      "filter": "sharp",
+      "realization": 1,
+      "strain2_measured": 3.5379133363063624,
+      "strain2_quadrature": 3.1432731970052035,
+      "strain2_rel_err": 0.1255506965405227
+    },
+    {
+      "C_s_implied": 0.3429594945114679,
+      "Delta_over_dx": 2.0,
+      "Delta_over_eta": 3.1415926535897922,
+      "filter": "gaussian",
+      "realization": 2,
+      "strain2_measured": 49.08270182256578,
+      "strain2_quadrature": 40.52046322736082,
+      "strain2_rel_err": 0.21130653287851456
+    },
+    {
+      "C_s_implied": 0.22155433733144392,
+      "Delta_over_dx": 4.0,
+      "Delta_over_eta": 6.2831853071795845,
+      "filter": "gaussian",
+      "realization": 2,
+      "strain2_measured": 34.879632350348736,
+      "strain2_quadrature": 28.69085244526005,
+      "strain2_rel_err": 0.21570568239115256
+    },
+    {
+      "C_s_implied": 0.17939677141703644,
+      "Delta_over_dx": 8.0,
+      "Delta_over_eta": 12.566370614359169,
+      "filter": "gaussian",
+      "realization": 2,
+      "strain2_measured": 18.340848183754062,
+      "strain2_quadrature": 14.915156035412046,
+      "strain2_rel_err": 0.22967859941985364
+    },
+    {
+      "C_s_implied": 0.17265590059095393,
+      "Delta_over_dx": 16.0,
+      "Delta_over_eta": 25.132741228718338,
+      "filter": "gaussian",
+      "realization": 2,
+      "strain2_measured": 7.659910325443925,
+      "strain2_quadrature": 6.1914060747642585,
+      "strain2_rel_err": 0.2371842894726592
+    },
+    {
+      "C_s_implied": 0.20972423398826312,
+      "Delta_over_dx": 32.0,
+      "Delta_over_eta": 50.265482457436676,
+      "filter": "gaussian",
+      "realization": 2,
+      "strain2_measured": 2.3454567855214203,
+      "strain2_quadrature": 2.1722657735827213,
+      "strain2_rel_err": 0.07972827912905649
+    },
+    {
+      "C_s_implied": 0.20214311585514108,
+      "Delta_over_dx": 4.0,
+      "Delta_over_eta": 6.2831853071795845,
+      "filter": "sharp",
+      "realization": 2,
+      "strain2_measured": 39.415493312858246,
+      "strain2_quadrature": 33.779013058628585,
+      "strain2_rel_err": 0.16686337888104358
+    },
+    {
+      "C_s_implied": 0.1592603090477961,
+      "Delta_over_dx": 16.0,
+      "Delta_over_eta": 25.132741228718338,
+      "filter": "sharp",
+      "realization": 2,
+      "strain2_measured": 8.530782054829203,
+      "strain2_quadrature": 7.593316368962493,
+      "strain2_rel_err": 0.12345932137090708
+    },
+    {
+      "C_s_implied": 0.16804283421320776,
+      "Delta_over_dx": 32.0,
+      "Delta_over_eta": 50.265482457436676,
+      "filter": "sharp",
+      "realization": 2,
+      "strain2_measured": 3.1516084848029897,
+      "strain2_quadrature": 2.09385285034314,
+      "strain2_rel_err": 0.5051719056028723
+    },
+    {
+      "C_s_implied": 0.3533106824035203,
+      "Delta_over_dx": 2.0,
+      "Delta_over_eta": 3.1415926535897922,
+      "filter": "gaussian",
+      "realization": 3,
+      "strain2_measured": 49.10401246839227,
+      "strain2_quadrature": 43.03135864514766,
+      "strain2_rel_err": 0.1411215916588164
+    },
+    {
+      "C_s_implied": 0.22897364377864474,
+      "Delta_over_dx": 4.0,
+      "Delta_over_eta": 6.2831853071795845,
+      "filter": "gaussian",
+      "realization": 3,
+      "strain2_measured": 34.746042895117036,
+      "strain2_quadrature": 30.46871291869506,
+      "strain2_rel_err": 0.14038433418030863
+    },
+    {
+      "C_s_implied": 0.18655502358595172,
+      "Delta_over_dx": 8.0,
+      "Delta_over_eta": 12.566370614359169,
+      "filter": "gaussian",
+      "realization": 3,
+      "strain2_measured": 18.12049623001937,
+      "strain2_quadrature": 15.839390211481486,
+      "strain2_rel_err": 0.14401476244233063
+    },
+    {
+      "C_s_implied": 0.17823281606352662,
+      "Delta_over_dx": 16.0,
+      "Delta_over_eta": 25.132741228718338,
+      "filter": "gaussian",
+      "realization": 3,
+      "strain2_measured": 7.642271543420492,
+      "strain2_quadrature": 6.575063414897675,
+      "strain2_rel_err": 0.1623114578795929
+    },
+    {
+      "C_s_implied": 0.20372334431213382,
+      "Delta_over_dx": 32.0,
+      "Delta_over_eta": 50.265482457436676,
+      "filter": "gaussian",
+      "realization": 3,
+      "strain2_measured": 2.537727387808541,
+      "strain2_quadrature": 2.306872630036946,
+      "strain2_rel_err": 0.10007260685558433
+    },
+    {
+      "C_s_implied": 0.20877512080525346,
+      "Delta_over_dx": 4.0,
+      "Delta_over_eta": 6.2831853071795845,
+      "filter": "sharp",
+      "realization": 3,
+      "strain2_measured": 39.29895664761005,
+      "strain2_quadrature": 35.872167044316534,
+      "strain2_rel_err": 0.09552781127106295
+    },
+    {
+      "C_s_implied": 0.1668540167341273,
+      "Delta_over_dx": 16.0,
+      "Delta_over_eta": 25.132741228718338,
+      "filter": "sharp",
+      "realization": 3,
+      "strain2_measured": 8.344951215030916,
+      "strain2_quadrature": 8.063844634388634,
+      "strain2_rel_err": 0.03486011863912782
+    },
+    {
+      "C_s_implied": 0.16456421780974098,
+      "Delta_over_dx": 32.0,
+      "Delta_over_eta": 50.265482457436676,
+      "filter": "sharp",
+      "realization": 3,
+      "strain2_measured": 3.373278120607614,
+      "strain2_quadrature": 2.223600763093962,
+      "strain2_rel_err": 0.5170340722108623
+    }
+  ],
+  "title": "Spectral verification of the Lilly-derivation inputs"
+}

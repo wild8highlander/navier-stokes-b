@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navier–Stokes Fluid Lab — Smagorinsky–Kolmogorov Program</title>
+<style>
+  :root {
+    --bg: #131519;
+    --panel: #1c1f26;
+    --panel2: #232730;
+    --line: #2e3340;
+    --text: #e9e7e1;
+    --muted: #9aa0ac;
+    --gold: #d3a945;
+    --gold-dim: #92761f;
+    --cyan: #4db3d6;
+    --red: #d46a5f;
+    --green: #6fae7f;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--text);
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh; }
+  header {
+    display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+    padding: 14px 22px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  header h1 { font-size: 17px; font-weight: 650; letter-spacing: 0.2px; }
+  header h1 b { color: var(--gold); font-weight: 700; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  header .lang { margin-left: auto; display: flex; gap: 6px; }
+  header .lang button {
+    background: var(--panel); color: var(--muted); border: 1px solid var(--line);
+    border-radius: 6px; padding: 3px 10px; font-size: 11px; cursor: pointer;
+  }
+  header .lang button.on { color: var(--gold); border-color: var(--gold-dim); }
+  .layout {
+    display: grid; grid-template-columns: 1fr 330px; gap: 14px;
+    padding: 14px 22px 22px; align-items: start;
+  }
+  @media (max-width: 980px) { .layout { grid-template-columns: 1fr; } }
+  .stage {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px; position: relative;
+  }
+  #field { width: 100%; display: block; border-radius: 6px;
+    background: #0d0f13; cursor: crosshair; touch-action: none; }
+  .stagebar {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+    margin-top: 10px;
+  }
+  .stagebar .readout {
+    background: var(--panel2); border: 1px solid var(--line);
+    border-radius: 6px; padding: 4px 10px; font-size: 11.5px;
+    color: var(--muted); font-variant-numeric: tabular-nums;
+  }
+  .stagebar .readout b { color: var(--text); font-weight: 600; }
+  .side { display: flex; flex-direction: column; gap: 12px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .card h2 {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.4px;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 10px;
+  }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; }
+  button.act {
+    background: var(--panel2); color: var(--text);
+    border: 1px solid var(--line); border-radius: 7px;
+    padding: 7px 12px; font-size: 12.5px; cursor: pointer; flex: 1 1 auto;
+    text-align: center; transition: border-color .15s, color .15s;
+  }
+  button.act:hover { border-color: var(--gold-dim); }
+  button.act.on { color: var(--gold); border-color: var(--gold-dim);
+    background: rgba(146, 118, 31, 0.10); }
+  .ctl { margin: 10px 0 2px; }
+  .ctl label {
+    display: flex; justify-content: space-between; font-size: 11.5px;
+    color: var(--muted); margin-bottom: 4px;
+  }
+  .ctl label b { color: var(--text); font-weight: 600;
+    font-variant-numeric: tabular-nums; }
+  input[type=range] {
+    width: 100%; accent-color: var(--gold-dim); height: 22px;
+  }
+  select {
+    width: 100%; background: var(--panel2); color: var(--text);
+    border: 1px solid var(--line); border-radius: 7px; padding: 6px 8px;
+    font-size: 12.5px;
+  }
+  #spec { width: 100%; display: block; border-radius: 6px;
+    background: #0d0f13; }
+  .note { color: var(--muted); font-size: 10.8px; line-height: 1.5;
+    margin-top: 8px; }
+  .note b { color: var(--text); }
+  .legend { display: flex; gap: 14px; margin-top: 8px; font-size: 11px;
+    color: var(--muted); flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 18px; height: 3px;
+    border-radius: 2px; margin-right: 5px; vertical-align: middle; }
+  footer {
+    padding: 10px 22px 18px; color: var(--muted); font-size: 11px;
+    border-top: 1px solid var(--line); line-height: 1.6;
+  }
+  footer a { color: var(--cyan); text-decoration: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1><b>Navier–Stokes</b> Fluid Lab</h1>
+  <span class="sub" id="subtitle">Smagorinsky–Kolmogorov research program · 2D fluid simulator</span>
+  <span class="lang">
+    <button id="lang-en" class="on">EN</button>
+    <button id="lang-ru">RU</button>
+  </span>
+</header>
+
+<div class="layout">
+  <div class="stage">
+    <canvas id="field" width="1024" height="640"></canvas>
+    <div class="stagebar">
+      <span class="readout" id="ro-mode"><b>Mode:</b> —</span>
+      <span class="readout" id="ro-t"><b>t</b> = 0.0</span>
+      <span class="readout" id="ro-e"><b>E</b> = —</span>
+      <span class="readout" id="ro-ens"><b>Ω</b> = —</span>
+      <span class="readout" id="ro-re"><b>Re</b> ≈ —</span>
+      <span class="readout" id="ro-fps"><b>FPS</b> = —</span>
+    </div>
+  </div>
+
+  <div class="side">
+    <div class="card">
+      <h2 id="h-mode">Mode</h2>
+      <div class="row">
+        <button class="act on" id="m-decay">Decay · no force</button>
+        <button class="act" id="m-forced">Forced · mouse = force</button>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="act" id="b-stir">Stirrer: off</button>
+        <button class="act" id="b-reset">Reset</button>
+        <button class="act" id="b-pause">Pause</button>
+      </div>
+      <div class="note" id="note-mode"></div>
+    </div>
+
+    <div class="card">
+      <h2 id="h-vis">Visualization</h2>
+      <div class="ctl">
+        <label><span id="l-view">View</span><b id="view-name">vorticity</b></label>
+        <select id="view">
+          <option value="vort" selected>vorticity ω</option>
+          <option value="speed">speed |u|</option>
+          <option value="schlieren">schlieren |∇ω|</option>
+        </select>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="act on" id="t-part">Tracer particles</button>
+        <button class="act" id="t-arrows">Velocity arrows</button>
+      </div>
+      <div class="ctl">
+        <label><span id="l-conf">Vorticity confinement</span><b id="v-conf">0.12</b></label>
+        <input type="range" id="conf" min="0" max="0.4" step="0.01" value="0.12">
+      </div>
+      <div class="ctl">
+        <label><span id="l-visc">Viscosity ν</span><b id="v-visc">1.0e-5</b></label>
+        <input type="range" id="visc" min="-5" max="-2.7" step="0.05" value="-5">
+      </div>
+      <div class="ctl">
+        <label><span id="l-speed">Simulation speed</span><b id="v-speed">1.0×</b></label>
+        <input type="range" id="speed" min="0.2" max="2.5" step="0.1" value="1">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 id="h-spec">Energy spectrum E(k)</h2>
+      <canvas id="spec" width="600" height="330"></canvas>
+      <div class="legend">
+        <span><i style="background:var(--gold)"></i>E(k) measured</span>
+        <span><i style="background:var(--cyan)"></i>k⁻⁵ᐟ³ (inverse cascade)</span>
+        <span><i style="background:var(--red)"></i>k⁻³ (enstrophy)</span>
+      </div>
+      <div class="note" id="note-spec"></div>
+    </div>
+  </div>
+</div>
+
+<footer id="footer">
+  2D Navier–Stokes on a periodic 256×160 lattice: semi-Lagrangian advection,
+  Jacobi pressure projection, vorticity confinement. The spectrum panel
+  shows the angle-averaged kinetic spectrum E(k) with the two canonical
+  slopes of two-dimensional turbulence and the slope measured live in the
+  shaded band. Part of the
+  <a href="https://github.com/wild8highlander/navier-stokes-b">navier-stokes-b</a>
+  Smagorinsky–Kolmogorov research program (research_col_smar).
+</footer>
+
+<script>
+"use strict";
+/* ---------------------------------------------------------------------
+   0. Lattice and state
+--------------------------------------------------------------------- */
+const W = 256, H = 160;            // lattice
+const DT = 0.016;                  // time step (sim units)
+let nu = 1.0e-5;                   // viscosity
+let confEps = 0.12;                // vorticity confinement
+let speed = 1.0;
+let paused = false;
+let mode = "decay";                // "decay" | "forced"
+let stirrer = false;
+let showParticles = true;
+let showArrows = false;
+let simTime = 0;
+
+const N = W * H;
+const u = new Float32Array(N);     // x-velocity
+const v = new Float32Array(N);     // y-velocity
+const u2 = new Float32Array(N);    // scratch
+const v2 = new Float32Array(N);
+const p = new Float32Array(N);     // pressure
+const div = new Float32Array(N);
+const w = new Float32Array(N);     // vorticity
+const fx = new Float32Array(N);
+const fy = new Float32Array(N);
+
+const IX = (x, y) => x + y * W;
+const wrap = (i, m) => ((i % m) + m) % m;
+
+/* ---------------------------------------------------------------------
+   1. Utilities: bilinear sampler with periodic wrap
+--------------------------------------------------------------------- */
+function sample(f, x, y) {
+  const i = Math.floor(x), j = Math.floor(y);
+  const fxr = x - i, fyr = y - j;
+  const i0 = wrap(i, W), i1 = wrap(i + 1, W);
+  const j0 = wrap(j, H), j1 = wrap(j + 1, H);
+  const a = f[IX(i0, j0)], b = f[IX(i1, j0)];
+  const c = f[IX(i0, j1)], d = f[IX(i1, j1)];
+  return (a * (1 - fxr) + b * fxr) * (1 - fyr) +
+         (c * (1 - fxr) + d * fxr) * fyr;
+}
+
+/* ---------------------------------------------------------------------
+   2. Solver: advection, confinement, diffusion, projection
+--------------------------------------------------------------------- */
+function advect(dt) {
+  for (let j = 0; j < H; j++) {
+    for (let i = 0; i < W; i++) {
+      const c = IX(i, j);
+      const x = i - dt * u[c], y = j - dt * v[c];
+      u2[c] = sample(u, x, y);
+      v2[c] = sample(v, x, y);
+    }
+  }
+  u.set(u2); v.set(v2);
+}
+
+function curl() {
+  for (let j = 0; j < H; j++) {
+    for (let i = 0; i < W; i++) {
+      w[IX(i, j)] =
+        (v[IX(wrap(i + 1, W), j)] - v[IX(wrap(i - 1, W), j)]) * 0.5 -
+        (u[IX(i, wrap(j + 1, H))] - u[IX(i, wrap(j - 1, H))]) * 0.5;
+    }
+  }
+}
+
+function confine(dt) {
+  if (confEps <= 0) return;
+  // F = eps * dt * ( grad|w| x w ) / |grad|w|| ;  2D: Fx = Ny*w, Fy = -Nx*w
+  for (let j = 0; j < H; j++) {
+    for (let i = 0; i < W; i++) {
+      const c = IX(i, j);
+      const gx = (Math.abs(w[IX(wrap(i + 1, W), j)]) -
+                  Math.abs(w[IX(wrap(i - 1, W), j)])) * 0.5;
+      const gy = (Math.abs(w[IX(i, wrap(j + 1, H))]) -
+                  Math.abs(w[IX(i, wrap(j - 1, H))])) * 0.5;
+      const len = Math.sqrt(gx * gx + gy * gy) + 1e-9;
+      fx[c] += confEps * dt * (gy / len) * w[c];
+      fy[c] -= confEps * dt * (gx / len) * w[c];
+    }
+  }
+}
+
+function diffuse(dt) {
+  // semi-implicit Jacobi on velocity (a few sweeps are plenty)
+  const a = dt * nu;
+  if (a < 1e-7) return;
+  for (let it = 0; it < 4; it++) {
+    for (let j = 0; j < H; j++) {
+      for (let i = 0; i < W; i++) {
+        const c = IX(i, j);
+        const l = u[IX(wrap(i - 1, W), j)], r = u[IX(wrap(i + 1, W), j)];
+        const b = u[IX(i, wrap(j - 1, H))], t = u[IX(i, wrap(j + 1, H))];
+        u2[c] = (u[c] + a * (l + r + b + t)) / (1 + 4 * a);
+        const l2 = v[IX(wrap(i - 1, W), j)], r2 = v[IX(wrap(i + 1, W), j)];
+        const b2 = v[IX(i, wrap(j - 1, H))], t2 = v[IX(i, wrap(j + 1, H))];
+        v2[c] = (v[c] + a * (l2 + r2 + b2 + t2)) / (1 + 4 * a);
+      }
+    }
+    u.set(u2); v.set(v2);
+  }
+}
+
+function project() {
+  // divergence
+  for (let j = 0; j < H; j++) {
+    for (let i = 0; i < W; i++) {
+      const c = IX(i, j);
+      div[c] = 0.5 * (
+        u[IX(wrap(i + 1, W), j)] - u[IX(wrap(i - 1, W), j)] +
+        v[IX(i, wrap(j + 1, H))] - v[IX(i, wrap(j - 1, H))]
+      );
+      p[c] = 0;
+    }
+  }
+  // Jacobi on Poisson
+  for (let it = 0; it < 28; it++) {
+    for (let j = 0; j < H; j++) {
+      for (let i = 0; i < W; i++) {
+        const c = IX(i, j);
+        const l = p[IX(wrap(i - 1, W), j)], r = p[IX(wrap(i + 1, W), j)];
+        const b = p[IX(i, wrap(j - 1, H))], t = p[IX(i, wrap(j + 1, H))];
+        p[c] = (l + r + b + t - div[c]) * 0.25;
+      }
+    }
+  }
+  // subtract gradient
+  for (let j = 0; j < H; j++) {
+    for (let i = 0; i < W; i++) {
+      const c = IX(i, j);
+      u[c] -= 0.5 * (p[IX(wrap(i + 1, W), j)] - p[IX(wrap(i - 1, W), j)]);
+      v[c] -= 0.5 * (p[IX(i, wrap(j + 1, H))] - p[IX(i, wrap(j - 1, H))]);
+    }
+  }
+}
+
+function step(dt) {
+  fx.fill(0); fy.fill(0);
+  applyStirrer(dt);
+  applyMouse(dt);
+  applyDrag(dt);
+  confine(dt);
+  for (let c = 0; c < N; c++) { u[c] += fx[c] * dt; v[c] += fy[c] * dt; }
+  advect(dt);
+  diffuse(dt);
+  project();
+  simTime += dt;
+}
+
+/* ---------------------------------------------------------------------
+   3. External forcing: mouse, stirrer, drag
+--------------------------------------------------------------------- */
+const mouse = { down: false, x: 0, y: 0, px: 0, py: 0 };
+function applyMouse(dt) {
+  if (mode !== "forced" || !mouse.down) return;
+  // mouse position in lattice coordinates (canvas is letterboxed onto the
+  // field by fieldCanvas.map); velocity kick = mouse velocity * falloff
+  const lat = fieldCanvas.toLattice(mouse.x, mouse.y);
+  const latPrev = fieldCanvas.toLattice(mouse.px, mouse.py);
+  const velX = (lat[0] - latPrev[0]) / Math.max(dt, 1e-3) * 0.08;
+  const velY = (lat[1] - latPrev[1]) / Math.max(dt, 1e-3) * 0.08;
+  const R = 9;
+  const ci = Math.round(lat[0]), cj = Math.round(lat[1]);
+  for (let j = cj - R; j <= cj + R; j++) {
+    if (j < 0 || j >= H) continue;
+    for (let i = ci - R; i <= ci + R; i++) {
+      const di = i - ci, dj = j - cj;
+      const d2 = di * di + dj * dj;
+      if (d2 > R * R) continue;
+      const fall = Math.exp(-d2 / (R * R * 0.35));
+      fx[IX(wrapIx(i), wrapIy(j))] += velX * fall;
+      fy[IX(wrapIx(i), wrapIy(j))] += velY * fall;
+    }
+  }
+}
+function wrapIx(i) { return ((i % W) + W) % W; }
+function wrapIy(i) { return ((i % H) + H) % H; }
+
+let stirPhase = 0;
+function applyStirrer(dt) {
+  if (!stirrer) return;
+  stirPhase += dt * 0.8;
+  const cores = [
+    [W * 0.30, H * 0.38], [W * 0.70, H * 0.38],
+    [W * 0.50, H * 0.66], [W * 0.15, H * 0.75], [W * 0.85, H * 0.75],
+  ];
+  for (let s = 0; s < cores.length; s++) {
+    const [cx, cy] = cores[s];
+    const R = 12;
+    const str = 14 * (s % 2 === 0 ? 1 : -1) * Math.sin(stirPhase + s);
+    for (let j = 0; j < H; j++) {
+      for (let i = 0; i < W; i++) {
+        const di = i - Math.floor(cx), dj = j - Math.floor(cy);
+        const d2 = di * di + dj * dj;
+        if (d2 < R * R) {
+          const fall = Math.exp(-d2 / (R * R * 0.3));
+          fx[IX(i, j)] += -str * dj * fall / Math.max(R, 1);
+          fy[IX(i, j)] += str * di * fall / Math.max(R, 1);
+        }
+      }
+    }
+  }
+}
+
+function applyDrag(dt) {
+  // weak Rayleigh drag keeps the forced mode stationary (like TG2D)
+  if (mode !== "forced") return;
+  const k = 0.02;
+  for (let c = 0; c < N; c++) { fx[c] -= k * u[c]; fy[c] -= k * v[c]; }
+}
+
+/* ---------------------------------------------------------------------
+   4. Tracer particles
+--------------------------------------------------------------------- */
+const NP = 3600;
+const px = new Float32Array(NP);
+const py = new Float32Array(NP);
+const page = new Float32Array(NP);
+function seedParticles() {
+  for (let n = 0; n < NP; n++) {
+    px[n] = Math.random() * W;
+    py[n] = Math.random() * H;
+    page[n] = Math.random();
+  }
+}
+
+function moveParticles(dt) {
+  for (let n = 0; n < NP; n++) {
+    const x = px[n], y = py[n];
+    px[n] = wrapIx2(x + sample(u, x, y) * dt * 8);
+    py[n] = wrapIy2(y + sample(v, x, y) * dt * 8);
+    page[n] += dt * 0.25;
+  }
+}
+function wrapIx2(x) { return x < 0 ? x + W : (x >= W ? x - W : x); }
+function wrapIy2(y) { return y < 0 ? y + H : (y >= H ? y - H : y); }
+/* ---------------------------------------------------------------------
+   5. FFT (radix-2, in-place, 2D) for the live energy spectrum
+--------------------------------------------------------------------- */
+const SW = 128, SH = 128;
+function fft1d(re, im, n, sign) {
+  for (let i = 1, j = 0; i < n; i++) {
+    let bit = n >> 1;
+    for (; j & bit; bit >>= 1) j ^= bit;
+    j ^= bit;
+    if (i < j) {
+      let t = re[i]; re[i] = re[j]; re[j] = t;
+      t = im[i]; im[i] = im[j]; im[j] = t;
+    }
+  }
+  for (let len = 2; len <= n; len <<= 1) {
+    const ang = (sign * 2 * Math.PI) / len;
+    const wr = Math.cos(ang), wi = Math.sin(ang);
+    for (let i = 0; i < n; i += len) {
+      let cr = 1, ci = 0;
+      for (let k = 0; k < len / 2; k++) {
+        const ur = re[i + k], ui = im[i + k];
+        const vr = re[i + k + len / 2] * cr - im[i + k + len / 2] * ci;
+        const vi = re[i + k + len / 2] * ci + im[i + k + len / 2] * cr;
+        re[i + k] = ur + vr; im[i + k] = ui + vi;
+        re[i + k + len / 2] = ur - vr; im[i + k + len / 2] = ui - vi;
+        const ncr = cr * wr - ci * wi;
+        ci = cr * wi + ci * wr; cr = ncr;
+      }
+    }
+  }
+}
+
+const kre = new Float64Array(SW * SW);
+const kim = new Float64Array(SW * SW);
+const kre2 = new Float64Array(SW * SW);
+const kim2 = new Float64Array(SW * SW);
+const EK = new Float64Array(SW / 2);
+const EKsm = new Float64Array(SW / 2);
+let spectrumReady = false;
+
+function computeSpectrum() {
+  // sample u and v onto the 128x128 spectral window (periodic wrap)
+  kre.fill(0); kim.fill(0);
+  kre2.fill(0); kim2.fill(0);
+  for (let j = 0; j < SH; j++) {
+    const sj = Math.floor(j * H / SH);
+    for (let i = 0; i < SW; i++) {
+      const si = Math.floor(i * W / SW);
+      const c = IX(si, sj);
+      kre[j * SW + i] = u[c];
+      kre2[j * SW + i] = v[c];
+    }
+  }
+  fft2d(kre, kim);
+  fft2d(kre2, kim2);
+  EK.fill(0);
+  const counts = new Float64Array(SW / 2);
+  for (let j = 0; j < SH; j++) {
+    let ky = j <= SH / 2 ? j : j - SH;
+    for (let i = 0; i < SW; i++) {
+      let kx = i <= SW / 2 ? i : i - SW;
+      const k = Math.round(Math.sqrt(kx * kx + ky * ky));
+      if (k >= 1 && k < SW / 2) {
+        // kinetic energy: (|u_k|^2 + |v_k|^2)/2 per mode; shell average
+        EK[k] += kre[j * SW + i] ** 2 + kim[j * SW + i] ** 2 +
+                 kre2[j * SW + i] ** 2 + kim2[j * SW + i] ** 2;
+        counts[k] += 1;
+      }
+    }
+  }
+  for (let k = 1; k < SW / 2; k++) {
+    if (counts[k] > 0) {
+      EK[k] = (EK[k] / counts[k]) * Math.PI * k * k / (SW * SH) * 2;
+    }
+  }
+  // exponential moving average
+  for (let k = 1; k < SW / 2; k++) {
+    EKsm[k] = spectrumReady ? EKsm[k] * 0.7 + EK[k] * 0.3 : EK[k];
+  }
+  spectrumReady = true;
+}
+
+function fft2d(re, im) {
+  const colr = new Float64Array(SH), coli = new Float64Array(SH);
+  for (let i = 0; i < SW; i++) {
+    for (let j = 0; j < SH; j++) { colr[j] = re[j * SW + i]; coli[j] = im[j * SW + i]; }
+    fft1d(colr, coli, SH, -1);
+    for (let j = 0; j < SH; j++) { re[j * SW + i] = colr[j]; im[j * SW + i] = coli[j]; }
+  }
+  for (let j = 0; j < SH; j++) {
+    fft1d(re.subarray(j * SW, j * SW + SW), im.subarray(j * SW, j * SW + SW), SW, -1);
+  }
+}
+
+function fitSlope() {
+  // log-log least squares in the band k in [6, 20]
+  let n = 0, sx = 0, sy = 0, sxx = 0, sxy = 0;
+  for (let k = 6; k <= 20; k++) {
+    if (EKsm[k] > 0) {
+      const x = Math.log(k), y = Math.log(EKsm[k]);
+      n++; sx += x; sy += y; sxx += x * x; sxy += x * y;
+    }
+  }
+  if (n < 5) return NaN;
+  return (n * sxy - sx * sy) / (n * sxx - sx * sx);
+}
+
+/* ---------------------------------------------------------------------
+   6. Rendering
+--------------------------------------------------------------------- */
+const fieldCanvas = {
+  el: document.getElementById("field"),
+  scaleX: 1, scaleY: 1,
+  toLattice(cx, cy) {
+    const r = this.el.getBoundingClientRect();
+    const x = (cx - r.left) / r.width * W;
+    const y = (cy - r.top) / r.height * H;
+    return [x, y];
+  },
+};
+const fctx = fieldCanvas.el.getContext("2d");
+const img = fctx.createImageData(W, H);
+const specCanvas = document.getElementById("spec");
+const sctx = specCanvas.getContext("2d");
+
+function colormap(v, out) {
+  // diverging blue -> dark -> gold (palette-consistent)
+  const a = Math.max(-1, Math.min(1, v));
+  const t = Math.pow(Math.abs(a), 0.65);
+  if (a >= 0) {
+    out[0] = 20 + t * 211; out[1] = 21 + t * 148; out[2] = 25 + t * 44;
+  } else {
+    out[0] = 20 + t * 57; out[1] = 21 + t * 128; out[2] = 25 + t * 189;
+  }
+  out[3] = 255;
+}
+
+function render() {
+  curl();
+  const d = img.data;
+  const mode_ = document.getElementById("view").value;
+  let vmax = 0.12;
+  if (mode_ === "speed") {
+    for (let c = 0; c < N; c++) {
+      const s = Math.hypot(u[c], v[c]);
+      if (s > vmax) vmax = s;
+    }
+  } else if (mode_ === "vort") {
+    for (let c = 0; c < N; c++) if (Math.abs(w[c]) > vmax) vmax = Math.abs(w[c]);
+    vmax = Math.max(vmax, 1e-4);
+  } else {
+    for (let c = 0; c < N; c++) if (Math.abs(w[c]) > vmax) vmax = Math.abs(w[c]);
+    vmax = Math.max(vmax, 1e-4);
+  }
+  const rgb = [0, 0, 0, 0];
+  for (let j = 0; j < H; j++) {
+    for (let i = 0; i < W; i++) {
+      const c = IX(i, j);
+      let val;
+      if (mode_ === "vort") {
+        colormap(w[c] / vmax, rgb);
+      } else if (mode_ === "speed") {
+        const s = Math.hypot(u[c], v[c]) / (vmax + 1e-9);
+        rgb[0] = 13 + s * 190; rgb[1] = 15 + s * 140; rgb[2] = 19 + s * 40;
+        rgb[3] = 255;
+      } else {
+        const gx = w[IX(wrap(i + 1, W), j)] - w[IX(wrap(i - 1, W), j)];
+        const gy = w[IX(i, wrap(j + 1, H))] - w[IX(i, wrap(j - 1, H))];
+        const s = Math.min(1, Math.sqrt(gx * gx + gy * gy) / (vmax * 0.6 + 1e-9));
+        const inv = 1 - s;
+        rgb[0] = 20 + inv * 200; rgb[1] = 22 + inv * 200; rgb[2] = 26 + inv * 205;
+        rgb[3] = 255;
+      }
+      const o = c * 4;
+      d[o] = rgb[0]; d[o + 1] = rgb[1]; d[o + 2] = rgb[2]; d[o + 3] = 255;
+    }
+  }
+  // paint the ImageData scaled to the canvas
+  const tmp = document.createElement("canvas");
+  tmp.width = W; tmp.height = H;
+  tmp.getContext("2d").putImageData(img, 0, 0);
+  fctx.imageSmoothingEnabled = true;
+  fctx.drawImage(tmp, 0, 0, fieldCanvas.el.width, fieldCanvas.el.height);
+
+  if (showParticles) {
+    fctx.fillStyle = "rgba(233,231,225,0.5)";
+    for (let n = 0; n < NP; n++) {
+      const age = page[n] % 1;
+      const sx = px[n] / W * fieldCanvas.el.width;
+      const sy = py[n] / H * fieldCanvas.el.height;
+      fctx.globalAlpha = 0.15 + 0.45 * Math.sin(age * Math.PI);
+      fctx.fillRect(sx, sy, 1.6, 1.6);
+    }
+    fctx.globalAlpha = 1;
+  }
+  if (showArrows) {
+    fctx.strokeStyle = "rgba(211,169,69,0.75)";
+    fctx.lineWidth = 1.2;
+    const stepI = 16;
+    fctx.beginPath();
+    for (let j = stepI / 2; j < H; j += stepI) {
+      for (let i = stepI / 2; i < W; i += stepI) {
+        const c = IX(i, j);
+        const x0 = i / W * fieldCanvas.el.width;
+        const y0 = j / H * fieldCanvas.el.height;
+        const dx = u[c] * 6, dy = v[c] * 6;
+        const L = Math.hypot(dx, dy);
+        if (L < 2) continue;
+        fctx.moveTo(x0, y0);
+        fctx.lineTo(x0 + dx * 8, y0 + dy * 8);
+      }
+    }
+    fctx.stroke();
+  }
+}
+
+function renderSpectrum(slope) {
+  const wpx = specCanvas.width, hpx = specCanvas.height;
+  sctx.clearRect(0, 0, wpx, hpx);
+  const padL = 46, padB = 26, padT = 10, padR = 10;
+  const x0 = padL, y0 = hpx - padB;
+  const kmin = 2, kmax = 48;
+  const emin = 1e-3, emax = 3e4;
+  const lx = (k) => x0 + (Math.log(k) - Math.log(kmin)) /
+                    (Math.log(kmax) - Math.log(kmin)) * (wpx - padL - padR);
+  const ly = (e) => y0 - (Math.log(e) - Math.log(emin)) /
+                    (Math.log(emax) - Math.log(emin)) * (y0 - padT);
+  // axes
+  sctx.strokeStyle = "#2e3340"; sctx.lineWidth = 1;
+  sctx.beginPath();
+  sctx.moveTo(x0, padT); sctx.lineTo(x0, y0); sctx.lineTo(wpx - padR, y0);
+  sctx.stroke();
+  sctx.fillStyle = "#9aa0ac"; sctx.font = "10px sans-serif";
+  for (const k of [2, 5, 10, 20, 40]) {
+    sctx.fillText(String(k), lx(k) - 4, y0 + 14);
+  }
+  for (const e of [1e-3, 1e0, 1e3]) {
+    sctx.fillText(e.toExponential(0), 4, ly(e) + 3);
+  }
+  // reference slopes anchored at k=8 through the measured level
+  const anchors = [[-5 / 3, "#4db3d6", "k^-5/3"], [-3, "#d46a5f", "k^-3"]];
+  for (const [pwr, col] of anchors) {
+    const k0 = 8;
+    const e0 = EKsm[k0] > 0 ? EKsm[k0] : 1e-6;
+    sctx.strokeStyle = col; sctx.globalAlpha = 0.65; sctx.lineWidth = 1.4;
+    sctx.beginPath();
+    sctx.moveTo(lx(3), ly(e0 * Math.pow(3 / k0, pwr)));
+    sctx.lineTo(lx(48), ly(e0 * Math.pow(48 / k0, pwr)));
+    sctx.stroke();
+    sctx.globalAlpha = 1;
+  }
+  // fit band
+  sctx.fillStyle = "rgba(211,169,69,0.10)";
+  sctx.fillRect(lx(6), padT, lx(20) - lx(6), y0 - padT);
+  // measured E(k)
+  sctx.strokeStyle = "#d3a945"; sctx.lineWidth = 2;
+  sctx.beginPath();
+  let started = false;
+  for (let k = 2; k < SW / 2; k++) {
+    if (EKsm[k] <= 0) continue;
+    const X = lx(k), Y = ly(EKsm[k]);
+    if (!started) { sctx.moveTo(X, Y); started = true; }
+    else sctx.lineTo(X, Y);
+  }
+  sctx.stroke();
+  // slope annotation
+  sctx.fillStyle = "#e9e7e1"; sctx.font = "12px sans-serif";
+  const sTxt = isFinite(slope) ? slope.toFixed(2) : "—";
+  sctx.fillText("slope = " + sTxt, x0 + 10, padT + 16);
+}
+
+/* ---------------------------------------------------------------------
+   7. Diagnostics + main loop
+--------------------------------------------------------------------- */
+let fps = 0, lastT = performance.now(), frames = 0, fpsT = 0;
+function frame() {
+  requestAnimationFrame(frame);
+  const now = performance.now();
+  const dts = Math.min(0.05, (now - lastT) / 1000);
+  lastT = now;
+  frames++; fpsT += dts;
+  if (fpsT > 0.5) { fps = frames / fpsT; frames = 0; fpsT = 0; }
+  if (!paused) {
+    const sub = Math.max(1, Math.round(speed));
+    for (let s = 0; s < sub; s++) {
+      step(DT * speed / sub);
+    }
+    moveParticles(DT * speed);
+    if (frames % 6 === 0) { computeSpectrum(); }
+  }
+  curl();
+  render();
+  // diagnostics
+  let E = 0, Ens = 0;
+  for (let c = 0; c < N; c++) {
+    E += u[c] * u[c] + v[c] * v[c];
+    Ens += w[c] * w[c];
+  }
+  E *= 0.5 / N; Ens *= 0.5 / N;
+  const slope = fitSlope();
+  renderSpectrum(slope);
+  const keff = Math.sqrt(Math.max(Ens, 1e-12) / Math.max(E, 1e-12));
+  const uref = Math.sqrt(2 * Math.max(E, 1e-12));
+  const re = uref / (keff * nu + 1e-12);
+  I.roT.innerHTML = "<b>t</b> = " + simTime.toFixed(1);
+  I.roE.innerHTML = "<b>E</b> = " + E.toExponential(2);
+  I.roEns.innerHTML = "<b>Ω</b> = " + Ens.toExponential(2);
+  I.roRe.innerHTML = "<b>Re</b> ≈ " + (re > 1 ? Math.round(re) : "—");
+  I.roFps.innerHTML = "<b>FPS</b> = " + fps.toFixed(0);
+}
+
+/* ---------------------------------------------------------------------
+   8. UI wiring and i18n
+--------------------------------------------------------------------- */
+const $ = (id) => document.getElementById(id);
+const I = {
+  roT: $("ro-t"), roE: $("ro-e"), roEns: $("ro-ens"), roRe: $("ro-re"),
+  roFps: $("ro-fps"), roMode: $("ro-mode"),
+};
+
+const TXT = {
+  en: {
+    subtitle: "Smagorinsky–Kolmogorov research program · 2D fluid simulator",
+    mode: "Mode", decay: "Decay · no force", forced: "Forced · mouse = force",
+    stirrer: "Stirrer", reset: "Reset", pause: "Pause", resume: "Resume",
+    vis: "Visualization", view: "View", part: "Tracer particles",
+    arrows: "Velocity arrows", conf: "Vorticity confinement",
+    visc: "Viscosity ν", speed: "Simulation speed",
+    spec: "Energy spectrum E(k)",
+    noteModeDecay: "Free decay: the flow is initialized with Taylor–Green " +
+      "vortices and random eddies and then evolves without any external " +
+      "force — energy decays, vortices merge (inverse cascade).",
+    noteModeForced: "Drag the cursor inside the field to inject momentum " +
+      "(external force). The deterministic stirrer and the weak drag keep " +
+      "the flow statistically stationary.",
+    noteSpec: "Shaded band: the k ∈ [6, 20] window of the live slope fit. " +
+      "In two dimensions the inverse-energy cascade carries E(k) ~ k⁻⁵ᐟ³ " +
+      "below the forcing scale and the enstrophy cascade E(k) ~ k⁻³ above it.",
+    modeDecay: "decay", modeForced: "forced",
+  },
+  ru: {
+    subtitle: "исследовательская программа Смагоринского–Колмогорова · 2D-симулятор",
+    mode: "Режим", decay: "Распад · без силы", forced: "Вынужденный · мышь = сила",
+    stirrer: "Мешалка", reset: "Сброс", pause: "Пауза", resume: "Пуск",
+    vis: "Визуализация", view: "Поле", part: "Частицы-трассеры",
+    arrows: "Поле скорости", conf: "Удержание завихренности",
+    visc: "Вязкость ν", speed: "Скорость расчёта",
+    spec: "Энергетический спектр E(k)",
+    noteModeDecay: "Свободный распад: поле задано вихрями Тейлора–Грина " +
+      "и случайными вихрями, затем развивается без внешней силы — " +
+      "энергия диссипирует, вихри сливаются (обратный каскад).",
+    noteModeForced: "Ведите курсор по полю, чтобы впрыскивать импульс " +
+      "(внешняя сила). Детерминированная мешалка и слабое трение " +
+      "поддерживают стационарную статистику.",
+    noteSpec: "Заштрихованная полоса — окно k ∈ [6, 20] измерения наклона. " +
+      "В двумерной турбулентности обратный каскад энергии несёт E(k) ~ k⁻⁵ᐟ³ " +
+      "ниже масштаба возбуждения, а каскад энстрофии E(k) ~ k⁻³ выше него.",
+    modeDecay: "распад", modeForced: "вынужденный",
+  },
+};
+let lang = "en";
+
+function applyLang() {
+  const t = TXT[lang];
+  document.documentElement.lang = lang;
+  $("subtitle").textContent = t.subtitle;
+  $("h-mode").textContent = t.mode;
+  $("m-decay").textContent = t.decay;
+  $("m-forced").textContent = t.forced;
+  $("b-stir").textContent = t.stirrer + ": " + (stirrer ? "on" : "off");
+  $("b-reset").textContent = t.reset;
+  $("b-pause").textContent = paused ? t.resume : t.pause;
+  $("h-vis").textContent = t.vis;
+  $("l-view").textContent = t.view;
+  $("t-part").textContent = t.part;
+  $("t-arrows").textContent = t.arrows;
+  $("l-conf").textContent = t.conf;
+  $("l-visc").textContent = t.visc;
+  $("l-speed").textContent = t.speed;
+  $("h-spec").textContent = t.spec;
+  $("note-mode").textContent = mode === "decay" ? t.noteModeDecay : t.noteModeForced;
+  $("note-spec").textContent = t.noteSpec;
+  I.roMode.innerHTML = "<b>" + t.mode + ":</b> " +
+    (mode === "decay" ? t.modeDecay : t.modeForced);
+  $("lang-en").classList.toggle("on", lang === "en");
+  $("lang-ru").classList.toggle("on", lang === "ru");
+}
+
+$("lang-en").onclick = () => { lang = "en"; applyLang(); };
+$("lang-ru").onclick = () => { lang = "ru"; applyLang(); };
+
+function setMode(m) {
+  mode = m;
+  $("m-decay").classList.toggle("on", m === "decay");
+  $("m-forced").classList.toggle("on", m === "forced");
+  applyLang();
+}
+$("m-decay").onclick = () => setMode("decay");
+$("m-forced").onclick = () => setMode("forced");
+
+$("b-stir").onclick = () => {
+  stirrer = !stirrer;
+  if (stirrer && mode !== "forced") setMode("forced");
+  $("b-stir").classList.toggle("on", stirrer);
+  $("b-stir").textContent = TXT[lang].stirrer + ": " + (stirrer ? "on" : "off");
+};
+$("b-reset").onclick = () => reset();
+$("b-pause").onclick = () => {
+  paused = !paused;
+  $("b-pause").textContent = TXT[lang][paused ? "resume" : "pause"];
+  $("b-pause").classList.toggle("on", paused);
+};
+
+$("view").onchange = () => { $("view-name").textContent = $("view").value; };
+$("t-part").onclick = () => {
+  showParticles = !showParticles;
+  $("t-part").classList.toggle("on", showParticles);
+};
+$("t-arrows").onclick = () => {
+  showArrows = !showArrows;
+  $("t-arrows").classList.toggle("on", showArrows);
+};
+$("conf").oninput = () => {
+  confEps = parseFloat($("conf").value);
+  $("v-conf").textContent = confEps.toFixed(2);
+};
+$("visc").oninput = () => {
+  nu = Math.pow(10, parseFloat($("visc").value));
+  $("v-visc").textContent = nu.toExponential(1);
+};
+$("speed").oninput = () => {
+  speed = parseFloat($("speed").value);
+  $("v-speed").textContent = speed.toFixed(1) + "×";
+};
+
+/* mouse and touch */
+function pos(ev) {
+  const r = fieldCanvas.el.getBoundingClientRect();
+  return [(ev.clientX - r.left) * fieldCanvas.el.width / r.width,
+          (ev.clientY - r.top) * fieldCanvas.el.height / r.height];
+}
+fieldCanvas.el.addEventListener("pointerdown", (ev) => {
+  const [x, y] = pos(ev);
+  mouse.down = true; mouse.x = x; mouse.y = y; mouse.px = x; mouse.py = y;
+  fieldCanvas.el.setPointerCapture(ev.pointerId);
+});
+fieldCanvas.el.addEventListener("pointermove", (ev) => {
+  const [x, y] = pos(ev);
+  mouse.px = mouse.x; mouse.py = mouse.y; mouse.x = x; mouse.y = y;
+});
+window.addEventListener("pointerup", () => { mouse.down = false; });
+
+/* ---------------------------------------------------------------------
+   9. Initial condition: Taylor-Green vortices + random eddies
+--------------------------------------------------------------------- */
+function reset() {
+  u.fill(0); v.fill(0); p.fill(0); fx.fill(0); fy.fill(0);
+  simTime = 0;
+  const nG = 4;
+  for (let j = 0; j < H; j++) {
+    for (let i = 0; i < W; i++) {
+      const x = i / W * 2 * Math.PI, y = j / H * 2 * Math.PI;
+      u[IX(i, j)] = Math.sin(nG * y) * Math.cos(nG * x) * 0.9;
+      v[IX(i, j)] = -Math.cos(nG * y) * Math.sin(nG * x) * 0.9;
+    }
+  }
+  // random eddies
+  const rnd = new Float32Array(N);
+  const rndY = new Float32Array(N);
+  for (let c = 0; c < N; c++) { rnd[c] = Math.random() - 0.5; }
+  for (let c = 0; c < N; c++) { rndY[c] = Math.random() - 0.5; }
+  for (let j = 0; j < H; j++) {
+    for (let i = 0; i < W; i++) {
+      u[IX(i, j)] += (rnd[IX(wrap(i + 3, W), j)] - rnd[IX(wrap(i - 3, W), j)]) * 0.8;
+      v[IX(i, j)] += (rndY[IX(i, wrap(j + 3, H))] - rndY[IX(i, wrap(j - 3, H))]) * 0.8;
+    }
+  }
+  seedParticles();
+  spectrumReady = false;
+}
+
+reset();
+applyLang();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

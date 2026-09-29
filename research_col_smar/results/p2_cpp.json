@@ -1,0 +1,14 @@
+{
+  "program": "p2_cpp",
+  "title": "Heisenberg and Pao closures in C++",
+  "date": "2026-09-29",
+  "calibration": [
+    {"source": "experiment", "C_K_target": 1.5, "alpha": 0.4838498257, "C_K_roundtrip": 1.5, "dissipation_rel_err": 0.0002250000004},
+    {"source": "LhDIA", "C_K_target": 1.52, "alpha": 0.4743316407, "C_K_roundtrip": 1.52, "dissipation_rel_err": 0.0002280000004},
+    {"source": "DIA", "C_K_target": 1.77, "alpha": 0.3774744648, "C_K_roundtrip": 1.77, "dissipation_rel_err": 0.0002655000004}
+  ],
+  "inertial_slope": -1.670033327,
+  "inertial_C_K_measured": 1.481396683,
+  "far_dissipation_slope": -6.999556115,
+  "pao_dissipation_rel_err": 0.0002249997398
+}
