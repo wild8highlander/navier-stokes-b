@@ -1,0 +1,55 @@
+{
+  "date": "2026-09-29",
+  "heisenberg": {
+    "balance": "eps = 2 (nu + nu_T(k)) int_0^k q^2 E(q) dq",
+    "calibration": [
+      {
+        "C_K_roundtrip": 1.5,
+        "C_K_target": 1.5,
+        "alpha": 0.4838498257349488,
+        "dissipation_integral": 0.9997750004473618,
+        "dissipation_rel_error": 0.00022499955263821647,
+        "source": "experiment"
+      },
+      {
+        "C_K_roundtrip": 1.52,
+        "C_K_target": 1.52,
+        "alpha": 0.4743316407332238,
+        "dissipation_integral": 0.9997720004473626,
+        "dissipation_rel_error": 0.00022799955263741456,
+        "source": "LhDIA"
+      },
+      {
+        "C_K_roundtrip": 1.7699999999999998,
+        "C_K_target": 1.77,
+        "alpha": 0.37747446478484814,
+        "dissipation_integral": 0.9997345004473648,
+        "dissipation_rel_error": 0.00026549955263521774,
+        "source": "DIA"
+      }
+    ],
+    "closed_form_spectrum": "E(k) = (alpha^2/4) eps^(1/4) nu^(5/4) chi^-7 [1 + (3 alpha^2 / 8) chi^-4]^(-4/3),  chi = k eta",
+    "closure": "nu_T(k) = alpha int_k^inf sqrt(E(q)/q^3) dq",
+    "far_dissipation_slope": -6.999556115125544,
+    "inertial_C_K_measured": 1.481396683044837,
+    "inertial_slope_measured": -1.670033327347837,
+    "master_relation": "C_K(alpha) = (8 / (9 alpha))^(2/3),  alpha = 8 / (9 C_K^(3/2))"
+  },
+  "integrity": {
+    "sha256_of_code": "684e540b9d85090b5a0674441a4381ae8509a066715d50537b978da2f5b2955c"
+  },
+  "literature": {
+    "Kraichnan_1959_DIA": 1.77,
+    "Kraichnan_1965_LhDIA": 1.52,
+    "Sreenivasan_1995_experiment": 1.5
+  },
+  "pao": {
+    "beta_rule": "beta = (C_K Gamma(2/3))^(3/2)",
+    "beta_value": 2.894820410941134,
+    "dissipation_integral": 0.9997750020499862,
+    "dissipation_rel_error": 0.00022499795001384992,
+    "spectrum": "E(k) = C_K eps^(2/3) k^(-5/3) exp(-beta chi^2)"
+  },
+  "program": "P2_closures",
+  "title": "Two-point closures for the Kolmogorov constant"
+}

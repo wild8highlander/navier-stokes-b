@@ -1,0 +1,33 @@
+{
+  "program": "p3_cpp",
+  "title": "C_s(Delta/eta) convergence curves in C++",
+  "date": "2026-09-29",
+  "convention": "E(k) kinetic-energy spectrum, eps = 2 nu int k^2 E dk",
+  "C_s_lilly_sharp": 0.1732659558,
+  "C_s_lilly_gaussian": 0.1696674622,
+  "eta": 0.04166666667,
+  "rows":   [
+    {"Delta_over_eta": 2, "filter": "sharp", "strain2": 69.207826, "C_s": 0.5001092},
+    {"Delta_over_eta": 2, "filter": "gaussian", "strain2": 64.376386, "C_s": 0.5280029},
+    {"Delta_over_eta": 2.8, "filter": "sharp", "strain2": 68.420086, "C_s": 0.36030103},
+    {"Delta_over_eta": 2.8, "filter": "gaussian", "strain2": 60.445101, "C_s": 0.3953961},
+    {"Delta_over_eta": 3.92, "filter": "sharp", "strain2": 63.497806, "C_s": 0.27217995},
+    {"Delta_over_eta": 3.92, "filter": "gaussian", "strain2": 54.229285, "C_s": 0.30637249},
+    {"Delta_over_eta": 5.488, "filter": "sharp", "strain2": 52.665256, "C_s": 0.22369382},
+    {"Delta_over_eta": 5.488, "filter": "gaussian", "strain2": 45.657995, "C_s": 0.24897716},
+    {"Delta_over_eta": 7.6832, "filter": "sharp", "strain2": 39.35751, "C_s": 0.19879177},
+    {"Delta_over_eta": 7.6832, "filter": "gaussian", "strain2": 35.70887, "C_s": 0.21383905},
+    {"Delta_over_eta": 10.75648, "filter": "sharp", "strain2": 27.419411, "C_s": 0.18620763},
+    {"Delta_over_eta": 10.75648, "filter": "gaussian", "strain2": 26.056049, "C_s": 0.19346823},
+    {"Delta_over_eta": 15.059072, "filter": "sharp", "strain2": 18.338067, "C_s": 0.17984479},
+    {"Delta_over_eta": 15.059072, "filter": "gaussian", "strain2": 18.022739, "C_s": 0.18219961},
+    {"Delta_over_eta": 21.082701, "filter": "sharp", "strain2": 11.995016, "C_s": 0.17661775},
+    {"Delta_over_eta": 21.082701, "filter": "gaussian", "strain2": 12.035423, "C_s": 0.17617285},
+    {"Delta_over_eta": 29.515781, "filter": "sharp", "strain2": 7.7547185, "C_s": 0.17497759},
+    {"Delta_over_eta": 29.515781, "filter": "gaussian", "strain2": 7.8720984, "C_s": 0.17301712},
+    {"Delta_over_eta": 41.322094, "filter": "sharp", "strain2": 4.9835678, "C_s": 0.17413002},
+    {"Delta_over_eta": 41.322094, "filter": "gaussian", "strain2": 5.0902906, "C_s": 0.17138468},
+    {"Delta_over_eta": 57.850931, "filter": "sharp", "strain2": 3.1923877, "C_s": 0.17370574},
+    {"Delta_over_eta": 57.850931, "filter": "gaussian", "strain2": 3.2714968, "C_s": 0.17054579}
+  ]
+}

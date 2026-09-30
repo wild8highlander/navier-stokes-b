@@ -1,0 +1,164 @@
+{
+  "b2_resolution_test_96": {
+    "b_pow": 2.0,
+    "beta_b_theory": 0.818856741408086,
+    "eps_mean_stat": 0.013221164737716328,
+    "eta_b": 0.3871444416404272,
+    "grid": 96,
+    "k_max_over_eta_b": 12.388622132493671,
+    "k_max_over_eta_b_48": 6.195033401650483,
+    "kd_measured": 2.114280027281222,
+    "kd_times_eta_b": 0.8185317606332959,
+    "rel_dev": 0.1090397689900347,
+    "rel_dev_48": 0.10896877081323024,
+    "x_star_theory": 0.9187074037024451
+  },
+  "convergence_48_vs_96": {
+    "E_final": {
+      "n48": 0.12263052189362109,
+      "n96": 0.1226267708682276,
+      "rel_diff": 3.0588024380611136e-05
+    },
+    "I_BKM_T": {
+      "n48": 17.64232056324808,
+      "n96": 17.878645119778554,
+      "rel_diff": 0.01339532153285871
+    },
+    "LPS_int_u4": {
+      "n48": 0.23247466394397565,
+      "n96": 0.23247334796174002,
+      "rel_diff": 5.6607555133192475e-06
+    },
+    "LPS_int_u6half": {
+      "n48": 0.5168958554501988,
+      "n96": 0.5168932376541433,
+      "rel_diff": 5.0644554950084386e-06
+    },
+    "Omega_max": {
+      "n48": 1.2995114794475742,
+      "n96": 1.2996563693139618,
+      "rel_diff": 0.00011149564176932302
+    },
+    "c_exp_at_peak": {
+      "n48": -0.497756194544088,
+      "n96": -0.42223475423749574,
+      "rel_diff": 0.15172375780428998
+    },
+    "eps_mean_stat": {
+      "n48": 0.01196394309458188,
+      "n96": 0.011964468337082725,
+      "rel_diff": 4.3902122961713525e-05
+    },
+    "omega_inf_max": {
+      "n48": 5.692074068422931,
+      "n96": 5.798805600821221,
+      "rel_diff": 0.018750903645191195
+    },
+    "r2_exp_at_peak": {
+      "n48": 0.9710168325706097,
+      "n96": 0.9926292414831328,
+      "rel_diff": 0.022257501814162986
+    },
+    "r2_pow_at_peak": {
+      "n48": 0.9685792120550588,
+      "n96": 0.9933357530715984,
+      "rel_diff": 0.025559645208586498
+    },
+    "slope_pow_at_peak": {
+      "n48": -6.63872580014723,
+      "n96": -11.295269231180493,
+      "rel_diff": 0.7014212623347077
+    },
+    "t_peak_enstrophy": {
+      "n48": 4.9,
+      "n96": 4.9,
+      "rel_diff": 0.0
+    },
+    "u_inf_max": {
+      "n48": 0.9935996809173858,
+      "n96": 0.9983951956083409,
+      "rel_diff": 0.004826405224413313
+    }
+  },
+  "date": "2026-09-29",
+  "integrity": {
+    "sha256_of_code": "e21cefd20140c66d671adeaff24169cf81132fa5bd986d689b09a25da29dd6e9",
+    "sha256_of_p5_regularity_py": "40576b9db8e3d10a99c8729d9aed570ac0e96f30aec5680d6b0a5342c6b7ddec"
+  },
+  "parameters": {
+    "C_K_used_for_beta_b": 1.5,
+    "T_end": 6.0,
+    "b_pow_H2_run": 2.0,
+    "cert_band_48_reference": [
+      11.0,
+      16.0
+    ],
+    "cert_band_96": [
+      22.0,
+      32.0
+    ],
+    "dealiasing": "2/3 rule on the nonlinear product",
+    "dt": 0.002,
+    "execution": "checkpointed chunks (u_hat is the complete IFK-RK2 state)",
+    "grid": 96,
+    "ic": "Taylor-Green u=(sin x cos y cos z, -cos x sin y cos z, 0)",
+    "nu": 0.01,
+    "stat_window_t0": 2.0,
+    "time_stepper": "integrating-factor midpoint RK2 + Leray projection"
+  },
+  "program": "P5B_resolution",
+  "run_A96_summary": {
+    "E_final": 0.1226267708682276,
+    "I_BKM_T": 17.878645119778554,
+    "LPS_int_u4": 0.23247334796174002,
+    "LPS_int_u6half": 0.5168932376541433,
+    "Omega_max": 1.2996563693139618,
+    "c_exp_at_peak": -0.42223475423749574,
+    "eps_mean_stat": 0.011964468337082725,
+    "kd_mean_stat": 2.6174338070440912,
+    "omega_inf_max": 5.798805600821221,
+    "r2_exp_at_peak": 0.9926292414831328,
+    "r2_pow_at_peak": 0.9933357530715984,
+    "slope_pow_at_peak": -11.295269231180493,
+    "t_peak_enstrophy": 4.9,
+    "u_inf_max": 0.9983951956083409
+  },
+  "run_H2_96_summary": {
+    "E_final": 0.056130383989918965,
+    "I_BKM_T": 7.020999775192861,
+    "LPS_int_u4": 0.12890039518576119,
+    "LPS_int_u6half": 0.316784074417091,
+    "Omega_max": 0.75,
+    "c_exp_at_peak": 0.08038368902882909,
+    "eps_mean_stat": 0.013221164737716328,
+    "kd_mean_stat": 2.114280027281222,
+    "omega_inf_max": 1.9967898178837495,
+    "r2_exp_at_peak": 0.1224178238435617,
+    "r2_pow_at_peak": 0.13298131165641724,
+    "slope_pow_at_peak": 2.2404178309296325,
+    "t_peak_enstrophy": 0.0,
+    "u_inf_max": 0.9983951956083409
+  },
+  "self_verification": {
+    "div_free_residual_max": 1.2682927915626964e-11,
+    "energy_balance_rel_max_A96": 0.0005494926212350482,
+    "energy_balance_rel_max_H2_96": 0.0004291580239795256,
+    "enstrophy_balance_rel_max_A96": 0.005616167493274897
+  },
+  "snapshots": {
+    "archived_f32": "p5b_snap_u_t5_f32.npz",
+    "files": [
+      "p5b_snap_u_t4.f64",
+      "p5b_snap_u_t5.f64",
+      "p5b_snap_u_t6.f64"
+    ],
+    "layout": "raw float64 C-order, shape (3, 96, 96, 96)",
+    "times": [
+      4.0,
+      5.0,
+      6.0
+    ]
+  },
+  "title": "P5-B: resolution study of the 3D smoothness protocol — Taylor-Green regularity diagnostics at 96^3",
+  "wall_time_min_finalize": 0.0
+}

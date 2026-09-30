@@ -1,0 +1,89 @@
+{
+  "a_priori_C_s_real_fields": {
+    "gaussian_d2": {
+      "C_s_mean": 0.0619922128839454,
+      "C_s_std": 0.0006323095554637071,
+      "n": 24
+    },
+    "gaussian_d3": {
+      "C_s_mean": 0.05039472119592403,
+      "C_s_std": 0.0005932796960262344,
+      "n": 24
+    },
+    "gaussian_d4": {
+      "C_s_mean": 0.03897166536404434,
+      "C_s_std": 0.000556303207719584,
+      "n": 24
+    },
+    "gaussian_d6": {
+      "C_s_mean": 0.015459393166268737,
+      "C_s_std": 0.000624055981588474,
+      "n": 24
+    }
+  },
+  "date": "2026-09-29",
+  "dynamic_C_s": [
+    {
+      "C_s_dynamic": -0.0004110155908320464,
+      "snapshot": 0
+    },
+    {
+      "C_s_dynamic": -0.0004038606743851313,
+      "snapshot": 3
+    },
+    {
+      "C_s_dynamic": -0.000397948903393762,
+      "snapshot": 6
+    },
+    {
+      "C_s_dynamic": -0.0003911700949666665,
+      "snapshot": 9
+    },
+    {
+      "C_s_dynamic": -0.0003846851566833617,
+      "snapshot": 12
+    },
+    {
+      "C_s_dynamic": -0.00037593413192819024,
+      "snapshot": 15
+    },
+    {
+      "C_s_dynamic": -0.00036812259954984057,
+      "snapshot": 18
+    },
+    {
+      "C_s_dynamic": -0.00036081847005611166,
+      "snapshot": 21
+    }
+  ],
+  "integrity": {
+    "sha256_of_code": "c94a2e9496527ab2f82cc2fbc55a4ce9176c7857fccfa6da1dc2e19a7230cb3b"
+  },
+  "kolmogorov_constant": {
+    "C_K_constrained_fit": 0.3450537584442956,
+    "caveat": "Re_lambda achievable on a 64^3 grid is modest; the inertial range spans about half a decade, so the fitted C_K carries a systematic bias discussed in ch. 9.",
+    "fit_band": [
+      4.0,
+      9.0
+    ],
+    "free_slope": -1.2577990875634781,
+    "rms_residual": 0.13592597327607447
+  },
+  "parameters": {
+    "dealiasing": "2/3 rule",
+    "dt": 0.004,
+    "forcing": "white-in-time solenoidal, |k| <= 2.5",
+    "grid": 48,
+    "nu": 0.0035,
+    "stat_window_samples": 300,
+    "steps": 1600
+  },
+  "program": "P4_dns_les",
+  "stationary_diagnostics": {
+    "Re_lambda": 145.48896721077753,
+    "eps_mean": 0.026067390347333255,
+    "taylor_scale_lambda": 0.8500891823102448,
+    "u_prime": 0.5990093696450332
+  },
+  "title": "3D DNS, a priori Smagorinsky test and dynamic procedure"
+}

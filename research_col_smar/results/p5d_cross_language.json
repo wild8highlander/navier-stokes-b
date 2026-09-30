@@ -1,0 +1,87 @@
+{
+  "artifact": "p5d_tensors_dns.f64",
+  "artifact_note": "(S, omega) point-tensor dump of run n064_nu0p010_s20261101 at t=5; the C++/Julia tracks recompute every scalar from this file in their own arithmetic (long double / Float64)",
+  "date": "2026-09-30",
+  "deviations": {
+    "cpp": {
+      "alpha_mean": 0.0,
+      "alpha_std": 0.0,
+      "beta_S": 1.2198242088771111e-16,
+      "cos2_0": 0.0,
+      "cos2_1": 0.0,
+      "cos2_2": 1.253341452519252e-16,
+      "mean_lam_0": 0.0,
+      "mean_lam_1": 2.0375877990914056e-16,
+      "mean_lam_2": 1.6650768543395287e-16,
+      "qr.p_q_pos": 0.0,
+      "qr.p_qn_rn": 0.0,
+      "qr.p_qn_rp": 0.0,
+      "qr.p_qneg_focal": 0.0,
+      "qr.p_qneg_node": 0.0,
+      "qr.p_qp_rn": 0.0,
+      "qr.p_qp_rp": 0.0,
+      "qr.r_std_norm": 2.7671283372781925e-16,
+      "qr.tail_pop_frac": 0.0,
+      "qr.tail_rel_mean": 1.3917122521903394e-16,
+      "s_rms": 1.3447177942164448e-16
+    },
+    "julia": {
+      "alpha_mean": 1.1208523761177456e-14,
+      "alpha_std": 2.3708952578243866e-14,
+      "beta_S": 2.7933974383285844e-14,
+      "cos2_0": 1.5080345282246933e-14,
+      "cos2_1": 2.5882831574070483e-14,
+      "cos2_2": 1.5040097430231025e-15,
+      "mean_lam_0": 5.10589736305004e-14,
+      "mean_lam_1": 6.112763397274217e-16,
+      "mean_lam_2": 8.158876586263624e-15,
+      "qr.p_q_pos": 0.0,
+      "qr.p_qn_rn": 0.0,
+      "qr.p_qn_rp": 0.0,
+      "qr.p_qneg_focal": 0.0,
+      "qr.p_qneg_node": 0.0,
+      "qr.p_qp_rn": 0.0,
+      "qr.p_qp_rp": 0.0,
+      "qr.r_std_norm": 4.7317894567454856e-14,
+      "qr.tail_pop_frac": 0.0,
+      "qr.tail_rel_mean": 3.4792806304758487e-15,
+      "s_rms": 1.465742395695925e-14
+    }
+  },
+  "identity_checks": {
+    "entries": {
+      "qr.q_mean_norm": {
+        "max_abs": 1.7663178049093925e-17,
+        "max_pairwise": 1.3914174242189746e-17,
+        "ok": true,
+        "values": {
+          "cpp": 3.749003806904179e-18,
+          "julia": 1.7663178049093925e-17,
+          "python": 6.938893903907228e-18
+        }
+      },
+      "qr.r_mean_norm": {
+        "max_abs": 3.0357660829594124e-18,
+        "max_pairwise": 2.998073116806596e-18,
+        "ok": true,
+        "values": {
+          "cpp": 2.2619882507528082e-18,
+          "julia": 3.7692966152816365e-20,
+          "python": 3.0357660829594124e-18
+        }
+      }
+    },
+    "note": "<q*> and <r*> vanish identically for divergence-free fields; the computed values are f64 accumulation noise (bounded by 1e-11 absolute) and verify the exact cancellation in all three arithmetic environments",
+    "status": "PASS",
+    "tolerance_abs": 1e-11
+  },
+  "max_rel_dev": {
+    "cpp": 2.7671283372781925e-16,
+    "julia": 5.10589736305004e-14
+  },
+  "metric": "rel(a,b) = |a-b| / max(|a|, |b|, 1e-12); the absolute floor only affects near-zero scalars",
+  "nScalars": 20,
+  "program": "P5D cross-language verification (Python/C++/Julia)",
+  "status": "PASS",
+  "tolerance": 1e-10
+}
