@@ -1,0 +1,9 @@
+session "ResearchPapersVerification" = HOL +
+  theories
+    [document = false]
+    "Section1_CorrectionB/CorrectionB"
+    "Section2_PreprintNSE/ProofChain"
+    "Section3_ABCloud/Hofstadter"
+    "Section4_KdV/KdV"
+    "Section5_KleinAttractor/Klein"
+    "Section6_RiemannZeros/RiemannZeros"

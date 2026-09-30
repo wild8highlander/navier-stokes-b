@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    @page { size: 794px 1123px; margin: 0; }
+    :root {
+      --c-bg: #101112;
+      --c-accent: #80b9d5;
+      --c-text: #dfe1e2;
+      --c-muted: #81888b;
+    }
+    html, body { margin: 0; padding: 0; width: 794px; height: 1123px;
+      background: var(--c-bg); color: var(--c-text);
+      font-family: 'PT Serif', 'DejaVu Serif', serif; }
+    @media screen {
+      html { height: auto; display: flex; justify-content: center; min-height: 100vh; background: var(--c-bg); }
+      body { transform-origin: top center; scale: min(1, calc(100vw / 794), calc(100vh / 1123)); margin: 0 auto; box-shadow: 0 0 60px rgba(0,0,0,0.3); }
+    }
+    .cover { width: 794px; height: 1123px; position: relative; display: flex;
+      flex-direction: column; align-items: center; box-sizing: border-box;
+      border: none; outline: none; box-shadow: none; }
+    .rule-top, .rule-bottom { position: absolute; left: 114px; right: 114px;
+      height: 2px; background: var(--c-accent); }
+    .rule-top { top: 114px; }
+    .rule-bottom { bottom: 114px; }
+    .center-block { position: absolute; top: 160px; bottom: 160px; left: 114px; right: 114px;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center; }
+    .label { font-size: 9pt; color: var(--c-accent); letter-spacing: 3px;
+      text-transform: uppercase; margin-bottom: 44px;
+      font-family: 'Inter', 'DejaVu Sans', sans-serif; }
+    .title { font-size: 29pt; font-weight: 700; line-height: 1.28;
+      font-family: 'PT Serif', 'DejaVu Serif', serif; margin-bottom: 26px; max-width: 520px; }
+    .subtitle { font-size: 12.5pt; color: var(--c-muted); margin-bottom: 48px;
+      max-width: 480px; line-height: 1.55; }
+    .formula { font-size: 13pt; color: var(--c-text); margin-bottom: 46px;
+      letter-spacing: 0.5px; }
+    .authors { font-size: 12pt; margin-bottom: 12px; }
+    .institution { font-size: 10pt; color: var(--c-muted); line-height: 1.5; }
+    .footer { position: absolute; bottom: 57px; left: 114px; right: 114px;
+      text-align: center; font-size: 9pt; color: var(--c-muted); }
+  </style>
+</head>
+<body>
+  <div class="cover">
+    <div class="rule-top"></div>
+    <div class="rule-bottom"></div>
+    <div class="center-block">
+      <div class="label">RESEARCH MONOGRAPH · NAVIER-STOKES</div>
+      <div class="title">The b-Mechanism in the Navier-Stokes<br>Equations: Verification,<br>3D Microphysics, and Applications</div>
+      <div class="subtitle">A monograph: the constant b, the seven open problems program,<br>the Wilson chamber, hadron colliders</div>
+      <div class="formula">b = 1/(4π+2√3),&nbsp;&nbsp;θ<sub>b</sub> = arcsin(b) = 3.5765013…°</div>
+      <div class="authors">wild8highlander · research-papers</div>
+      <div class="institution">https://github.com/wild8highlander/research-papers</div>
+    </div>
+    <div class="footer">research-papers · navier-stokes/open-problems · September 15, 2026</div>
+  </div>
+</body>
+</html>

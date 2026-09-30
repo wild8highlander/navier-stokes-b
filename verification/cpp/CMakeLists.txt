@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.18)
+project(research_papers_verification_cpp CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_compile_options(-Wall -Wextra)
+foreach(section section1_correction_b section2_preprint section3_ab_cloud section4_kdv section5_klein_attractor section6_riemann_zeros)
+    add_executable(verify_${section} ${section}/main.cpp)
+endforeach()

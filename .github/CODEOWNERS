@@ -1,0 +1,9 @@
+# Code Owners — default reviewer for the whole repository
+* @wild8highlander
+
+# License and legal files require the author
+/LICENSE.md @wild8highlander
+/LICENSE.ru.md @wild8highlander
+/LICENSE.zh.md @wild8highlander
+/NOTICE.md @wild8highlander
+/CITATION.cff @wild8highlander

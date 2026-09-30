@@ -1,0 +1,26 @@
+{
+  "module": "core_b",
+  "run_date": "2026-09-16",
+  "b_60digits": "0.062381194121028227546339671639402081186993306823604",
+  "theta_b_rad_60digits": "0.062421723636155434482141312472029840799307480257861",
+  "theta_b_deg_60digits": "3.5765013142837210201064663953695291751004199840146",
+  "L1_identity_forms_equal_absdiff": "4.8617e-63",
+  "L1_sin_theta_b_minus_b_absdiff": "0.0",
+  "L1_cos_theta_b": "0.99805239673077013922986386661311573465686579183884",
+  "b_float64": 0.06238119412102823,
+  "theta_b_deg_float64": 3.576501314283721,
+  "L2_eigenvalue_moduli": [
+    1.0,
+    1.0
+  ],
+  "L2_max_eig_modulus_dev_from_1": 0.0,
+  "L2_det_R_minus_1": 0.0,
+  "L2_orthogonality_maxdev": 3.446862392299183e-18,
+  "L3_max_norm_dev_2d": 8.881784197001252e-16,
+  "L3_max_norm_dev_3d": 1.7763568394002505e-15,
+  "L3_vectors_tested": 2000000,
+  "L1_pass": true,
+  "L2_pass": true,
+  "L3_pass": true,
+  "all_pass": true
+}

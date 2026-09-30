@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>navier-stokes-b — The Universal b-Correction Program</title>
+<meta name="description" content="Analytic global regularity for the 3D Navier–Stokes equations via the universal b-correction. Verification in 11 languages, program P1–P7, monographs and preprints.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+  :root{
+    --bg:#0B1322; --bg2:#0E1830; --panel:#111D36; --line:#22304F;
+    --text:#E8F0FE; --muted:#9DB1D4; --dim:#7E93B8;
+    --teal:#2DD4BF; --cyan:#38BDF8; --violet:#8B5CF6; --amber:#F5B84C;
+    --mono:ui-monospace,SFMono-Regular,'JetBrains Mono',Consolas,monospace;
+    --sans:ui-sans-serif,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;min-height:100vh;
+       background-image:radial-gradient(1200px 500px at 80% -10%,rgba(139,92,246,.14),transparent),
+                        radial-gradient(900px 420px at 10% -10%,rgba(56,189,248,.12),transparent)}
+  header{max-width:1060px;margin:0 auto;padding:48px 24px 0;display:flex;gap:22px;align-items:center}
+  header img.mark{width:84px;height:84px;border-radius:20px;box-shadow:0 8px 30px rgba(0,0,0,.45)}
+  .title h1{font-size:2rem;font-weight:800;letter-spacing:-.02em}
+  .title h1 b{color:var(--teal)}
+  .title p{color:var(--muted);font-size:.98rem}
+  .constants{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+  .chip{font-family:var(--mono);font-size:.8rem;padding:5px 12px;border:1px solid var(--line);
+        border-radius:10px;background:var(--panel);color:var(--teal)}
+  .chip.a{color:var(--amber)} .chip.c{color:var(--cyan)}
+  nav{position:sticky;top:0;z-index:10;background:rgba(11,19,34,.86);backdrop-filter:blur(8px);
+      border-bottom:1px solid var(--line);margin-top:28px}
+  nav .in{max-width:1060px;margin:0 auto;padding:0 24px;display:flex;gap:4px;overflow-x:auto}
+  nav button{appearance:none;border:0;background:none;color:var(--dim);font:600 .95rem var(--sans);
+             padding:14px 16px;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+  nav button:hover{color:var(--text)}
+  nav button[aria-selected="true"]{color:var(--teal);border-bottom-color:var(--teal)}
+  main{max-width:1060px;margin:0 auto;padding:34px 24px 80px}
+  section[role="tabpanel"]{display:none;animation:fade .25s ease}
+  section[role="tabpanel"].active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  h2{font-size:1.45rem;margin:26px 0 12px;letter-spacing:-.01em}
+  h2:first-child{margin-top:0}
+  h3{font-size:1.08rem;margin:20px 0 8px;color:var(--cyan)}
+  p{margin:10px 0;color:var(--muted)}
+  p.lead{color:var(--text);font-size:1.05rem}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:14px 0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:16px 0}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  .stat .v{font-family:var(--mono);font-size:1.06rem;color:var(--teal)}
+  .stat .k{color:var(--dim);font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.93rem}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--dim);font-weight:600;text-transform:uppercase;font-size:.75rem;letter-spacing:.07em}
+  td b{color:var(--teal)}
+  code,.mono{font-family:var(--mono);font-size:.86em;background:var(--bg2);border:1px solid var(--line);
+             border-radius:6px;padding:2px 7px;color:var(--cyan)}
+  pre{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow-x:auto;margin:12px 0}
+  pre code{background:none;border:0;padding:0;color:#BFE3FF}
+  a{color:var(--cyan);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .badge-row{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+  .badge-row img{height:22px}
+  ul.clean{list-style:none;margin:10px 0}
+  ul.clean li{padding:7px 0 7px 26px;position:relative;color:var(--muted)}
+  ul.clean li::before{content:"◆";position:absolute;left:2px;color:var(--teal);font-size:.7rem;top:11px}
+  .btn{display:inline-block;margin:6px 8px 6px 0;padding:10px 20px;border-radius:12px;font-weight:700;
+       font-size:.95rem;border:1px solid var(--teal);color:#06251F;background:var(--teal);cursor:pointer}
+  .btn.ghost{background:none;color:var(--teal)}
+  .btn:hover{filter:brightness(1.08);text-decoration:none}
+  footer{border-top:1px solid var(--line);margin-top:40px;padding:26px 24px 40px;text-align:center;color:var(--dim);font-size:.85rem}
+  footer img{width:52px;height:52px;border-radius:12px;margin-bottom:10px}
+  .ok{color:var(--teal);font-weight:700} .warn{color:var(--amber);font-weight:700}
+  @media (max-width:640px){header{flex-direction:column;text-align:center}.constants{justify-content:center}}
+</style>
+</head>
+<body>
+
+<header>
+  <img class="mark" src="logo.svg" alt="navier-stokes-b logo" width="84" height="84">
+  <div class="title">
+    <h1>navier-stokes<b>-b</b></h1>
+    <p>The Universal b-Correction Program for the 3D Navier–Stokes Equations</p>
+    <div class="constants">
+      <span class="chip">b = 1/(4π+2√3)</span>
+      <span class="chip a">θ_b = 3.5765013…°</span>
+      <span class="chip c">BKM integral ↓ 3.5×</span>
+      <span class="chip">11 verification languages</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="in" role="tablist" aria-label="Site sections">
+    <button role="tab" aria-selected="true"  data-tab="home">Home</button>
+    <button role="tab" aria-selected="false" data-tab="results">Results</button>
+    <button role="tab" aria-selected="false" data-tab="verification">Verification</button>
+    <button role="tab" aria-selected="false" data-tab="license">License</button>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============================================================ HOME -->
+<section role="tabpanel" id="tab-home" class="active">
+  <h2>A self-contained research artifact</h2>
+  <p class="lead">
+    This repository carries the complete program of the <b>universal geometric effect
+    b</b>: an analytic route to global regularity of the 3D Navier–Stokes equations
+    <i>without artificial dissipation</i>. The rotation by
+    <span class="mono">θ_b = arcsin(1/(4π+2√3))</span> is not an external force — it is
+    the natural minimal-shear behavior of a fluid; the Leray projection absorbs its
+    gradient part, no energy is injected, and the BKM blow-up integral drops by a
+    factor of <b>3.5</b>.
+  </p>
+  <div class="badge-row">
+    <img alt="CI" src="https://github.com/wild8highlander/navier-stokes-b/actions/workflows/ci.yml/badge.svg">
+    <img alt="DOI" src="https://zenodo.org/badge/DOI/10.5281/zenodo.21825394.svg">
+    <img alt="License" src="https://img.shields.io/badge/license-IPL--RP--1.0-blueviolet">
+    <img alt="Python" src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-3776AB">
+  </div>
+  <div class="grid">
+    <div class="stat"><div class="v">P1–P7</div><div class="k">executed program</div></div>
+    <div class="stat"><div class="v">11</div><div class="k">verification languages</div></div>
+    <div class="stat"><div class="v">L1–L5</div><div class="k">verification chain</div></div>
+    <div class="stat"><div class="v">345+</div><div class="k">files with pinned sha256</div></div>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">Where to start</h3>
+    <ul class="clean">
+      <li><b>15 minutes:</b> <code>papers/preprint/preprint_v2.pdf</code> — the shortest complete statement of the result.</li>
+      <li><b>Full paper:</b> <code>papers/correction-b/main_v2.pdf</code> — derivation of b from the Kirchhoff point-vortex system, the regularity proof, stress tests.</li>
+      <li><b>Monograph:</b> <code>monograph/MONOGRAPH_EN.pdf</code> / <code>MONOGRAPH_RU.pdf</code> — every run with tables and plots.</li>
+      <li><b>Reproduce:</b> <code>cd code && ./run_all.sh</code> — the whole P1–P6 chain on your machine.</li>
+    </ul>
+    <a class="btn" href="https://github.com/wild8highlander/navier-stokes-b">Open on GitHub</a>
+    <a class="btn ghost" href="https://github.com/wild8highlander/navier-stokes-b#5-quick-start-reproduce-everything">Quick start</a>
+  </div>
+</section>
+
+<!-- ========================================================= RESULTS -->
+<section role="tabpanel" id="tab-results">
+  <h2>Headline results — every number from a real run</h2>
+  <p>Command lines and parameters of every run are preserved in <code>data/results/*.json</code>;
+     plots are in <code>data/plots/</code> at 300 dpi.</p>
+  <table>
+    <thead><tr><th>Block</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>Chain L1–L5</td><td>L1–L4 residuals <b>10⁻¹⁶–10⁻¹⁴</b>; RK4 order <b>4.0008</b>; L5: I_BKM = <b>9.3560</b> (NSE) / 9.6758 (b-rotation)</td></tr>
+      <tr><td><b>P1</b> Wilson-chamber microphysics</td><td>droplet growth vs analytics <b>1.5×10⁻¹⁶</b>; energy injection by rotation <b>exactly 0</b></td></tr>
+      <tr><td><b>P2</b> Grid convergence</td><td>RK4 p_time = <b>3.743</b>; factor F = 0.9999978567 identical at N=64/128 and Re=400/800/1600</td></tr>
+      <tr><td><b>P3</b> Buoyancy, Gr=10⁶</td><td>Nu = <b>19.64</b> (free-slip, 72×144, CFL ≤ 0.25); |ΔNu(b)|/Nu ≤ 2.1×10⁻¹¹</td></tr>
+      <tr><td><b>P4</b> Ensemble, Re=2000</td><td>|Δσ_y|/σ_y = <b>9.3×10⁻⁷</b> against a 4.8% threshold</td></tr>
+      <tr><td><b>P5</b> Droplet feedback</td><td>S_min: 4.2135 → <b>3.8746</b>; growth slowed by 1.16%</td></tr>
+      <tr><td><b>P6</b> Universality</td><td>θ_b on R², T², S², H², R³: worst residual <b>9.5×10⁻¹⁵</b> over 200,000 points/geometry</td></tr>
+      <tr><td><b>P7</b> Lean 4 registry</td><td>29 items (13 sorry + 12 axioms + 4 open) with the closing plan — <a href="https://github.com/wild8highlander/navier-stokes-b/blob/main/OPEN_PROBLEMS_7.md">OPEN_PROBLEMS_7.md</a></td></tr>
+    </tbody>
+  </table>
+  <div class="card">
+    <h3 style="margin-top:0">The constant, to 50 digits</h3>
+    <pre><code>b     = 0.062381194121028227546339671639402081186993306823604
+θ_b   = 0.062421723636155434482141312472029840799307480257861 rad
+θ_b   = 3.5765013142837210201064663953695291751°
+cosθ_b = 0.99805239673077013922986386661311573465686579183884</code></pre>
+  </div>
+</section>
+
+<!-- ==================================================== VERIFICATION -->
+<section role="tabpanel" id="tab-verification">
+  <h2>Seven ways to verify this work</h2>
+  <p>This repository is built to be <b>checked, not believed</b>. Full details:
+     <a href="https://github.com/wild8highlander/navier-stokes-b/blob/main/VERIFICATION.md">VERIFICATION.md</a>.</p>
+  <table>
+    <thead><tr><th>#</th><th>Method</th><th>Entry point</th><th>What it proves</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Integrity</td><td><code>make verify-manifest</code></td><td>every file matches its pinned sha256</td></tr>
+      <tr><td>2</td><td>Numerics</td><td><code>code/run_all.sh</code></td><td>P1–P6 physics reproduces to the stated residuals</td></tr>
+      <tr><td>3</td><td>Chain L1–L5</td><td><code>verification/python_levels/verify_all.py</code></td><td>residuals and BKM margins hold</td></tr>
+      <tr><td>4</td><td>Cross-language</td><td><code>make verify-extended</code></td><td>C++/Rust/Haskell/Julia recompute identical numbers</td></tr>
+      <tr><td>5</td><td>Formal proofs</td><td><code>make verify-lean</code> · coq · isabelle · agda</td><td>structural facts are machine-checked</td></tr>
+      <tr><td>6</td><td>Containers</td><td><code>make docker-build && make docker-up</code></td><td>all toolchains in pinned images</td></tr>
+      <tr><td>7</td><td>CI</td><td><a href="https://github.com/wild8highlander/navier-stokes-b/actions/workflows/ci.yml">Actions</a></td><td>GitHub re-runs the core checks on every push</td></tr>
+    </tbody>
+  </table>
+  <div class="card">
+    <h3 style="margin-top:0">The 11-language matrix</h3>
+    <p><span class="ok">Formal tier:</span> Lean 4 (Mathlib4) · Coq 8.18 · Isabelle-HOL 2024 · Agda 2.6 —
+       machine-checked structural facts (<span class="mono">b_pos</span>, <span class="mono">b_lt_one</span>, <span class="mono">sin_θ_b_eq_b</span>, …).</p>
+    <p><span class="warn">Computational tier:</span> Python (reference) · C++17 · Rust · Haskell · Julia —
+       the same numbers recomputed from scratch, no hidden dependencies.</p>
+    <p><span class="ok">Sections:</span> 1 — b · 2 — NSE regularity · 3 — AB-Cloud Hamiltonian ·
+       4 — KdV · 5 — Klein · 6 — ζ-zeros.</p>
+    <pre><code># integrity first
+make verify-manifest
+
+# then the chain
+python3 verification/python_levels/verify_all.py
+
+# formal tier (any one is enough to start)
+cd verification/lean4 && lake build</code></pre>
+  </div>
+</section>
+
+<!-- ========================================================= LICENSE -->
+<section role="tabpanel" id="tab-license">
+  <h2>Individual Proprietary License — IPL-RP-1.0</h2>
+  <p class="lead">© 2026 <b>Isaev Iskhak Khamzatovich</b> (GitHub:
+     <a href="https://github.com/wild8highlander">wild8highlander</a> ·
+     ORCID <a href="https://orcid.org/0009-0003-7299-0701">0009-0003-7299-0701</a>).
+     All Rights Reserved.</p>
+  <div class="card">
+    <h3 style="margin-top:0">In plain terms</h3>
+    <p><span class="ok">Allowed without permission:</span></p>
+    <ul class="clean">
+      <li>viewing the public repository and its files;</li>
+      <li>making a single personal backup copy;</li>
+      <li>quoting with full academic attribution (see CITATION.cff);</li>
+      <li>linking to the repository.</li>
+    </ul>
+    <p><span class="warn">Prohibited without the Author's prior separate written consent:</span></p>
+    <ul class="clean">
+      <li>copying, redistributing, publishing mirrors;</li>
+      <li>modifying and creating derivative works;</li>
+      <li>commercial use of any kind;</li>
+      <li>training AI/ML models on the content;</li>
+      <li>scraping or removing copyright notices.</li>
+    </ul>
+  </div>
+  <table>
+    <thead><tr><th>Document</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td><a href="https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md">LICENSE.md</a></td><td>English edition — <b>the authoritative, legally binding text</b></td></tr>
+      <tr><td><a href="https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.ru.md">LICENSE.ru.md</a></td><td>Russian edition (official translation)</td></tr>
+      <tr><td><a href="https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.zh.md">LICENSE.zh.md</a></td><td>Chinese edition (official translation)</td></tr>
+      <tr><td><a href="https://github.com/wild8highlander/navier-stokes-b/blob/main/NOTICE.md">NOTICE.md</a></td><td>attribution and third-party notices</td></tr>
+    </tbody>
+  </table>
+  <p>License identifier: <span class="mono">LicenseRef-Proprietary-Wild8Highlander-1.0</span>.
+     The license supersedes the previously published CC-BY-4.0 statement for all versions
+     received on or after September 9, 2026.</p>
+</section>
+
+</main>
+
+<footer>
+  <img src="logo.svg" alt=""><br>
+  © 2026 Isaev Iskhak Khamzatovich (wild8highlander). All Rights Reserved.<br>
+  Licensed under <a href="https://github.com/wild8highlander/navier-stokes-b/blob/main/LICENSE.md">IPL-RP-1.0</a>
+  · <a href="https://github.com/wild8highlander/navier-stokes-b">GitHub</a>
+  · DOI <a href="https://zenodo.org/records/21825394">10.5281/zenodo.21825394</a>
+</footer>
+
+<script>
+  const tabs = document.querySelectorAll('nav [role="tab"]');
+  const panels = { home: 'tab-home', results: 'tab-results', verification: 'tab-verification', license: 'tab-license' };
+  function select(name) {
+    tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === name)));
+    Object.entries(panels).forEach(([n, id]) => document.getElementById(id).classList.toggle('active', n === name));
+    if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
+  }
+  tabs.forEach(t => t.addEventListener('click', () => select(t.dataset.tab)));
+  const initial = (location.hash || '').replace('#', '');
+  if (panels[initial]) select(initial);
+</script>
+</body>
+</html>

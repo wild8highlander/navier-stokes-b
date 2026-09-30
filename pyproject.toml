@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "navier-stokes-b"
+description = "The universal b-correction program for the 3D Navier–Stokes equations: multi-language computational verification, proof chain, and open-problems program"
+readme = "README.md"
+license = {file = "LICENSE.md"}
+authors = [
+    {name = "Isaev Iskhak Khamzatovich", email = "aslan08_05@mail.ru"}
+]
+keywords = ["navier-stokes", "riemann-hypothesis", "lean4", "formal-verification", "KdV", "spectral-theory"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Rust",
+    "Programming Language :: C++",
+    "Programming Language :: Haskell",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "matplotlib>=3.7",
+    "mpmath>=1.3",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "ruff>=0.1", "black>=23.0", "pre-commit>=3.0"]
+docs = ["mkdocs>=1.5", "mkdocs-material>=9.0"]
+gpu = ["cupy-cuda12x>=13.0", "jax>=0.4"]
+
+[project.urls]
+Homepage = "https://github.com/wild8highlander/navier-stokes-b"
+Documentation = "https://wild8highlander.github.io/navier-stokes-b"
+Repository = "https://github.com/wild8highlander/navier-stokes-b"
+Issues = "https://github.com/wild8highlander/navier-stokes-b/issues"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+# Legacy research code (physics verifiers, open-problems programs, monograph
+# scripts) intentionally keeps its original style: single-letter physics
+# symbols (N802/N803/N806), semicolon-packed derivation lines (E702), long
+# formulas (E501). Rewriting them risks changing published numbers, so they
+# are excluded from linting; everything else (CI scripts, common verifier,
+# tests, API, demo apps) is linted strictly in CI.
+extend-exclude = [
+    "code",
+    "monograph",
+    "verification/python_levels",
+    "verification/section1_correction_b",
+    "verification/section2_preprint",
+    "verification/section3_ab_cloud",
+    "verification/section4_kdv",
+    "verification/section5_klein_attractor",
+    "verification/section6_riemann_zeros",
+    "verification/patch_docx.py",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.pytest.ini_options]
+testpaths = ["verification/tests"]
+python_files = ["test_*.py"]
+addopts = "-v --tb=short"

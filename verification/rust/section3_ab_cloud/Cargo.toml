@@ -1,0 +1,8 @@
+[package]
+name = "section3_ab_cloud"
+version = "2.0.0"
+edition = "2021"
+
+[[bin]]
+name = "verify_section3_ab_cloud"
+path = "src/main.rs"

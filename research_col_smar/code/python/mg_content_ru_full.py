@@ -6,7 +6,6 @@ from mg_content_ru import C, META
 import mg_content_ru2  # noqa: F401  (добавляет главы 8-11)
 import mg_content_ru4  # noqa: F401  (добавляет главу 12: 3D-гладкость, P5)
 import mg_content_ru3  # noqa: F401  (добавляет главы 13-14 и приложения)
-import mg_content_ru5  # noqa: F401  (добавляет 12.7/12.8: P5-B 96³ и P5-C ансамбли)
 
 # Литература (в конец, до приложений не вставляем — порядок уже задан;
 # список добавим как блоки ref после главы 13 перед приложениями не
@@ -57,7 +56,6 @@ REFS = [
     "Lin F. H. A new proof of the Caffarelli-Kohn-Nirenberg theorem // Comm. Pure Appl. Math. 1986. V. 39. P. 273-292.",
     "Beale J. T., Kato T., Majda A. Remarks on the breakdown of smooth solutions for the 3-D Euler equations // Comm. Math. Phys. 1984. V. 94. P. 61-66.",
     "Constantin P., Fefferman C. Direction of vorticity and the problem of global regularity for the Navier-Stokes equations // Indiana Univ. Math. J. 1993. V. 42. P. 775-789.",
-    "Ashurst W. T. R., Kerstein A. R., Kerr R. M., Gibson C. H. Alignment of vorticity and scalar gradient with strain rate in simulated Navier-Stokes turbulence // Physics of Fluids. 1987. V. 30. P. 2343-2353.",
     "Ладыженская О. А., Серёгин Г. А. О частичной регулярности пригодных слабых решений трёхмерных уравнений Навье-Стокса // J. Math. Fluid Mech. 1999. V. 1. P. 356-387.",
     "Rípamonti M. F., Seregin G. A. Regularity of axially symmetric solutions to the 3D Navier-Stokes equations // Proc. Steklov Inst. Math. 2013. V. 283. P. 121-132.",
     "Doering C. R., Gibbon J. D. Applied Analysis of the Navier-Stokes Equations. Cambridge University Press, 1995.",

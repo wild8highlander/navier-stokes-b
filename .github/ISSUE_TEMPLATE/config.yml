@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/wild8highlander/navier-stokes-b/discussions
+    about: Questions about the mathematics, the b-correction mechanism, or the verification matrix.
+  - name: 📖 Project site
+    url: https://wild8highlander.github.io/navier-stokes-b/
+    about: Tabbed overview — Home, Results, Verification, License.
+  - name: 🔒 Security disclosure
+    url: https://github.com/wild8highlander/navier-stokes-b/security/advisories/new
+    about: Please do not report security issues through public issues.

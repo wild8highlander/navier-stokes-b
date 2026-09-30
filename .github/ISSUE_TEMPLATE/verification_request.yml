@@ -1,0 +1,39 @@
+name: 🔬 Verification request
+description: Ask for help reproducing a number, a proof, or a full verification chain.
+labels: ["verification"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This repository exists to be **checked, not believed**. Use this form when
+        you want to reproduce a claim and something is unclear or does not match.
+  - type: dropdown
+    id: target
+    attributes:
+      label: What are you trying to verify?
+      options:
+        - File integrity (MANIFEST.json sha256)
+        - A physics run P1–P6 (`code/`)
+        - The L1–L5 verification chain
+        - A cross-language port (C++ / Rust / Haskell / Julia)
+        - A formal proof (Lean 4 / Coq / Isabelle / Agda)
+        - Docker toolchains
+        - CITATION / provenance metadata
+    validations:
+      required: true
+  - type: textarea
+    id: claim
+    attributes:
+      label: Which claim / number?
+      description: Reference the exact value, e.g. "P3: Nu = 19.64" or "L5: I_BKM = 9.3560".
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps you already tried
+      render: shell
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Observed vs expected output

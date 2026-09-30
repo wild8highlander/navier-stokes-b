@@ -290,86 +290,6 @@ T = 6) instrumented end-to-end:
 * exports the `(u, ω)` snapshot and a miniature 16³ run for the
   three-language dynamical cross-check (`p5_crosscheck.py` → PASS).
 
-### P5-B — `p5b_resolution_96.py`: resolution 96³
-
-The resolution study of monograph section 12.7 — run A repeated one to
-one on a **96³ grid** (eight times the degrees of freedom, `k_max = 32`):
-
-* checkpointed execution with the Fourier-space state as the complete
-  integration variable (a 96³ run exceeds the small-job memory budget of
-  one chunk);
-* pairwise 48³ ↔ 96³ comparison of every diagnostic: averaged quantities
-  converge to `3·10⁻⁵` (energy), `1.1·10⁻⁴` (enstrophy peak) and
-  `5.7·10⁻⁶ / 5.1·10⁻⁶` (Serrin integrals); the supremum norms shift by
-  a conservative 1–2 % (nearly degenerate argmax);
-* the spectral certificate **improves**: the far-tail slope at the
-  enstrophy peak moves from `σ = −6.64` to `σ = −11.30` (`R² = 0.993`),
-  the certificate band from `[11, 16]` to `[22, 32]`;
-* the hyperdissipative run H2 (`b = 2`) reaches `k_max/η_b = 12.4` yet
-  the `x*(b)` deviation stays at 10.9 % — the residual is
-  **model-form** (the Pao shape), not resolution — recorded explicitly.
-
-### P5-C — `p5c_stretch_ensemble.py`: vortex stretching statistics
-
-The random-ensemble program of monograph section 12.8 — is the certified
-field genuinely turbulent, or a degenerate flow on which the gates close
-trivially? Stretching statistics `α = (ω_i S_ij ω_j)/(|ω|² s_rms)`,
-`β_S` and the alignment `cos²θ_i` on three families of 96³ fields:
-
-* **GAU** — 32 synthetic K41 Gaussian fields (the P3 generator): null
-  check passed, `⟨α⟩ = 0.0007 ± 0.0036`, `cos²θ_i = 1/3` exactly as the
-  independence of ω and S demands — a spectrum, even an exact one,
-  creates no stretching;
-* **SUR** — 8 phase surrogates of a DNS snapshot (amplitudes preserved,
-  phases randomized): `⟨α⟩ = 0.006 ± 0.007` — also null;
-* **DNS** — snapshots `t = 4, 5, 6` of the 96³ run: `⟨α⟩ = 0.09–0.12`
-  (stretching dominates, feeding the enstrophy balance),
-  `cos²θ₂ = 0.41–0.45` — the classical **intermediate-eigenvector
-  alignment** (Ashurst et al. 1987), `β_S = 0.11–0.13` against the GOE
-  null `3·10⁻⁴` (2·10⁵ Monte-Carlo matrices);
-* point-tensor artifacts (9 channels × 48³ f64: `S` and `ω`) recomputed
-  by the C++ and Julia tracks from the raw file — after catching and
-  fixing a genuine Julia memory-layout bug (column-major requires the
-  `(9, N, N, N)` reshaping) the three languages agree to `9·10⁻¹⁴`;
-* f64-vs-f32 pipeline verification `≤ 4·10⁻⁸`.
-
-### P5-D — `p5d_qr_ensemble.py`: extended ensemble and Q-R topology
-
-The fourth block of the smoothness program (user-requested extension).
-Two directions at once.
-
-**More realizations.** The P5-C field families are enlarged: GAU 32 ->
-64 fresh exactly-Gaussian realizations (pooled with the original 32
-into an M = 96 estimate), SUR 8 -> 16 random-phase surrogates (pooled
-24), and — the qualitative step — a *time-resolved DNS ensemble*: 16
-perturbed Taylor-Green realizations (8 seeds x nu in {0.01, 0.005}) on
-64^3 to t = 6, each starting from the TG initial condition plus a
-divergence-free Gaussian perturbation whose amplitude is solved from
-the quadratic <(u_TG + c u_p)^2> = 1.1 <u_TG^2> so every realization
-starts from exactly the same energy state. A 96^3 resolution check
-(seed 1, nu = 0.005) re-quantifies every geometry statistic at doubled
-resolution.
-
-**Q-R plane topology.** For every field of every family the program
-computes the Chong-Perry-Cantwell invariants of the velocity gradient,
-Q = -1/2 tr(A^2) = 1/4|omega|^2 - 1/2 S:S and R = -det A, normalized by
-the field-averaged <S:S>; the joint PDF of (r*, q*), the quadrant and
-focal/node masses, the conditional mean <q*|r*> and the Vieillefosse
-tail statistics (proximity on q* < -0.5 and the tail population
-fraction). The DNS families concentrate along the compressional tail;
-the Gaussian and surrogate families do not - the topology, like the
-eigen-geometry, is carried by the phase dynamics, and it is stable
-across the resolution change and the viscosity sweep.
-
-Cross-language verification is extended to the Q-R block: the
-(S, omega) point-tensor dump of the primary run (p5d_tensors_dns.f64)
-is recomputed by `p5d_qr.cpp` (long double) and `p5d_qr.jl` (Julia),
-and `p5d_crosscheck.py` issues the PASS/FAIL verdict
-(`p5d_cross_language.json`, tolerance 1e-10). The paper-grade summary
-of the whole program (P5-A through P5-D) is the arXiv-format article
-`papers/p5-regularity/main.pdf`, whose every number is generated from
-the sealed protocols by `gen_paper_numbers.py`.
-
 ## 5. Headline results (all pinned, all reproducible)
 
 All numbers below are produced by `code/python/run_all.py` in ~25 minutes
@@ -433,11 +353,8 @@ discusses the physical origin.
 | Serrin integrals `∫⟨u⁴⟩dt`, `∫⟨u⁶⟩^{1/2}dt` | 0.2325, 0.5169 (finite, sublinear) |
 | b-protocol effect `I_BKM(B)/I_BKM(A)` | **0.9985** (−0.15 %, trajectory-level) |
 | universal dissipation peak `k_d·η_b` vs `x*(b)` | 4.3 % (`b=1`) … 11 % (`b≥5/4`), resolution-limited |
-| far-tail slope at the enstrophy peak | σ = −6.64 (Heisenberg `k⁻⁷` band); σ = −11.30 at 96³ |
+| far-tail slope at the enstrophy peak | σ = −6.64 (Heisenberg `k⁻⁷` band) |
 | energy / enstrophy balance residuals | ≤ 1.1·10⁻³ / 5.7·10⁻³ |
-| **P5-B**: averaged diagnostics 48³ → 96³ | converge to 10⁻⁶–10⁻⁴; sup-norms 1–2 % (conservative) |
-| **P5-C**: DNS vs Gaussian ensembles | `⟨α⟩ = 0.09–0.12` vs `0.0007 ± 0.0036`; `cos²θ₂ = 0.43` vs `1/3` |
-| **P5-C**: three-language tensor statistics | agree to `9·10⁻¹⁴` after the Julia layout fix |
 
 Every classical regularity criterion (LPS, BKM, ε-regularity proxies) is
 satisfied with wide margins on the computed horizon; the monograph (ch. 12)
@@ -450,9 +367,9 @@ is re-implemented **three times** and the outputs must agree:
 
 | Track | Files | Runtime | Output |
 |---|---|---|---|
-| **Python 3.11+** | `code/python/sk_core.py`, `p1_lilly.py`, `p2_closures.py`, `p3_synthetic_apriori.py`, `p4_dns_les.py`, `p5_regularity.py`, `p5b_resolution_96.py`, `p5c_stretch_ensemble.py`, `p5_crosscheck.py` | ~25 min | `results/p1..p5*.json`, `*.csv`, `*.npy`, `*.npz`, `*.f64` |
-| **C++17** | `code/cpp/sk_core.hpp`, `p1_lilly.cpp`, `p2_closures.cpp`, `p3_apriori_cpp.cpp`, `p5_regularity.cpp`, `p5c_stretch.cpp` (+ `Makefile`) | ~1 min | `results/p1_cpp.json`, `p2_cpp.json`, `p3_cpp.json`, `p5_cpp.json`, `p5c_cpp.json` |
-| **Julia 1.10+** | `code/julia/sk_core.jl`, `p1_p2_julia.jl`, `p5_regularity.jl`, `p5c_stretch.jl` (zero external dependencies) | ~30 s | `results/p1_p2_julia.json`, `p5_julia.json`, `p5c_julia.json` |
+| **Python 3.11+** | `code/python/sk_core.py`, `p1_lilly.py`, `p2_closures.py`, `p3_synthetic_apriori.py`, `p4_dns_les.py`, `p5_regularity.py`, `p5_crosscheck.py` | ~25 min | `results/p1..p5*.json`, `*.csv`, `*.npy`, `*.npz`, `*.f64` |
+| **C++17** | `code/cpp/sk_core.hpp`, `p1_lilly.cpp`, `p2_closures.cpp`, `p3_apriori_cpp.cpp`, `p5_regularity.cpp` (+ `Makefile`) | ~1 min | `results/p1_cpp.json`, `p2_cpp.json`, `p3_cpp.json`, `p5_cpp.json` |
+| **Julia 1.10+** | `code/julia/sk_core.jl`, `p1_p2_julia.jl`, `p5_regularity.jl` (zero external dependencies) | ~30 s | `results/p1_p2_julia.json`, `p5_julia.json` |
 
 Cross-language agreement at the reference point `C_K = 1.50`:
 
@@ -467,7 +384,6 @@ Cross-language agreement at the reference point `C_K = 1.50`:
 | P5 `x*(b)`, `b = 2` | 0.91871 | 0.91871 | 0.91871 |
 | P5 snapshot `‖ω‖_∞` | 5.6920712 | 5.6920712 | 5.6920712 |
 | P5 mini-DNS `E(1.0)`, 16³ | 0.234961873 | 0.234961922 | 0.234961873 |
-| P5-C `s_rms` (DNS 48³ snapshot) | 0.7841508168776554 | 0.7841508168776553 | 0.7841508168776627 |
 
 The P5 cross-language protocol (`results/p5_cross_language.json`, status
 **PASS**) additionally quantifies the miniature-DNS agreement: machine
@@ -475,11 +391,7 @@ precision at `t = 0`, ≤ 1.3·10⁻⁸ on `[0, 0.1]` (set by the nearly
 degenerate argmax of the sup-norm) and ≤ 8.1·10⁻⁶ at `t = 1` — the
 exponential deviation growth (rate ≈ 21) is the chaotic amplification of
 floating-point noise, itself an estimate of the largest Lyapunov exponent
-of the mini-flow. The P5-C block of the same protocol recomputes the
-stretching statistics from the raw point-tensor artifacts in all three
-languages (max relative deviation ≤ 9·10⁻¹⁴; the block also documents the
-Julia column-major layout bug that was caught and fixed during the
-cross-check).
+of the mini-flow.
 
 The C++ track uses `long double` where precision matters; the Julia track
 uses no external packages at all (the JSON writer is hand-rolled), so it
@@ -501,8 +413,6 @@ research_col_smar/
 │   │   ├── p3_synthetic_apriori.py  ← Monte-Carlo spectral verification
 │   │   ├── p4_dns_les.py            ← 3D DNS + a priori + dynamic tests
 │   │   ├── p5_regularity.py         ← 3D smoothness protocol (BKM/LPS, b-family)
-│   │   ├── p5b_resolution_96.py     ← 96³ resolution study (checkpointed)
-│   │   ├── p5c_stretch_ensemble.py  ← stretching statistics: GAU/SUR/DNS ensembles
 │   │   ├── p5_crosscheck.py         ← three-language cross-validation
 │   │   ├── figures.py               ← all monograph figures (RU and EN)
 │   │   ├── run_all.py               ← orchestrator
@@ -513,13 +423,11 @@ research_col_smar/
 │   │   ├── p2_closures.cpp
 │   │   ├── p3_apriori_cpp.cpp
 │   │   ├── p5_regularity.cpp        ← long-double analytic core + mini-DNS
-│   │   ├── p5c_stretch.cpp          ← P5-C tensor statistics (long double)
 │   │   └── Makefile
 │   ├── julia/                       ← Julia verification track (dependency-free)
 │   │   ├── sk_core.jl
 │   │   ├── p1_p2_julia.jl
-│   │   ├── p5_regularity.jl         ← hand-rolled FFT mini-DNS
-│   │   └── p5c_stretch.jl           ← P5-C tensor statistics
+│   │   └── p5_regularity.jl         ← hand-rolled FFT mini-DNS
 │   └── README.md
 ├── results/                         ← pinned JSON protocols + CSV/NPY data
 │   ├── p1_lilly.json                ← master-relation protocol
@@ -578,10 +486,6 @@ Expected console output (abridged):
 [P5] B: I_BKM = 17.6157, factor I_B/I_A = 0.9985
 [P5] b_pow=1: eta_b=0.0956, k_d=2.617, k_d*eta_b=0.2503, x*(b)=0.2399, rel.dev=4.3%
 [P5] energy balance A: 5.52e-04, enstrophy balance A: 5.65e-03
-[P5-B] 96^3: I_BKM = 17.8786, slope at peak = -11.30 (48^3: -6.64)
-[P5-B] convergence: E 3.1e-05, Omega_max 1.1e-04, LPS_u4 5.7e-06
-[P5-C] GAU: alpha = 0.0007 +/- 0.0036, cos2 = 1/3 (null check)
-[P5-C] DNS t=5: alpha = 0.0908, beta_S = 0.1148, cos2 = (0.28, 0.43, 0.29)
 ```
 
 ### 8.2 C++ track (verification of the analytical core)
@@ -601,7 +505,6 @@ Requires Julia 1.10+ (any build; no packages are used).
 cd research_col_smar/code/julia
 julia p1_p2_julia.jl ../../results
 julia p5_regularity.jl ../..            # P5 track (writes results/p5_julia.json)
-julia p5c_stretch.jl ../..              # P5-C tensor statistics (writes results/p5c_julia.json)
 python3 ../python/p5_crosscheck.py      # three-language cross-validation -> PASS
 ```
 
@@ -666,7 +569,7 @@ Contents (14 chapters, ~29 pages per language, 10 figures per language):
 9. **Experiment II**: 3D DNS, a priori tests and the dynamic procedure
 10. Consolidated results and the literature 1962–2026
 11. The program inside the parent b-correction framework
-12. **3D smoothness**: regularity criteria, the b-protocol, spectral certificates, the 96³ resolution study and vortex-stretching statistics (P5, P5-B, P5-C)
+12. **3D smoothness**: regularity criteria, the b-protocol and spectral certificates (P5)
 13. Discussion: what is and is not claimed
 14. Conclusions
 
@@ -695,8 +598,6 @@ the monograph), all generated by `code/python/figures.py`:
 | `fig8_regularity.png` | P5: enstrophy and the BKM envelope, runs A vs B |
 | `fig9_bfamily.png` | P5: shell dissipation of the b-family + the `k_d·η_b` vs `x*(b)` collapse |
 | `fig10_certificate.png` | P5: the exponential tail fits and the smoothness-certificate quality |
-| `fig11_resolution_96.png` | P5-B: 96³ spectra (A vs H2) + the 48³ → 96³ convergence bars |
-| `fig12_stretch_ensemble.png` | P5-C: alignment `cos²θ_i` and stretching-rate `α` PDFs, DNS vs Gaussian/surrogates |
 
 ## 11. Conventions, normalizations and the factor-2 trap
 

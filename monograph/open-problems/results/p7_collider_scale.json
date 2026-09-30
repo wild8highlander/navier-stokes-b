@@ -1,0 +1,64 @@
+{
+  "module": "p7_collider_scale",
+  "run_date": "2026-09-16",
+  "public_parameters": {
+    "T_c_ns": 25.0,
+    "f_RF_Hz": 40079000.0,
+    "bunches_per_train_max": 288,
+    "B_solenoid_T": 3.8
+  },
+  "preamble_sync": {
+    "N_p_bunches": 256,
+    "preamble_duration_us": 6.3999999999999995,
+    "jitter_table": [
+      {
+        "SNR_chip_dB": -20,
+        "sigma_phi_rad": 0.4419417382415922,
+        "sigma_t_ns": 1.7584303049943477
+      },
+      {
+        "SNR_chip_dB": -15,
+        "sigma_phi_rad": 0.24852210273970335,
+        "sigma_t_ns": 0.9888380279653912
+      },
+      {
+        "SNR_chip_dB": -10,
+        "sigma_phi_rad": 0.13975424859373686,
+        "sigma_t_ns": 0.5560644870446696
+      },
+      {
+        "SNR_chip_dB": -5,
+        "sigma_phi_rad": 0.07858958935518347,
+        "sigma_t_ns": 0.3126980405359912
+      },
+      {
+        "SNR_chip_dB": 0,
+        "sigma_phi_rad": 0.044194173824159216,
+        "sigma_t_ns": 0.17584303049943475
+      },
+      {
+        "SNR_chip_dB": 5,
+        "sigma_phi_rad": 0.024852210273970332,
+        "sigma_t_ns": 0.09888380279653912
+      }
+    ],
+    "direction_isolation_dB": 35.48192590749946,
+    "adjacent_isolation_dB": 18.13007905690316
+  },
+  "momentum_window": {
+    "sigma_pos_um": 18.00789960907298,
+    "B_T": 3.8,
+    "windows": [
+      {
+        "L_cm": 5.0,
+        "p_max_GeV_3sigma": 6.59432818806752,
+        "sigma_dp_over_p_at_1GeV": 0.05054849013073116
+      },
+      {
+        "L_cm": 20.0,
+        "p_max_GeV_3sigma": 105.50925100908032,
+        "sigma_dp_over_p_at_1GeV": 0.0031592806331706973
+      }
+    ]
+  }
+}

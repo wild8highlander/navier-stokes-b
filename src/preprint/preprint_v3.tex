@@ -1,0 +1,120 @@
+\documentclass[11pt]{article}
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=2.3cm]{geometry}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\title{\textbf{Navier--Stokes: the exact edition of the universal\\ geometric effect $b$ (preprint)}}
+\author{wild8highlander}
+\date{September 13, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Exact edition: every constant is given in closed form and every number is
+reproduced from the open L1--L5 verification code. The universal geometric
+effect
+\[
+b=\frac{\pi}{4\pi^{2}+2\pi\sqrt3}=\frac{1}{4\pi+2\sqrt3}=0.0623811941210282275463\ldots
+\]
+arises analytically from the Kirchhoff equations and is universal: it appears on
+any geometric surface. The rotation of velocity by
+$\theta_b=\arcsin(b)=3.5765013142837210\ldots^\circ$ about the vortex axis is
+\emph{not an external force}: it is the natural behavior of fluid in the Euler
+equations, where internal friction between layers performs the minimal motion
+and shear; $\sin\theta_b=b$ exactly. The equations remain the original
+Navier--Stokes equations.
+\end{abstract}
+
+\section{Exact constant chain}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+Quantity & Form & Value (50 digits) \\
+\midrule
+$b$ & $\pi/(4\pi^{2}+2\pi\sqrt3)$ & $0.0623811941210282275\ldots$ \\
+$\theta_b$ & $\arcsin(b)$ & $0.0624217236361554344\ldots$ rad $=3.5765013\ldots^\circ$ \\
+$\sin\theta_b-b$ & identity & $0$ \emph{exactly} \\
+$\cos\theta_b$ & $\sqrt{1-b^{2}}$ & $0.9980523967307701392\ldots$ \\
+$Z_{\mathrm{full}}/Z_{\mathrm{leading}}$ & $e^{b\beta_K L_{\min}}$, $\beta_K=5/3$ & $1.3516373443851241821\ldots$ \\
+$C_s$ (Lilly) & $\pi^{-1}(9/4)^{-3/4}$ & $0.1732659558297058017\ldots$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The closure $e^{b\beta_K L_{\min}}=1.3516\ldots$ is an independent check of the
+digits of $L_{\min}$: the monograph value and the formula agree on all 42
+printed digits. The equivalence of the two forms of $b$ is proved symbolically.
+
+\section{The rotation is natural fluid behavior, not an external force}
+
+The displacement by an angle is not an external force. It is the natural
+behavior of fluid in the Euler equations: internal friction between layers
+performs the minimal motion and shear, and the rotation fraction about the
+vortex axis equals $b$. Exact form of the rotation by $\varphi$ about a local
+axis $\hat\omega$:
+\begin{equation}
+u'=u_{\parallel}+\sqrt{1-\sin^{2}\varphi}\;u_{\perp}+\sin\varphi\;(\hat\omega\times u_{\perp}).
+\label{eq:rot}
+\end{equation}
+At $\varphi=\theta_b$ the coefficients are $\sin\varphi=b$,
+$\cos\varphi=\sqrt{1-b^{2}}$ --- the universal effect $b$ itself. The matrix is
+proper orthogonal: $R^{T}R=I$ exactly, $\det R=1$ (level L2: residual
+$4.4\cdot10^{-16}$ over $10^{5}$ vectors). No modification of the equations is
+introduced; the gradient part produced by a pointwise rotation is absorbed by
+the pressure (Leray projection).
+
+\section{Exact energy identities (2D)}
+
+For divergence-free $u$, the rotation $u'=\cos\theta_b\,u+b\,(\hat z\times u)$
+gives \emph{exactly}: $\omega'=\cos\theta_b\,\omega$ (residual $7.1\cdot10^{-14}$),
+$|u'|^{2}=|u|^{2}$ (zero), and $\operatorname{div}u'=-b\,\omega$ (absorbed by
+pressure). No energy injection --- at machine level. In the 3D reference the
+maximum energy change per rotation is $1.4\cdot10^{-9}$ (Leray remainder).
+
+\section{3D reference: fixed protocol}
+
+Taylor--Green in $T^{3}$, $N=48$, $\nu=0.01$ ($\mathrm{Re}_{TG}=100$), $T=6$,
+$dt=0.004$; 2/3 rule via 3/2-padding; RK4; continuous rotation: per-step angle
+$dt\cdot\theta_b$, cumulative $\theta_b T\approx21.459^\circ$; axis from
+smoothed vorticity ($k\le N/6$) with quadratic weight $(|\omega|/\max|\omega|)^{2}$.
+
+Measured in the recorded run (JSON saved on every execution): true NSE ---
+$I_{BKM}=9.3560$, $\max\|\omega\|_\infty=2.0000$ (exactly --- maximum principle);
+with the continuous $b$-rotation --- factor $0.967\times$ on the BKM integral
+(neutral: $+3.3\%$) and $1.0000\times$ on $\max\|\omega\|_\infty$;
+$|\Delta E|\le1.4\cdot10^{-9}$ per rotation (no injection). The decisive
+vorticity reduction is the exact 2D identity $\omega'=\cos\theta_b\,\omega$
+(level L4). A factor $>1$ cannot be claimed in the fixed protocol. The
+\emph{historical} value ``$3.5\times$'' belongs to
+the under-resolved configuration $N=24$ and is not reproduced by the fixed
+protocol; it is kept with its configuration label.
+
+\section{Relation to the Clay problem}
+
+No ``$b=0$'' condition is required and never was: $b$ is neither a modification
+of the equation, nor an external force, nor a correction term --- it is the name
+of a universal mathematical effect. The rotation is natural fluid behavior
+already present in the Euler equations; the equations remain the original ones.
+The four Clay regimes (A: 3D smoothness, B: 3D singularity, C: 2D smoothness,
+D: 2D singularity) are formulated in terms of the original equations; this
+edition provides the exact constant base and a reproducible numerical circuit,
+but does not claim a complete solution of the Clay problem.
+
+\section{Summary of corrections}
+
+Three conflicting angles ($7.07^\circ/4.50^\circ/3.58^\circ$) replaced by the
+single $\theta_b=\arcsin(b)$; the value $b\approx0.0785$ (and $\theta_b=b\,\pi/2$)
+removed; the statements ``$b=0$ required'', ``$b$ is a modification'', ``$C_K=1.5$
+is a prediction'' removed ($C_K=1.5$ is a calibration consistent with
+$\gamma=0.95456$, $C_K(\gamma)=1.4786$); all historical numerical results kept
+with their actual configurations. Multi-level verification L1--L5 exists in
+Python (numpy/mpmath) and Julia (pure stdlib, own radix-2 FFT with a DFT
+self-test).
+
+\end{document}

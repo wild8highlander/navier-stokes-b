@@ -1,0 +1,8 @@
+[package]
+name = "section5_klein_attractor"
+version = "2.0.0"
+edition = "2021"
+
+[[bin]]
+name = "verify_section5_klein_attractor"
+path = "src/main.rs"

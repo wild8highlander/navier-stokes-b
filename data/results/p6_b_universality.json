@@ -1,0 +1,51 @@
+{
+ "problem": "P6",
+ "title": "b-универсальность: угол θ_b на разных геометриях",
+ "command": "python3 code/p6_b_universality.py",
+ "params": {
+  "b": 0.06238119412102824,
+  "theta_b_rad": 0.062421723636155446,
+  "theta_b_deg": 3.5765013142837216,
+  "n_points": 200000,
+  "seed": 11,
+  "method": "форма Родригеса u'=u∥+√(1−sin²θ)u⊥+sinθ(ω̂×u⊥); измерение фактического угла и норм"
+ },
+ "geometries": {
+  "R2": {
+   "n_points": 200000,
+   "max_abs_angle_minus_theta_b": 8.31279489688086e-15,
+   "max_norm_deviation": 4.440892098500626e-16
+  },
+  "T2": {
+   "n_points": 200000,
+   "max_abs_angle_minus_theta_b": 8.31279489688086e-15,
+   "max_norm_deviation": 4.440892098500626e-16
+  },
+  "S2": {
+   "n_points": 200000,
+   "max_abs_angle_minus_theta_b": 9.485467966641181e-15,
+   "max_norm_deviation": 4.440892098500626e-16,
+   "max_extra_residual": 2.0816681711721685e-15
+  },
+  "H2": {
+   "n_points": 200000,
+   "max_abs_angle_minus_theta_b": 8.31279489688086e-15,
+   "max_norm_deviation": 4.440892098500626e-16
+  },
+  "R3": {
+   "n_points": 200000,
+   "max_abs_angle_minus_theta_b": 9.485467966641181e-15,
+   "max_norm_deviation": 4.440892098500626e-16,
+   "max_extra_residual": 1.1102230246251565e-15
+  }
+ },
+ "criteria": {
+  "C1_worst_angle_residual": 9.485467966641181e-15,
+  "C1_ok": true,
+  "C2_worst_norm_deviation": 4.440892098500626e-16,
+  "C2_ok": true,
+  "C3_tangency_ok": true
+ },
+ "wall_seconds": 0.4,
+ "ok": true
+}

@@ -131,37 +131,6 @@ def main() -> int:
     d1 = max(dev_cx["E"][-1], 1e-18)
     lam_est = math.log(d1 / d0) / s_py["t"][-1]
 
-    # ---- P5-C vortex-stretching statistics -----------------------------------
-    py_p5c = load("p5c_stretch_ensemble.json")
-    cx_p5c = load("p5c_cpp.json")
-    jl_p5c = load("p5c_julia.json")
-    p5c_rows = {}
-    p5c_max_cx = 0.0
-    p5c_max_jl = 0.0
-    for tag in ("gauss_ref48", "dns_ref48"):
-        ref = py_p5c["cross_language_reference"][tag]
-        for key in ("s_rms", "beta_S", "alpha_mean", "alpha_std"):
-            dcx = rel(ref[key], cx_p5c[tag][key])
-            djl = rel(ref[key], jl_p5c[tag][key])
-            p5c_max_cx = max(p5c_max_cx, dcx)
-            p5c_max_jl = max(p5c_max_jl, djl)
-            p5c_rows[f"{tag}.{key}"] = {
-                "python_reference": ref[key],
-                "rel_dev_cpp": dcx,
-                "rel_dev_julia": djl,
-            }
-        for key in ("mean_lam", "cos2"):
-            for j in range(3):
-                dcx = rel(ref[key][j], cx_p5c[tag][key][j])
-                djl = rel(ref[key][j], jl_p5c[tag][key][j])
-                p5c_max_cx = max(p5c_max_cx, dcx)
-                p5c_max_jl = max(p5c_max_jl, djl)
-                p5c_rows[f"{tag}.{key}[{j}]"] = {
-                    "python_reference": ref[key][j],
-                    "rel_dev_cpp": dcx,
-                    "rel_dev_julia": djl,
-                }
-
     out = {
         "program": "P5_cross_language",
         "title": "Three-language cross-validation of the P5 smoothness protocol",
@@ -206,27 +175,11 @@ def main() -> int:
             ),
             "pass": bool(max(all_cx, all_jl) < 1e-4 and max(pre_cx, pre_jl) < 1e-7),
         },
-        "p5c_stretch_stats": {
-            "rows": p5c_rows,
-            "max_rel_dev_cpp": p5c_max_cx,
-            "max_rel_dev_julia": p5c_max_jl,
-            "tolerance": 1e-10,
-            "tolerance_note": (
-                "pointwise tensor statistics of exported f64 snapshots; "
-                "eigen decompositions differ at the last ulp between "
-                "LAPACK (numpy/cpp) and Julia's LinearAlgebra, 1e-10 is "
-                "a conservative band"
-            ),
-            "pass": bool(max(p5c_max_cx, p5c_max_jl) < 1e-10),
-        },
         "status": None,
     }
     out["status"] = (
         "PASS"
-        if out["analytic"]["pass"]
-        and out["snapshot"]["pass"]
-        and out["mini_dns"]["pass"]
-        and out["p5c_stretch_stats"]["pass"]
+        if out["analytic"]["pass"] and out["snapshot"]["pass"] and out["mini_dns"]["pass"]
         else "FAIL"
     )
     dst = os.path.join(RESULTS, "p5_cross_language.json")

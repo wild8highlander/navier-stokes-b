@@ -1,0 +1,13 @@
+[workspace]
+resolver = "2"
+members = [
+    "section1_correction_b",
+    "section2_preprint",
+    "section3_ab_cloud",
+    "section4_kdv",
+    "section5_klein_attractor",
+    "section6_riemann_zeros",
+]
+
+[workspace.package]
+edition = "2021"
