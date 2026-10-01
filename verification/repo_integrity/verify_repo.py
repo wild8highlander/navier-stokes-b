@@ -40,7 +40,6 @@ Usage:
 """
 import json
 import math
-import os
 import re
 import subprocess
 import sys
@@ -107,10 +106,14 @@ def check_core_constants():
     ok = True
     ok &= check(f, "b = 1/(4*pi + 2*sqrt(3)) matches pinned string",
                 abs(b - float(s["b_str"])) < 5e-16, s["b_str"][:20] + "…")
-    ok &= check(f, "theta_b (rad) matches", abs(theta - float(s["theta_b_rad_str"])) < 5e-16)
-    ok &= check(f, "theta_b (deg) matches", abs(math.degrees(theta) - float(s["theta_b_deg_str"])) < 5e-16)
-    ok &= check(f, "cos(theta_b) matches", abs(math.cos(theta) - float(s["cos_theta_b_str"])) < 5e-16)
-    ok &= check(f, "ln(1+b) matches", abs(math.log1p(b) - float(s["ln1pb_str"])) < 5e-16)
+    ok &= check(f, "theta_b (rad) matches",
+                abs(theta - float(s["theta_b_rad_str"])) < 5e-16)
+    ok &= check(f, "theta_b (deg) matches",
+                abs(math.degrees(theta) - float(s["theta_b_deg_str"])) < 5e-16)
+    ok &= check(f, "cos(theta_b) matches",
+                abs(math.cos(theta) - float(s["cos_theta_b_str"])) < 5e-16)
+    ok &= check(f, "ln(1+b) matches",
+                abs(math.log1p(b) - float(s["ln1pb_str"])) < 5e-16)
     return ok
 
 
@@ -222,10 +225,6 @@ def check_monographs():
         "papers/kdv/KdV_b_correction_Chapter16_EN.pdf",
         "papers/kdv/KdV_b_correction_Chapter16_RU.docx",
         "papers/kdv/KdV_b_correction_Chapter16_EN.docx",
-        "docs/kdv/ru/KdV_b_correction_Chapter16.docx",
-        "docs/kdv/en/KdV_b_correction_Chapter16.docx",
-        "docs/correction-b/ru/monograph_with_figures.docx",
-        "docs/correction-b/en/monograph_with_figures.docx",
         "research_col_smar/monograph/research_col_smar/MONOGRAPH_RU.docx",
         "research_col_smar/monograph/research_col_smar/MONOGRAPH_EN.docx",
     ]
@@ -315,8 +314,6 @@ def check_services():
         "verification/docker/haskell/Dockerfile",
         "MANIFEST.json",
         "CITATION.cff",
-        "push_wild8highlander.sh",
-        "TERMUX_GUIDE.md",
     ]
     ok = True
     for rel in paths:

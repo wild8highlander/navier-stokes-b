@@ -575,6 +575,7 @@ concentrated where it belongs — in the modelling, not in the mechanics.
 | **Sections (per-topic ports)** | Sections 1–7 re-ported per language | [`verification/section1_correction_b/`](verification/section1_correction_b/README.md) … [`section7_smagorinsky_kolmogorov/`](verification/section7_smagorinsky_kolmogorov/README.md) |
 | **Integrity (whole tree)** | the repository auditor — 9 evidence groups, all folders | [`verification/repo_integrity/`](verification/repo_integrity/README.md) |
 | **Infrastructure** | REST API · Gradio/Streamlit demos · 7 pinned Docker images · Jupyter · pytest suite · shell scripts | [`verification/api/`](verification/api/README.md) · [`demo/`](verification/demo/README.md) · [`docker/`](verification/docker/README.md) · [`notebooks/`](verification/notebooks/README.md) · [`tests/`](verification/tests/README.md) · [`scripts/`](verification/scripts/README.md) |
+| **Research lab (dynamics)** | 3D pseudospectral NSE solver · BKM blow-up monitors · dt/N extrapolation protocols · b-rotation audit · EN/RU switchable | [`research_lab/`](research_lab/README.md) ([RU](research_lab/README.ru.md)) |
 
 The seven sections map one-to-one onto the research program: **1** — the
 polarization correction *b* itself; **2** — the NSE regularity chain of

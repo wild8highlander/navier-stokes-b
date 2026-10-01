@@ -6,8 +6,8 @@ computational ports and compares their JSON verdicts against the Python
 reference. Any disagreement is a CI failure by construction.
 
 Usage:
-    python3 verification/tests/extended_cross_language_validator.py          # registry report
-    python3 verification/tests/extended_cross_language_validator.py --run    # + execute what is available
+    python3 verification/tests/extended_cross_language_validator.py       # registry report
+    python3 verification/tests/extended_cross_language_validator.py --run # + execute available
 """
 import json
 import shutil

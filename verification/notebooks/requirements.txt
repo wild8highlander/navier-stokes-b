@@ -1,1 +1,4 @@
-jupyter>=1.0\nnumpy\nscipy\nmatplotlib\n
+jupyter>=1.0
+numpy
+scipy
+matplotlib

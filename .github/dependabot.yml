@@ -22,10 +22,10 @@ updates:
     open-pull-requests-limit: 3
 
   - package-ecosystem: "npm"
-    directory: "/verification/web-dashboard"
+    directory: "/research_webapp_fluid/nextjs-source"
     schedule:
       interval: "monthly"
-    labels: ["dependencies", "javascript", "dashboard"]
+    labels: ["dependencies", "javascript", "webapp"]
     open-pull-requests-limit: 3
 
   - package-ecosystem: "github-actions"

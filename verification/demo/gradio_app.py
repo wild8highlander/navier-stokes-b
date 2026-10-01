@@ -39,8 +39,10 @@ SECTION_DIRS = {
 
 def compute_b():
     """The constant itself, recomputed on the fly (the S1 teaser)."""
-    return (f"b = 1/(4π + 2√3) = {math.pi / (4 * math.pi**2 + 2 * math.pi * math.sqrt(3)):.17f}\n"
-            f"θ_b = arcsin(b) = {math.degrees(math.asin(1 / (4 * math.pi + 2 * math.sqrt(3)))):,.13f} deg".replace(",", ""))
+    b_value = math.pi / (4 * math.pi**2 + 2 * math.pi * math.sqrt(3))
+    theta_deg = math.degrees(math.asin(1 / (4 * math.pi + 2 * math.sqrt(3))))
+    return (f"b = 1/(4π + 2√3) = {b_value:.17f}\n"
+            f"θ_b = arcsin(b) = {theta_deg:,.13f} deg".replace(",", ""))
 
 
 def run_section(section_label):
@@ -75,8 +77,10 @@ with gr.Blocks(title="navier-stokes-b verification demo") as demo:
         out = gr.Textbox(label="Contract output", lines=24)
         btn.click(run_section, inputs=sec, outputs=out)
     with gr.Tab("Constants"):
-        gr.Button("Recompute the constants").click(lambda: compute_b(), inputs=[], outputs=gr.Textbox(label="b"))
-        gr.Button("Recompute the master relation").click(lambda: compute_cs(), inputs=[], outputs=gr.Textbox(label="C_s"))
+        gr.Button("Recompute the constants").click(
+            lambda: compute_b(), inputs=[], outputs=gr.Textbox(label="b"))
+        gr.Button("Recompute the master relation").click(
+            lambda: compute_cs(), inputs=[], outputs=gr.Textbox(label="C_s"))
 
 if __name__ == "__main__":
     demo.launch()

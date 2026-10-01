@@ -1,1 +1,2 @@
-fastapi>=0.104\nuvicorn>=0.24\n
+fastapi>=0.104
+uvicorn>=0.24

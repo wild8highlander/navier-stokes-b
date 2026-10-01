@@ -55,6 +55,25 @@ jobs:
       - name: Run section 1 (correction b) Python verification
         run: python verification/common/python/main.py --section 1 --preset default
 
+  lab-smoke:
+    name: Research lab smoke (N=16)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Install numpy
+        run: pip install numpy
+      - name: Run all four lab experiments (smoke preset, EN + RU output)
+        run: |
+          python -m research_lab.run_lab --experiment taylor_green --preset smoke
+          python -m research_lab.run_lab --experiment abc_blowup_hunt --preset smoke
+          python -m research_lab.run_lab --experiment hou_luo_tubes --preset smoke
+          NSB_LAB_LANG=ru python -m research_lab.run_lab --experiment bcorrection_stress --preset smoke
+      - name: Lab unit tests
+        run: python -m pytest research_lab/tests -q
+
   manifest-integrity:
     name: Manifest integrity (sha256)
     runs-on: ubuntu-24.04
