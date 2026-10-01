@@ -1,85 +1,44 @@
-# Rust · Section 2 — Preprint NSE
+# `section2_preprint` — Preprint NSE — the regularity chain (Rust)
 
-> **Navigation:** [`verification`](../../../verification/README.md) › **`section2_preprint`**
+> **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [rust](../README.md) › **section 2**
 
-![Rust](https://img.shields.io/badge/Rust-1.75%2B-DEA584?style=flat-square&logo=rust&logoColor=white) ![Section](https://img.shields.io/badge/Section-2-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Section](https://img.shields.io/badge/S2-2B579A?style=flat-square) ![Language](https://img.shields.io/badge/Rust_·_std--only-dea584-informational?style=flat-square) ![Contract](https://img.shields.io/badge/PASS_%2B_JSON-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The **Rust port of Section 2** — Preprint NSE — the Regularity Argument Chain. This folder is
-a **std-only Rust binary** — one crate in the Cargo workspace, zero external dependencies. The supply-chain is trivially auditable by reading one `main.rs`; memory safety comes from the language, not from discipline.
+---
 
-## 🔬 Section context — where this port sits
+**What this port recomputes:** twist unitarity, the Leray premise (per-rotation energy change at machine-accumulation level, signed injection zero in the mean), the BKM bridge on the reference Taylor–Green field.
 
-**Where it sits.** Section 2 of the framework covers **the NSE regularity argument chain of the preprint: the twist as a unitary rearrangement and the bound it produces**. Its
-central quantities are the twist operator on u, the identity ω′ = cos θ_b · ω, and the ordered estimates that close the regularity argument. The same assertions exist in every
-peer language of the matrix, each in its own idiom: [Python](../../../verification/section2_preprint/README.md) · [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section2_PreprintNSE/README.md) · [Coq/Rocq](../../../verification/coq/section2_preprint/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section2_PreprintNSE/README.md) · [Agda](../../../verification/agda/Section2_PreprintNSE/README.md) · [C++](../../../verification/cpp/section2_preprint/README.md) · [Haskell](../../../verification/haskell/Section2_PreprintNSE/README.md). Agreement
-between all ports is enforced by the cross-language validator
-([`tests/`](../../../verification/tests/README.md)) and fails CI on any
-disagreement.
+The claims are *defined* by the Python reference port
+([`verification/section2_preprint/python/verify.py`](../../verification/section2_preprint/python/README.md));
+this Rust binary must reproduce the same verdict — same
+assertions, same tolerances, different arithmetic and toolchain. Any
+disagreement is a CI failure by construction.
 
-**What you will see.** Run this port and you get: a banner identifying the
-section and language; the computed values at full precision; one
-`[PASS]`/`[FAIL]` line per assertion; and a final
-`JSON: {"section": 2, "language": "rust", "values": {…}, "all_passed": …}`
-verdict line. Exit status is 0 only when every assertion passed.
-
-## 📂 Contents
-
-| File | Description |
-|---|---|
-| [`src/main.rs`](src/main.rs) | the section 2 port — Preprint NSE — the Regularity Argument Chain |
-| [`Cargo.toml`](Cargo.toml) | the crate/package manifest |
-
-## ▶️ How to run
+## How to build & run
 
 ```bash
-cd verification/rust
-cargo run --release -p section2_preprint      # this section
-cargo run --release             # the whole chain
+cd verification/rust && cargo build --release
+
+./target/release/verify_section2
 ```
 
-## 📋 What is asserted
+## Files
 
-1. **twist unitarity** — the b-twist preserves the L2 norm of the velocity field (the Leray projection absorbs the gradient part);
-2. **BKM bound under the twist** — the BKM integral decreases once the rotation is applied — no energy is injected;
-3. **estimate ordering** — the chain of inequalities used by the regularity argument holds in the stated order.
+| File | Role |
+|---|---|
+| `main.rs` | the Rust port of section 2 |
+| `src/README.md` | notes on the source module |
+| `Cargo.toml` / `.cabal` | the build manifest |
 
-## 🔍 Sample output
+Every port follows the repository-wide output contract: banner → compute
+from the closed forms (no data files) → one `[PASS]`/`[FAIL]` line per
+assertion with the measured residual → exactly one `JSON: {"section": N,
+"language": "...", "values": {...}, "all_passed": bool}` verdict line →
+exit `0` only if everything passed. The cross-language validator in
+[`verification/tests/`](../tests/README.md) (or
+[`../..`](../tests/README.md) from nested directories) fails CI on any
+disagreement between ports.
 
-```text
-$ cd verification/rust
-=== Section 2 ===
-||Twist(u)|| = ||u||
-BKM factor = 0.96695
-PASS
-```
+## License
 
-## 🧩 The port family
-
-| Port | Where | Command | Time |
-|---|---|---|---|
-| Python (reference) | [`python/`](../../../verification/section2_preprint/README.md) | `python3 verification/section2_preprint/python/verify.py` | < 1 s |
-| Lean 4 | [`lean4/`](../../../verification/lean4/ResearchPapersVerification/Section2_PreprintNSE/README.md) | `lake build && lake exe check` | min (cached s) |
-| Coq | [`coq/`](../../../verification/coq/section2_preprint/README.md) | `coqc verification/coq/section2_preprint/CorrectionB.v` | s |
-| Isabelle | [`isabelle/`](../../../verification/isabelle/Section2_PreprintNSE/README.md) | `isabelle build -D verification/isabelle` | min (first) |
-| Agda | [`agda/`](../../../verification/agda/Section2_PreprintNSE/README.md) | `agda --safe verification/agda/Section2_PreprintNSE/CorrectionB.agda` | s |
-| C++ | [`cpp/`](../../../verification/cpp/section2_preprint/README.md) | `cmake -S verification/cpp -B build && ./build/section2_preprint` | < 1 s |
-| Rust | [`rust/`](../../../verification/rust/section2_preprint/README.md) | `cargo run --release -p section2_preprint` | < 1 s |
-| Haskell | [`haskell/`](../../../verification/haskell/Section2_PreprintNSE/README.md) | `cabal run section2-PreprintNSE` | < 1 s |
-
-Section 2 is the structural mirror of the preprint's argument: every analytic step of the regularity proof appears here as a checkable numeric assertion, and every formal kernel mirrors the same steps as lemmas. If any link of this section fails, the preprint's chain has a gap — which is precisely why it is asserted in eleven languages instead of one.
-
-## 🔗 Cross-references
-
-- [Section 2 reference port](../../../verification/section2_preprint/README.md)
-- [Framework hub](../../../verification/README.md)
-- [Gap ledger (Lean 4)](../../../verification/lean4/TODO_sorry.md) — which
-  formal lemmas are admitted gaps
-
----
-
----
-
-Navigation: [repository root](../../../README.md) · [rust](../../../verification/rust/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../LICENSE.md)).

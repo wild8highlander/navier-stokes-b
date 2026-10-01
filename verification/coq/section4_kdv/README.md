@@ -1,84 +1,48 @@
-# Coq/Rocq · Section 4 — KdV
+# `Section4_KdV` — KdV — soliton interactions under the b-correction (Coq/Rocq)
 
-> **Navigation:** [`verification`](../../../verification/README.md) › **`section4_kdv`**
+> **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [coq](../README.md) › **section 4**
 
-![Coq/Rocq](https://img.shields.io/badge/Coq%2FRocq-8.18-DC8447?style=flat-square&logo=ocaml&logoColor=white) ![Section](https://img.shields.io/badge/Section-4-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Section](https://img.shields.io/badge/S4-2B579A?style=flat-square) ![Kernel](https://img.shields.io/badge/Coq_8.18_·_Reals-orange-informational?style=flat-square) ![Status](https://img.shields.io/badge/machine--checked-2EA043?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The **Coq/Rocq port of Section 4** — KdV — Soliton Interactions under the b-Correction. This folder is
-a **classical Coq/Rocq proof file** over the standard library's `Reals` with `lra` automation. The file intentionally calls `Compute b_correction`, so the numeric value prints while the proof compiles — the reviewer watches the number appear.
+---
 
-## 🔬 Section context — where this port sits
+**What this module machine-checks:** the soliton ODE at machine zero, u_max = c/2, width ∝ 1/√c.
 
-**Where it sits.** Section 4 of the framework covers **soliton interactions of the Korteweg–de Vries equation under the b-correction: the integrable continuation of the program**. Its
-central quantities are the conserved quantities (mass, momentum, energy) across the two-soliton interaction, and the closed-form sech² soliton profile. The same assertions exist in every
-peer language of the matrix, each in its own idiom: [Python](../../../verification/section4_kdv/README.md) · [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section4_KdV/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section4_KdV/README.md) · [Agda](../../../verification/agda/Section4_KdV/README.md) · [C++](../../../verification/cpp/section4_kdv/README.md) · [Rust](../../../verification/rust/section4_kdv/README.md) · [Haskell](../../../verification/haskell/Section4_KdV/README.md). Agreement
-between all ports is enforced by the cross-language validator
-([`tests/`](../../../verification/tests/README.md)) and fails CI on any
-disagreement.
+The section belongs to the seven-section research map of the repository
+(see the [verification hub](../../verification/README.md)); the Python
+reference port that defines the claims is
+[`verification/section4_kdv/python/verify.py`](../../verification/section4_kdv/python/README.md),
+and this module is the Coq/Rocq mirror of the same assertions.
 
-**What you will see.** Run this port and you get: a banner identifying the
-section and language; the computed values at full precision; one
-`[PASS]`/`[FAIL]` line per assertion; and a final
-`JSON: {"section": 4, "language": "coq", "values": {…}, "all_passed": …}`
-verdict line. Exit status is 0 only when every assertion passed.
+## Assertion → lemma map
 
-## 📂 Contents
-
-| File | Description |
+| Claim (reference port) | Formal counterpart |
 |---|---|
-| [`KdV.v`](KdV.v) | the section 4 port — KdV — Soliton Interactions under the b-Correction |
+| C1 | the constant block (`b_pos`, `b_lt_one`, the pinned digits) |
+| C2 | the identity block (arcsine / parity / spectrum) |
+| C3 | the structural block (algebra / Hermiticity / isometry) |
+| C4 | the analytic block (bounds / monotonicity / density) |
+| C5 | the bridge block (NSE / BKM / cross-links) |
 
-## ▶️ How to run
+The exact lemma names are in the source file; the admitted statements
+(such as the rotation orthogonality in Section 1, or the Cassini
+induction in Section 7 where a kernel defers it) are itemised in the
+relevant ledger — for Lean 4, [`TODO_sorry.md`](../../lean4/TODO_sorry.md).
+
+## Build
 
 ```bash
 cd verification/coq
-coqc section4_kdv/KdV.v                        # one file (prints Compute output)
-coq_makefile -f _CoqProject -o Makefile && make    # all six
+coq_makefile -f _CoqProject -o Makefile
+make
 ```
 
-## 📋 What is asserted
+## Files
 
-1. **conservation across the interaction** — the conserved quantities measured before and after the two-soliton collision agree to tolerance;
-2. **closed-form soliton** — the sech² profile substituted into KdV satisfies the equation (the formal counterpart is soliton_solves_KdV);
-3. **phase shift bookkeeping** — the interaction's phase shifts are recorded and match the integrable theory.
+| File | Role |
+|---|---|
+| `KdV.v` | the Coq/Rocq module of section 4 |
 
-## 🔍 Sample output
+## License
 
-```text
-$ cd verification/coq
-=== Section 4 ===
-mass conserved: |dM| = 3.1e-13
-sech^2 residual = 2.4e-12
-PASS
-```
-
-## 🧩 The port family
-
-| Port | Where | Command | Time |
-|---|---|---|---|
-| Python (reference) | [`python/`](../../../verification/section4_kdv/README.md) | `python3 verification/section4_kdv/python/verify.py` | < 1 s |
-| Lean 4 | [`lean4/`](../../../verification/lean4/ResearchPapersVerification/Section4_KdV/README.md) | `lake build && lake exe check` | min (cached s) |
-| Coq | [`coq/`](../../../verification/coq/section4_kdv/README.md) | `coqc verification/coq/section4_kdv/CorrectionB.v` | s |
-| Isabelle | [`isabelle/`](../../../verification/isabelle/Section4_KdV/README.md) | `isabelle build -D verification/isabelle` | min (first) |
-| Agda | [`agda/`](../../../verification/agda/Section4_KdV/README.md) | `agda --safe verification/agda/Section4_KdV/CorrectionB.agda` | s |
-| C++ | [`cpp/`](../../../verification/cpp/section4_kdv/README.md) | `cmake -S verification/cpp -B build && ./build/section4_kdv` | < 1 s |
-| Rust | [`rust/`](../../../verification/rust/section4_kdv/README.md) | `cargo run --release -p section4_kdv` | < 1 s |
-| Haskell | [`haskell/`](../../../verification/haskell/Section4_KdV/README.md) | `cabal run section4-KdV` | < 1 s |
-
-Section 4 is the integrable-systems bridge of the program: the KdV chapter (papers/kdv) claims the same constant b governs soliton interactions, and this section is where that claim is executable. The C++ port is the computational workhorse here — the pseudospectral solver — while every other port checks the conservation bookkeeping on the closed-form solutions.
-
-## 🔗 Cross-references
-
-- [Section 4 reference port](../../../verification/section4_kdv/README.md)
-- [Framework hub](../../../verification/README.md)
-- [Gap ledger (Lean 4)](../../../verification/lean4/TODO_sorry.md) — which
-  formal lemmas are admitted gaps
-
----
-
----
-
-Navigation: [repository root](../../../README.md) · [coq](../../../verification/coq/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../LICENSE.md)).

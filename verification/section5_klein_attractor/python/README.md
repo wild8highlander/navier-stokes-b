@@ -1,53 +1,60 @@
-# 🐍 Section 5 · python — the Reference Port
+# `section5_klein_attractor/python/` — the reference port (Python)
 
-> **Navigation:** [`verification`](../../README.md) › [`section5_klein_attractor`](../README.md) › **`python`**
+> **Navigation:** [repository root](../../../README.md) › [verification](../../README.md) › [`section5_klein_attractor`](../README.md) › **`python/`**
 
-![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Language](https://img.shields.io/badge/Python_3.11%2B-3776AB?style=flat-square) ![Deps](https://img.shields.io/badge/stdlib_·_mpmath_optional-2EA043?style=flat-square) ![Contract](https://img.shields.io/badge/PASS_%2B_JSON-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The **pure-Python port** of Section 5 — Klein Attractor — Ergodic Dynamics and the NSE Bridge. A single
-`verify.py` using only the standard library: it computes the section's
-quantities from closed-form inputs, asserts the section's properties, and
-prints the framework's JSON verdict. This is the port CI runs first and the
-one new toolchain ports are compared against.
+---
 
-## 🔬 Section context
+This is the **reference implementation** of Section 5 — the executable
+definition of the claims. It is deliberately boring: deterministic
+(fixed-seed LCG where randomness is needed), self-contained (no imports
+beyond the standard library; `mpmath` upgrades the 50-digit block when
+present and is skipped cleanly when absent), and contract-exact (see
+below). Every other port of Section 5 — C++, Rust, Haskell, Julia and
+the four proof assistants — is required to agree with *this* file's
+verdict, which is what makes it the reference.
 
-Section 5 covers **the Klein attractor: ergodic statistics over the reference ensemble and the bridge back to the NSE program**; central quantities: the Klein closure Z = exp(b·β_K·L_min) = 1.351637344385124…, the invariant statistics of the reference ensemble, and the contraction statements.
-Peers: [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section5_KleinAttractor/README.md) · [Coq/Rocq](../../../verification/coq/section5_klein_attractor/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section5_KleinAttractor/README.md) · [Agda](../../../verification/agda/Section5_KleinAttractor/README.md) · [C++](../../../verification/cpp/section5_klein_attractor/README.md) · [Rust](../../../verification/rust/section5_klein_attractor/README.md) · [Haskell](../../../verification/haskell/Section5_KleinAttractor/README.md).
+## The assertions
 
-| File | Description |
+| # | Assertion |
 |---|---|
-| [`verify.py`](verify.py) | the Section 5 reference verifier — prints values, asserts, JSON verdict |
+| C1 | `b` and `θ_b` pinned; `θ_b/π = 0.019869451746021…` |
+| C2 | `sin(θ_b) = b ∉ Niven set` ⇒ `θ_b/π` irrational |
+| C3 | orbit dense: max angular gap < 1e-3 rad after 1e5 iterates (measured 9.0×10⁻⁵) |
+| C4 | rotation is an isometry at every iterate (`max |r² drift|` = 1.6×10⁻¹²) |
 
-## ▶️ How to run
+Pinned values: `max_gap` = 9.005×10⁻⁵ rad (uniform bound 6.28×10⁻⁵ × spacing)
+
+## Run
 
 ```bash
-python3 verify.py          # from this folder
-python3 verification/section5_klein_attractor/python/verify.py   # from the repo root
+python3 verification/section5_klein_attractor/python/verify.py
 ```
 
-## 🔍 Sample output
+Wall-clock: well under one second on any modern machine.
 
-```text
-=== Section 5 ===
-Z = 1.351637344385124
-contraction holds
-PASS
-```
+## Output contract
 
-Exit code 0 = all assertions passed; anything else fails CI.
+Every port follows the repository-wide output contract, which is what
+makes cross-language comparison mechanical:
 
-## 📋 What is asserted
+1. print a banner line identifying section and language;
+2. compute the section's quantities **from the closed forms** (no data
+   files are read at this tier);
+3. print one `[PASS]`/`[FAIL]` line per assertion with the measured
+   residual;
+4. print exactly one machine-readable verdict line `JSON: {"section": N,
+   "language": "...", "values": {...}, "all_passed": true|false}`;
+5. exit `0` only if every assertion passed — CI fails otherwise.
 
-1. **invariant statistics** — the reference ensemble's statistics are invariant under the dynamics;
-2. **contraction** — the declared contraction statements hold — the attractor absorbs the transients;
-3. **the NSE bridge** — the closure Z enters the NSE-side estimates in the role the monograph assigns it.
+## Files
 
----
+| File | Purpose |
+|---|---|
+| `verify.py` | the verifier itself (4 assertions, one `main()`, ~120 lines) |
+| `README.md` | this file |
 
----
+## License
 
-Navigation: [section parent](../README.md) · [framework hub](../../README.md) · [IPL-RP-1.0](../../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../../../LICENSE.md)).

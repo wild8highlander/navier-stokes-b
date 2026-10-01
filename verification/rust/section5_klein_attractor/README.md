@@ -1,85 +1,44 @@
-# Rust · Section 5 — Klein Attractor
+# `section5_klein_attractor` — Klein attractor — ergodic dynamics (Rust)
 
-> **Navigation:** [`verification`](../../../verification/README.md) › **`section5_klein_attractor`**
+> **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [rust](../README.md) › **section 5**
 
-![Rust](https://img.shields.io/badge/Rust-1.75%2B-DEA584?style=flat-square&logo=rust&logoColor=white) ![Section](https://img.shields.io/badge/Section-5-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Section](https://img.shields.io/badge/S5-2B579A?style=flat-square) ![Language](https://img.shields.io/badge/Rust_·_std--only-dea584-informational?style=flat-square) ![Contract](https://img.shields.io/badge/PASS_%2B_JSON-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The **Rust port of Section 5** — Klein Attractor — Ergodic Dynamics and the NSE Bridge. This folder is
-a **std-only Rust binary** — one crate in the Cargo workspace, zero external dependencies. The supply-chain is trivially auditable by reading one `main.rs`; memory safety comes from the language, not from discipline.
+---
 
-## 🔬 Section context — where this port sits
+**What this port recomputes:** orbit density (max angular gap), isometry at every iterate, the Niven-set irrationality argument.
 
-**Where it sits.** Section 5 of the framework covers **the Klein attractor: ergodic statistics over the reference ensemble and the bridge back to the NSE program**. Its
-central quantities are the Klein closure Z = exp(b·β_K·L_min) = 1.351637344385124…, the invariant statistics of the reference ensemble, and the contraction statements. The same assertions exist in every
-peer language of the matrix, each in its own idiom: [Python](../../../verification/section5_klein_attractor/README.md) · [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section5_KleinAttractor/README.md) · [Coq/Rocq](../../../verification/coq/section5_klein_attractor/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section5_KleinAttractor/README.md) · [Agda](../../../verification/agda/Section5_KleinAttractor/README.md) · [C++](../../../verification/cpp/section5_klein_attractor/README.md) · [Haskell](../../../verification/haskell/Section5_KleinAttractor/README.md). Agreement
-between all ports is enforced by the cross-language validator
-([`tests/`](../../../verification/tests/README.md)) and fails CI on any
-disagreement.
+The claims are *defined* by the Python reference port
+([`verification/section5_klein_attractor/python/verify.py`](../../verification/section5_klein_attractor/python/README.md));
+this Rust binary must reproduce the same verdict — same
+assertions, same tolerances, different arithmetic and toolchain. Any
+disagreement is a CI failure by construction.
 
-**What you will see.** Run this port and you get: a banner identifying the
-section and language; the computed values at full precision; one
-`[PASS]`/`[FAIL]` line per assertion; and a final
-`JSON: {"section": 5, "language": "rust", "values": {…}, "all_passed": …}`
-verdict line. Exit status is 0 only when every assertion passed.
-
-## 📂 Contents
-
-| File | Description |
-|---|---|
-| [`src/main.rs`](src/main.rs) | the section 5 port — Klein Attractor — Ergodic Dynamics and the NSE Bridge |
-| [`Cargo.toml`](Cargo.toml) | the crate/package manifest |
-
-## ▶️ How to run
+## How to build & run
 
 ```bash
-cd verification/rust
-cargo run --release -p section5_klein_attractor      # this section
-cargo run --release             # the whole chain
+cd verification/rust && cargo build --release
+
+./target/release/verify_section5
 ```
 
-## 📋 What is asserted
+## Files
 
-1. **invariant statistics** — the reference ensemble's statistics are invariant under the dynamics;
-2. **contraction** — the declared contraction statements hold — the attractor absorbs the transients;
-3. **the NSE bridge** — the closure Z enters the NSE-side estimates in the role the monograph assigns it.
+| File | Role |
+|---|---|
+| `main.rs` | the Rust port of section 5 |
+| `src/README.md` | notes on the source module |
+| `Cargo.toml` / `.cabal` | the build manifest |
 
-## 🔍 Sample output
+Every port follows the repository-wide output contract: banner → compute
+from the closed forms (no data files) → one `[PASS]`/`[FAIL]` line per
+assertion with the measured residual → exactly one `JSON: {"section": N,
+"language": "...", "values": {...}, "all_passed": bool}` verdict line →
+exit `0` only if everything passed. The cross-language validator in
+[`verification/tests/`](../tests/README.md) (or
+[`../..`](../tests/README.md) from nested directories) fails CI on any
+disagreement between ports.
 
-```text
-$ cd verification/rust
-=== Section 5 ===
-Z = 1.351637344385124
-contraction holds
-PASS
-```
+## License
 
-## 🧩 The port family
-
-| Port | Where | Command | Time |
-|---|---|---|---|
-| Python (reference) | [`python/`](../../../verification/section5_klein_attractor/README.md) | `python3 verification/section5_klein_attractor/python/verify.py` | < 1 s |
-| Lean 4 | [`lean4/`](../../../verification/lean4/ResearchPapersVerification/Section5_KleinAttractor/README.md) | `lake build && lake exe check` | min (cached s) |
-| Coq | [`coq/`](../../../verification/coq/section5_klein_attractor/README.md) | `coqc verification/coq/section5_klein_attractor/CorrectionB.v` | s |
-| Isabelle | [`isabelle/`](../../../verification/isabelle/Section5_KleinAttractor/README.md) | `isabelle build -D verification/isabelle` | min (first) |
-| Agda | [`agda/`](../../../verification/agda/Section5_KleinAttractor/README.md) | `agda --safe verification/agda/Section5_KleinAttractor/CorrectionB.agda` | s |
-| C++ | [`cpp/`](../../../verification/cpp/section5_klein_attractor/README.md) | `cmake -S verification/cpp -B build && ./build/section5_klein_attractor` | < 1 s |
-| Rust | [`rust/`](../../../verification/rust/section5_klein_attractor/README.md) | `cargo run --release -p section5_klein_attractor` | < 1 s |
-| Haskell | [`haskell/`](../../../verification/haskell/Section5_KleinAttractor/README.md) | `cabal run section5-KleinAttractor` | < 1 s |
-
-Section 5 documents the attractor side of the program: the place where the geometric mechanism and the statistical mechanics meet. Its contraction statements are what make the ensemble averages of the monograph legitimate, and its closure constant Z is one of the few quantities the framework pins at 50 digits (see L1 of the verification chain).
-
-## 🔗 Cross-references
-
-- [Section 5 reference port](../../../verification/section5_klein_attractor/README.md)
-- [Framework hub](../../../verification/README.md)
-- [Gap ledger (Lean 4)](../../../verification/lean4/TODO_sorry.md) — which
-  formal lemmas are admitted gaps
-
----
-
----
-
-Navigation: [repository root](../../../README.md) · [rust](../../../verification/rust/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../LICENSE.md)).

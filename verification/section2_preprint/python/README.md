@@ -1,53 +1,61 @@
-# 🐍 Section 2 · python — the Reference Port
+# `section2_preprint/python/` — the reference port (Python)
 
-> **Navigation:** [`verification`](../../README.md) › [`section2_preprint`](../README.md) › **`python`**
+> **Navigation:** [repository root](../../../README.md) › [verification](../../README.md) › [`section2_preprint`](../README.md) › **`python/`**
 
-![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Language](https://img.shields.io/badge/Python_3.11%2B-3776AB?style=flat-square) ![Deps](https://img.shields.io/badge/stdlib_·_mpmath_optional-2EA043?style=flat-square) ![Contract](https://img.shields.io/badge/PASS_%2B_JSON-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The **pure-Python port** of Section 2 — Preprint NSE — the Regularity Argument Chain. A single
-`verify.py` using only the standard library: it computes the section's
-quantities from closed-form inputs, asserts the section's properties, and
-prints the framework's JSON verdict. This is the port CI runs first and the
-one new toolchain ports are compared against.
+---
 
-## 🔬 Section context
+This is the **reference implementation** of Section 2 — the executable
+definition of the claims. It is deliberately boring: deterministic
+(fixed-seed LCG where randomness is needed), self-contained (no imports
+beyond the standard library; `mpmath` upgrades the 50-digit block when
+present and is skipped cleanly when absent), and contract-exact (see
+below). Every other port of Section 2 — C++, Rust, Haskell, Julia and
+the four proof assistants — is required to agree with *this* file's
+verdict, which is what makes it the reference.
 
-Section 2 covers **the NSE regularity argument chain of the preprint: the twist as a unitary rearrangement and the bound it produces**; central quantities: the twist operator on u, the identity ω′ = cos θ_b · ω, and the ordered estimates that close the regularity argument.
-Peers: [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section2_PreprintNSE/README.md) · [Coq/Rocq](../../../verification/coq/section2_preprint/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section2_PreprintNSE/README.md) · [Agda](../../../verification/agda/Section2_PreprintNSE/README.md) · [C++](../../../verification/cpp/section2_preprint/README.md) · [Rust](../../../verification/rust/section2_preprint/README.md) · [Haskell](../../../verification/haskell/Section2_PreprintNSE/README.md).
+## The assertions
 
-| File | Description |
+| # | Assertion |
 |---|---|
-| [`verify.py`](verify.py) | the Section 2 reference verifier — prints values, asserts, JSON verdict |
+| C1 | `b ∈ (0,1)` and `sin(θ_b) = b` |
+| C2 | `det R = 1` — the twist is volume-preserving |
+| C3 | `max |ΔE|` per rotation ≤ 1e-12 (measured 6.7×10⁻¹⁶) — the Leray premise |
+| C4 | signed energy injection zero to FP accumulation (`|ΣΔE|` ≤ 1e-12) |
+| C5 | BKM enstrophy finite and positive on the reference TG field (`Ω` = 1.0) |
 
-## ▶️ How to run
+Pinned values: `max|ΔE|` = 6.66×10⁻¹⁶, `ΣΔE` = −2.53×10⁻¹³ (bound 2.2×10⁻¹²), `Ω` = 1.000000000000
+
+## Run
 
 ```bash
-python3 verify.py          # from this folder
-python3 verification/section2_preprint/python/verify.py   # from the repo root
+python3 verification/section2_preprint/python/verify.py
 ```
 
-## 🔍 Sample output
+Wall-clock: well under one second on any modern machine.
 
-```text
-=== Section 2 ===
-||Twist(u)|| = ||u||
-BKM factor = 0.96695
-PASS
-```
+## Output contract
 
-Exit code 0 = all assertions passed; anything else fails CI.
+Every port follows the repository-wide output contract, which is what
+makes cross-language comparison mechanical:
 
-## 📋 What is asserted
+1. print a banner line identifying section and language;
+2. compute the section's quantities **from the closed forms** (no data
+   files are read at this tier);
+3. print one `[PASS]`/`[FAIL]` line per assertion with the measured
+   residual;
+4. print exactly one machine-readable verdict line `JSON: {"section": N,
+   "language": "...", "values": {...}, "all_passed": true|false}`;
+5. exit `0` only if every assertion passed — CI fails otherwise.
 
-1. **twist unitarity** — the b-twist preserves the L2 norm of the velocity field (the Leray projection absorbs the gradient part);
-2. **BKM bound under the twist** — the BKM integral decreases once the rotation is applied — no energy is injected;
-3. **estimate ordering** — the chain of inequalities used by the regularity argument holds in the stated order.
+## Files
 
----
+| File | Purpose |
+|---|---|
+| `verify.py` | the verifier itself (5 assertions, one `main()`, ~120 lines) |
+| `README.md` | this file |
 
----
+## License
 
-Navigation: [section parent](../README.md) · [framework hub](../../README.md) · [IPL-RP-1.0](../../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../../../LICENSE.md)).

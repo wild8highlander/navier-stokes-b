@@ -28,6 +28,7 @@ SECTION_DIRS = {
     4: "section4_kdv",
     5: "section5_klein_attractor",
     6: "section6_riemann_zeros",
+    7: "section7_smagorinsky_kolmogorov",
 }
 
 

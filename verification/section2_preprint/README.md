@@ -1,73 +1,81 @@
-# 🐍 Section 2 — Preprint NSE (Python Reference)
+# `section2_preprint/` — Preprint NSE — the analytical regularity chain
 
-> **Navigation:** [`verification`](../README.md) › **`section2_preprint`**
+> **Navigation:** [repository root](../../README.md) › [verification](../README.md) › **`section2_preprint`**
 
-![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![Section](https://img.shields.io/badge/Section-2-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Section](https://img.shields.io/badge/Section_2-2B579A?style=flat-square) ![Reference](https://img.shields.io/badge/Python_stdlib-2EA043?style=flat-square) ![Contract](https://img.shields.io/badge/PASS_%2B_JSON-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-This directory is the **Python reference implementation** of research
-Section 2 — Preprint NSE — the Regularity Argument Chain. Within the framework it is the *numerical
-reference tier*: the simplest, dependency-free port that every other
-language port can be diffed against. The implementation is intentionally
-minimal — pure standard library, a single `verify.py` entry point under
-[`python/`](python/README.md), and the framework's uniform output contract:
-the computed quantities are printed, each expected property is asserted
-with a `[PASS]` line, and the run ends with the `JSON:` verdict.
+---
 
-## 🔬 What this section covers
+Section 2 encodes the preprint's proof chain as executable assertions: the twist unitarity (the rotation preserves norms and volumes), the Leray premise (per-rotation energy change bounded by machine accumulation, signed injection exactly zero in the mean), and the BKM bridge — the enstrophy of the reference Taylor–Green field is finite and positive, so the blow-up criterion is well-defined on the test case. The formal ports mirror the chain as a lemma sequence from the constant to the stability statement.
 
-**Coverage.** Section 2 covers **the NSE regularity argument chain of the preprint: the twist as a unitary rearrangement and the bound it produces**. Central quantities:
-the twist operator on u, the identity ω′ = cos θ_b · ω, and the ordered estimates that close the regularity argument. The same assertions live in every peer language:
-[Lean 4](../../verification/lean4/ResearchPapersVerification/Section2_PreprintNSE/README.md) · [Coq/Rocq](../../verification/coq/section2_preprint/README.md) · [Isabelle-HOL](../../verification/isabelle/Section2_PreprintNSE/README.md) · [Agda](../../verification/agda/Section2_PreprintNSE/README.md) · [C++](../../verification/cpp/section2_preprint/README.md) · [Rust](../../verification/rust/section2_preprint/README.md) · [Haskell](../../verification/haskell/Section2_PreprintNSE/README.md).
+## The claims, verbatim
 
-## 📂 Contents
+| # | Assertion | Recorded value / tolerance |
+|---|---|---|
+| C1 | `b ∈ (0,1)` and `sin(θ_b) = b` | |
+| C2 | `det R = 1` — the twist is volume-preserving | |
+| C3 | `max |ΔE|` per rotation ≤ 1e-12 (measured 6.7×10⁻¹⁶) — the Leray premise | |
+| C4 | signed energy injection zero to FP accumulation (`|ΣΔE|` ≤ 1e-12) | |
+| C5 | BKM enstrophy finite and positive on the reference TG field (`Ω` = 1.0) | |
 
-| Item | Description |
+Pinned values of the reference run: `max|ΔE|` = 6.66×10⁻¹⁶, `ΣΔE` = −2.53×10⁻¹³ (bound 2.2×10⁻¹²), `Ω` = 1.000000000000
+
+## Layout
+
+| Path | Role |
 |---|---|
-| [`python/`](python/README.md) | the runnable reference port — a single `verify.py` |
+| [`python/verify.py`](python/verify.py) | the **reference port** — the executable definition of the claims above |
+| [`python/README.md`](python/README.md) | how to run it, the contract, the exact expected output |
 
-## ▶️ How to run
+
+
+## How to run
 
 ```bash
-python3 python/verify.py
-# runtime: well under a second, no dependencies, no configuration
+# direct (the reference port is stdlib-only; mpmath upgrades the precision block)
+python3 verification/section2_preprint/python/verify.py
+python3 verification/section2_preprint/python/verify.py --preset default   # contract-compatible
+
+# through the aggregate runner (same verdict, uniform harness)
+python3 verification/common/python/main.py --section 2 --preset default
+
+# over HTTP, through the REST API
+#   GET /api/verify/2  →  the parsed verdict + full output
 ```
 
-## 📋 What is asserted
+Every port follows the repository-wide output contract, which is what
+makes cross-language comparison mechanical:
 
-1. **twist unitarity** — the b-twist preserves the L2 norm of the velocity field (the Leray projection absorbs the gradient part);
-2. **BKM bound under the twist** — the BKM integral decreases once the rotation is applied — no energy is injected;
-3. **estimate ordering** — the chain of inequalities used by the regularity argument holds in the stated order.
+1. print a banner line identifying section and language;
+2. compute the section's quantities **from the closed forms** (no data
+   files are read at this tier);
+3. print one `[PASS]`/`[FAIL]` line per assertion with the measured
+   residual;
+4. print exactly one machine-readable verdict line `JSON: {"section": N,
+   "language": "...", "values": {...}, "all_passed": true|false}`;
+5. exit `0` only if every assertion passed — CI fails otherwise.
 
-## 🔍 Sample output
+## Where this section lives across the matrix
 
-```text
-$ python3 verification/section2_preprint/python/verify.py
-=== Section 2 ===
-||Twist(u)|| = ||u||
-BKM factor = 0.96695
-PASS
-```
+| Port | Location |
+|---|---|
+| Python reference | [`python/verify.py`](python/verify.py) (this directory) |
+| Lean 4 (formal) | [`../lean4/ResearchPapersVerification/Section2_PreprintNSE/`](../lean4/ResearchPapersVerification/Section2_PreprintNSE/README.md) |
+| Coq (formal) | [`../coq/`section2_preprint/README.md](../coq/section2_preprint/README.md) |
+| Isabelle (formal) | [`../isabelle/Section2_PreprintNSE/README.md`](../isabelle/Section2_PreprintNSE/README.md) |
+| Agda (formal) | [`../agda/Section2_PreprintNSE/README.md`](../agda/Section2_PreprintNSE/README.md) |
+| C++17 | [`../cpp/section2_preprint/README.md`](../cpp/section2_preprint/README.md) |
+| Rust | [`../rust/section2_preprint/README.md`](../rust/section2_preprint/README.md) |
+| Haskell | [`../haskell/Section2_PreprintNSE/README.md`](../haskell/Section2_PreprintNSE/README.md) |
+| Julia | `../julia_levels/` (`l2_…` for the chain sections) / the satellite `research_col_smar/code/julia` |
 
-## 🧩 The port family
+The same assertions are re-derived in every language of the matrix:
+four proof assistants machine-check the structural statements, and five
+computational toolchains recompute the numbers with five different
+rounding regimes. A reviewer diffs *mathematical content* across systems,
+not code style; any disagreement fails the cross-language validator in
+[`verification/tests/`](../tests/README.md).
 
-| Port | Where | Command | Time |
-|---|---|---|---|
-| Python (reference) | [`python/`](../../verification/section2_preprint/README.md) | `python3 verification/section2_preprint/python/verify.py` | < 1 s |
-| Lean 4 | [`lean4/`](../../verification/lean4/ResearchPapersVerification/Section2_PreprintNSE/README.md) | `lake build && lake exe check` | min (cached s) |
-| Coq | [`coq/`](../../verification/coq/section2_preprint/README.md) | `coqc verification/coq/section2_preprint/CorrectionB.v` | s |
-| Isabelle | [`isabelle/`](../../verification/isabelle/Section2_PreprintNSE/README.md) | `isabelle build -D verification/isabelle` | min (first) |
-| Agda | [`agda/`](../../verification/agda/Section2_PreprintNSE/README.md) | `agda --safe verification/agda/Section2_PreprintNSE/CorrectionB.agda` | s |
-| C++ | [`cpp/`](../../verification/cpp/section2_preprint/README.md) | `cmake -S verification/cpp -B build && ./build/section2_preprint` | < 1 s |
-| Rust | [`rust/`](../../verification/rust/section2_preprint/README.md) | `cargo run --release -p section2_preprint` | < 1 s |
-| Haskell | [`haskell/`](../../verification/haskell/Section2_PreprintNSE/README.md) | `cabal run section2-PreprintNSE` | < 1 s |
+## License
 
-Section 2 is the structural mirror of the preprint's argument: every analytic step of the regularity proof appears here as a checkable numeric assertion, and every formal kernel mirrors the same steps as lemmas. If any link of this section fails, the preprint's chain has a gap — which is precisely why it is asserted in eleven languages instead of one.
-
----
-
----
-
-Navigation: [repository root](../../README.md) · [framework hub](../README.md) · [section 2 peers](../../verification/README.md) · [IPL-RP-1.0](../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../../LICENSE.md)).

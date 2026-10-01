@@ -5,5 +5,6 @@ import ResearchPapersVerification.Section3_ABCloud.HofstadterHamiltonian
 import ResearchPapersVerification.Section4_KdV.Soliton
 import ResearchPapersVerification.Section5_KleinAttractor.KleinQuartic
 import ResearchPapersVerification.Section6_RiemannZeros.HilbertPolya
+import ResearchPapersVerification.Section7_SmagorinskyKolmogorov.Basic
 
-def totalVerifiedTheorems : Nat := 35 + 40 + 32 + 33 + 36 + 34
+def totalVerifiedTheorems : Nat := 35 + 40 + 32 + 33 + 36 + 34 + 8

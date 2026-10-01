@@ -1,32 +1,19 @@
-# 🦀 `rust/…/section3_*/src/` — the Binary Source
+# `section3_ab_cloud/src/` — the Rust module of section 3
 
-> **Navigation:** [`rust`](../../README.md) › [section 3](../README.md) › **`src`**
+> **Navigation:** [repository root](../../../README.md) › [verification](../../../verification/README.md) › [rust](../../README.md) › [`section3_ab_cloud`](../README.md) › **`src/`**
 
-![Rust](https://img.shields.io/badge/Rust-1.75%2B-DEA584?style=flat-square&logo=rust&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
-
-The **`main.rs` of the Section 3 Rust port** — AB-Cloud — the Non-Hermitian Hofstadter Hamiltonian. One std-only
-module: it computes the section's quantities, asserts the properties
-through the shared `check(name, expected, actual)` helper at `{:15e}`
-precision, prints the `JSON:` verdict and exits non-zero on any failure.
-
-| File | Description |
-|---|---|
-| [`main.rs`](main.rs) | the binary's single module — zero external crates |
-
-## Run
-
-```bash
-cd verification/rust
-cargo run --release -p section3_ab_cloud
-```
-
-Peers of this port: [Python](../../../section3_ab_cloud/README.md) · [Lean 4](../../../lean4/ResearchPapersVerification/Section3_ABCloud/README.md) · [Coq/Rocq](../../../coq/section3_ab_cloud/README.md) · [Isabelle-HOL](../../../isabelle/Section3_ABCloud/README.md) · [Agda](../../../agda/Section3_ABCloud/README.md) · [C++](../../../cpp/section3_ab_cloud/README.md) · [Haskell](../../../haskell/Section3_ABCloud/README.md).
+![Module](https://img.shields.io/badge/main.rs-informational?style=flat-square) ![Safety](https://img.shields.io/badge/std--only_·_no--unsafe-2EA043?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
 ---
 
----
+`main.rs` is the complete port: a single `fn main()` behind the uniform
+`check()` harness. The module contains no `unsafe`, no external crates,
+and no floating-point state beyond the deterministic computation itself —
+which is the point: the Rust toolchain re-derives the numbers with its own
+arithmetic, and the verdict must agree with the Python reference
+[`verification/section3_ab_cloud/python/verify.py`](../../verification/section3_ab_cloud/python/README.md)
+to the stated tolerances.
 
-Navigation: [section 3](../README.md) · [rust layer](../../README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
+## License
 
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../../LICENSE.md)).

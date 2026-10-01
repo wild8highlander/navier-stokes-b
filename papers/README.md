@@ -20,7 +20,7 @@ quantitative claim live in [`data/results/`](../data/results/README.md).
 |---|---|---|
 | [`preprint/`](preprint/README.md) | `preprint_v1.pdf`, `preprint_v2.pdf` (~120 KB, byte-identical twins) | the compact statement of the NSE regularity result — **the best first read** |
 | [`correction-b/`](correction-b/README.md) | `main.pdf`, `main_v2.pdf` (~2.3 MB, byte-identical twins) | the full paper: regularity of 3D NSE through the polarization correction b |
-| [`kdv/`](kdv/README.md) | `KdV_b_correction_Chapter16_RU.pdf`, `..._EN.pdf` (two genuinely independent language editions) | the continuation: the same constant b in Korteweg–de Vries soliton interactions |
+| [`kdv/`](kdv/README.md) | `KdV_b_correction_Chapter16_{RU,EN}.pdf` + `.{RU,EN}.docx` (independent language editions, PDF + DOCX) | the continuation: the same constant b in Korteweg–de Vries soliton interactions — now with **§16.29**, the exact-Lax-combination solver benchmarked against the closed-form Hirota two-soliton solution (protocol: 11 WIN · 1 DRAW · 0 LOSS) |
 
 The twin-naming convention (`main` / `main_v2`, `v1` / `v2`) inside
 `correction-b/` and `preprint/` exists for citation convenience: both names
@@ -40,7 +40,9 @@ independently and carry their own pagination.
    numerical stress tests cross-referenced against the pinned protocols.
 3. **`kdv/KdV_b_correction_Chapter16_RU.pdf`** (or `_EN.pdf`) — the
    integrable continuation: the same constant surfacing in soliton
-   interactions of the Korteweg–de Vries equation.
+   interactions of the Korteweg–de Vries equation; read §16.29 with
+   [`kdv/kdv/`](kdv/kdv/README.md) open — the solver whose verdicts the
+   section tabulates.
 
 ## Verification support
 

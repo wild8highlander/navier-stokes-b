@@ -1,41 +1,26 @@
-# 🐳 docker · lean4 — Pinned Toolchain Image
+# `docker/lean4/` — the Lean 4 + Mathlib 4 (v4.14.0 pinned) image
 
-> **Navigation:** [`verification`](../../../verification/README.md) › [`docker`](../README.md) › **`lean4`**
+> **Navigation:** [repository root](../../../README.md) › [verification](../../verification/README.md) › [docker](../README.md) › **`lean4`**
 
-![Type](https://img.shields.io/badge/Type-Dockerfile-2496ED?style=flat-square&logo=docker&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Image](https://img.shields.io/badge/lean4-2B579A?style=flat-square) ![Toolchain](https://img.shields.io/badge/Lean_4_+_Mathlib_4_(v4.14.0_pinned)-informational?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The **Dockerfile pinning the Lean 4 (v4.14) environment** for the verification
-framework. The image installs elan + the pinned Lean toolchain, copies the verification sources, and defaults to `lake build && lake exe check` — so `docker run` reproduces exactly what CI
-runs, byte-for-byte at the toolchain level. Mathlib4 artifacts are cached in the image layer, so the first run does not download them
+---
 
-## 📂 Contents
-
-| File | Description |
-|---|---|
-| [`Dockerfile`](Dockerfile) | the Lean 4 (v4.14) environment — install + source copy + verification entrypoint |
-
-## ▶️ How to run
+The pinned environment for the lean4 tier of the verification matrix. The
+image installs exactly the toolchain the framework expects — nothing more,
+so the build is the environment statement.
 
 ```bash
-docker build -t rp-lean4 verification/docker/lean4
-docker run --rm -v "$PWD":/work rp-lean4 lake exe check
+docker build -t nsb-verify-lean4 .
+docker run --rm -v "$PWD/../../..:/repo" -w /repo nsb-verify-lean4 bash -lc "lake build && lake exe check"
 ```
 
-The bind-mount (`-v "$PWD":/work`) lets you verify the repository you are
-standing in rather than the copy baked into the image; omit it to run the
-pinned snapshot.
+Inside the container, the working command for this tier is:
 
-## 🔗 Cross-references
+```bash
+lake build && lake exe check
+```
 
-- [Docker layer](../README.md) — the full image table and the compose flow
-- [Lean 4 (v4.14) language layer](../../../verification/lean4/README.md)
-- [Verification contract](../../../verification/README.md)
+## License
 
----
-
----
-
-Navigation: [docker](../README.md) · [verification](../../../verification/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../../LICENSE.md)).

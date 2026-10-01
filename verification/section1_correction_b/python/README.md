@@ -1,53 +1,63 @@
-# 🐍 Section 1 · python — the Reference Port
+# `section1_correction_b/python/` — the reference port (Python)
 
-> **Navigation:** [`verification`](../../README.md) › [`section1_correction_b`](../README.md) › **`python`**
+> **Navigation:** [repository root](../../../README.md) › [verification](../../README.md) › [`section1_correction_b`](../README.md) › **`python/`**
 
-![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Language](https://img.shields.io/badge/Python_3.11%2B-3776AB?style=flat-square) ![Deps](https://img.shields.io/badge/stdlib_·_mpmath_optional-2EA043?style=flat-square) ![Contract](https://img.shields.io/badge/PASS_%2B_JSON-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The **pure-Python port** of Section 1 — Correction b — the Universal Polarization Constant. A single
-`verify.py` using only the standard library: it computes the section's
-quantities from closed-form inputs, asserts the section's properties, and
-prints the framework's JSON verdict. This is the port CI runs first and the
-one new toolchain ports are compared against.
+---
 
-## 🔬 Section context
+This is the **reference implementation** of Section 1 — the executable
+definition of the claims. It is deliberately boring: deterministic
+(fixed-seed LCG where randomness is needed), self-contained (no imports
+beyond the standard library; `mpmath` upgrades the 50-digit block when
+present and is skipped cleanly when absent), and contract-exact (see
+below). Every other port of Section 1 — C++, Rust, Haskell, Julia and
+the four proof assistants — is required to agree with *this* file's
+verdict, which is what makes it the reference.
 
-Section 1 covers **the universal polarization correction derived from the Kirchhoff point-vortex system**; central quantities: b = 1/(4π + 2√3) = 0.062381194121028…, the rotation angle θ_b = arcsin(b) ≈ 3.5765°, and the stabilisation identity cos²θ_b + sin²θ_b = 1.
-Peers: [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section1_CorrectionB/README.md) · [Coq/Rocq](../../../verification/coq/section1_correction_b/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section1_CorrectionB/README.md) · [Agda](../../../verification/agda/Section1_CorrectionB/README.md) · [C++](../../../verification/cpp/section1_correction_b/README.md) · [Rust](../../../verification/rust/section1_correction_b/README.md) · [Haskell](../../../verification/haskell/Section1_CorrectionB/README.md).
+## The assertions
 
-| File | Description |
+| # | Assertion |
 |---|---|
-| [`verify.py`](verify.py) | the Section 1 reference verifier — prints values, asserts, JSON verdict |
+| C1 | `b` matches the pinned value `0.06238119412102822…` to 15+ digits |
+| C2 | `0 < b < 1` |
+| C3 | `sin(θ_b) = b` to machine precision (θ_b = arcsin b by construction) |
+| C4 | `cos²θ_b + b² = 1` |
+| C5 | `det R = 1` and `trace R = 1 + 2 cos θ_b` for the θ_b-rotation |
+| C6 | `RᵀR = I` (orthogonality, max residual < 1e-12) |
+| C7 | energy neutrality: `max |ΔE|` over 10⁴ vectors ≤ 1e-12 |
 
-## ▶️ How to run
+Pinned values: `b` = 0.06238119412102824, `θ_b` = 0.06242172363615545 rad = 3.5765013142837°
+
+## Run
 
 ```bash
-python3 verify.py          # from this folder
-python3 verification/section1_correction_b/python/verify.py   # from the repo root
+python3 verification/section1_correction_b/python/verify.py
 ```
 
-## 🔍 Sample output
+Wall-clock: well under one second on any modern machine.
 
-```text
-=== Section 1 ===
-b = 0.062381194121028
-PASS
-```
+## Output contract
 
-Exit code 0 = all assertions passed; anything else fails CI.
+Every port follows the repository-wide output contract, which is what
+makes cross-language comparison mechanical:
 
-## 📋 What is asserted
+1. print a banner line identifying section and language;
+2. compute the section's quantities **from the closed forms** (no data
+   files are read at this tier);
+3. print one `[PASS]`/`[FAIL]` line per assertion with the measured
+   residual;
+4. print exactly one machine-readable verdict line `JSON: {"section": N,
+   "language": "...", "values": {...}, "all_passed": true|false}`;
+5. exit `0` only if every assertion passed — CI fails otherwise.
 
-1. **b well-defined and positive** — the closed form evaluates and satisfies 0 < b;
-2. **b < 1** — the twist stays within the physical range;
-3. **sin θ_b = b** — holds for θ_b = arcsin b (the trigonometric bridge);
-4. **rotation sanity** — the associated Rodrigues rotation is orthogonal with det 1 (the numeric echo of the formal R_b_orthogonal / R_b_det_one).
+## Files
 
----
+| File | Purpose |
+|---|---|
+| `verify.py` | the verifier itself (7 assertions, one `main()`, ~120 lines) |
+| `README.md` | this file |
 
----
+## License
 
-Navigation: [section parent](../README.md) · [framework hub](../../README.md) · [IPL-RP-1.0](../../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../../../LICENSE.md)).

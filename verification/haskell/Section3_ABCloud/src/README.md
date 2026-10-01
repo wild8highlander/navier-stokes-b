@@ -1,34 +1,17 @@
-# 🎩 `haskell/…/Section3_ABCloud/src/` — the Executable Source
+# `Section3_ABCloud/src/` — the Haskell module of section 3
 
-> **Navigation:** [`haskell`](../../README.md) › [`Section3_ABCloud`](../README.md) › **`src`**
+> **Navigation:** [repository root](../../../README.md) › [verification](../../../verification/README.md) › [haskell](../../README.md) › [`Section3_ABCloud`](../README.md) › **`src/`**
 
-![Haskell](https://img.shields.io/badge/Haskell-GHC_9.4-5E5086?style=flat-square&logo=haskell&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
-
-The **`Main.hs` of the Section 3 Haskell port** — AB-Cloud — the Non-Hermitian Hofstadter Hamiltonian. One pure
-module: it computes the section's quantities from closed forms, asserts the
-properties via `printf`-formatted PASS/FAIL lines at 15-digit precision,
-and emits the framework's `JSON:` verdict.
-
-| File | Description |
-|---|---|
-| [`Main.hs`](Main.hs) | the executable's single module — the section contract as types and pure functions |
-
-## Run
-
-```bash
-cd verification/haskell
-cabal run section3-ab-cloud
-```
-
-No `unsafe`, no FFI — the file is readable end-to-end in one sitting, which
-is the point of the Haskell witness. Peers of this port:
-[Python](../../../section3_ab_cloud/README.md) · [Lean 4](../../../lean4/ResearchPapersVerification/Section3_ABCloud/README.md) · [Coq/Rocq](../../../coq/section3_ab_cloud/README.md) · [Isabelle-HOL](../../../isabelle/Section3_ABCloud/README.md) · [Agda](../../../agda/Section3_ABCloud/README.md) · [C++](../../../cpp/section3_ab_cloud/README.md) · [Rust](../../../rust/section3_ab_cloud/README.md).
+![Module](https://img.shields.io/badge/Main.hs-informational?style=flat-square) ![Purity](https://img.shields.io/badge/pure_·_total-5e5075?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
 ---
 
----
+`Main.hs` is the complete port: pure numerical functions, an IO wrapper
+that prints the contract output, and exact `Integer` arithmetic wherever
+the claim demands it (Fibonacci, Cassini, the closed forms). The verdict
+must agree with the Python reference
+[`verification/section3_ab_cloud/python/verify.py`](../../verification/section3_ab_cloud/python/README.md).
 
-Navigation: [section 3](../README.md) · [haskell layer](../../README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
+## License
 
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../../LICENSE.md)).

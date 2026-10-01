@@ -1,85 +1,44 @@
-# Rust · Section 4 — KdV
+# `section4_kdv` — KdV — soliton interactions (Rust)
 
-> **Navigation:** [`verification`](../../../verification/README.md) › **`section4_kdv`**
+> **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [rust](../README.md) › **section 4**
 
-![Rust](https://img.shields.io/badge/Rust-1.75%2B-DEA584?style=flat-square&logo=rust&logoColor=white) ![Section](https://img.shields.io/badge/Section-4-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Section](https://img.shields.io/badge/S4-2B579A?style=flat-square) ![Language](https://img.shields.io/badge/Rust_·_std--only-dea584-informational?style=flat-square) ![Contract](https://img.shields.io/badge/PASS_%2B_JSON-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The **Rust port of Section 4** — KdV — Soliton Interactions under the b-Correction. This folder is
-a **std-only Rust binary** — one crate in the Cargo workspace, zero external dependencies. The supply-chain is trivially auditable by reading one `main.rs`; memory safety comes from the language, not from discipline.
+---
 
-## 🔬 Section context — where this port sits
+**What this port recomputes:** the soliton ODE residual at machine zero, the speed–amplitude law `u_max = c/2`, the width law `∝ 1/√c`.
 
-**Where it sits.** Section 4 of the framework covers **soliton interactions of the Korteweg–de Vries equation under the b-correction: the integrable continuation of the program**. Its
-central quantities are the conserved quantities (mass, momentum, energy) across the two-soliton interaction, and the closed-form sech² soliton profile. The same assertions exist in every
-peer language of the matrix, each in its own idiom: [Python](../../../verification/section4_kdv/README.md) · [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section4_KdV/README.md) · [Coq/Rocq](../../../verification/coq/section4_kdv/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section4_KdV/README.md) · [Agda](../../../verification/agda/Section4_KdV/README.md) · [C++](../../../verification/cpp/section4_kdv/README.md) · [Haskell](../../../verification/haskell/Section4_KdV/README.md). Agreement
-between all ports is enforced by the cross-language validator
-([`tests/`](../../../verification/tests/README.md)) and fails CI on any
-disagreement.
+The claims are *defined* by the Python reference port
+([`verification/section4_kdv/python/verify.py`](../../verification/section4_kdv/python/README.md));
+this Rust binary must reproduce the same verdict — same
+assertions, same tolerances, different arithmetic and toolchain. Any
+disagreement is a CI failure by construction.
 
-**What you will see.** Run this port and you get: a banner identifying the
-section and language; the computed values at full precision; one
-`[PASS]`/`[FAIL]` line per assertion; and a final
-`JSON: {"section": 4, "language": "rust", "values": {…}, "all_passed": …}`
-verdict line. Exit status is 0 only when every assertion passed.
-
-## 📂 Contents
-
-| File | Description |
-|---|---|
-| [`src/main.rs`](src/main.rs) | the section 4 port — KdV — Soliton Interactions under the b-Correction |
-| [`Cargo.toml`](Cargo.toml) | the crate/package manifest |
-
-## ▶️ How to run
+## How to build & run
 
 ```bash
-cd verification/rust
-cargo run --release -p section4_kdv      # this section
-cargo run --release             # the whole chain
+cd verification/rust && cargo build --release
+
+./target/release/verify_section4
 ```
 
-## 📋 What is asserted
+## Files
 
-1. **conservation across the interaction** — the conserved quantities measured before and after the two-soliton collision agree to tolerance;
-2. **closed-form soliton** — the sech² profile substituted into KdV satisfies the equation (the formal counterpart is soliton_solves_KdV);
-3. **phase shift bookkeeping** — the interaction's phase shifts are recorded and match the integrable theory.
+| File | Role |
+|---|---|
+| `main.rs` | the Rust port of section 4 |
+| `src/README.md` | notes on the source module |
+| `Cargo.toml` / `.cabal` | the build manifest |
 
-## 🔍 Sample output
+Every port follows the repository-wide output contract: banner → compute
+from the closed forms (no data files) → one `[PASS]`/`[FAIL]` line per
+assertion with the measured residual → exactly one `JSON: {"section": N,
+"language": "...", "values": {...}, "all_passed": bool}` verdict line →
+exit `0` only if everything passed. The cross-language validator in
+[`verification/tests/`](../tests/README.md) (or
+[`../..`](../tests/README.md) from nested directories) fails CI on any
+disagreement between ports.
 
-```text
-$ cd verification/rust
-=== Section 4 ===
-mass conserved: |dM| = 3.1e-13
-sech^2 residual = 2.4e-12
-PASS
-```
+## License
 
-## 🧩 The port family
-
-| Port | Where | Command | Time |
-|---|---|---|---|
-| Python (reference) | [`python/`](../../../verification/section4_kdv/README.md) | `python3 verification/section4_kdv/python/verify.py` | < 1 s |
-| Lean 4 | [`lean4/`](../../../verification/lean4/ResearchPapersVerification/Section4_KdV/README.md) | `lake build && lake exe check` | min (cached s) |
-| Coq | [`coq/`](../../../verification/coq/section4_kdv/README.md) | `coqc verification/coq/section4_kdv/CorrectionB.v` | s |
-| Isabelle | [`isabelle/`](../../../verification/isabelle/Section4_KdV/README.md) | `isabelle build -D verification/isabelle` | min (first) |
-| Agda | [`agda/`](../../../verification/agda/Section4_KdV/README.md) | `agda --safe verification/agda/Section4_KdV/CorrectionB.agda` | s |
-| C++ | [`cpp/`](../../../verification/cpp/section4_kdv/README.md) | `cmake -S verification/cpp -B build && ./build/section4_kdv` | < 1 s |
-| Rust | [`rust/`](../../../verification/rust/section4_kdv/README.md) | `cargo run --release -p section4_kdv` | < 1 s |
-| Haskell | [`haskell/`](../../../verification/haskell/Section4_KdV/README.md) | `cabal run section4-KdV` | < 1 s |
-
-Section 4 is the integrable-systems bridge of the program: the KdV chapter (papers/kdv) claims the same constant b governs soliton interactions, and this section is where that claim is executable. The C++ port is the computational workhorse here — the pseudospectral solver — while every other port checks the conservation bookkeeping on the closed-form solutions.
-
-## 🔗 Cross-references
-
-- [Section 4 reference port](../../../verification/section4_kdv/README.md)
-- [Framework hub](../../../verification/README.md)
-- [Gap ledger (Lean 4)](../../../verification/lean4/TODO_sorry.md) — which
-  formal lemmas are admitted gaps
-
----
-
----
-
-Navigation: [repository root](../../../README.md) · [rust](../../../verification/rust/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../LICENSE.md)).

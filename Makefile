@@ -4,7 +4,7 @@
 # (The previous revision used 8 spaces, so every `make` invocation aborted
 # with "missing separator".)
 
-.PHONY: help install test verify-all verify-extended \
+.PHONY: help install test verify-all verify-extended verify-repo \
         verify-python verify-julia verify-java \
         verify-lean verify-coq verify-isabelle verify-agda \
         verify-rust verify-cpp verify-haskell \
@@ -43,7 +43,7 @@ verify-all: verify-python ## Run original verifications
 verify-extended: verify-lean verify-coq verify-rust verify-cpp verify-haskell ## Run all 7 new languages
 
 verify-python: ## Python verification (all six sections)
-	@for s in 1 2 3 4 5 6; do \
+	@for s in 1 2 3 4 5 6 7; do \
 		$(PYTHON) verification/common/python/main.py --section $$s --preset default || exit 1; \
 	done
 
@@ -91,6 +91,9 @@ clean-all: clean ## Full clean
 	rm -rf node_modules/ verification/web-dashboard/node_modules/
 	rm -rf verification/rust/target/ verification/cpp/build/
 	rm -rf verification/haskell/dist-newstyle/ verification/lean4/.lake/
+
+verify-repo: ## Repository-wide integrity audit (9 groups, all folders)
+	$(PYTHON) verification/repo_integrity/verify_repo.py
 
 verify-manifest: ## Check every file against MANIFEST.json (PASS/FAIL)
 	$(PYTHON) .github/scripts/verify_manifest.py

@@ -1,44 +1,40 @@
-# 🧰 `verification/common/` — Shared Utilities
+# `common/` — shared verification utilities
 
-> **Navigation:** [`verification`](../README.md) › **`common`**
+> **Navigation:** [repository root](../README.md) › [verification](../README.md) › **`common`**
 
-![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Role](https://img.shields.io/badge/shared--harness-2EA043?style=flat-square) ![Language](https://img.shields.io/badge/Python-3776AB?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The shared plumbing of the Python tier: the verifier base class that
-implements the framework's output protocol (banner → assertions → JSON
-verdict → exit code), the central configuration, and the aggregate CLI
-that runs sections through the shared base. Everything user-facing — the
-[REST API](../api/README.md), the [demos](../demo/README.md), the
-[notebooks](../notebooks/README.md) — is a thin shell over this package.
+---
 
-## Design notes
+This directory holds the pieces every Python port shares: the aggregate
+CLI that runs a section verifier as a subprocess and enforces the output
+contract, the section registry, and the preset system. The design rule is
+deliberately conservative: **the section verifiers never import this
+code** — they stay stdlib-only and independently runnable — while the
+*runner* (which is allowed to have opinions) wraps them uniformly.
 
-- **The protocol lives in one place.** The PASS/JSON/exit-code contract is
-  implemented once, in `verifier_base.py`; a change to the contract is a
-  one-file diff plus the atomic validator update — not a sweep over ports.
-- **Configuration is data.** Section paths, tolerances and output options
-  sit in `config.py`, so adding a section to the aggregate CLI is a data
-  change.
-- **The CLI is for humans and CI.** `main.py` runs one or all sections with
-  the same output the standalone ports produce.
+## What lives here
 
-## Contents
-
-| Item | Contents |
+| Path | Role |
 |---|---|
-| [`python/`](python/README.md) | the package itself: `verifier_base`, `config`, `main`, `__init__` |
+| [`python/main.py`](python/README.md) | the aggregate runner: `--section N --preset P`, enforces banner → PASS/FAIL → JSON verdict → exit code |
+| [`python/config.py`](python/README.md) | the section registry (names of sections 1–7) and the preset table (quick / default / full / extreme) |
+| [`python/verifier_base.py`](python/README.md) | the base class used by tooling that builds on the contract (API, demos) |
+| [`python/__init__.py`](python/README.md) | package marker |
 
-## Usage
+## Run
 
 ```bash
-python3 verification/common/python/main.py --section 1 --preset default
+# one section through the uniform harness
+python3 verification/common/python/main.py --section 7 --preset default
+
+# every section 1..7
+python3 verification/common/python/main.py --all
 ```
 
----
+The runner is what `make verify-all` invokes; it exits non-zero on any
+failure, which is the CI hook.
 
----
+## License
 
-Navigation: [repository root](../../README.md) · [python package](python/README.md) · [api](../api/README.md) · [IPL-RP-1.0](../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../LICENSE.md)).

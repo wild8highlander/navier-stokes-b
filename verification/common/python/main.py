@@ -8,7 +8,7 @@ as a subprocess and enforces the repository-wide output contract:
 
 Usage:
     python main.py --section 1 --preset default
-    python main.py --all              # run every section 1..6
+    python main.py --all              # run every section 1..7
 """
 import json
 import subprocess
@@ -25,6 +25,7 @@ SECTION_DIRS = {
     4: "section4_kdv",
     5: "section5_klein_attractor",
     6: "section6_riemann_zeros",
+    7: "section7_smagorinsky_kolmogorov",
 }
 
 try:

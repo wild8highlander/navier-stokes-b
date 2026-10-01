@@ -1,55 +1,34 @@
-# 🐳 `verification/docker/` — Pinned Toolchain Images
+# `docker/` — one pinned container per toolchain
 
-> **Navigation:** [`verification`](../README.md) › **`docker`**
+> **Navigation:** [repository root](../README.md) › [verification](../README.md) › **`docker`**
 
-![Docker](https://img.shields.io/badge/Images-7-2496ED?style=flat-square&logo=docker&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Images](https://img.shields.io/badge/7-2B579A?style=flat-square) ![Purpose](https://img.shields.io/badge/reproducible--CI-2EA043?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-One pinned container per formal/extended toolchain, so container runs are
-the closest match to CI: the images pin the toolchain versions, copy the
-verification sources, and default to running the verification — `docker
-run` reproduces exactly what CI runs, byte-for-byte at the toolchain level.
+---
 
-## The images
+The formal and extended toolchains are pinned as container images so that
+`make docker-build && make docker-up` reproduces the CI environment
+locally, byte for byte. Each subdirectory carries one `Dockerfile` and its
+README.
 
-| Folder | Toolchain | Default entrypoint |
+| Image | Toolchain | What runs inside |
 |---|---|---|
-| [`agda/`](agda/README.md) | Agda (2.6) | `agda --safe verification/agda/Section1_CorrectionB/CorrectionB.agda` |
-| [`coq/`](coq/README.md) | Coq/Rocq (8.18) | `coqc verification/coq/section1_correction_b/CorrectionB.v` |
-| [`cpp/`](cpp/README.md) | C++17 + CMake | `./build/section1_correction_b` |
-| [`haskell/`](haskell/README.md) | Haskell (GHC 9.4) | `cabal run section1-correction-b` |
-| [`isabelle/`](isabelle/README.md) | Isabelle-HOL (2024) | `isabelle build -D verification/isabelle` |
-| [`lean4/`](lean4/README.md) | Lean 4 (v4.14) | `lake exe check` |
-| [`rust/`](rust/README.md) | Rust (1.75+) | `cargo run --release --manifest-path verification/rust/Cargo.toml` |
+| [`lean4/`](lean4/README.md) | Lean 4 + Mathlib 4 (v4.14.0 pinned) | `lake build && lake exe check` |
+| [`coq/`](coq/README.md) | Coq/Rocq 8.18 with Reals + lra | `coq_makefile -f _CoqProject -o Makefile && make` |
+| [`isabelle/`](isabelle/README.md) | Isabelle-HOL 2024 with Complex_Main | `isabelle build -D .` |
+| [`agda/`](agda/README.md) | Agda 2.6 with the standard library | `agda --safe Section1_CorrectionB/CorrectionB.agda` |
+| [`cpp/`](cpp/README.md) | gcc C++17 + CMake (+ BLAS/LAPACK) | `cmake .. && make -j$(nproc)` |
+| [`rust/`](rust/README.md) | Rust stable (edition 2021) | `cargo build --release` |
+| [`haskell/`](haskell/README.md) | GHC 9.4 + Cabal | `cabal build all` |
 
-## Build and run everything
-
-```bash
-make docker-build     # all 7 toolchain images
-make docker-up        # run the verification services (docker compose)
-make docker-down      # stop them again
-```
-
-or per image (from the repository root):
+## Run
 
 ```bash
-docker build -t rp-lean4 verification/docker/lean4
-docker run --rm -v "$PWD":/work rp-lean4 lake exe check
+make docker-build     # build every image
+make docker-up        # start the compose services
+make docker-down      # stop
 ```
 
-## Why pinned images matter
+## License
 
-A formal proof is only as reproducible as its kernel version; a numerical
-verdict only as reproducible as its libm. Pinning the toolchain turns
-"works on my machine" into a byte-level property, and lets the CI matrix
-and any external audit execute the *same* environment. When a toolchain
-upstream changes, the fix is a one-line base-image bump plus a re-run —
-see the [hub's maintenance map](../README.md).
-
----
-
----
-
-Navigation: [repository root](../../README.md) · [extended-languages notes](../docs/extended-languages/README.md) · [IPL-RP-1.0](../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../LICENSE.md)).

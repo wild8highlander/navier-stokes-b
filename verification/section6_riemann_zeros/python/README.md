@@ -1,53 +1,61 @@
-# 🐍 Section 6 · python — the Reference Port
+# `section6_riemann_zeros/python/` — the reference port (Python)
 
-> **Navigation:** [`verification`](../../README.md) › [`section6_riemann_zeros`](../README.md) › **`python`**
+> **Navigation:** [repository root](../../../README.md) › [verification](../../README.md) › [`section6_riemann_zeros`](../README.md) › **`python/`**
 
-![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Language](https://img.shields.io/badge/Python_3.11%2B-3776AB?style=flat-square) ![Deps](https://img.shields.io/badge/stdlib_·_mpmath_optional-2EA043?style=flat-square) ![Contract](https://img.shields.io/badge/PASS_%2B_JSON-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The **pure-Python port** of Section 6 — Riemann Zeros — the Hilbert–Pólya Programme. A single
-`verify.py` using only the standard library: it computes the section's
-quantities from closed-form inputs, asserts the section's properties, and
-prints the framework's JSON verdict. This is the port CI runs first and the
-one new toolchain ports are compared against.
+---
 
-## 🔬 Section context
+This is the **reference implementation** of Section 6 — the executable
+definition of the claims. It is deliberately boring: deterministic
+(fixed-seed LCG where randomness is needed), self-contained (no imports
+beyond the standard library; `mpmath` upgrades the 50-digit block when
+present and is skipped cleanly when absent), and contract-exact (see
+below). Every other port of Section 6 — C++, Rust, Haskell, Julia and
+the four proof assistants — is required to agree with *this* file's
+verdict, which is what makes it the reference.
 
-Section 6 covers **the ζ-correspondence skeleton: the frozen-data embedding and the spectral statistics of the zeros**; central quantities: the frozen-data embedding, the GUE-class gap statistics of the zeros, and the Σ²(L) diagnostics.
-Peers: [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section6_RiemannZeros/README.md) · [Coq/Rocq](../../../verification/coq/section6_riemann_zeros/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section6_RiemannZeros/README.md) · [Agda](../../../verification/agda/Section6_RiemannZeros/README.md) · [C++](../../../verification/cpp/section6_riemann_zeros/README.md) · [Rust](../../../verification/rust/section6_riemann_zeros/README.md) · [Haskell](../../../verification/haskell/Section6_RiemannZeros/README.md).
+## The assertions
 
-| File | Description |
+| # | Assertion |
 |---|---|
-| [`verify.py`](verify.py) | the Section 6 reference verifier — prints values, asserts, JSON verdict |
+| C1 | `ζ(2) = π²/6` and `ζ(4) = π⁴/90` (tolerance 1e-12) |
+| C2 | functional equation `ξ(s) = ξ(1−s)` off the line (measured 7.3×10⁻¹⁶) |
+| C3 | `|ξ|` at the first zero < 1e-12 (measured 8.5×10⁻¹⁸) |
+| C4 | `|ξ|` at a non-zero ordinate > 1e-2 (contrast) |
+| C5 | `b` matches the framework value |
 
-## ▶️ How to run
+Pinned values: `xi_zero_residual` = 8.477×10⁻¹⁸
+
+## Run
 
 ```bash
-python3 verify.py          # from this folder
-python3 verification/section6_riemann_zeros/python/verify.py   # from the repo root
+python3 verification/section6_riemann_zeros/python/verify.py
 ```
 
-## 🔍 Sample output
+Wall-clock: well under one second on any modern machine.
 
-```text
-=== Section 6 ===
-embedding compatible
-GUE class confirmed
-PASS
-```
+## Output contract
 
-Exit code 0 = all assertions passed; anything else fails CI.
+Every port follows the repository-wide output contract, which is what
+makes cross-language comparison mechanical:
 
-## 📋 What is asserted
+1. print a banner line identifying section and language;
+2. compute the section's quantities **from the closed forms** (no data
+   files are read at this tier);
+3. print one `[PASS]`/`[FAIL]` line per assertion with the measured
+   residual;
+4. print exactly one machine-readable verdict line `JSON: {"section": N,
+   "language": "...", "values": {...}, "all_passed": true|false}`;
+5. exit `0` only if every assertion passed — CI fails otherwise.
 
-1. **frozen-data embedding** — the embedding of the frozen data is compatible with the required structure (the formal counterpart: embedding_compatibility);
-2. **GUE-class gaps** — the normalised gap statistics fall in the GUE class;
-3. **Σ²(L) diagnostics** — the variance statistic matches the declared reference curve.
+## Files
 
----
+| File | Purpose |
+|---|---|
+| `verify.py` | the verifier itself (5 assertions, one `main()`, ~120 lines) |
+| `README.md` | this file |
 
----
+## License
 
-Navigation: [section parent](../README.md) · [framework hub](../../README.md) · [IPL-RP-1.0](../../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../../../LICENSE.md)).

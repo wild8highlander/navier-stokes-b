@@ -1,41 +1,26 @@
-# 🐳 docker · agda — Pinned Toolchain Image
+# `docker/agda/` — the Agda 2.6 with the standard library image
 
-> **Navigation:** [`verification`](../../../verification/README.md) › [`docker`](../README.md) › **`agda`**
+> **Navigation:** [repository root](../../../README.md) › [verification](../../verification/README.md) › [docker](../README.md) › **`agda`**
 
-![Type](https://img.shields.io/badge/Type-Dockerfile-2496ED?style=flat-square&logo=docker&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Image](https://img.shields.io/badge/agda-2B579A?style=flat-square) ![Toolchain](https://img.shields.io/badge/Agda_2.6_with_the_standard_library-informational?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The **Dockerfile pinning the Agda (2.6) environment** for the verification
-framework. The image installs Agda via cabal, copies the verification sources, and type-checks every module with `--safe` — so `docker run` reproduces exactly what CI
-runs, byte-for-byte at the toolchain level. the stdlib dependency is minimal; the `--safe` flag is the CI configuration
+---
 
-## 📂 Contents
-
-| File | Description |
-|---|---|
-| [`Dockerfile`](Dockerfile) | the Agda (2.6) environment — install + source copy + verification entrypoint |
-
-## ▶️ How to run
+The pinned environment for the agda tier of the verification matrix. The
+image installs exactly the toolchain the framework expects — nothing more,
+so the build is the environment statement.
 
 ```bash
-docker build -t rp-agda verification/docker/agda
-docker run --rm -v "$PWD":/work rp-agda agda --safe verification/agda/Section1_CorrectionB/CorrectionB.agda
+docker build -t nsb-verify-agda .
+docker run --rm -v "$PWD/../../..:/repo" -w /repo nsb-verify-agda bash -lc "agda --safe Section1_CorrectionB/CorrectionB.agda"
 ```
 
-The bind-mount (`-v "$PWD":/work`) lets you verify the repository you are
-standing in rather than the copy baked into the image; omit it to run the
-pinned snapshot.
+Inside the container, the working command for this tier is:
 
-## 🔗 Cross-references
+```bash
+agda --safe Section1_CorrectionB/CorrectionB.agda
+```
 
-- [Docker layer](../README.md) — the full image table and the compose flow
-- [Agda (2.6) language layer](../../../verification/agda/README.md)
-- [Verification contract](../../../verification/README.md)
+## License
 
----
-
----
-
-Navigation: [docker](../README.md) · [verification](../../../verification/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../../LICENSE.md)).

@@ -1,36 +1,20 @@
-# 🐚 `verification/scripts/` — Cross-Validation and API Bootstrap
+# `scripts/` — shell entry points
 
-> **Navigation:** [`verification`](../README.md) › **`scripts`**
+> **Navigation:** [repository root](../README.md) › [verification](../README.md) › **`scripts`**
 
-![Type](https://img.shields.io/badge/Type-Shell_scripts-4EAA25?style=flat-square&logo=gnubash&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Shell](https://img.shields.io/badge/bash-4EAA25?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The one-liner shell entry points for the two most common maintenance
-operations: running the whole cross-language validation and booting the
-REST API. They exist so the operations are copy-pasteable from CI logs and
-issue comments without re-reading the framework hub.
+---
 
-## Contents
-
-| File | Description |
+| Script | Effect |
 |---|---|
-| [`run_cross_validation.sh`](run_cross_validation.sh) | runs every computational port and the validator — the cross-language gate in one command |
-| [`start_api.sh`](start_api.sh) | installs the API requirements and boots the Flask server |
+| `run_cross_validation.sh` | runs the cross-validation battery: the section ports and the comparison report |
+| `start_api.sh` | installs the API requirements (if needed) and launches `uvicorn` on the verification API |
 
-## Usage
+Both scripts are idempotent and safe to re-run; they are the non-Makefile
+entry points for environments where `make` is unavailable (Termux ships
+make, but a bare busybox may not).
 
-```bash
-bash verification/scripts/run_cross_validation.sh
-bash verification/scripts/start_api.sh
-```
+## License
 
-Both scripts are thin wrappers (set -e, cd to the repo root, invoke the
-documented entry points) — read them in ten seconds, trust them in one.
-
----
-
----
-
-Navigation: [repository root](../../README.md) · [tests](../tests/README.md) · [api](../api/README.md) · [IPL-RP-1.0](../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../LICENSE.md)).

@@ -1,48 +1,31 @@
-# 📓 `verification/notebooks/` — the Jupyter Entry Point
+# `notebooks/` — the Jupyter entry point
 
-> **Navigation:** [`verification`](../README.md) › **`notebook`**
+> **Navigation:** [repository root](../README.md) › [verification](../README.md) › **`notebooks`**
 
-![Jupyter](https://img.shields.io/badge/Tool-Jupyter-F37626?style=flat-square&logo=jupyter&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Jupyter](https://img.shields.io/badge/interactive-F37626?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The notebook-based access layer to the verification ports: launch Jupyter
-from this directory and drive the verifiers interactively — run a section,
-inspect the JSON verdict, plot the residuals, compare languages cell by
-cell.
+---
 
-## Contents
-
-| File | Description |
-|---|---|
-| [`requirements.txt`](requirements.txt) | pinned Jupyter + scientific dependencies |
-
-## How to use
+The interactive-exploration corner of the framework: launch Jupyter from
+the repository root and import any reference port — the verifiers are
+plain importable modules with a `main()` returning the exit code, so a
+notebook cell can run a section and dissect its values.
 
 ```bash
-pip install -r verification/notebooks/requirements.txt
-cd verification/notebooks && jupyter lab
+pip install -r requirements.txt
+jupyter lab
 ```
 
 Suggested first cells:
 
 ```python
-import subprocess, json, pathlib
-root = pathlib.Path("../..").resolve()
-out = subprocess.run(
-    ["python3", str(root / "verification/section1_correction_b/python/verify.py")],
+import subprocess, sys
+r = subprocess.run([sys.executable,
+    "verification/section7_smagorinsky_kolmogorov/python/verify.py"],
     capture_output=True, text=True)
-print(out.stdout)
+print(r.stdout)
 ```
 
-The notebook path is intentionally thin: it adds no logic of its own, it
-just shells into the same contract-based ports — everything the notebook
-shows, the CLI shows identically, and the
-[validator](../tests/README.md) consumes.
+## License
 
----
-
----
-
-Navigation: [repository root](../../README.md) · [framework hub](../README.md) · [IPL-RP-1.0](../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../LICENSE.md)).

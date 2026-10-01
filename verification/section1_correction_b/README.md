@@ -1,73 +1,83 @@
-# 🐍 Section 1 — Correction b (Python Reference)
+# `section1_correction_b/` — Correction b — the universal polarization constant
 
-> **Navigation:** [`verification`](../README.md) › **`section1_correction_b`**
+> **Navigation:** [repository root](../../README.md) › [verification](../README.md) › **`section1_correction_b`**
 
-![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![Section](https://img.shields.io/badge/Section-1-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Section](https://img.shields.io/badge/Section_1-2B579A?style=flat-square) ![Reference](https://img.shields.io/badge/Python_stdlib-2EA043?style=flat-square) ![Contract](https://img.shields.io/badge/PASS_%2B_JSON-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-This directory is the **Python reference implementation** of research
-Section 1 — Correction b — the Universal Polarization Constant. Within the framework it is the *numerical
-reference tier*: the simplest, dependency-free port that every other
-language port can be diffed against. The implementation is intentionally
-minimal — pure standard library, a single `verify.py` entry point under
-[`python/`](python/README.md), and the framework's uniform output contract:
-the computed quantities are printed, each expected property is asserted
-with a `[PASS]` line, and the run ends with the `JSON:` verdict.
+---
 
-## 🔬 What this section covers
+Section 1 is the executable definition of the constant itself: the closed form `b = 1/(4π + 2√3)`, the range `0 < b < 1`, the arcsine identity `sin θ_b = b` at machine precision, and the sanity algebra of the Rodrigues rotation about a non-trivial axis (orthogonality, `det R = 1`, `trace R = 1 + 2 cos θ_b`, and energy neutrality of the rotation over 10⁴ deterministic pseudo-random vectors). Every other section re-anchors to this one: `b matches framework value` is a standing assertion of sections 3, 6 and 7.
 
-**Coverage.** Section 1 covers **the universal polarization correction derived from the Kirchhoff point-vortex system**. Central quantities:
-b = 1/(4π + 2√3) = 0.062381194121028…, the rotation angle θ_b = arcsin(b) ≈ 3.5765°, and the stabilisation identity cos²θ_b + sin²θ_b = 1. The same assertions live in every peer language:
-[Lean 4](../../verification/lean4/ResearchPapersVerification/Section1_CorrectionB/README.md) · [Coq/Rocq](../../verification/coq/section1_correction_b/README.md) · [Isabelle-HOL](../../verification/isabelle/Section1_CorrectionB/README.md) · [Agda](../../verification/agda/Section1_CorrectionB/README.md) · [C++](../../verification/cpp/section1_correction_b/README.md) · [Rust](../../verification/rust/section1_correction_b/README.md) · [Haskell](../../verification/haskell/Section1_CorrectionB/README.md).
+## The claims, verbatim
 
-## 📂 Contents
+| # | Assertion | Recorded value / tolerance |
+|---|---|---|
+| C1 | `b` matches the pinned value `0.06238119412102822…` to 15+ digits | |
+| C2 | `0 < b < 1` | |
+| C3 | `sin(θ_b) = b` to machine precision (θ_b = arcsin b by construction) | |
+| C4 | `cos²θ_b + b² = 1` | |
+| C5 | `det R = 1` and `trace R = 1 + 2 cos θ_b` for the θ_b-rotation | |
+| C6 | `RᵀR = I` (orthogonality, max residual < 1e-12) | |
+| C7 | energy neutrality: `max |ΔE|` over 10⁴ vectors ≤ 1e-12 | |
 
-| Item | Description |
+Pinned values of the reference run: `b` = 0.06238119412102824, `θ_b` = 0.06242172363615545 rad = 3.5765013142837°
+
+## Layout
+
+| Path | Role |
 |---|---|
-| [`python/`](python/README.md) | the runnable reference port — a single `verify.py` |
+| [`python/verify.py`](python/verify.py) | the **reference port** — the executable definition of the claims above |
+| [`python/README.md`](python/README.md) | how to run it, the contract, the exact expected output |
 
-## ▶️ How to run
+
+
+## How to run
 
 ```bash
-python3 python/verify.py
-# runtime: well under a second, no dependencies, no configuration
+# direct (the reference port is stdlib-only; mpmath upgrades the precision block)
+python3 verification/section1_correction_b/python/verify.py
+python3 verification/section1_correction_b/python/verify.py --preset default   # contract-compatible
+
+# through the aggregate runner (same verdict, uniform harness)
+python3 verification/common/python/main.py --section 1 --preset default
+
+# over HTTP, through the REST API
+#   GET /api/verify/1  →  the parsed verdict + full output
 ```
 
-## 📋 What is asserted
+Every port follows the repository-wide output contract, which is what
+makes cross-language comparison mechanical:
 
-1. **b well-defined and positive** — the closed form evaluates and satisfies 0 < b;
-2. **b < 1** — the twist stays within the physical range;
-3. **sin θ_b = b** — holds for θ_b = arcsin b (the trigonometric bridge);
-4. **rotation sanity** — the associated Rodrigues rotation is orthogonal with det 1 (the numeric echo of the formal R_b_orthogonal / R_b_det_one).
+1. print a banner line identifying section and language;
+2. compute the section's quantities **from the closed forms** (no data
+   files are read at this tier);
+3. print one `[PASS]`/`[FAIL]` line per assertion with the measured
+   residual;
+4. print exactly one machine-readable verdict line `JSON: {"section": N,
+   "language": "...", "values": {...}, "all_passed": true|false}`;
+5. exit `0` only if every assertion passed — CI fails otherwise.
 
-## 🔍 Sample output
+## Where this section lives across the matrix
 
-```text
-$ python3 verification/section1_correction_b/python/verify.py
-=== Section 1 ===
-b = 0.062381194121028
-PASS
-```
+| Port | Location |
+|---|---|
+| Python reference | [`python/verify.py`](python/verify.py) (this directory) |
+| Lean 4 (formal) | [`../lean4/ResearchPapersVerification/Section1_CorrectionB/`](../lean4/ResearchPapersVerification/Section1_CorrectionB/README.md) |
+| Coq (formal) | [`../coq/`section1_correction_b/README.md](../coq/section1_correction_b/README.md) |
+| Isabelle (formal) | [`../isabelle/Section1_CorrectionB/README.md`](../isabelle/Section1_CorrectionB/README.md) |
+| Agda (formal) | [`../agda/Section1_CorrectionB/README.md`](../agda/Section1_CorrectionB/README.md) |
+| C++17 | [`../cpp/section1_correction_b/README.md`](../cpp/section1_correction_b/README.md) |
+| Rust | [`../rust/section1_correction_b/README.md`](../rust/section1_correction_b/README.md) |
+| Haskell | [`../haskell/Section1_CorrectionB/README.md`](../haskell/Section1_CorrectionB/README.md) |
+| Julia | `../julia_levels/` (`l1_…` for the chain sections) / the satellite `research_col_smar/code/julia` |
 
-## 🧩 The port family
+The same assertions are re-derived in every language of the matrix:
+four proof assistants machine-check the structural statements, and five
+computational toolchains recompute the numbers with five different
+rounding regimes. A reviewer diffs *mathematical content* across systems,
+not code style; any disagreement fails the cross-language validator in
+[`verification/tests/`](../tests/README.md).
 
-| Port | Where | Command | Time |
-|---|---|---|---|
-| Python (reference) | [`python/`](../../verification/section1_correction_b/README.md) | `python3 verification/section1_correction_b/python/verify.py` | < 1 s |
-| Lean 4 | [`lean4/`](../../verification/lean4/ResearchPapersVerification/Section1_CorrectionB/README.md) | `lake build && lake exe check` | min (cached s) |
-| Coq | [`coq/`](../../verification/coq/section1_correction_b/README.md) | `coqc verification/coq/section1_correction_b/CorrectionB.v` | s |
-| Isabelle | [`isabelle/`](../../verification/isabelle/Section1_CorrectionB/README.md) | `isabelle build -D verification/isabelle` | min (first) |
-| Agda | [`agda/`](../../verification/agda/Section1_CorrectionB/README.md) | `agda --safe verification/agda/Section1_CorrectionB/CorrectionB.agda` | s |
-| C++ | [`cpp/`](../../verification/cpp/section1_correction_b/README.md) | `cmake -S verification/cpp -B build && ./build/section1_correction_b` | < 1 s |
-| Rust | [`rust/`](../../verification/rust/section1_correction_b/README.md) | `cargo run --release -p section1_correction_b` | < 1 s |
-| Haskell | [`haskell/`](../../verification/haskell/Section1_CorrectionB/README.md) | `cabal run section1-CorrectionB` | < 1 s |
+## License
 
-Section 1 is the framework's keystone: every other section references the constant it fixes. Its four assertions are the minimal complete characterisation of b for the framework's purposes — anything more belongs to the papers, anything less breaks the chain. When porting to a new language, Section 1 is the correct first target: fastest to write, easiest to diff, and it immediately joins the new language into the validator's matrix.
-
----
-
----
-
-Navigation: [repository root](../../README.md) · [framework hub](../README.md) · [section 1 peers](../../verification/README.md) · [IPL-RP-1.0](../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../../LICENSE.md)).

@@ -1,32 +1,19 @@
-# 🦀 `rust/…/section5_*/src/` — the Binary Source
+# `section5_klein_attractor/src/` — the Rust module of section 5
 
-> **Navigation:** [`rust`](../../README.md) › [section 5](../README.md) › **`src`**
+> **Navigation:** [repository root](../../../README.md) › [verification](../../../verification/README.md) › [rust](../../README.md) › [`section5_klein_attractor`](../README.md) › **`src/`**
 
-![Rust](https://img.shields.io/badge/Rust-1.75%2B-DEA584?style=flat-square&logo=rust&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
-
-The **`main.rs` of the Section 5 Rust port** — Klein Attractor — Ergodic Dynamics and the NSE Bridge. One std-only
-module: it computes the section's quantities, asserts the properties
-through the shared `check(name, expected, actual)` helper at `{:15e}`
-precision, prints the `JSON:` verdict and exits non-zero on any failure.
-
-| File | Description |
-|---|---|
-| [`main.rs`](main.rs) | the binary's single module — zero external crates |
-
-## Run
-
-```bash
-cd verification/rust
-cargo run --release -p section5_klein_attractor
-```
-
-Peers of this port: [Python](../../../section5_klein_attractor/README.md) · [Lean 4](../../../lean4/ResearchPapersVerification/Section5_KleinAttractor/README.md) · [Coq/Rocq](../../../coq/section5_klein_attractor/README.md) · [Isabelle-HOL](../../../isabelle/Section5_KleinAttractor/README.md) · [Agda](../../../agda/Section5_KleinAttractor/README.md) · [C++](../../../cpp/section5_klein_attractor/README.md) · [Haskell](../../../haskell/Section5_KleinAttractor/README.md).
+![Module](https://img.shields.io/badge/main.rs-informational?style=flat-square) ![Safety](https://img.shields.io/badge/std--only_·_no--unsafe-2EA043?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
 ---
 
----
+`main.rs` is the complete port: a single `fn main()` behind the uniform
+`check()` harness. The module contains no `unsafe`, no external crates,
+and no floating-point state beyond the deterministic computation itself —
+which is the point: the Rust toolchain re-derives the numbers with its own
+arithmetic, and the verdict must agree with the Python reference
+[`verification/section5_klein_attractor/python/verify.py`](../../verification/section5_klein_attractor/python/README.md)
+to the stated tolerances.
 
-Navigation: [section 5](../README.md) · [rust layer](../../README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
+## License
 
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../../LICENSE.md)).

@@ -1,73 +1,81 @@
-# 🐍 Section 6 — Riemann Zeros (Python Reference)
+# `section6_riemann_zeros/` — Riemann zeros — the Hilbert–Pólya programme
 
-> **Navigation:** [`verification`](../README.md) › **`section6_riemann_zeros`**
+> **Navigation:** [repository root](../../README.md) › [verification](../README.md) › **`section6_riemann_zeros`**
 
-![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![Section](https://img.shields.io/badge/Section-6-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Section](https://img.shields.io/badge/Section_6-2B579A?style=flat-square) ![Reference](https://img.shields.io/badge/Python_stdlib-2EA043?style=flat-square) ![Contract](https://img.shields.io/badge/PASS_%2B_JSON-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-This directory is the **Python reference implementation** of research
-Section 6 — Riemann Zeros — the Hilbert–Pólya Programme. Within the framework it is the *numerical
-reference tier*: the simplest, dependency-free port that every other
-language port can be diffed against. The implementation is intentionally
-minimal — pure standard library, a single `verify.py` entry point under
-[`python/`](python/README.md), and the framework's uniform output contract:
-the computed quantities are printed, each expected property is asserted
-with a `[PASS]` line, and the run ends with the `JSON:` verdict.
+---
 
-## 🔬 What this section covers
+Section 6 verifies the frozen-data embedding facts of the AB-Cloud/Riemann correspondence: the zeta special values (`ζ(2) = π²/6`, `ζ(4) = π⁴/90`), the functional equation `ξ(s) = ξ(1−s)` off the critical line to 1e-10, the annihilation of ξ at the first non-trivial zero versus the contrast at a non-zero ordinate, and the framework constant cross-link.
 
-**Coverage.** Section 6 covers **the ζ-correspondence skeleton: the frozen-data embedding and the spectral statistics of the zeros**. Central quantities:
-the frozen-data embedding, the GUE-class gap statistics of the zeros, and the Σ²(L) diagnostics. The same assertions live in every peer language:
-[Lean 4](../../verification/lean4/ResearchPapersVerification/Section6_RiemannZeros/README.md) · [Coq/Rocq](../../verification/coq/section6_riemann_zeros/README.md) · [Isabelle-HOL](../../verification/isabelle/Section6_RiemannZeros/README.md) · [Agda](../../verification/agda/Section6_RiemannZeros/README.md) · [C++](../../verification/cpp/section6_riemann_zeros/README.md) · [Rust](../../verification/rust/section6_riemann_zeros/README.md) · [Haskell](../../verification/haskell/Section6_RiemannZeros/README.md).
+## The claims, verbatim
 
-## 📂 Contents
+| # | Assertion | Recorded value / tolerance |
+|---|---|---|
+| C1 | `ζ(2) = π²/6` and `ζ(4) = π⁴/90` (tolerance 1e-12) | |
+| C2 | functional equation `ξ(s) = ξ(1−s)` off the line (measured 7.3×10⁻¹⁶) | |
+| C3 | `|ξ|` at the first zero < 1e-12 (measured 8.5×10⁻¹⁸) | |
+| C4 | `|ξ|` at a non-zero ordinate > 1e-2 (contrast) | |
+| C5 | `b` matches the framework value | |
 
-| Item | Description |
+Pinned values of the reference run: `xi_zero_residual` = 8.477×10⁻¹⁸
+
+## Layout
+
+| Path | Role |
 |---|---|
-| [`python/`](python/README.md) | the runnable reference port — a single `verify.py` |
+| [`python/verify.py`](python/verify.py) | the **reference port** — the executable definition of the claims above |
+| [`python/README.md`](python/README.md) | how to run it, the contract, the exact expected output |
 
-## ▶️ How to run
+
+
+## How to run
 
 ```bash
-python3 python/verify.py
-# runtime: well under a second, no dependencies, no configuration
+# direct (the reference port is stdlib-only; mpmath upgrades the precision block)
+python3 verification/section6_riemann_zeros/python/verify.py
+python3 verification/section6_riemann_zeros/python/verify.py --preset default   # contract-compatible
+
+# through the aggregate runner (same verdict, uniform harness)
+python3 verification/common/python/main.py --section 6 --preset default
+
+# over HTTP, through the REST API
+#   GET /api/verify/6  →  the parsed verdict + full output
 ```
 
-## 📋 What is asserted
+Every port follows the repository-wide output contract, which is what
+makes cross-language comparison mechanical:
 
-1. **frozen-data embedding** — the embedding of the frozen data is compatible with the required structure (the formal counterpart: embedding_compatibility);
-2. **GUE-class gaps** — the normalised gap statistics fall in the GUE class;
-3. **Σ²(L) diagnostics** — the variance statistic matches the declared reference curve.
+1. print a banner line identifying section and language;
+2. compute the section's quantities **from the closed forms** (no data
+   files are read at this tier);
+3. print one `[PASS]`/`[FAIL]` line per assertion with the measured
+   residual;
+4. print exactly one machine-readable verdict line `JSON: {"section": N,
+   "language": "...", "values": {...}, "all_passed": true|false}`;
+5. exit `0` only if every assertion passed — CI fails otherwise.
 
-## 🔍 Sample output
+## Where this section lives across the matrix
 
-```text
-$ python3 verification/section6_riemann_zeros/python/verify.py
-=== Section 6 ===
-embedding compatible
-GUE class confirmed
-PASS
-```
+| Port | Location |
+|---|---|
+| Python reference | [`python/verify.py`](python/verify.py) (this directory) |
+| Lean 4 (formal) | [`../lean4/ResearchPapersVerification/Section6_RiemannZeros/`](../lean4/ResearchPapersVerification/Section6_RiemannZeros/README.md) |
+| Coq (formal) | [`../coq/`section6_riemann_zeros/README.md](../coq/section6_riemann_zeros/README.md) |
+| Isabelle (formal) | [`../isabelle/Section6_RiemannZeros/README.md`](../isabelle/Section6_RiemannZeros/README.md) |
+| Agda (formal) | [`../agda/Section6_RiemannZeros/README.md`](../agda/Section6_RiemannZeros/README.md) |
+| C++17 | [`../cpp/section6_riemann_zeros/README.md`](../cpp/section6_riemann_zeros/README.md) |
+| Rust | [`../rust/section6_riemann_zeros/README.md`](../rust/section6_riemann_zeros/README.md) |
+| Haskell | [`../haskell/Section6_RiemannZeros/README.md`](../haskell/Section6_RiemannZeros/README.md) |
+| Julia | `../julia_levels/` (`l6_…` for the chain sections) / the satellite `research_col_smar/code/julia` |
 
-## 🧩 The port family
+The same assertions are re-derived in every language of the matrix:
+four proof assistants machine-check the structural statements, and five
+computational toolchains recompute the numbers with five different
+rounding regimes. A reviewer diffs *mathematical content* across systems,
+not code style; any disagreement fails the cross-language validator in
+[`verification/tests/`](../tests/README.md).
 
-| Port | Where | Command | Time |
-|---|---|---|---|
-| Python (reference) | [`python/`](../../verification/section6_riemann_zeros/README.md) | `python3 verification/section6_riemann_zeros/python/verify.py` | < 1 s |
-| Lean 4 | [`lean4/`](../../verification/lean4/ResearchPapersVerification/Section6_RiemannZeros/README.md) | `lake build && lake exe check` | min (cached s) |
-| Coq | [`coq/`](../../verification/coq/section6_riemann_zeros/README.md) | `coqc verification/coq/section6_riemann_zeros/CorrectionB.v` | s |
-| Isabelle | [`isabelle/`](../../verification/isabelle/Section6_RiemannZeros/README.md) | `isabelle build -D verification/isabelle` | min (first) |
-| Agda | [`agda/`](../../verification/agda/Section6_RiemannZeros/README.md) | `agda --safe verification/agda/Section6_RiemannZeros/CorrectionB.agda` | s |
-| C++ | [`cpp/`](../../verification/cpp/section6_riemann_zeros/README.md) | `cmake -S verification/cpp -B build && ./build/section6_riemann_zeros` | < 1 s |
-| Rust | [`rust/`](../../verification/rust/section6_riemann_zeros/README.md) | `cargo run --release -p section6_riemann_zeros` | < 1 s |
-| Haskell | [`haskell/`](../../verification/haskell/Section6_RiemannZeros/README.md) | `cabal run section6-RiemannZeros` | < 1 s |
+## License
 
-Section 6 is the framework's outlook section: the Hilbert–Pólya programme is where the b-geometry and the spectral theory of the zeta function touch. The assertions here are scaffolding, not a proof of the Riemann hypothesis — they record exactly which structural facts the embedding needs, which is what makes an honest open problem auditable.
-
----
-
----
-
-Navigation: [repository root](../../README.md) · [framework hub](../README.md) · [section 6 peers](../../verification/README.md) · [IPL-RP-1.0](../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../../LICENSE.md)).

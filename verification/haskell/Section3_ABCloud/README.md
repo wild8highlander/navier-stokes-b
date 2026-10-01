@@ -1,85 +1,44 @@
-# Haskell · Section 3 — AB-Cloud
+# `Section3_ABCloud` — AB-Cloud — the Hofstadter Hamiltonian (Haskell)
 
-> **Navigation:** [`verification`](../../../verification/README.md) › **`Section3_ABCloud`**
+> **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [haskell](../README.md) › **section 3**
 
-![Haskell](https://img.shields.io/badge/Haskell-GHC_9.4-5E5086?style=flat-square&logo=haskell&logoColor=white) ![Section](https://img.shields.io/badge/Section-3-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Section](https://img.shields.io/badge/S3-2B579A?style=flat-square) ![Language](https://img.shields.io/badge/Haskell_·_GHC_9.4-5e5075-informational?style=flat-square) ![Contract](https://img.shields.io/badge/PASS_%2B_JSON-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The **Haskell port of Section 3** — AB-Cloud — the Non-Hermitian Hofstadter Hamiltonian. This folder is
-a **pure Haskell (GHC 9.4) executable** in its own Cabal package. The section contract is expressed as types and pure functions — no `unsafe`, no FFI — making the port readable as an executable specification.
+---
 
-## 🔬 Section context — where this port sits
+**What this port recomputes:** Hermiticity and trace zero of the flux-lattice Hamiltonian, the butterfly slice identities `Σ E_j = −2`, `Σ E_j² = 2q − 4`, and the framework-constant cross-link.
 
-**Where it sits.** Section 3 of the framework covers **the structural core of the AB-Cloud Hamiltonian at reduced scale: the presuppositions of the heavy spectral statistics**. Its
-central quantities are the Peierls phase e^{2πi/7}, the flux-quantisation lattice, and the GUE-class spacing statistics. The same assertions exist in every
-peer language of the matrix, each in its own idiom: [Python](../../../verification/section3_ab_cloud/README.md) · [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section3_ABCloud/README.md) · [Coq/Rocq](../../../verification/coq/section3_ab_cloud/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section3_ABCloud/README.md) · [Agda](../../../verification/agda/Section3_ABCloud/README.md) · [C++](../../../verification/cpp/section3_ab_cloud/README.md) · [Rust](../../../verification/rust/section3_ab_cloud/README.md). Agreement
-between all ports is enforced by the cross-language validator
-([`tests/`](../../../verification/tests/README.md)) and fails CI on any
-disagreement.
+The claims are *defined* by the Python reference port
+([`verification/section3_ab_cloud/python/verify.py`](../../verification/section3_ab_cloud/python/README.md));
+this Haskell binary must reproduce the same verdict — same
+assertions, same tolerances, different arithmetic and toolchain. Any
+disagreement is a CI failure by construction.
 
-**What you will see.** Run this port and you get: a banner identifying the
-section and language; the computed values at full precision; one
-`[PASS]`/`[FAIL]` line per assertion; and a final
-`JSON: {"section": 3, "language": "haskell", "values": {…}, "all_passed": …}`
-verdict line. Exit status is 0 only when every assertion passed.
-
-## 📂 Contents
-
-| File | Description |
-|---|---|
-| [`src/Main.hs`](src/Main.hs) | the section 3 port — AB-Cloud — the Non-Hermitian Hofstadter Hamiltonian |
-| [`Section3_ABCloud.cabal`](Section3_ABCloud.cabal) | the crate/package manifest |
-
-## ▶️ How to run
+## How to build & run
 
 ```bash
-cd verification/haskell
-cabal build                                  # all six packages
-cabal run section3-ab-cloud               # this section
+cd verification/haskell && cabal build all
+
+cabal run verify_section3_ab_cloud
 ```
 
-## 📋 What is asserted
+## Files
 
-1. **Peierls phase** — |e^{2πi/7}| = 1 and the phase has exact order 7;
-2. **flux quantisation** — the flux per plaquette is quantised in units of the flux quantum — the Hamiltonian is well defined on the lattice;
-3. **Hermiticity and symmetry classes** — the reduced Hamiltonian has the declared symmetry class and the GUE spacing statistic is normalised.
+| File | Role |
+|---|---|
+| `Main.hs` | the Haskell port of section 3 |
+| `src/README.md` | notes on the source module |
+| `Cargo.toml` / `.cabal` | the build manifest |
 
-## 🔍 Sample output
+Every port follows the repository-wide output contract: banner → compute
+from the closed forms (no data files) → one `[PASS]`/`[FAIL]` line per
+assertion with the measured residual → exactly one `JSON: {"section": N,
+"language": "...", "values": {...}, "all_passed": bool}` verdict line →
+exit `0` only if everything passed. The cross-language validator in
+[`verification/tests/`](../tests/README.md) (or
+[`../..`](../tests/README.md) from nested directories) fails CI on any
+disagreement between ports.
 
-```text
-$ cd verification/haskell
-=== Section 3 ===
-|phase| = 1.0, order = 7
-flux quantised
-PASS
-```
+## License
 
-## 🧩 The port family
-
-| Port | Where | Command | Time |
-|---|---|---|---|
-| Python (reference) | [`python/`](../../../verification/section3_ab_cloud/README.md) | `python3 verification/section3_ab_cloud/python/verify.py` | < 1 s |
-| Lean 4 | [`lean4/`](../../../verification/lean4/ResearchPapersVerification/Section3_ABCloud/README.md) | `lake build && lake exe check` | min (cached s) |
-| Coq | [`coq/`](../../../verification/coq/section3_ab_cloud/README.md) | `coqc verification/coq/section3_ab_cloud/CorrectionB.v` | s |
-| Isabelle | [`isabelle/`](../../../verification/isabelle/Section3_ABCloud/README.md) | `isabelle build -D verification/isabelle` | min (first) |
-| Agda | [`agda/`](../../../verification/agda/Section3_ABCloud/README.md) | `agda --safe verification/agda/Section3_ABCloud/CorrectionB.agda` | s |
-| C++ | [`cpp/`](../../../verification/cpp/section3_ab_cloud/README.md) | `cmake -S verification/cpp -B build && ./build/section3_ab_cloud` | < 1 s |
-| Rust | [`rust/`](../../../verification/rust/section3_ab_cloud/README.md) | `cargo run --release -p section3_ab_cloud` | < 1 s |
-| Haskell | [`haskell/`](../../../verification/haskell/Section3_ABCloud/README.md) | `cabal run section3-ABCloud` | < 1 s |
-
-Section 3 carries the structural skeleton of the AB-Cloud program: the identities that the heavy statistics elsewhere rely on, checked at a scale small enough to audit by eye. Its assertions are deliberately elementary — their value is that they are presuppositions, and a broken presupposition must be visible long before the statistics that consume it.
-
-## 🔗 Cross-references
-
-- [Section 3 reference port](../../../verification/section3_ab_cloud/README.md)
-- [Framework hub](../../../verification/README.md)
-- [Gap ledger (Lean 4)](../../../verification/lean4/TODO_sorry.md) — which
-  formal lemmas are admitted gaps
-
----
-
----
-
-Navigation: [repository root](../../../README.md) · [haskell](../../../verification/haskell/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../LICENSE.md)).

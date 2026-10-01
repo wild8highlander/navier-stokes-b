@@ -6,3 +6,4 @@ section3_ab_cloud/Hofstadter.v
 section4_kdv/KdV.v
 section5_klein_attractor/Klein.v
 section6_riemann_zeros/RiemannZeros.v
+section7_smagorinsky/MasterRelation.v

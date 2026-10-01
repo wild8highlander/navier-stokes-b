@@ -7,6 +7,7 @@ members = [
     "section4_kdv",
     "section5_klein_attractor",
     "section6_riemann_zeros",
+    "section7_smagorinsky_kolmogorov",
 ]
 
 [workspace.package]

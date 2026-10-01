@@ -1,34 +1,17 @@
-# 🎩 `haskell/…/Section6_RiemannZeros/src/` — the Executable Source
+# `Section6_RiemannZeros/src/` — the Haskell module of section 6
 
-> **Navigation:** [`haskell`](../../README.md) › [`Section6_RiemannZeros`](../README.md) › **`src`**
+> **Navigation:** [repository root](../../../README.md) › [verification](../../../verification/README.md) › [haskell](../../README.md) › [`Section6_RiemannZeros`](../README.md) › **`src/`**
 
-![Haskell](https://img.shields.io/badge/Haskell-GHC_9.4-5E5086?style=flat-square&logo=haskell&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
-
-The **`Main.hs` of the Section 6 Haskell port** — Riemann Zeros — the Hilbert–Pólya Programme. One pure
-module: it computes the section's quantities from closed forms, asserts the
-properties via `printf`-formatted PASS/FAIL lines at 15-digit precision,
-and emits the framework's `JSON:` verdict.
-
-| File | Description |
-|---|---|
-| [`Main.hs`](Main.hs) | the executable's single module — the section contract as types and pure functions |
-
-## Run
-
-```bash
-cd verification/haskell
-cabal run section6-riemann-zeros
-```
-
-No `unsafe`, no FFI — the file is readable end-to-end in one sitting, which
-is the point of the Haskell witness. Peers of this port:
-[Python](../../../section6_riemann_zeros/README.md) · [Lean 4](../../../lean4/ResearchPapersVerification/Section6_RiemannZeros/README.md) · [Coq/Rocq](../../../coq/section6_riemann_zeros/README.md) · [Isabelle-HOL](../../../isabelle/Section6_RiemannZeros/README.md) · [Agda](../../../agda/Section6_RiemannZeros/README.md) · [C++](../../../cpp/section6_riemann_zeros/README.md) · [Rust](../../../rust/section6_riemann_zeros/README.md).
+![Module](https://img.shields.io/badge/Main.hs-informational?style=flat-square) ![Purity](https://img.shields.io/badge/pure_·_total-5e5075?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
 ---
 
----
+`Main.hs` is the complete port: pure numerical functions, an IO wrapper
+that prints the contract output, and exact `Integer` arithmetic wherever
+the claim demands it (Fibonacci, Cassini, the closed forms). The verdict
+must agree with the Python reference
+[`verification/section6_riemann_zeros/python/verify.py`](../../verification/section6_riemann_zeros/python/README.md).
 
-Navigation: [section 6](../README.md) · [haskell layer](../../README.md) · [IPL-RP-1.0](../../../../LICENSE.md)
+## License
 
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../../LICENSE.md)).

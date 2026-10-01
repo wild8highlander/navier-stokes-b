@@ -60,16 +60,17 @@ an Android phone (Termux) in roughly fifteen minutes.
 3. [The master relation and its derivation chain](#3-the-master-relation-and-its-derivation-chain)
 4. [The executed program P1–P5](#4-the-executed-program-p1p5)
 5. [Headline results (all pinned, all reproducible)](#5-headline-results-all-pinned-all-reproducible)
-6. [Three-language verification](#6-three-language-verification)
-7. [Repository layout](#7-repository-layout)
-8. [How to run everything](#8-how-to-run-everything)
-9. [The monograph (RU / EN, PDF / DOCX)](#9-the-monograph-ru--en-pdf--docx)
-10. [Figures](#10-figures)
-11. [Conventions, normalizations and the factor-2 trap](#11-conventions-normalizations-and-the-factor-2-trap)
-12. [Results integrity and manifests](#12-results-integrity-and-manifests)
-13. [Frequently asked questions](#13-frequently-asked-questions)
-14. [Relation to the parent b-correction program](#14-relation-to-the-parent-b-correction-program)
-15. [License and citation](#15-license-and-citation)
+6. [The NSB-96 laboratory suite (tools · results · reports)](#6-the-nsb-96-laboratory-suite-tools--results--reports)
+7. [Three-language verification and the Section-7 bridge](#7-three-language-verification-and-the-section-7-bridge)
+8. [Repository layout](#8-repository-layout)
+9. [How to run everything](#9-how-to-run-everything)
+10. [The monograph (RU / EN, PDF / DOCX)](#10-the-monograph-ru--en-pdf--docx)
+11. [Figures](#11-figures)
+12. [Conventions, normalizations and the factor-2 trap](#12-conventions-normalizations-and-the-factor-2-trap)
+13. [Results integrity and manifests](#13-results-integrity-and-manifests)
+14. [Frequently asked questions](#14-frequently-asked-questions)
+15. [Relation to the parent b-correction program](#15-relation-to-the-parent-b-correction-program)
+16. [License and citation](#16-license-and-citation)
 
 ---
 
@@ -360,7 +361,46 @@ Every classical regularity criterion (LPS, BKM, ε-regularity proxies) is
 satisfied with wide margins on the computed horizon; the monograph (ch. 12)
 discusses what a numerical certificate can and cannot establish.
 
-## 6. Three-language verification
+## 6. The NSB-96 laboratory suite (tools · results · reports)
+
+Since the **NSB-96-UPGRADE** package (2026-09-30 … 2026-10-01), the
+program is stress-tested by a second, laboratory-style execution layer:
+
+- **[`tools/`](tools/README.md)** — the single-file laboratories
+  (`nsb_lab.py` and its Julia/C++ twins, the launcher `nsb_lab.sh`, and
+  `nsb_extra_research.py`/`.jl`): **L1–L8** re-execute the headline
+  protocol at 96³ and 112³, verify the algebra on 112×112 matrices,
+  benchmark the improved KdV complex against the exact Hirota solution,
+  and match configurations against each other; **L9–L10** produce the
+  figures and the aggregate reports; **L11–L17** extend the program with
+  intermittency statistics, the spectral-flux cascade, the
+  hyperdissipative KdV family, self-convergence scans, and the
+  independent **φ-attractor monograph audit**.
+- **[`results/`](results/README.md) + [`reference/`](reference/README.md)**
+  — the pinned records: per-run JSON verdicts and verdict CSVs
+  (`results/results/`, with `*_latest.json` pointers) and the heavy
+  reference states and curves (`reference/` — the 96³ state, the BKM
+  time series, the regularity certificate, the monograph extracts).
+- **[`reports/`](reports/README.md)** — the human-readable layer:
+  `NSB_LAB_REPORT.md` (L1–L8: **WIN 39 · DRAW 2 · LOSS 0**),
+  `EXTRA_RESEARCH_REPORT.md` (L11–L17: **28 WIN · 5 DRAW · 2 LOSS**),
+  `PHI_MONOGRAPH_AUDIT.md` and `PHI_FORMULA_FIXES.md` (the audited
+  corrections I1–I4, ready for insertion).
+
+The aggregate scoreboard of the thirteen laboratories is
+**67 WIN · 7 DRAW · 2 LOSS** — the two losses are the documented
+corrections to the φ-monograph's oscillation formulas, and the corrected
+life-time estimate strengthens that monograph's conclusion. Reproduce
+everything with:
+
+```bash
+python3 tools/nsb_lab.py --run all                 # L1–L10 (~10 min)
+python3 tools/nsb_extra_research.py --run all      # L11–L17 (~10 min)
+julia   tools/nsb_extra_research.jl phi17          # the Julia φ-cross-check
+```
+
+## 7. Three-language verification and the Section-7 bridge
+
 
 The analytical core is deliberately small (a handful of formulas), so it
 is re-implemented **three times** and the outputs must agree:
@@ -397,7 +437,32 @@ The C++ track uses `long double` where precision matters; the Julia track
 uses no external packages at all (the JSON writer is hand-rolled), so it
 runs on a bare Julia installation — including Termux.
 
-## 7. Repository layout
+### The Section-7 bridge into the parent framework
+
+The verification bridge into the parent eleven-language framework is
+[`verification/section7_smagorinsky_kolmogorov/`](../../verification/section7_smagorinsky_kolmogorov/README.md)
+(reference port `python/verify.py`, ports in C++, Rust, Haskell, Julia
+and four proof assistants). It re-derives, under the standard output
+contract:
+
+- the **master relation at 50 digits** (mpmath) and the float64 parity
+  with the pinned `0.1732659558297058017568595667273903913207704…`;
+- the **agreement with Lilly** (`|C_s − 0.17326| < 1e-5`, measured
+  `5.96×10⁻⁶`);
+- the **exact −3/4 exponent law** (`C_s(a·C_K)/C_s(C_K) = a^(−3/4)` to
+  2.2×10⁻¹⁶) and the monotonicity of `C_s` in `C_K`;
+- the **Cassini identity** (exact integers, k = 0..40) and the **(5′)
+  coefficient algebra** of the φ-audit: `a·b·b·c` sign-definite (18/18
+  scans — no zero-drift root at any scale), `a·a·b·b` degenerate;
+- the **symmetry theorem**: the scale-similarity numerator is
+  identically zero on x-mirror-symmetric circulations (parity argument,
+  `|N| ≤ 3.7×10⁻¹⁶` on the 32×32 test grid);
+- the **K41 slope** check of the model spectrum.
+
+This is what makes the satellite a *first-class citizen* of the
+repository's verification matrix rather than a side directory.
+
+## 8. Repository layout
 
 ```text
 research_col_smar/
@@ -456,7 +521,7 @@ research_col_smar/
 
 Every directory carries its own README with file-level documentation.
 
-## 8. How to run everything
+## 9. How to run everything
 
 ### 8.1 Python track (the full program: P1–P5 + figures)
 
@@ -543,7 +608,7 @@ Notes for Termux:
 | Julia track | 10 s | 40 s |
 | figures (both languages) | 25 s | 90 s |
 
-## 9. The monograph (RU / EN, PDF / DOCX)
+## 10. The monograph (RU / EN, PDF / DOCX)
 
 The book-length treatment of this program ships in this directory in two
 languages and two formats:
@@ -581,7 +646,7 @@ numbers, tables, figures and chapter structure are identical; only the
 language differs. The PDF is the citable edition; the DOCX is kept in
 sync for editing.
 
-## 10. Figures
+## 11. Figures
 
 Ten figures per language edition (300 dpi PNG, palette-consistent with
 the monograph), all generated by `code/python/figures.py`:
@@ -599,7 +664,7 @@ the monograph), all generated by `code/python/figures.py`:
 | `fig9_bfamily.png` | P5: shell dissipation of the b-family + the `k_d·η_b` vs `x*(b)` collapse |
 | `fig10_certificate.png` | P5: the exponential tail fits and the smoothness-certificate quality |
 
-## 11. Conventions, normalizations and the factor-2 trap
+## 12. Conventions, normalizations and the factor-2 trap
 
 Turbulence spectra have a notorious convention trap that silently
 corrupts constant-fitting by a factor of 2^(3/4) ≈ 1.68. This program
@@ -638,7 +703,7 @@ yields `C_s = 0.29` instead of `0.17` — a 70 % error with no arithmetic
 mistake anywhere. The pinned protocols in `results/` record the
 convention next to every number.
 
-## 12. Results integrity and manifests
+## 13. Results integrity and manifests
 
 * Every program writes a **JSON protocol** containing: full parameters,
   the convention statement, all headline numbers, per-sample rows, and the
@@ -660,7 +725,7 @@ convention next to every number.
   or regenerating results, refresh it with
   `python3 .github/scripts/regen_manifest.py` from the repository root.
 
-## 13. Frequently asked questions
+## 14. Frequently asked questions
 
 **Q1. Is the master relation `C_s = 1/(π(3C_K/2)^{3/4})` a new result?**
 The derivation is classical in spirit — it is the matching argument that
@@ -717,7 +782,7 @@ This directory inherits the repository license IPL-RP-1.0 (see
 §15). Code may be read, executed and verified; the standard terms of the
 parent repository apply without modification.
 
-## 14. Relation to the parent b-correction program
+## 15. Relation to the parent b-correction program
 
 The parent repository ([`navier-stokes-b`](../README.md)) is built around
 a universal polarization correction `b = 1/(4π + 2√3)` — an
@@ -744,7 +809,7 @@ inertial-range statistics. The monograph (ch. 11) reads the two
 constructions against each other and asks what the parallel says about
 the structure of the equation.
 
-## 15. License and citation
+## 16. License and citation
 
 This directory is part of **navier-stokes-b** and inherits the repository
 license **IPL-RP-1.0** ([LICENSE.md](../LICENSE.md), Russian text:

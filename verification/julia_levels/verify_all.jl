@@ -9,6 +9,8 @@ include(joinpath(@__DIR__, "l2_rotation_algebra.jl"))
 include(joinpath(@__DIR__, "l3_kirchhoff_vortices.jl"))
 include(joinpath(@__DIR__, "l4_nse_2d.jl"))
 include(joinpath(@__DIR__, "l5_nse_3d_bkm.jl"))
+include(joinpath(@__DIR__, "l7_smagorinsky_kolmogorov.jl"))
+include(joinpath(@__DIR__, "l7_smagorinsky_kolmogorov.jl"))
 
 function main()
     t0 = time()
@@ -23,6 +25,7 @@ function main()
     else
         r["L5"] = run_l5()
     end
+    r["L7"] = run_l7()
     println("=" ^ 50)
     for k in sort(collect(keys(r)))
         v = r[k]

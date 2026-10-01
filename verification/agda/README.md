@@ -1,122 +1,51 @@
-# Ⓜ️ `agda/` — the Agda Formal Verification Layer
+# `agda/` — the Agda formal tier
 
-> **Navigation:** [`verification`](../README.md) › **`agda`**
+> **Navigation:** [repository root](../README.md) › [verification](../README.md) › **`agda`**
 
-![Agda](https://img.shields.io/badge/Agda-2.6-CB6BA7?style=flat-square&logo=agda&logoColor=white)
-![Sections](https://img.shields.io/badge/Sections-6-9558B2?style=flat-square)
-![Safe](https://img.shields.io/badge/Flags---safe-2EA043?style=flat-square)
-![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
-
-This directory carries the **Agda (2.6) formal-verification layer**: a
-dependently-typed, constructive development with one module per research
-section, compiled with `--safe`. Agda's contribution to the framework is
-the **minimal trust base** made literal: π and √3 are explicit
-`postulate`s rather than library imports, so the axioms a reader must
-accept are visible in the first lines of each file — an honest, two-line
-trust base beats an implicit one.
-
-The modules define `b-correction` as a rational-expression division over
-`Data.Rational`, carry the postulated positivity/bound lemmas (`b-pos`,
-`b-lt-one`), and develop the per-section constructions (the PSL(2,7) proof
-chain in Section 2, Hofstadter scaffolding in Section 3, and so on). The
-[`agda.agda-lib`](agda.agda-lib) file registers the include roots so
-`agda` resolves the `SectionN_*` modules from anywhere.
-
-Check any module with `agda Section1_CorrectionB/CorrectionB.agda` (with
-`--safe` for the CI configuration). CI type-checks the modules in the
-extended-languages workflow.
-
-## The six section ports
-
-| Port | Module | Notes |
-|---|---|---|
-| [Section 1](Section1_CorrectionB/README.md) | `Section1_CorrectionB/CorrectionB.agda` | π and √3 postulated explicitly |
-| [Section 2](Section2_PreprintNSE/README.md) | `Section2_PreprintNSE/ProofChain.agda` | the chain as an indexed structure |
-| [Section 3](Section3_ABCloud/README.md) | `Section3_ABCloud/Hofstadter.agda` | flux structure as inductive data |
-| [Section 4](Section4_KdV/README.md) | `Section4_KdV/KdV.agda` | conservation as type-level identity |
-| [Section 5](Section5_KleinAttractor/README.md) | `Section5_KleinAttractor/Klein.agda` | contraction statements |
-| [Section 6](Section6_RiemannZeros/README.md) | `Section6_RiemannZeros/RiemannZeros.agda` | embedding compatibility |
-
-## Contents
-
-| File | Description |
-|---|---|
-| [`agda.agda-lib`](agda.agda-lib) | library file — include roots and module list |
-| `Section1_CorrectionB/` … `Section6_RiemannZeros/` | the six modules, each with its `.agda` file and README |
-
-## How to run
-
-```bash
-cd verification/agda
-agda --safe Section1_CorrectionB/CorrectionB.agda     # one module
-# or, all modules in dependency order:
-agda --safe Section6_RiemannZeros/RiemannZeros.agda
-```
-
-Run from the repository root or set the include path per
-`agda.agda-lib`. Without installing Agda, use the pinned image
-([`docker/agda/`](../docker/README.md)) or the CI job, which compiles
-every module with `--safe` on each push.
-
-## 🔬 What Agda proves about the trust base
-
-Because π and √3 are the **only** postulates, everything else in the Agda
-development is *constructed* — including the order relations and the
-algebraic identities the other systems take from their standard libraries.
-Reading the Agda files is therefore the fastest way to see exactly which
-properties of π and √3 the whole framework's formal layer actually needs:
-read the postulate block, and you have enumerated the formal trust base.
-This is the same honesty policy that keeps the Lean gap ledger public —
-the framework's contract with its reader is that trust is always
-enumerable, never ambient.
-
-The constructive idiom also has a practical consequence: where a classical
-development might prove a disjunction by excluded middle, the Agda modules
-carry the constructive content (witnesses, not just existence), which
-occasionally sharpens the statements themselves.
-
-## 🔗 See also
-
-- [the framework hub](../README.md) — the two-tier picture and the
-  contract;
-- [`lean4/`](../lean4/README.md) — the primary formal development;
-- [`coq/`](../coq/README.md) · [`isabelle/`](../isabelle/README.md) — the
-  other kernels;
-- [`docker/agda/`](../docker/README.md) — the pinned toolchain image.
-
-
-## The postulate block, precisely
-
-Every section module opens with the same two-line trust base:
-
-- `postulate π : ℝ` with the positivity/order properties the development
-  actually uses;
-- `postulate √3 : ℝ` likewise.
-
-That is the entire axiom set. Everything else — the rational arithmetic,
-the order relations, the algebraic identities — is constructed. This is
-why the Agda folder is the fastest read in the formal tier: the postulate
-block *is* the framework's formal trust base, enumerated.
-
-## Compilation flags and what they buy
-
-`--safe` disables unsafe pragmas — a module that compiled with `--safe`
-cannot have switched off the termination or positivity checkers. CI
-compiles with `--safe` for exactly this reason; a local build without the
-flag is fine for exploration but proves nothing.
-
-## Where Agda is the right witness
-
-| Question | Best answered by | Why |
-|---|---|---|
-| what does the formal layer assume? | Agda | the postulate block enumerates it |
-| is the statement constructive? | Agda | witnesses are extracted by construction |
-| is the proof classical-routine? | Coq | `lra` closes it — routine is signal too |
-| is the statement faithful to the paper? | Isabelle | Isar blocks read like the paper |
-| is everything integrated? | Lean | the aggregator + the gap ledger |
+![Language](https://img.shields.io/badge/Agda_2.6_·_constructive-red-informational?style=flat-square) ![Tier](https://img.shields.io/badge/1_·_Formal-blue?style=flat-square) ![Contract](https://img.shields.io/badge/lemmas_·_ledger-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
 ---
 
-Navigation: [verification](../README.md) · [repository root](../../README.md) · [IPL-RP-1.0](../../LICENSE.md)
+The Agda tree is the constructive, dependently-typed corner of the framework: the trust base is made *literal* — π and √3 are explicit `postulate`s, everything else is constructed from them. Section 7 (`Section7_SmagorinskyKolmogorov/MasterRelation.agda`) constructs the Fibonacci recurrence, the a·a·b·b degeneracy (all three (5′) coefficients vanish, no gaps) and declares the Cassini sign induction as the port's single trust-base postulate — closed by full induction in the Lean/Coq/Isabelle ports and numerically in every computational port.
 
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) — © 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
+## Toolchain
+
+Agda 2.6 with the standard library, `--safe`
+
+## Build
+
+```bash
+cd verification/agda
+agda --safe Section1_CorrectionB/CorrectionB.agda
+```
+
+## Module map
+
+| Directory | Section | Content |
+|---|---|---|
+| [`Section1_CorrectionB/`](Section1_CorrectionB/README.md) | S1 — Correction b | machine-checked: the closed form, the range 0 < b < 1, sin θ_b = b, the Rodrigues algebra, energy neutrality |
+| [`Section2_PreprintNSE/`](Section2_PreprintNSE/README.md) | S2 — Preprint NSE | machine-checked: twist unitarity, the Leray premise (zero energy injection), the BKM bridge |
+| [`Section3_ABCloud/`](Section3_ABCloud/README.md) | S3 — AB-Cloud | machine-checked: flux quantisation, Hermiticity and trace zero, butterfly slice identities |
+| [`Section4_KdV/`](Section4_KdV/README.md) | S4 — KdV | machine-checked: the soliton ODE at machine zero, u_max = c/2, width ∝ 1/√c |
+| [`Section5_KleinAttractor/`](Section5_KleinAttractor/README.md) | S5 — Klein attractor | machine-checked: orbit density, isometry at every iterate, the Niven-set irrationality |
+| [`Section6_RiemannZeros/`](Section6_RiemannZeros/README.md) | S6 — Riemann zeros | machine-checked: ζ special values, ξ(s) = ξ(1−s), annihilation at the first zero |
+| [`Section7_SmagorinskyKolmogorov/`](Section7_SmagorinskyKolmogorov/README.md) | S7 — Smagorinsky–Kolmogorov | machine-checked: C_s = 1/(π(3C_K/2)^{3/4}) at 50 digits, the −3/4 exponent law, Cassini, the (5′) coefficient algebra |
+
+
+## The verification contract (formal mirror)
+
+The formal tier mirrors the computational output contract with *lemma
+names* instead of `[PASS]` lines: every claim of a section appears as a
+named lemma, the numeric constants appear as `def`s or `Compute`d values,
+and the admitted statements are public in the gap ledger. Nothing is
+hidden behind unconditional assumptions — the trust base is enumerable.
+
+## Cross-language matrix
+
+![Lean_4](https://img.shields.io/badge/S1%E2%80%93S7-2B579A?style=flat-square) ![Coq](https://img.shields.io/badge/S1%E2%80%93S7-2B579A?style=flat-square) ![Isabelle](https://img.shields.io/badge/S1%E2%80%93S7-2B579A?style=flat-square) ![Agda](https://img.shields.io/badge/S1%E2%80%93S7-2B579A?style=flat-square)
+The same assertions are proved in all four kernels; any structural
+disagreement is a CI failure by construction.
+
+## License
+
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../LICENSE.md)).

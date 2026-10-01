@@ -19,6 +19,18 @@ favicon.
 | [`logo.svg`](logo.svg) | square mark (512×512) | root README footer, GitHub social previews |
 | [`banner.svg`](banner.svg) | hero banner (1600×400) | root README header, the Pages site header |
 | [`favicon.svg`](favicon.svg) | compact mark (64×64) | [`site/`](../site/README.md) favicon |
+| [`social-preview.png`](social-preview.png) | the 1280×640 raster social card | GitHub repository settings → Social preview |
+
+## The data-figure galleries (new)
+
+Two subdirectories carry the **referenced figure layer** of the
+documentation — the academic figure set and the physics animations
+embedded across the READMEs:
+
+| Gallery | Content | Documentation |
+|---|---|---|
+| [`figures/`](figures/README.md) | **11 academic figures at 300 dpi** — the anatomy of b, the Rodrigues geometry, the headline residuals, the NSB-96 scoreboard, the master relation, the verification matrix, the program timeline, the KdV b-family, the L16 convergence, the P6 universality, the BKM protocol | every number from a pinned protocol |
+| [`animations/`](animations/README.md) | **4 physics GIF animations** — the stepwise b-rotation, the exact Hirota two-soliton collision, the Taylor–Green decay (real pseudo-spectral solver), the E(k, t) cascade | illustrative physics, deterministic seeds |
 
 ## Design notes
 

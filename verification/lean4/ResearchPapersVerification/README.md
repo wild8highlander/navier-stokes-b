@@ -1,44 +1,29 @@
-# Ⓜ️ `lean4/ResearchPapersVerification/` — the Lean Proof Library
+# `ResearchPapersVerification/` — the Lean 4 package
 
-> **Navigation:** [`lean4`](../../README.md) › **`ResearchPapersVerification`**
+> **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [lean4](../README.md) › **`ResearchPapersVerification`**
 
-![Lean 4](https://img.shields.io/badge/Lean%204-v4.14-1284BA?style=flat-square&logo=leanpub&logoColor=white)
-![Modules](https://img.shields.io/badge/Modules-9-9558B2?style=flat-square) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
-
-The **`ResearchPapersVerification` library** — the Lean package that holds
-the entire formal development: the aggregator module, the common
-foundation, and the six per-section modules. Everything under
-[`verification/lean4/`](../../README.md) that is not build plumbing lives
-here.
-
-## Module map
-
-| Module | Section | Contents |
-|---|---|---|
-| [`Common/`](Common/README.md) | — | `Foundation.lean`: the constant, the angle, the cross matrix, the shared lemmas |
-| [`Section1_CorrectionB/`](Section1_CorrectionB/README.md) | 1 | the rotation algebra, the sine identity |
-| [`Section2_PreprintNSE/`](Section2_PreprintNSE/README.md) | 2 | the regularity chain scaffolding |
-| [`Section3_ABCloud/`](Section3_ABCloud/README.md) | 3 | the Hofstadter structure lemmas |
-| [`Section4_KdV/`](Section4_KdV/README.md) | 4 | the soliton interaction identities |
-| [`Section5_KleinAttractor/`](Section5_KleinAttractor/README.md) | 5 | the attractor structural facts |
-| [`Section6_RiemannZeros/`](Section6_RiemannZeros/README.md) | 6 | the embedding compatibility |
-| [`Basic.lean`](Basic.lean) | — | the aggregator — imports all sections |
-
-## Build
-
-```bash
-cd verification/lean4 && lake build && lake exe check
-```
-
-Per-file status (closed lemmas vs `sorry` vs axiom) is tracked in
-[`TODO_sorry.md`](../TODO_sorry.md) — the ledger is the module map's
-second dimension.
+![Kernel](https://img.shields.io/badge/Lean_4_·_Mathlib4-informational?style=flat-square) ![Modules](https://img.shields.io/badge/8-2B579A?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
 ---
 
----
+The Lean library root: `Basic.lean` imports every section module and
+exposes the `totalVerifiedTheorems` counter; `Common/Foundation.lean`
+carries the shared foundation (the constant, its pinned digits, the
+common lemmas). Section 7 (`Section7_SmagorinskyKolmogorov/Basic.lean`)
+adds the master-relation positivity, the Fibonacci scaffolding and the
+(5′) coefficient algebra of the φ-audit.
 
-Navigation: [lean4](../../README.md) · [gap ledger](../TODO_sorry.md) · [framework hub](../../../verification/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
+| Module | Section |
+|---|---|
+| [`Common/`](Common/README.md) | the shared foundation |
+| [`Section1_CorrectionB/`](Section1_CorrectionB/README.md) | S1 — the constant |
+| [`Section2_PreprintNSE/`](Section2_PreprintNSE/README.md) | S2 — the regularity chain |
+| [`Section3_ABCloud/`](Section3_ABCloud/README.md) | S3 — the Hofstadter Hamiltonian |
+| [`Section4_KdV/`](Section4_KdV/README.md) | S4 — KdV |
+| [`Section5_KleinAttractor/`](Section5_KleinAttractor/README.md) | S5 — the Klein attractor |
+| [`Section6_RiemannZeros/`](Section6_RiemannZeros/README.md) | S6 — the Riemann zeros |
+| [`Section7_SmagorinskyKolmogorov/`](Section7_SmagorinskyKolmogorov/README.md) | S7 — the master relation (new) |
 
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
+## License
 
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../LICENSE.md)).

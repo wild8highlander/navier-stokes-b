@@ -7,3 +7,4 @@ session "ResearchPapersVerification" = HOL +
     "Section4_KdV/KdV"
     "Section5_KleinAttractor/Klein"
     "Section6_RiemannZeros/RiemannZeros"
+    "Section7_SmagorinskyKolmogorov/MasterRelation"

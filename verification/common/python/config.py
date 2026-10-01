@@ -14,6 +14,7 @@ SECTION_NAMES = {
     4: "KdV & b-Correction",
     5: "Klein Attractor & NS Bridge",
     6: "AB-Cloud / Riemann Zeros",
+    7: "Smagorinsky-Kolmogorov Master Relation",
 }
 
 def get_config(section_id=1, preset="default"):

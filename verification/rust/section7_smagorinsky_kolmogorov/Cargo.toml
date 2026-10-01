@@ -1,0 +1,10 @@
+[package]
+name = "section7_smagorinsky_kolmogorov"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "verify_section7"
+path = "src/main.rs"
+
+[workspace]

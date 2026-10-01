@@ -1,52 +1,45 @@
-# 🌐 `verification/api/` — the REST Verification API
+# `api/` — the verification REST API
 
-> **Navigation:** [`verification`](../README.md) › **`api`**
+> **Navigation:** [repository root](../README.md) › [verification](../README.md) › **`api`**
 
-![Type](https://img.shields.io/badge/Type-REST_API-6BA539?style=flat-square)
-![Framework](https://img.shields.io/badge/Framework-Flask-000000?style=flat-square&logo=flask&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Service](https://img.shields.io/badge/FastAPI-009485?style=flat-square) ![Contract](https://img.shields.io/badge/same_PASS_%2F_JSON-FF8C00?style=flat-square) ![Sections](https://img.shields.io/badge/1%E2%80%937-2B579A?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-A **REST API wrapper** around the verification framework:
-[`server.py`](server.py) (Flask) exposes the section verifiers over HTTP so
-audits can be scripted from any language or CI job without installing the
-toolchains locally. Each endpoint runs the corresponding verifier, captures
-its PASS ledger and JSON verdict, and returns them as a structured response
-— the exact same contract the CLI ports print to the console.
+---
 
-## Contents
+The API exposes every section verifier over HTTP with the same PASS/JSON
+contract the CLI uses — so monitoring jobs, CI pipelines and reviewers can
+audit from any language without installing the toolchains.
 
-| File | Description |
+## Endpoints
+
+| Endpoint | Effect |
 |---|---|
-| [`server.py`](server.py) | the Flask application — section endpoints returning PASS ledgers + JSON verdicts |
-| [`requirements.txt`](requirements.txt) | pinned Python dependencies for the API service |
+| `GET /api/sections` | the list of section ids (1–7) |
+| `GET /api/verify/{section_id}` | **actually executes** the section's Python verifier in a subprocess and returns the parsed verdict plus the full stdout; unknown id → 404; verifier timeout → 504 |
+| `GET /api/constant` | the constant `b` and its derived angles, recomputed on the fly |
 
-## How to run
+A failing *verdict* is still a working *API*: the endpoint returns
+`all_passed: false` with HTTP 200, because the audit question was answered.
+
+## Run
 
 ```bash
-pip install -r verification/api/requirements.txt
-python verification/api/server.py
-# then query the section endpoints over HTTP:
-curl http://127.0.0.1:5000/section/1
+pip install -r requirements.txt
+uvicorn server:app --host 0.0.0.0 --port 8000
+# then: curl http://localhost:8000/api/verify/7
 ```
 
-The response contains the section number, the computed values and the
-`all_passed` flag, so a monitoring job can assert on it directly. The API
-reuses [`common/`](../common/README.md) for the verifier protocol and is
-bootstrapped by [`scripts/start_api.sh`](../scripts/README.md).
+`start_api.sh` in [`../scripts/`](../scripts/README.md) wraps the same
+launch; the docker image [`../docker/`](../docker/README.md) pins the
+environment.
 
-## Use cases
+## Files
 
-- **Scheduled audits** — a cron/CI job hits the endpoints and alerts on any
-  `all_passed: false`;
-- **cross-language dashboards** — the [demos](../demo/README.md) and the
-  [web-dashboard](../web-dashboard/README.md) consume the same endpoints;
-- **third-party verification** — an external reviewer can trigger the
-  verifiers without installing Lean/Coq/Isabelle/Agda.
+| File | Role |
+|---|---|
+| `server.py` | the FastAPI application (executes the real verifiers) |
+| `requirements.txt` | fastapi + uvicorn |
 
----
+## License
 
----
-
-Navigation: [repository root](../../README.md) · [common](../common/README.md) · [demos](../demo/README.md) · [IPL-RP-1.0](../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../LICENSE.md)).

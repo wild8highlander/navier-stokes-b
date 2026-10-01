@@ -1,44 +1,34 @@
-# 🧪 `verification/tests/` — the Cross-Language Validator and Integration Tests
+# `tests/` — the cross-language validator and the pytest suite
 
-> **Navigation:** [`verification`](../README.md) › **`tests`**
+> **Navigation:** [repository root](../README.md) › [verification](../README.md) › **`tests`**
 
-![Role](https://img.shields.io/badge/Role-Validator_%2B_tests-FF8C00?style=flat-square)
-![pytest](https://img.shields.io/badge/Runner-pytest-0A9EDC?style=flat-square&logo=pytest&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Validator](https://img.shields.io/badge/extended__cross__language-2B579A?style=flat-square) ![pytest](https://img.shields.io/badge/CI--locked-2EA043?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The framework's **referee and integration layer**. The validator runs
-every registered computational port (or reads archived verdicts), parses
-each port's single `JSON: Ellipsis` line, and diffs every language's values
-against the Python reference within declared tolerances — non-zero exit on
-any disagreement. The pytest suite wraps the extended-language ports as
-integration tests that auto-skip when a toolchain is absent, so the same
-suite is useful on a full CI runner and on a minimal laptop.
+---
 
-## Contents
+This directory is the judge of the matrix: it parses every port's verdict
+and fails CI on any disagreement, plus the pytest suite that CI runs on
+Python 3.11 and 3.12 (toolchain-locked tests auto-skip when the toolchain
+is absent).
 
-| File | Description |
+| File | Role |
 |---|---|
-| [`extended_cross_language_validator.py`](extended_cross_language_validator.py) | the referee — collect → normalise → compare → report → exit code |
-| [`test_extended_languages.py`](test_extended_languages.py) | pytest integration tests for the extended ports (toolchain-locked, auto-skipping) |
+| `extended_cross_language_validator.py` | the language × section registry (11 languages × 7 sections), the artifact count, and the report header — extended to Section 7 |
+| `test_extended_languages.py` | pytest integration tests for the extended toolchains (auto-skip without the toolchain) |
 
-## How to run
+## Run
 
 ```bash
-python3 verification/tests/extended_cross_language_validator.py   # the whole matrix
-python -m pytest verification/tests/ -v --tb=short                # the integration suite
+python3 verification/tests/extended_cross_language_validator.py
+make test          # pytest over this directory
 ```
 
-The validator's logic is deliberately transparent: collect every port's
-verdict, map section number → expected value-key set, diff against the
-Python reference, print a per-section per-language OK/FAIL matrix, exit
-non-zero on any disagreement. CI runs it on every push — its green is the
-framework's core invariant (see the
-[hub's "what passing means"](../README.md)).
+The full mechanical comparison is the pair `make verify-all` (sections
+1–7 through the common runner) + `make verify-extended` (C++/Rust/Haskell
+builds + Lean/Coq); the repository auditor
+([`../repo_integrity/`](../repo_integrity/README.md)) re-runs sections
+1–7 end-to-end as its group G.
 
----
+## License
 
----
-
-Navigation: [repository root](../../README.md) · [framework hub](../README.md) · [CI](../../.github/workflows/README.md) · [IPL-RP-1.0](../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../LICENSE.md)).

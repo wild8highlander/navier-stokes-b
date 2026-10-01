@@ -1,41 +1,26 @@
-# 🐳 docker · isabelle — Pinned Toolchain Image
+# `docker/isabelle/` — the Isabelle-HOL 2024 with Complex_Main image
 
-> **Navigation:** [`verification`](../../../verification/README.md) › [`docker`](../README.md) › **`isabelle`**
+> **Navigation:** [repository root](../../../README.md) › [verification](../../verification/README.md) › [docker](../README.md) › **`isabelle`**
 
-![Type](https://img.shields.io/badge/Type-Dockerfile-2496ED?style=flat-square&logo=docker&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Image](https://img.shields.io/badge/isabelle-2B579A?style=flat-square) ![Toolchain](https://img.shields.io/badge/Isabelle-HOL_2024_with_Complex_Main-informational?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The **Dockerfile pinning the Isabelle-HOL (2024) environment** for the verification
-framework. The image installs Isabelle with HOL, copies the verification sources, and defaults to `isabelle build -D .` — so `docker run` reproduces exactly what CI
-runs, byte-for-byte at the toolchain level. budget for a long first build (heap images); later builds are incremental
+---
 
-## 📂 Contents
-
-| File | Description |
-|---|---|
-| [`Dockerfile`](Dockerfile) | the Isabelle-HOL (2024) environment — install + source copy + verification entrypoint |
-
-## ▶️ How to run
+The pinned environment for the isabelle tier of the verification matrix. The
+image installs exactly the toolchain the framework expects — nothing more,
+so the build is the environment statement.
 
 ```bash
-docker build -t rp-isabelle verification/docker/isabelle
-docker run --rm -v "$PWD":/work rp-isabelle isabelle build -D verification/isabelle
+docker build -t nsb-verify-isabelle .
+docker run --rm -v "$PWD/../../..:/repo" -w /repo nsb-verify-isabelle bash -lc "isabelle build -D ."
 ```
 
-The bind-mount (`-v "$PWD":/work`) lets you verify the repository you are
-standing in rather than the copy baked into the image; omit it to run the
-pinned snapshot.
+Inside the container, the working command for this tier is:
 
-## 🔗 Cross-references
+```bash
+isabelle build -D .
+```
 
-- [Docker layer](../README.md) — the full image table and the compose flow
-- [Isabelle-HOL (2024) language layer](../../../verification/isabelle/README.md)
-- [Verification contract](../../../verification/README.md)
+## License
 
----
-
----
-
-Navigation: [docker](../README.md) · [verification](../../../verification/README.md) · [IPL-RP-1.0](../../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../../LICENSE.md)).

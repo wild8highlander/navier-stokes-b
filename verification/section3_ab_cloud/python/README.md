@@ -1,53 +1,59 @@
-# 🐍 Section 3 · python — the Reference Port
+# `section3_ab_cloud/python/` — the reference port (Python)
 
-> **Navigation:** [`verification`](../../README.md) › [`section3_ab_cloud`](../README.md) › **`python`**
+> **Navigation:** [repository root](../../../README.md) › [verification](../../README.md) › [`section3_ab_cloud`](../README.md) › **`python/`**
 
-![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?style=flat-square&logo=python&logoColor=white) ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
+![Language](https://img.shields.io/badge/Python_3.11%2B-3776AB?style=flat-square) ![Deps](https://img.shields.io/badge/stdlib_·_mpmath_optional-2EA043?style=flat-square) ![Contract](https://img.shields.io/badge/PASS_%2B_JSON-FF8C00?style=flat-square) ![License](https://img.shields.io/badge/IPL--RP--1.0-red?style=flat-square)
 
-The **pure-Python port** of Section 3 — AB-Cloud — the Non-Hermitian Hofstadter Hamiltonian. A single
-`verify.py` using only the standard library: it computes the section's
-quantities from closed-form inputs, asserts the section's properties, and
-prints the framework's JSON verdict. This is the port CI runs first and the
-one new toolchain ports are compared against.
+---
 
-## 🔬 Section context
+This is the **reference implementation** of Section 3 — the executable
+definition of the claims. It is deliberately boring: deterministic
+(fixed-seed LCG where randomness is needed), self-contained (no imports
+beyond the standard library; `mpmath` upgrades the 50-digit block when
+present and is skipped cleanly when absent), and contract-exact (see
+below). Every other port of Section 3 — C++, Rust, Haskell, Julia and
+the four proof assistants — is required to agree with *this* file's
+verdict, which is what makes it the reference.
 
-Section 3 covers **the structural core of the AB-Cloud Hamiltonian at reduced scale: the presuppositions of the heavy spectral statistics**; central quantities: the Peierls phase e^{2πi/7}, the flux-quantisation lattice, and the GUE-class spacing statistics.
-Peers: [Lean 4](../../../verification/lean4/ResearchPapersVerification/Section3_ABCloud/README.md) · [Coq/Rocq](../../../verification/coq/section3_ab_cloud/README.md) · [Isabelle-HOL](../../../verification/isabelle/Section3_ABCloud/README.md) · [Agda](../../../verification/agda/Section3_ABCloud/README.md) · [C++](../../../verification/cpp/section3_ab_cloud/README.md) · [Rust](../../../verification/rust/section3_ab_cloud/README.md) · [Haskell](../../../verification/haskell/Section3_ABCloud/README.md).
+## The assertions
 
-| File | Description |
+| # | Assertion |
 |---|---|
-| [`verify.py`](verify.py) | the Section 3 reference verifier — prints values, asserts, JSON verdict |
+| C1 | Hofstadter matrix Hermitian, trace 0 (checked for several p/q) |
+| C2 | butterfly slice identities: `Σ E_j = −2`, `Σ E_j² = 2q − 4` (all pairs) |
+| C3 | `b` matches the framework value |
 
-## ▶️ How to run
+Pinned values: hermiticity error 0.0, `|trace|` ≤ 6.7×10⁻¹⁶, slice identities to 5×10⁻¹⁵
+
+## Run
 
 ```bash
-python3 verify.py          # from this folder
-python3 verification/section3_ab_cloud/python/verify.py   # from the repo root
+python3 verification/section3_ab_cloud/python/verify.py
 ```
 
-## 🔍 Sample output
+Wall-clock: well under one second on any modern machine.
 
-```text
-=== Section 3 ===
-|phase| = 1.0, order = 7
-flux quantised
-PASS
-```
+## Output contract
 
-Exit code 0 = all assertions passed; anything else fails CI.
+Every port follows the repository-wide output contract, which is what
+makes cross-language comparison mechanical:
 
-## 📋 What is asserted
+1. print a banner line identifying section and language;
+2. compute the section's quantities **from the closed forms** (no data
+   files are read at this tier);
+3. print one `[PASS]`/`[FAIL]` line per assertion with the measured
+   residual;
+4. print exactly one machine-readable verdict line `JSON: {"section": N,
+   "language": "...", "values": {...}, "all_passed": true|false}`;
+5. exit `0` only if every assertion passed — CI fails otherwise.
 
-1. **Peierls phase** — |e^{2πi/7}| = 1 and the phase has exact order 7;
-2. **flux quantisation** — the flux per plaquette is quantised in units of the flux quantum — the Hamiltonian is well defined on the lattice;
-3. **Hermiticity and symmetry classes** — the reduced Hamiltonian has the declared symmetry class and the GUE spacing statistic is normalised.
+## Files
 
----
+| File | Purpose |
+|---|---|
+| `verify.py` | the verifier itself (3 assertions, one `main()`, ~120 lines) |
+| `README.md` | this file |
 
----
+## License
 
-Navigation: [section parent](../README.md) · [framework hub](../../README.md) · [IPL-RP-1.0](../../../LICENSE.md)
-
-*Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) - (c) 2026 Isaev Iskhak Khamzatovich, all rights reserved.*
-
+Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../../../LICENSE.md)).
