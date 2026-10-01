@@ -1,2 +1,2 @@
 fastapi>=0.104
-uvicorn>=0.24
+uvicorn>=0.54.0
