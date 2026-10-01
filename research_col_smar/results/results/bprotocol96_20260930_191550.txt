@@ -1,0 +1,58 @@
+lab = L7_bprotocol96
+run_B96_summary:
+  label = B96
+  grid = 96
+  b_pow = 1.0
+  nu = 0.01
+  dt = 0.002
+  t_end = 6.0
+  rotated = True
+  t_peak_enstrophy = 4.92
+  Omega_max = 1.2950646961185803
+  omega_inf_max = 5.752069625092389
+  u_inf_max = 0.9966669592778625
+  I_BKM_T = 17.8356620297973
+  LPS_int_u4 = 0.23136816337422586
+  LPS_int_u6half = 0.5150747536154618
+  E_final = 0.12277721455466294
+  eps_mean_stat = 0.01193008344858197
+  energy_balance_rel_max = 0.0010922552193704117
+  enstrophy_balance_rel_max = 0.008140869648391384
+  kd_mean_stat = 2.614035351394209
+  c_exp_at_peak = -0.41863850204577374
+  r2_exp_at_peak = 0.990437331082636
+  slope_pow_at_peak = -11.42900864308963
+  r2_pow_at_peak = 0.991066749128955
+  cert_band:
+    - 22.4
+    - 32.0
+  steps = 3000
+  done = True
+run_A96_summary:
+  I_BKM_T = 17.878645119778554
+  Omega_max = 1.2996563693139618
+  omega_inf_max = 5.798805600821221
+  E_final = 0.1226267708682276
+  t_peak_enstrophy = 4.9
+  LPS_int_u4 = 0.23247334796174002
+  LPS_int_u6half = 0.5168932376541433
+max_abs_dE_A_vs_B = 0.0006485688966608727
+theta_b_deg = 3.5765013142837216
+verdicts:
+  - [0]
+    lab = L7
+    test = I_BKM(B)/I_BKM(A) - 1
+    value = 0.002404158127938927
+    verdict = WIN
+    note = factor = 0.9976
+  - [1]
+    lab = L7
+    test = max|E_A(t) - E_B(t)|
+    value = 0.0006485688966608727
+    verdict = WIN
+    note = изометрия: E совпадают при t=0; расхождение — хаос (чувствительность к округлению), статистики (BKM, Ω_max) согласованы
+tally:
+  WIN = 2
+  DRAW = 0
+  LOSS = 0
+  total = 2

@@ -1,0 +1,135 @@
+# NSB LAB 96 — сводный отчёт / aggregate report
+
+*2026-09-30 19:30:24*  
+*b = 1/(4π+2√3) = 0.062381194121, θ_b = 3.576501°*
+
+## L6_bfamily96
+
+**ТАБЛО МАТЧА:** WIN 6 · DRAW 0 · LOSS 0
+
+  test   value   verdict   note  
+ --- --- --- --- 
+  b=1.25: resolved margin k_max/eta_b   5.670e+00   WIN   должен расти с N; при 96^3 удваивается против 48^3  
+  b=1.25:  k_d*eta_b - x*(b) /x*(b)   1.113e-01   WIN   коллапс универсального пика (сравнение в отчёте)  
+  b=1.5: resolved margin k_max/eta_b   8.158e+00   WIN   должен расти с N; при 96^3 удваивается против 48^3  
+  b=1.5:  k_d*eta_b - x*(b) /x*(b)   1.097e-01   WIN   коллапс универсального пика (сравнение в отчёте)  
+  b=2: resolved margin k_max/eta_b   1.239e+01   WIN   должен расти с N; при 96^3 удваивается против 48^3  
+  b=2:  k_d*eta_b - x*(b) /x*(b)   1.090e-01   WIN   коллапс универсального пика (сравнение в отчёте)  
+
+  b_pow   k_max/η_b   k_d·η_b   x*(b)   rel.dev  
+ --- --- --- --- --- 
+  1.25   5.670   0.4594   0.5169   11.1%  
+  1.5   8.158   0.6306   0.7083   11.0%  
+  2   12.390   0.8186   0.9187   10.9%  
+
+
+## L7_bprotocol96
+
+**ТАБЛО МАТЧА:** WIN 2 · DRAW 0 · LOSS 0
+
+  test   value   verdict   note  
+ --- --- --- --- 
+  I_BKM(B)/I_BKM(A) - 1   2.404e-03   WIN   factor = 0.9976  
+  max E_A(t) - E_B(t)    6.486e-04   WIN   изометрия: E совпадают при t=0; расхождение — хаос (чувствит  
+
+
+## L5_dns112
+
+**ТАБЛО МАТЧА:** WIN 3 · DRAW 0 · LOSS 0
+
+  test   value   verdict   note  
+ --- --- --- --- 
+  energy balance (112^3)   9.896e-05   WIN     
+  enstrophy balance (112^3)   6.762e-04   WIN     
+  early-time energy vs 96^3 reference   1.973e-09   WIN   max/E112-E96//max(E) = 1.973e-09 (t<=1)  
+
+
+## L2_kdv_improved
+
+**ТАБЛО МАТЧА:** WIN 7 · DRAW 1 · LOSS 0
+
+  test   value   verdict   note  
+ --- --- --- --- 
+  E1  u_num − u_exact ∞ (T=20)   9.813e-08   WIN     
+  b-mech M1_hilbert: worst invariant drift   2.932e-09   WIN     
+  b-mech M2_rodrigues: worst invariant drift   2.886e-09   WIN     
+  b-mech M3_nonlin: worst invariant drift   5.223e-06   DRAW     
+  E5 collision: worst invariant drift   1.716e-09   WIN     
+  E5  u_num − u_Hirota ∞ (фазовые сдвиги)   4.895e-08   WIN     
+  E6 theta scan: phase-space norm identity   1.110e-16   WIN     
+  E7 spectral convergence (err decreases with N)   0.000e+00   WIN   2.9e+00 -> 9.0e+00 -> 1.6e-04 -> 1.2e-08  
+
+
+## L4_main96
+
+**ТАБЛО МАТЧА:** WIN 8 · DRAW 1 · LOSS 0
+
+  test   value   verdict   note  
+ --- --- --- --- 
+  48→96 Omega_max   1.115e-04   WIN     
+  48→96 omega_inf_max   1.875e-02   WIN     
+  48→96 u_inf_max   4.826e-03   WIN     
+  48→96 I_BKM_T   1.340e-02   WIN     
+  48→96 LPS_int_u4   5.661e-06   WIN     
+  48→96 LPS_int_u6half   5.064e-06   WIN     
+  48→96 E_final   3.059e-05   WIN     
+  48→96 eps_mean_stat   4.390e-05   WIN     
+  48→96 r2_exp_at_peak   2.009e-02   DRAW   качество хвоста; полоса 96³ [22,32] шире полосы 48³ [11,16]  
+
+  diagnostic   48³   96³   rel.diff  
+ --- --- --- --- 
+  t_peak_enstrophy   4.9   4.9   0.000%  
+  Omega_max   1.29951   1.29966   0.011%  
+  omega_inf_max   5.69207   5.79881   1.875%  
+  u_inf_max   0.9936   0.998395   0.483%  
+  I_BKM_T   17.6423   17.8786   1.340%  
+  LPS_int_u4   0.232475   0.232473   0.001%  
+  LPS_int_u6half   0.516896   0.516893   0.001%  
+  E_final   0.122631   0.122627   0.003%  
+  eps_mean_stat   0.0119639   0.0119645   0.004%  
+  r2_exp_at_peak   0.971017   0.990527   2.009%  
+  c_exp_at_peak   -0.497756   -0.417227   16.178%  
+  slope_pow_at_peak   -6.63873   -11.3905   71.577%  
+
+
+## L8_match
+
+**ТАБЛО МАТЧА:** WIN 3 · DRAW 0 · LOSS 0
+
+  test   value   verdict   note  
+ --- --- --- --- 
+  MATCH1 A vs B:  dI_BKM /I_A   1.747e-02   WIN   dE_final = 4.848e-04; ожидание — НИЧЬЯ (изометрия)  
+  MATCH2 H2 vs A: resolved margin k_max*eta_b   3.448e+00   WIN   k_max*eta_b: H2 5.88 vs A 1.70 (ожидание: H2 выигрывает)  
+  MATCH3 U(32) vs A: energy balance   1.000e+00   WIN   balance U 9.90e-05 vs A 9.90e-05  
+
+
+## L1_matrix112
+
+**ТАБЛО МАТЧА:** WIN 8 · DRAW 0 · LOSS 0
+
+  test   value   verdict   note  
+ --- --- --- --- 
+  R(theta_b) block-diag orthogonality (112x112)   3.420e-18   WIN   det = +1.000000000000  
+  Rodrigues 3D norm preservation (200k vectors)   4.441e-16   WIN     
+  Leray projector block idempotence (112x112)   4.163e-17   WIN     
+  KdV linear flow unitarity exp(i k^3 t) (112x112)   1.110e-16   WIN     
+  NSE dissipation semigroup contraction (112x112)   1.110e-16   WIN   max sigma = 1.000000000000 <= 1  
+  FFT 112^3 roundtrip   5.456e-16   WIN     
+  Parseval identity 112^3   3.318e-16   WIN     
+  TG IC divergence-free residual (112^3)   7.504e-12   WIN     
+
+
+## L3_smoke48
+
+**ТАБЛО МАТЧА:** WIN 2 · DRAW 0 · LOSS 0
+
+  test   value   verdict   note  
+ --- --- --- --- 
+  energy balance (SMOKE48)   8.414e-07   WIN     
+  enstrophy balance (SMOKE48)   6.392e-06   WIN     
+
+
+---
+## ТАБЛО МАТЧА (итог)
+
+**WIN 39 · DRAW 2 · LOSS 0**

@@ -1,0 +1,226 @@
+{
+  "checks": [
+    {
+      "julia": 1.618033988749895,
+      "lab": "L17/алгебра",
+      "python": 1.618033988749895,
+      "rel_dev": 0.0,
+      "test": "phi",
+      "tol": 1.0e-15,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.6180257510729614,
+      "lab": "L17/спектр",
+      "python": 1.6180257510729614,
+      "rel_dev": 0.0,
+      "test": "mu[1]",
+      "tol": 1.0e-12,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.6180555555555556,
+      "lab": "L17/спектр",
+      "python": 1.6180555555555556,
+      "rel_dev": 0.0,
+      "test": "mu[2]",
+      "tol": 1.0e-12,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.6179775280898876,
+      "lab": "L17/спектр",
+      "python": 1.6179775280898876,
+      "rel_dev": 0.0,
+      "test": "mu[3]",
+      "tol": 1.0e-12,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.6179775280898876,
+      "lab": "L17/спектр",
+      "python": 1.6179775280898876,
+      "rel_dev": 0.0,
+      "test": "mu[4]",
+      "tol": 1.0e-12,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.6181818181818182,
+      "lab": "L17/спектр",
+      "python": 1.6181818181818182,
+      "rel_dev": 0.0,
+      "test": "mu[5]",
+      "tol": 1.0e-12,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.6176470588235294,
+      "lab": "L17/спектр",
+      "python": 1.6176470588235294,
+      "rel_dev": 0.0,
+      "test": "mu[6]",
+      "tol": 1.0e-12,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.6176470588235294,
+      "lab": "L17/спектр",
+      "python": 1.6176470588235294,
+      "rel_dev": 0.0,
+      "test": "mu[7]",
+      "tol": 1.0e-12,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.619047619047619,
+      "lab": "L17/спектр",
+      "python": 1.619047619047619,
+      "rel_dev": 0.0,
+      "test": "mu[8]",
+      "tol": 1.0e-12,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.619047619047619,
+      "lab": "L17/спектр",
+      "python": 1.619047619047619,
+      "rel_dev": 0.0,
+      "test": "mu[9]",
+      "tol": 1.0e-12,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.625,
+      "lab": "L17/спектр",
+      "python": 1.625,
+      "rel_dev": 0.0,
+      "test": "mu[10]",
+      "tol": 1.0e-12,
+      "verdict": "PASS"
+    },
+    {
+      "julia": -0.942614726387215,
+      "lab": "L17/RG",
+      "python": -0.9426147263872142,
+      "rel_dev": 8.244684657285565e-16,
+      "test": "slope",
+      "tol": 1.0e-7,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 0.3819660060124761,
+      "lab": "L17/RG",
+      "python": 0.3819660060124761,
+      "rel_dev": 0.0,
+      "test": "ratio",
+      "tol": 1.0e-12,
+      "verdict": "PASS"
+    },
+    {
+      "julia": -0.9624236501192069,
+      "lab": "L17/RG",
+      "python": -0.9624236501192069,
+      "rel_dev": 0.0,
+      "test": "slope_theory",
+      "tol": 1.0e-15,
+      "verdict": "PASS"
+    },
+    {
+      "julia": -1.0,
+      "lab": "L17/дрейф",
+      "python": -1.0,
+      "rel_dev": 0.0,
+      "test": "cassini[1]",
+      "tol": 0.5,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.0,
+      "lab": "L17/дрейф",
+      "python": 1.0,
+      "rel_dev": 0.0,
+      "test": "cassini[2]",
+      "tol": 0.5,
+      "verdict": "PASS"
+    },
+    {
+      "julia": -1.0,
+      "lab": "L17/дрейф",
+      "python": -1.0,
+      "rel_dev": 0.0,
+      "test": "cassini[3]",
+      "tol": 0.5,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.0,
+      "lab": "L17/дрейф",
+      "python": 1.0,
+      "rel_dev": 0.0,
+      "test": "cassini[4]",
+      "tol": 0.5,
+      "verdict": "PASS"
+    },
+    {
+      "julia": -1.0,
+      "lab": "L17/дрейф",
+      "python": -1.0,
+      "rel_dev": 0.0,
+      "test": "cassini[5]",
+      "tol": 0.5,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.0,
+      "lab": "L17/дрейф",
+      "python": 1.0,
+      "rel_dev": 0.0,
+      "test": "cassini[6]",
+      "tol": 0.5,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 1.1802878748464264e-16,
+      "lab": "L17/дрейф",
+      "python": 1.1802878748464264e-16,
+      "rel_dev": 0.0,
+      "test": "identity_mismatch",
+      "tol": 1.0e-12,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 0.0,
+      "lab": "L17/дрейф",
+      "python": 1.282386484695645e-16,
+      "rel_dev": 1.282386484695645e-16,
+      "test": "sym_family",
+      "tol": 1.0e-12,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 0.0,
+      "lab": "L17/дрейф",
+      "python": 0.0,
+      "rel_dev": 0.0,
+      "test": "roots(55-89-89-144)",
+      "tol": 0.5,
+      "verdict": "PASS"
+    },
+    {
+      "julia": 3.793188646799509e-5,
+      "lab": "L17/C_s",
+      "python": 3.7931886467994374e-5,
+      "rel_dev": 1.893615124778226e-14,
+      "test": "cs2_pair",
+      "tol": 1.0e-6,
+      "verdict": "PASS"
+    }
+  ],
+  "julia_version": "1.10.9",
+  "program": "NSB-96-UPGRADE / nsb_extra_research.jl (L17)",
+  "tally": {
+    "FAIL": 0,
+    "PASS": 24
+  }
+}

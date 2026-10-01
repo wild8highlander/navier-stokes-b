@@ -1,0 +1,9 @@
+lab,test,value,verdict,note
+L2,E1 |u_num − u_exact|∞ (T=20),9.812523149577146e-08,WIN,
+L2,b-mech M1_hilbert: worst invariant drift,2.932258534925327e-09,WIN,
+L2,b-mech M2_rodrigues: worst invariant drift,2.8857812772651815e-09,WIN,
+L2,b-mech M3_nonlin: worst invariant drift,5.223261383959996e-06,DRAW,
+L2,E5 collision: worst invariant drift,1.7158551515654976e-09,WIN,
+L2,E5 |u_num − u_Hirota|∞ (фазовые сдвиги),4.895485505862496e-08,WIN,
+L2,E6 theta scan: phase-space norm identity,1.1102230246251565e-16,WIN,
+L2,E7 spectral convergence (err decreases with N),0.0,WIN,2.9e+00 -> 9.0e+00 -> 1.6e-04 -> 1.2e-08

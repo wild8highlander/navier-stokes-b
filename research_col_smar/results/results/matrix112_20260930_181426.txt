@@ -1,0 +1,70 @@
+lab = L1_matrix112
+n = 112
+tests:
+  R_orth_residual = 3.4198339673950057e-18
+  R_det = 1.0
+  rodrigues_norm_dev = 4.440892098500626e-16
+  rodrigues_angle_dev = 0.06202501129914918
+  leray_idempotence_112 = 4.163336342344337e-17
+  leray_symmetry_112 = 1.3877787807814457e-17
+  leray_eig_dev = 3.1123505820182244e-16
+  kdv_unitarity_112 = 1.1102230246251565e-16
+  nse_semigroup_residual = 1.1102230246251565e-16
+  nse_semigroup_max_sv = 1.0
+  fft_roundtrip = 5.456099095114245e-16
+  fft_parseval_err = 3.317903143049806e-16
+  tg_divfree_residual = 7.503705678294736e-12
+verdicts:
+  - [0]
+    lab = L1
+    test = R(theta_b) block-diag orthogonality (112x112)
+    value = 3.4198339673950057e-18
+    verdict = WIN
+    note = det = +1.000000000000
+  - [1]
+    lab = L1
+    test = Rodrigues 3D norm preservation (200k vectors)
+    value = 4.440892098500626e-16
+    verdict = WIN
+    note = 
+  - [2]
+    lab = L1
+    test = Leray projector block idempotence (112x112)
+    value = 4.163336342344337e-17
+    verdict = WIN
+    note = 
+  - [3]
+    lab = L1
+    test = KdV linear flow unitarity exp(i k^3 t) (112x112)
+    value = 1.1102230246251565e-16
+    verdict = WIN
+    note = 
+  - [4]
+    lab = L1
+    test = NSE dissipation semigroup contraction (112x112)
+    value = 1.1102230246251565e-16
+    verdict = WIN
+    note = max sigma = 1.000000000000 <= 1
+  - [5]
+    lab = L1
+    test = FFT 112^3 roundtrip
+    value = 5.456099095114245e-16
+    verdict = WIN
+    note = 
+  - [6]
+    lab = L1
+    test = Parseval identity 112^3
+    value = 3.317903143049806e-16
+    verdict = WIN
+    note = 
+  - [7]
+    lab = L1
+    test = TG IC divergence-free residual (112^3)
+    value = 7.503705678294736e-12
+    verdict = WIN
+    note = 
+tally:
+  WIN = 8
+  DRAW = 0
+  LOSS = 0
+  total = 8

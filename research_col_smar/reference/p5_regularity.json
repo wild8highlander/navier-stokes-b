@@ -1,0 +1,127 @@
+{
+  "b_family_prediction_test": [
+    {
+      "b_pow": 1.0,
+      "beta_b_theory": 2.8948204109411324,
+      "eps_mean_stat": 0.01196394309458188,
+      "eta_b": 0.09561618578914816,
+      "k_max_over_eta_b": 1.5298589726263705,
+      "kd_measured": 2.617480736310629,
+      "kd_times_eta_b": 0.2502735243825934,
+      "rel_dev": 0.04304092223935989,
+      "x_star_theory": 0.23994602613027677
+    },
+    {
+      "b_pow": 1.25,
+      "beta_b_theory": 1.734965177564039,
+      "eps_mean_stat": 0.013598877816344807,
+      "eta_b": 0.17719602978651722,
+      "k_max_over_eta_b": 2.8351364765842755,
+      "kd_measured": 2.5925562707770213,
+      "kd_times_eta_b": 0.4593906781798271,
+      "rel_dev": 0.1113167691395758,
+      "x_star_theory": 0.5169341135592763
+    },
+    {
+      "b_pow": 1.5,
+      "beta_b_theory": 1.2508428309314912,
+      "eps_mean_stat": 0.014290280688944496,
+      "eta_b": 0.25493105818465067,
+      "k_max_over_eta_b": 4.078896930954411,
+      "kd_measured": 2.4735626206104055,
+      "kd_times_eta_b": 0.6305879363582083,
+      "rel_dev": 0.1096910373488655,
+      "x_star_theory": 0.708279892499861
+    },
+    {
+      "b_pow": 2.0,
+      "beta_b_theory": 0.818856741408086,
+      "eps_mean_stat": 0.013205757062892075,
+      "eta_b": 0.3871895876031552,
+      "k_max_over_eta_b": 6.195033401650483,
+      "kd_measured": 2.114201965634948,
+      "kd_times_eta_b": 0.8185969871839756,
+      "rel_dev": 0.10896877081323024,
+      "x_star_theory": 0.9187074037024451
+    }
+  ],
+  "b_protocol_effect": {
+    "factor_I_BKM_B_over_A": 0.9984891247327149,
+    "factor_Omega_max_B_over_A": 0.9964588162620206,
+    "factor_omega_inf_B_over_A": 0.9905971574806273,
+    "max_abs_dE": 0.0006485688966608727
+  },
+  "date": "2026-09-29",
+  "integrity": {
+    "sha256_of_code": "40576b9db8e3d10a99c8729d9aed570ac0e96f30aec5680d6b0a5342c6b7ddec",
+    "snapshot_files": [
+      "p5_snapshot_u.f64",
+      "p5_snapshot_w.f64"
+    ],
+    "snapshot_layout": "raw float64 C-order, shape (3, 48, 48, 48)"
+  },
+  "parameters": {
+    "C_K_used_for_beta_b": 1.5,
+    "T_end": 6.0,
+    "b_powers": [
+      1.0,
+      1.25,
+      1.5,
+      2.0
+    ],
+    "cert_band": [
+      11.0,
+      16.0
+    ],
+    "dealiasing": "2/3 rule on the nonlinear product",
+    "dt": 0.002,
+    "grid": 48,
+    "ic": "Taylor-Green u=(sin x cos y cos z, -cos x sin y cos z, 0)",
+    "ifk_note": "dissipation exp(-nu k^(2b) t) is applied exactly; the explicit part is the nonlinearity only",
+    "nu": 0.01,
+    "run_B": "IC rotated by theta_b = arcsin(b) about z (energy identical)",
+    "stat_window_t0": 2.0,
+    "theta_b_deg": 3.5765013142837216,
+    "time_stepper": "integrating-factor midpoint RK2 + Leray projection"
+  },
+  "program": "P5_regularity",
+  "run_A_baseline": {
+    "E_final": 0.12263052189362109,
+    "I_BKM_T": 17.64232056324808,
+    "LPS_int_u4": 0.23247466394397565,
+    "LPS_int_u6half": 0.5168958554501988,
+    "Omega_max": 1.2995114794475742,
+    "c_exp_at_peak": -0.497756194544088,
+    "eps_mean_stat": 0.01196394309458188,
+    "kd_mean_stat": 2.617480736310629,
+    "omega_inf_max": 5.692074068422931,
+    "r2_exp_at_peak": 0.9710168325706097,
+    "r2_pow_at_peak": 0.9685792120550588,
+    "slope_pow_at_peak": -6.63872580014723,
+    "t_peak_enstrophy": 4.9,
+    "u_inf_max": 0.9935996809173858
+  },
+  "run_B_brotated": {
+    "E_final": 0.12277973918693551,
+    "I_BKM_T": 17.615665217451554,
+    "LPS_int_u4": 0.23136943920234299,
+    "LPS_int_u6half": 0.5150772953194447,
+    "Omega_max": 1.294909670529237,
+    "c_exp_at_peak": -0.49951012030330255,
+    "eps_mean_stat": 0.011929491486391134,
+    "kd_mean_stat": 2.614075167098414,
+    "omega_inf_max": 5.638552392348945,
+    "r2_exp_at_peak": 0.9720340712509082,
+    "r2_pow_at_peak": 0.9698177583112396,
+    "slope_pow_at_peak": -6.662887476946806,
+    "t_peak_enstrophy": 4.92,
+    "u_inf_max": 0.9918797605870364
+  },
+  "self_verification": {
+    "div_free_residual_max": 1.2614820749071946e-12,
+    "energy_balance_rel_max_A": 0.0005517431144511644,
+    "energy_balance_rel_max_B": 0.0010922572301884771,
+    "enstrophy_balance_rel_max_A": 0.005651465561384325
+  },
+  "title": "3D smoothness of solutions: BKM/LPS diagnostics, the b-protocol and the hyperdissipative family"
+}

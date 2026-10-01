@@ -1,0 +1,171 @@
+{
+  "module": "kdv_improved",
+  "date": "2026-09-30T21:24:03.227500",
+  "params": {
+    "n": 512,
+    "L": 100.0,
+    "dt": 0.0005,
+    "T1": 20.0,
+    "Tc": 14.0,
+    "dealiasing": "2/3 rule",
+    "scheme": "IFRK4"
+  },
+  "experiments": {
+    "E1": {
+      "l_inf_err": 9.812522794305778e-08,
+      "drift": {
+        "M": 0.0,
+        "P": 7.245625540525102e-10,
+        "E": 2.898250216210041e-09
+      }
+    },
+    "E2": {
+      "l_inf_err_vs_hirota": 4.895485505862496e-08,
+      "drift": {
+        "M": 1.0513475611980648e-16,
+        "P": 4.2873480439254547e-10,
+        "E": 1.7158551515654976e-09
+      }
+    },
+    "E3_M1_hilbert": {
+      "drift": {
+        "M": 1.0868169881223923e-16,
+        "P": 1.9574274953041625e-10,
+        "E": 7.756558503380108e-10
+      }
+    },
+    "E3_M2_rodrigues": {
+      "drift": {
+        "M": 1.0856209537845717e-16,
+        "P": 1.804752557885779e-10,
+        "E": 7.243580004969167e-10
+      }
+    },
+    "E3_M3_nonlin": {
+      "drift": {
+        "M": 0.0,
+        "P": 1.7699920305466743e-10,
+        "E": 1.6554357576588352e-06
+      }
+    },
+    "E4": {
+      "max_norm_dev": 2.220446049250313e-16
+    },
+    "E5_mkdv": {
+      "l_inf_err": 4.168587697250814e-11
+    },
+    "E5_bbm": {
+      "l_inf_err": 6.212859052658308e-12
+    },
+    "E5_kawahara": {
+      "drift_MP": 1.090273704651423e-13
+    },
+    "E6": {
+      "convergence": [
+        {
+          "N": 64,
+          "l_inf_err": 2.8663224708885475
+        },
+        {
+          "N": 128,
+          "l_inf_err": 8.965486515503368
+        },
+        {
+          "N": 256,
+          "l_inf_err": 0.0001639339363688208
+        }
+      ]
+    }
+  },
+  "verdicts": [
+    {
+      "lab": "E1",
+      "test": "|u_num − u_exact|∞ (KdV, T=20)",
+      "value": 9.812522794305778e-08,
+      "verdict": "WIN",
+      "note": ""
+    },
+    {
+      "lab": "E1",
+      "test": "worst invariant drift (KdV)",
+      "value": 2.898250216210041e-09,
+      "verdict": "WIN",
+      "note": ""
+    },
+    {
+      "lab": "E2",
+      "test": "|u_num − u_Hirota|∞ (столкновение)",
+      "value": 4.895485505862496e-08,
+      "verdict": "WIN",
+      "note": ""
+    },
+    {
+      "lab": "E2",
+      "test": "worst invariant drift (столкновение)",
+      "value": 1.7158551515654976e-09,
+      "verdict": "WIN",
+      "note": ""
+    },
+    {
+      "lab": "E3",
+      "test": "b-mech M1_hilbert: worst drift",
+      "value": 7.756558503380108e-10,
+      "verdict": "WIN",
+      "note": ""
+    },
+    {
+      "lab": "E3",
+      "test": "b-mech M2_rodrigues: worst drift",
+      "value": 7.243580004969167e-10,
+      "verdict": "WIN",
+      "note": ""
+    },
+    {
+      "lab": "E3",
+      "test": "b-mech M3_nonlin: worst drift",
+      "value": 1.6554357576588352e-06,
+      "verdict": "DRAW",
+      "note": ""
+    },
+    {
+      "lab": "E4",
+      "test": "theta scan: max norm identity dev",
+      "value": 2.220446049250313e-16,
+      "verdict": "WIN",
+      "note": ""
+    },
+    {
+      "lab": "E5",
+      "test": "mKdV soliton |u_num − u_exact|∞",
+      "value": 4.168587697250814e-11,
+      "verdict": "WIN",
+      "note": ""
+    },
+    {
+      "lab": "E5",
+      "test": "BBM soliton |u_num − u_exact|∞",
+      "value": 6.212859052658308e-12,
+      "verdict": "WIN",
+      "note": "u = 3c sech²(½√(c/(1+c))(x−(1+c)t))"
+    },
+    {
+      "lab": "E5",
+      "test": "Kawahara: max(|ΔM|, |ΔP|/P)",
+      "value": 1.090273704651423e-13,
+      "verdict": "WIN",
+      "note": "M и P сохраняются точно (граничные члены)"
+    },
+    {
+      "lab": "E6",
+      "test": "spectral convergence (err ↓ with N)",
+      "value": 0.0,
+      "verdict": "WIN",
+      "note": "2.9e+00 -> 9.0e+00 -> 1.6e-04"
+    }
+  ],
+  "tally": {
+    "WIN": 11,
+    "DRAW": 1,
+    "LOSS": 0
+  }
+}

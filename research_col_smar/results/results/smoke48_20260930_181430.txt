@@ -1,0 +1,48 @@
+lab = L3_smoke48
+summary:
+  label = SMOKE48
+  grid = 48
+  b_pow = 1.0
+  nu = 0.01
+  dt = 0.002
+  t_end = 0.2
+  rotated = False
+  t_peak_enstrophy = 0.0
+  Omega_max = 0.7499999999999997
+  omega_inf_max = 1.9871901934682963
+  u_inf_max = 0.9935996809173858
+  I_BKM_T = 0.3949650671471644
+  LPS_int_u4 = 0.01235109643392185
+  LPS_int_u6half = 0.02477619639981971
+  E_final = 0.24701385410178134
+  eps_mean_stat = 0.007440891744582227
+  energy_balance_rel_max = 8.413877069304858e-07
+  enstrophy_balance_rel_max = 6.392465767048516e-06
+  kd_mean_stat = 2.001386995957114
+  c_exp_at_peak = 0.43177605135625224
+  r2_exp_at_peak = 0.35829873650142663
+  slope_pow_at_peak = 6.108405853779857
+  r2_pow_at_peak = 0.37083481109109906
+  cert_band:
+    - 11.2
+    - 16.0
+  steps = 100
+  done = True
+verdicts:
+  - [0]
+    lab = L3
+    test = energy balance (SMOKE48)
+    value = 8.413877069304858e-07
+    verdict = WIN
+    note = 
+  - [1]
+    lab = L3
+    test = enstrophy balance (SMOKE48)
+    value = 6.392465767048516e-06
+    verdict = WIN
+    note = 
+tally:
+  WIN = 2
+  DRAW = 0
+  LOSS = 0
+  total = 2

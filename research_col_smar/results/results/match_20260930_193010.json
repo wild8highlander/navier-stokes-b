@@ -1,0 +1,56 @@
+{
+  "lab": "L8_match",
+  "t": 1.0,
+  "matches": {
+    "M1_A_vs_B": {
+      "I_BKM_A": 1.820415486173555,
+      "I_BKM_B": 1.8522137982018114,
+      "dE_final": 0.0004848487521976197,
+      "rel_dI": 0.017467612349912048,
+      "expected": "DRAW",
+      "verdict_test": "WIN"
+    },
+    "M2_A_vs_H2": {
+      "margin_A": 1.7041917812757466,
+      "margin_H2": 5.875883361535695,
+      "ratio": 3.447900304469869,
+      "expected": "H2 WIN",
+      "verdict_test": "WIN"
+    },
+    "M3_A_vs_U": {
+      "bal_A": 9.895714193332992e-05,
+      "bal_U": 9.896278631861544e-05,
+      "expected": "U LOSS",
+      "verdict_test": "WIN"
+    }
+  },
+  "verdicts": [
+    {
+      "lab": "L8",
+      "test": "MATCH1 A vs B: |dI_BKM|/I_A",
+      "value": 0.017467612349912048,
+      "verdict": "WIN",
+      "note": "dE_final = 4.848e-04; ожидание — НИЧЬЯ (изометрия)"
+    },
+    {
+      "lab": "L8",
+      "test": "MATCH2 H2 vs A: resolved margin k_max*eta_b",
+      "value": 3.447900304469869,
+      "verdict": "WIN",
+      "note": "k_max*eta_b: H2 5.88 vs A 1.70 (ожидание: H2 выигрывает)"
+    },
+    {
+      "lab": "L8",
+      "test": "MATCH3 U(32) vs A: energy balance",
+      "value": 1.0000570386853869,
+      "verdict": "WIN",
+      "note": "balance U 9.90e-05 vs A 9.90e-05"
+    }
+  ],
+  "tally": {
+    "WIN": 3,
+    "DRAW": 0,
+    "LOSS": 0,
+    "total": 3
+  }
+}

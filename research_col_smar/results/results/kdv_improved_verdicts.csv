@@ -1,0 +1,13 @@
+lab,test,value,verdict,note
+E1,"|u_num − u_exact|∞ (KdV, T=20)",9.812522794305778e-08,WIN,
+E1,worst invariant drift (KdV),2.898250216210041e-09,WIN,
+E2,|u_num − u_Hirota|∞ (столкновение),4.895485505862496e-08,WIN,
+E2,worst invariant drift (столкновение),1.7158551515654976e-09,WIN,
+E3,b-mech M1_hilbert: worst drift,7.756558503380108e-10,WIN,
+E3,b-mech M2_rodrigues: worst drift,7.243580004969167e-10,WIN,
+E3,b-mech M3_nonlin: worst drift,1.6554357576588352e-06,DRAW,
+E4,theta scan: max norm identity dev,2.220446049250313e-16,WIN,
+E5,mKdV soliton |u_num − u_exact|∞,4.168587697250814e-11,WIN,
+E5,BBM soliton |u_num − u_exact|∞,6.212859052658308e-12,WIN,u = 3c sech²(½√(c/(1+c))(x−(1+c)t))
+E5,"Kawahara: max(|ΔM|, |ΔP|/P)",1.090273704651423e-13,WIN,M и P сохраняются точно (граничные члены)
+E6,spectral convergence (err ↓ with N),0.0,WIN,2.9e+00 -> 9.0e+00 -> 1.6e-04

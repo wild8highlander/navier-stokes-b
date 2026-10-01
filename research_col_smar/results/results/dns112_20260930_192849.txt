@@ -1,0 +1,55 @@
+lab = L5_dns112
+run_summary:
+  label = A112
+  grid = 112
+  b_pow = 1.0
+  nu = 0.01
+  dt = 0.002
+  t_end = 1.0
+  rotated = False
+  t_peak_enstrophy = 1.0
+  Omega_max = 0.7769732456403295
+  omega_inf_max = 1.9976409961189836
+  u_inf_max = 0.9988206528022637
+  I_BKM_T = 1.8282074266227741
+  LPS_int_u4 = 0.058837803866737336
+  LPS_int_u6half = 0.11945118232170682
+  E_final = 0.2349675249839126
+  eps_mean_stat = 0.007769732456403296
+  energy_balance_rel_max = 9.895714027392807e-05
+  enstrophy_balance_rel_max = 0.0006762151310060529
+  kd_mean_stat = 2.0341146351949573
+  c_exp_at_peak = -1.3240828397019784
+  r2_exp_at_peak = 0.9994529791038247
+  slope_pow_at_peak = -41.328170434433446
+  r2_pow_at_peak = 0.9979704538326533
+  cert_band:
+    - 25.9
+    - 37.0
+  steps = 500
+  done = True
+verdicts:
+  - [0]
+    lab = L5
+    test = energy balance (112^3)
+    value = 9.895714027392807e-05
+    verdict = WIN
+    note = 
+  - [1]
+    lab = L5
+    test = enstrophy balance (112^3)
+    value = 0.0006762151310060529
+    verdict = WIN
+    note = 
+  - [2]
+    lab = L5
+    test = early-time energy vs 96^3 reference
+    value = 1.973214369677123e-09
+    verdict = WIN
+    note = max|E112-E96|/max(E) = 1.973e-09 (t<=1)
+tally:
+  WIN = 3
+  DRAW = 0
+  LOSS = 0
+  total = 3
+note = max|E112-E96|/max(E) = 1.973e-09 (t<=1)

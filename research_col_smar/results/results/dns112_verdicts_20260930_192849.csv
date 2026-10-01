@@ -1,0 +1,4 @@
+lab,test,value,verdict,note
+L5,energy balance (112^3),9.895714027392807e-05,WIN,
+L5,enstrophy balance (112^3),0.0006762151310060529,WIN,
+L5,early-time energy vs 96^3 reference,1.973214369677123e-09,WIN,max|E112-E96|/max(E) = 1.973e-09 (t<=1)

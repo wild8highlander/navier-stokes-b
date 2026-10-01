@@ -1,0 +1,9 @@
+lab,test,value,verdict,note
+L1,R(theta_b) block-diag orthogonality (112x112),3.4198339673950057e-18,WIN,det = +1.000000000000
+L1,Rodrigues 3D norm preservation (200k vectors),4.440892098500626e-16,WIN,
+L1,Leray projector block idempotence (112x112),4.163336342344337e-17,WIN,
+L1,KdV linear flow unitarity exp(i k^3 t) (112x112),1.1102230246251565e-16,WIN,
+L1,NSE dissipation semigroup contraction (112x112),1.1102230246251565e-16,WIN,max sigma = 1.000000000000 <= 1
+L1,FFT 112^3 roundtrip,5.456099095114245e-16,WIN,
+L1,Parseval identity 112^3,3.317903143049806e-16,WIN,
+L1,TG IC divergence-free residual (112^3),7.503705678294736e-12,WIN,

@@ -1,0 +1,614 @@
+program = NSB-96-UPGRADE / nsb_extra_research
+lab = L16 solver self-convergence (N × dt) and Richardson extrapolation
+protocol:
+  nu = 0.01
+  dt_protocol = 0.002
+  T = 6.0
+  ic = Taylor–Green
+  scheme = IFK-RK2, 2/3-dealias
+  spatial_scan_N:
+    - 24
+    - 36
+    - 48
+    - 72
+    - 96
+  temporal_scan_dt:
+    - 0.0005
+    - 0.001
+    - 0.002
+    - 0.004
+  ref_spatial = A96 (main96, 96³, dt = 2e-3, T = 6)
+  ref_temporal = CONV48DT0.0005 (48³, dt = 5e-4, T = 6)
+runs:
+  CONV24:
+    n = 24
+    dt = 0.002
+    t_end = 6.0
+    summary:
+      label = CONV24
+      grid = 24
+      b_pow = 1.0
+      nu = 0.01
+      dt = 0.002
+      t_end = 6.0
+      rotated = False
+      t_peak_enstrophy = 4.76
+      Omega_max = 1.2849265282457456
+      omega_inf_max = 3.252083555777674
+      u_inf_max = 0.9746999016613688
+      I_BKM_T = 14.49638849473022
+      LPS_int_u4 = 0.23272790819636385
+      LPS_int_u6half = 0.5173946409392609
+      E_final = 0.1235073963324217
+      eps_mean_stat = 0.011868042935146593
+      energy_balance_rel_max = 0.0008283248954066988
+      enstrophy_balance_rel_max = 0.006616000624877914
+      kd_mean_stat = 2.6178684012128266
+      c_exp_at_peak = nan
+      r2_exp_at_peak = nan
+      slope_pow_at_peak = nan
+      r2_pow_at_peak = nan
+      cert_band:
+        - 5.6
+        - 8.0
+      steps = 3000
+      done = True
+  CONV36:
+    n = 36
+    dt = 0.002
+    t_end = 6.0
+    summary:
+      label = CONV36
+      grid = 36
+      b_pow = 1.0
+      nu = 0.01
+      dt = 0.002
+      t_end = 6.0
+      rotated = False
+      t_peak_enstrophy = 4.9
+      Omega_max = 1.2993982485201392
+      omega_inf_max = 5.202174418463925
+      u_inf_max = 0.9886564404673686
+      I_BKM_T = 17.197813092897768
+      LPS_int_u4 = 0.23248299148061757
+      LPS_int_u6half = 0.5169119050910915
+      E_final = 0.12265127935256709
+      eps_mean_stat = 0.011962566579103828
+      energy_balance_rel_max = 0.0006035985872439865
+      enstrophy_balance_rel_max = 0.00656334017018027
+      kd_mean_stat = 2.6176648165223755
+      c_exp_at_peak = -0.4151529950931223
+      r2_exp_at_peak = 0.7821842129292699
+      slope_pow_at_peak = -4.253079605767544
+      r2_pow_at_peak = 0.7553540533994918
+      cert_band:
+        - 8.399999999999999
+        - 12.0
+      steps = 3000
+      done = True
+  CONV72:
+    n = 72
+    dt = 0.002
+    t_end = 6.0
+    summary:
+      label = CONV72
+      grid = 72
+      b_pow = 1.0
+      nu = 0.01
+      dt = 0.002
+      t_end = 6.0
+      rotated = False
+      t_peak_enstrophy = 4.9
+      Omega_max = 1.299655093133899
+      omega_inf_max = 5.672575661865747
+      u_inf_max = 0.9971491932929253
+      I_BKM_T = 17.714666685191123
+      LPS_int_u4 = 0.23247334368381278
+      LPS_int_u6half = 0.5168932294537616
+      E_final = 0.12262674783695576
+      eps_mean_stat = 0.011964461143418523
+      energy_balance_rel_max = 0.0005493349362266642
+      enstrophy_balance_rel_max = 0.005604993303228518
+      kd_mean_stat = 2.617434521059768
+      c_exp_at_peak = -0.4418513179124601
+      r2_exp_at_peak = 0.9724399364606945
+      slope_pow_at_peak = -9.011916835486025
+      r2_pow_at_peak = 0.9793516015215362
+      cert_band:
+        - 16.799999999999997
+        - 24.0
+      steps = 3000
+      done = True
+  CONV48:
+    n = 48
+    dt = 0.002
+    t_end = 6.0
+    summary:
+      label = CONV48
+      grid = 48
+      b_pow = 1.0
+      nu = 0.01
+      dt = 0.002
+      t_end = 6.0
+      rotated = False
+      t_peak_enstrophy = 4.9
+      Omega_max = 1.2995114794475742
+      omega_inf_max = 5.692074068422931
+      u_inf_max = 0.9935996809173858
+      I_BKM_T = 17.64232056324808
+      LPS_int_u4 = 0.23247466394397565
+      LPS_int_u6half = 0.5168958554501988
+      E_final = 0.12263052189362109
+      eps_mean_stat = 0.01196394309458188
+      energy_balance_rel_max = 0.0005517431144511644
+      enstrophy_balance_rel_max = 0.005651465561384325
+      kd_mean_stat = 2.617480736310629
+      c_exp_at_peak = -0.49533001740856897
+      r2_exp_at_peak = 0.9499459821545664
+      slope_pow_at_peak = -6.881631147061488
+      r2_pow_at_peak = 0.9481759761427291
+      cert_band:
+        - 11.2
+        - 16.0
+      steps = 3000
+      done = True
+  CONV48DT0.004:
+    n = 48
+    dt = 0.004
+    t_end = 6.0
+    summary:
+      label = CONV48DT0.004
+      grid = 48
+      b_pow = 1.0
+      nu = 0.01
+      dt = 0.004
+      t_end = 6.0
+      rotated = False
+      t_peak_enstrophy = 4.92
+      Omega_max = 1.2994720023869577
+      omega_inf_max = 5.6920069308861025
+      u_inf_max = 0.9935996809173858
+      I_BKM_T = 17.642238974208222
+      LPS_int_u4 = 0.23247470803724235
+      LPS_int_u6half = 0.5168954955925538
+      E_final = 0.12263041577627584
+      eps_mean_stat = 0.011958020899193728
+      energy_balance_rel_max = 0.0005507702680218609
+      enstrophy_balance_rel_max = 0.0055197870494795975
+      kd_mean_stat = 2.6169912720996833
+      c_exp_at_peak = -0.4951750793748386
+      r2_exp_at_peak = 0.9501482210945442
+      slope_pow_at_peak = -6.880334806377209
+      r2_pow_at_peak = 0.9486139223376693
+      cert_band:
+        - 11.2
+        - 16.0
+      steps = 1500
+      done = True
+  CONV48DT0.001:
+    n = 48
+    dt = 0.001
+    t_end = 6.0
+    summary:
+      label = CONV48DT0.001
+      grid = 48
+      b_pow = 1.0
+      nu = 0.01
+      dt = 0.001
+      t_end = 6.0
+      rotated = False
+      t_peak_enstrophy = 4.9
+      Omega_max = 1.2995251974816078
+      omega_inf_max = 5.69210994026024
+      u_inf_max = 0.9935996809173858
+      I_BKM_T = 17.642391821342883
+      LPS_int_u4 = 0.2324746685110301
+      LPS_int_u6half = 0.5168959750734694
+      E_final = 0.12263056670568408
+      eps_mean_stat = 0.011966908755924679
+      energy_balance_rel_max = 0.0005526231748335111
+      enstrophy_balance_rel_max = 0.00571811843585168
+      kd_mean_stat = 2.617726021133247
+      c_exp_at_peak = -0.49502969378269984
+      r2_exp_at_peak = 0.9499589990883599
+      slope_pow_at_peak = -6.877586428662382
+      r2_pow_at_peak = 0.9482241766502116
+      cert_band:
+        - 11.2
+        - 16.0
+      steps = 6000
+      done = True
+  CONV48DT0.0005:
+    n = 48
+    dt = 0.0005
+    t_end = 6.0
+    summary:
+      label = CONV48DT0.0005
+      grid = 48
+      b_pow = 1.0
+      nu = 0.01
+      dt = 0.0005
+      t_end = 6.0
+      rotated = False
+      t_peak_enstrophy = 4.905
+      Omega_max = 1.299533013905693
+      omega_inf_max = 5.692128457384026
+      u_inf_max = 0.9935996809173858
+      I_BKM_T = 17.64242092924713
+      LPS_int_u4 = 0.2324746774386523
+      LPS_int_u6half = 0.5168960197935458
+      E_final = 0.12263058705184185
+      eps_mean_stat = 0.011968392734588357
+      energy_balance_rel_max = 0.0005531604074621446
+      enstrophy_balance_rel_max = 0.005751659208182783
+      kd_mean_stat = 2.617849237989629
+      c_exp_at_peak = -0.4946875238593106
+      r2_exp_at_peak = 0.9500183934626482
+      slope_pow_at_peak = -6.873172810435086
+      r2_pow_at_peak = 0.9483773557927206
+      cert_band:
+        - 11.2
+        - 16.0
+      steps = 12000
+      done = True
+spatial:
+  Omega_max:
+    ref96 = 1.2996563693139618
+    points:
+      - [0]
+        N = 24
+        value = 1.2849265282457456
+        rel_err = 0.01133364281205461
+      - [1]
+        N = 36
+        value = 1.2993982485201392
+        rel_err = 0.0001986069548205604
+      - [2]
+        N = 48
+        value = 1.2995114794475742
+        rel_err = 0.00011148321187706828
+      - [3]
+        N = 72
+        value = 1.299655093133899
+        rel_err = 9.81936527892095e-07
+    monotone = True
+    exp_fit:
+      c = 0.18255448219564344
+      A = 0.46304415608373295
+      r2 = 0.953658097215694
+      n_pts = 4
+    err72_over_err48 = 0.008807931807480298
+  omega_inf_max:
+    ref96 = 5.798805600821221
+    points:
+      - [0]
+        N = 24
+        value = 3.252083555777674
+        rel_err = 0.43918044858804767
+      - [1]
+        N = 36
+        value = 5.202174418463925
+        rel_err = 0.10288863318211625
+      - [2]
+        N = 48
+        value = 5.692074068422931
+        rel_err = 0.01840577866296718
+      - [3]
+        N = 72
+        value = 5.672575661865747
+        rel_err = 0.021768265336847503
+    monotone = False
+    exp_fit:
+      c = 0.06156802556970133
+      A = 1.0415653480540492
+      r2 = 0.7182658469114507
+      n_pts = 4
+    err72_over_err48 = 1.1826864668673713
+  I_BKM_T:
+    ref96 = 17.878645119778554
+    points:
+      - [0]
+        N = 24
+        value = 14.49638849473022
+        rel_err = 0.1891785760268072
+      - [1]
+        N = 36
+        value = 17.197813092897768
+        rel_err = 0.03808073946988322
+      - [2]
+        N = 48
+        value = 17.64232056324808
+        rel_err = 0.013218258707368993
+      - [3]
+        N = 72
+        value = 17.714666685191123
+        rel_err = 0.00917174838970472
+    monotone = True
+    exp_fit:
+      c = 0.059740988801478725
+      A = 0.449608078890583
+      r2 = 0.8142615262400326
+      n_pts = 4
+    err72_over_err48 = 0.6938696384109655
+  E_final:
+    ref96 = 0.1226267708682276
+    points:
+      - [0]
+        N = 24
+        value = 0.1235073963324217
+        rel_err = 0.00718134757980713
+      - [1]
+        N = 36
+        value = 0.12265127935256709
+        rel_err = 0.00019986242943498814
+      - [2]
+        N = 48
+        value = 0.12263052189362109
+        rel_err = 3.058896003646651e-05
+      - [3]
+        N = 72
+        value = 0.12262674783695576
+        rel_err = 1.8781601824014782e-07
+    monotone = True
+    exp_fit:
+      c = 0.2135180399361895
+      A = 0.7978025251251953
+      r2 = 0.9904022702066442
+      n_pts = 4
+    err72_over_err48 = 0.00613999357991392
+temporal:
+  Omega_max:
+    ref_dt_min = 1.299533013905693
+    points:
+      - [0]
+        dt = 0.004
+        value = 1.2994720023869577
+        rel_err = 4.694880244097845e-05
+      - [1]
+        dt = 0.002
+        value = 1.2995114794475742
+        rel_err = 1.6570920391010675e-05
+      - [2]
+        dt = 0.001
+        value = 1.2995251974816078
+        rel_err = 6.014794546715132e-06
+      - [3]
+        dt = 0.0005
+        value = 1.299533013905693
+        rel_err = 0.0
+    p_2e3_1e3 = 1.4620663719374363
+    p_roache_3lvl = 0.8114930910973683
+    p_mean = 1.1367797315174024
+    richardson_p2:
+      Q_dt_2e3 = 1.2995114794475742
+      Q_dt_1e3 = 1.2995251974816078
+      Q_dt_5e4 = 1.299533013905693
+      Q0 = 1.2995356193803882
+      resid = 2.004927495829388e-06
+  omega_inf_max:
+    ref_dt_min = 5.692128457384026
+    points:
+      - [0]
+        dt = 0.004
+        value = 5.6920069308861025
+        rel_err = 2.1349921884821534e-05
+      - [1]
+        dt = 0.002
+        value = 5.692074068422931
+        rel_err = 9.555118353720817e-06
+      - [2]
+        dt = 0.001
+        value = 5.69210994026024
+        rel_err = 3.253110664129365e-06
+      - [3]
+        dt = 0.0005
+        value = 5.692128457384026
+        rel_err = 0.0
+    p_2e3_1e3 = 1.5544538424120722
+    p_roache_3lvl = 0.9539916139761134
+    p_mean = 1.2542227281940928
+    richardson_p2:
+      Q_dt_2e3 = 5.692074068422931
+      Q_dt_1e3 = 5.69210994026024
+      Q_dt_5e4 = 5.692128457384026
+      Q0 = 5.6921346297586215
+      resid = 1.0843690455189531e-06
+  I_BKM_T:
+    ref_dt_min = 17.64242092924713
+    points:
+      - [0]
+        dt = 0.004
+        value = 17.642238974208222
+        rel_err = 1.0313496069369011e-05
+      - [1]
+        dt = 0.002
+        value = 17.64232056324808
+        rel_err = 5.68890173587894e-06
+      - [2]
+        dt = 0.001
+        value = 17.642391821342883
+        rel_err = 1.6498815193029134e-06
+      - [3]
+        dt = 0.0005
+        value = 17.64242092924713
+        rel_err = 0.0
+    p_2e3_1e3 = 1.7857877357526315
+    p_roache_3lvl = 1.291642941310423
+    p_mean = 1.538715338531527
+    richardson_p2:
+      Q_dt_2e3 = 17.64232056324808
+      Q_dt_1e3 = 17.642391821342883
+      Q_dt_5e4 = 17.64242092924713
+      Q0 = 17.64243063188188
+      resid = 5.499602039779122e-07
+  E_final:
+    ref_dt_min = 0.12263058705184185
+    points:
+      - [0]
+        dt = 0.004
+        value = 0.12263041577627584
+        rel_err = 1.396679002566505e-06
+      - [1]
+        dt = 0.002
+        value = 0.12263052189362109
+        rel_err = 5.313374283678192e-07
+      - [2]
+        dt = 0.001
+        value = 0.12263056670568408
+        rel_err = 1.6591421652303499e-07
+      - [3]
+        dt = 0.0005
+        value = 0.12263058705184185
+        rel_err = 0.0
+    p_2e3_1e3 = 1.6791908320984548
+    p_roache_3lvl = 1.1391307671704598
+    p_mean = 1.4091607996344573
+    richardson_p2:
+      Q_dt_2e3 = 0.12263052189362109
+      Q_dt_1e3 = 0.12263056670568408
+      Q_dt_5e4 = 0.12263058705184185
+      Q0 = 0.12263059383389444
+      resid = 5.530473574467522e-08
+attribution:
+  Omega_max:
+    spatial_err_48_vs_96 = 0.00011148321187706828
+    temporal_err_dt2e3_vs_rich0 = 1.857581466334614e-05
+    ratio_spatial_over_temporal = 6.0015247728029575
+  omega_inf_max:
+    spatial_err_48_vs_96 = 0.01840577866296718
+    temporal_err_dt2e3_vs_rich0 = 1.0639477037965202e-05
+    ratio_spatial_over_temporal = 1729.9514437870605
+  I_BKM_T:
+    spatial_err_48_vs_96 = 0.013218258707368993
+    temporal_err_dt2e3_vs_rich0 = 6.238858811187293e-06
+    ratio_spatial_over_temporal = 2118.6981637838153
+  E_final:
+    spatial_err_48_vs_96 = 3.058896003646651e-05
+    temporal_err_dt2e3_vs_rich0 = 5.866421347270184e-07
+    ratio_spatial_over_temporal = 52.14245316814899
+balances:
+  - [0]
+    run = CONV24
+    metric = energy_balance_rel_max
+    value = 0.0008283248954066988
+  - [1]
+    run = CONV24
+    metric = enstrophy_balance_rel_max
+    value = 0.006616000624877914
+  - [2]
+    run = CONV36
+    metric = energy_balance_rel_max
+    value = 0.0006035985872439865
+  - [3]
+    run = CONV36
+    metric = enstrophy_balance_rel_max
+    value = 0.00656334017018027
+  - [4]
+    run = CONV72
+    metric = energy_balance_rel_max
+    value = 0.0005493349362266642
+  - [5]
+    run = CONV72
+    metric = enstrophy_balance_rel_max
+    value = 0.005604993303228518
+  - [6]
+    run = CONV48
+    metric = energy_balance_rel_max
+    value = 0.0005517431144511644
+  - [7]
+    run = CONV48
+    metric = enstrophy_balance_rel_max
+    value = 0.005651465561384325
+  - [8]
+    run = CONV48DT0.004
+    metric = energy_balance_rel_max
+    value = 0.0005507702680218609
+  - [9]
+    run = CONV48DT0.004
+    metric = enstrophy_balance_rel_max
+    value = 0.0055197870494795975
+  - [10]
+    run = CONV48DT0.001
+    metric = energy_balance_rel_max
+    value = 0.0005526231748335111
+  - [11]
+    run = CONV48DT0.001
+    metric = enstrophy_balance_rel_max
+    value = 0.00571811843585168
+  - [12]
+    run = CONV48DT0.0005
+    metric = energy_balance_rel_max
+    value = 0.0005531604074621446
+  - [13]
+    run = CONV48DT0.0005
+    metric = enstrophy_balance_rel_max
+    value = 0.005751659208182783
+headline:
+  p_time_worst = 1.1367797315174024
+  n_monotone = 3
+  r2_exp_min = 0.7182658469114507
+  n_sat72 = 3
+  err72_over_err48_max = 1.1826864668673713
+  balance_max = 0.006616000624877914
+  richardson_resid_max = 2.004927495829388e-06
+thresholds:
+  thr_conv_p:
+    - 1.8
+    - 1.5
+  thr_conv_mono:
+    - 3.5
+    - 3.0
+  thr_conv_r2:
+    - 0.85
+    - 0.6
+  thr_conv_sat:
+    - 0.6
+    - 0.85
+  thr_conv_bal:
+    - 0.01
+    - 0.03
+  thr_conv_rich:
+    - 0.005
+    - 0.02
+verdicts:
+  - [0]
+    lab = L16
+    test = наблюдаемый временной порядок IFK-RK2: min(p_E, p_Ω) ≥ 1.8
+    value = 1.1367797315174024
+    verdict = LOSS
+    note = 
+  - [1]
+    lab = L16
+    test = монотонное убывание ошибки по N (из 4 величин)
+    value = 3.0
+    verdict = LOSS
+    note = 
+  - [2]
+    lab = L16
+    test = r² экспоненциальной посадки err(N) ∝ e^(−cN), минимум
+    value = 0.7182658469114507
+    verdict = DRAW
+    note = 
+  - [3]
+    lab = L16
+    test = насыщение сетки: err(72³) < err(48³) (из 4 величин)
+    value = 3.0
+    verdict = LOSS
+    note = 
+  - [4]
+    lab = L16
+    test = максимум балансов энергии/энстрофии по прогонам L16
+    value = 0.006616000624877914
+    verdict = WIN
+    note = 
+  - [5]
+    lab = L16
+    test = невязка Ричардсона dt→0 при p = 2 (максимум)
+    value = 2.004927495829388e-06
+    verdict = WIN
+    note = 
+tally:
+  WIN = 2
+  DRAW = 1
+  LOSS = 3
+  total = 6

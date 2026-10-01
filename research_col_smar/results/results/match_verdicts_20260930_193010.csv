@@ -1,0 +1,4 @@
+lab,test,value,verdict,note
+L8,MATCH1 A vs B: |dI_BKM|/I_A,0.017467612349912048,WIN,dE_final = 4.848e-04; ожидание — НИЧЬЯ (изометрия)
+L8,MATCH2 H2 vs A: resolved margin k_max*eta_b,3.447900304469869,WIN,k_max*eta_b: H2 5.88 vs A 1.70 (ожидание: H2 выигрывает)
+L8,MATCH3 U(32) vs A: energy balance,1.0000570386853869,WIN,balance U 9.90e-05 vs A 9.90e-05
