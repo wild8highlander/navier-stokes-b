@@ -59,9 +59,8 @@
 14. [Verification, provenance and integrity](#14-verification-provenance-and-integrity)
 15. [Repository services](#15-repository-services)
 16. [Contributing](#16-contributing)
-17. [Pushing from Android (Termux)](#17-pushing-from-android-termux)
-18. [License](#18-license)
-19. [Citation](#19-citation)
+17. [License](#18-license)
+18. [Citation](#19-citation)
 
 ---
 
@@ -722,29 +721,7 @@ structured issue forms (bug report, feature request, verification
 request). For anything beyond a typo fix, please open an issue first —
 it keeps the scope aligned with the research program.
 
-## 17. Pushing from Android (Termux)
-
-The repository is designed to be maintained *from a phone*. The script
-[`push_wild8highlander.sh`](push_wild8highlander.sh) is idempotent: it
-finds the repository root, configures the committer identity, points
-`origin` at
-`https://github.com/wild8highlander/navier-stokes-b.git`, commits all
-changes and pushes — in Linux, macOS and Termux alike. First run asks for
-the GitHub username and a Personal Access Token (classic, scope `repo`)
-and stores them with `git credential.helper store`; every later run is a
-single command:
-
-```bash
-./push_wild8highlander.sh "what changed, in one line"
-./push_wild8highlander.sh --manifest "what changed"   # + regenerate MANIFEST.json
-```
-
-A complete, novice-proof, step-by-step Android walkthrough — installing
-Termux from F-Droid, creating the empty repository and the token on
-github.com, unpacking the archive, the first push, wakelock tips and a
-troubleshooting table — lives in [`TERMUX_GUIDE.md`](TERMUX_GUIDE.md).
-
-## 18. License
+## 17. License
 
 **Individual Proprietary License (IPL-RP-1.0).** The entire repository —
 code, papers, monographs, data, plots, figures, animations, site and this
@@ -767,7 +744,7 @@ review process, a translation — ask:
 [open an issue](https://github.com/wild8highlander/navier-stokes-b/issues/new?template=feature_request.yml)
 or contact the author directly.
 
-## 19. Citation
+## 18. Citation
 
 If this repository contributed to your work, cite it as:
 

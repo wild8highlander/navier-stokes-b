@@ -1,0 +1,140 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install numpy
+      - name: Selftest
+        run: python3 python/nsb_lab.py --selftest --no-color --ascii --out /tmp/nsb_py
+      - name: Version + flow table
+        run: |
+          python3 python/nsb_lab.py --version
+          python3 python/nsb_lab.py --list-flows --lang en --no-color
+
+  c:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cc: [gcc, clang]
+    steps:
+      - uses: actions/checkout@v4
+      - run: ${{ matrix.cc }} -O2 -std=c99 -Wall c/nsb_lab.c -o nsb_c -lm
+      - name: Selftest
+        run: ./nsb_c --selftest --no-color --ascii --out /tmp/nsb_c
+      - name: Quick TG physics (N=16)
+        run: ./nsb_c --experiment tg --n 16 --t 0.3 --dt 0.01 --no-color --ascii --out /tmp/nsb_c
+
+  cpp:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        cxx: [g++, clang++]
+    steps:
+      - uses: actions/checkout@v4
+      - run: ${{ matrix.cxx }} -O2 -std=c++17 -Wall -pthread cpp/nsb_lab.cpp -o nsb_cpp
+      - name: Selftest
+        run: ./nsb_cpp --selftest --no-color --ascii --out /tmp/nsb_cpp
+      - name: b-audit (N=16, small)
+        run: ./nsb_cpp --experiment baudit --n 16 --no-color --ascii --out /tmp/nsb_cpp
+
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build (no external crates)
+        run: cargo build --release --manifest-path rust/Cargo.toml
+      - name: Selftest
+        run: ./rust/target/release/nsb_lab --selftest --no-color --ascii --out /tmp/nsb_rs
+
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+      - run: cd go && go vet . && go build -o nsb_go .
+      - name: Selftest
+        run: ./go/nsb_go --selftest --no-color --ascii --out /tmp/nsb_go
+
+  php:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ["8.1", "8.3"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+      - name: Lint
+        run: php -l php/nsb_lab.php
+      - name: Selftest
+        run: php php/nsb_lab.php --selftest --no-color --ascii --out /tmp/nsb_php
+
+  julia:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: julia-actions/setup-julia@v2
+        with:
+          version: "1.10"
+      - name: Selftest
+        run: julia -t auto julia/nsb_lab_standalone.jl --selftest --no-color
+      - name: Flow table
+        run: julia -t auto julia/nsb_lab_standalone.jl --list-flows --no-color
+
+  physics:
+    runs-on: ubuntu-latest
+    needs: python
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install numpy
+      - name: Taylor-Green suite must pass every check
+        run: |
+          python3 python/nsb_lab.py --experiment tg --n 16 --t 0.5 --dt 0.01 \
+            --lang en --no-color --ascii --out /tmp/nsb_phys
+          python3 - << 'PY'
+          import glob, json
+          path = sorted(glob.glob('/tmp/nsb_phys/data/session_*.json'))[-1]
+          runs = json.load(open(path))['runs']
+          assert runs, 'no runs registered'
+          failed = [(r['experiment'], c['key'])
+                    for r in runs for c in r['checks'] if not c['ok']]
+          assert not failed, f'failed checks: {failed}'
+          print('physics OK:', sum(len(r['checks']) for r in runs), 'checks passed')
+          PY
+
+  webapp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: index.html sanity (title, six languages, worker)
+        run: |
+          node -e '
+          const fs = require("fs");
+          const s = fs.readFileSync("webapp/index.html", "utf8");
+          for (const token of ["NSB Web Lab", "ru", "en", "es", "de", "fr", "zh",
+                               "Worker", "viridis", "progFill"])
+            if (!s.includes(token)) throw new Error("missing token: " + token);
+          console.log("webapp OK:", s.length, "bytes");'

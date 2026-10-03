@@ -1,0 +1,28 @@
+# build artefacts
+*.o
+*.out
+*.exe
+nsb_lab
+nsb_c
+nsb_cpp
+nsb_go
+target/
+rust/target/
+cpp/build/
+go/nsb_go
+
+# python
+__pycache__/
+*.pyc
+.venv/
+
+# results & scratch
+nsb_lab_results/
+results/
+*.pkl
+*.ckpt
+
+# editors / OS
+.vscode/
+.idea/
+.DS_Store

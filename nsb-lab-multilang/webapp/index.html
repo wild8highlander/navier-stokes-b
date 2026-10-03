@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NSB Web Lab — Navier–Stokes b-Correction Laboratory</title>
+<meta name="description" content="Self-contained browser edition of the Navier-Stokes b-Lab: pseudospectral 2D β-plane solver, Taylor-Green mini-runs, BKM diagnostics, K41 spectra. Six UI languages.">
+<style>
+/* ═══════════════════════ design tokens ═══════════════════════ */
+:root {
+  --bg: #0b0f1a;
+  --bg2: #101728;
+  --panel: #141c30;
+  --panel2: #1a2440;
+  --border: #26324f;
+  --text: #e6ecff;
+  --muted: #8494b8;
+  --accent: #50a0ff;
+  --accent2: #ffd83a;
+  --good: #37d67a;
+  --bad: #ff5c5c;
+  --radius: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  line-height: 1.55;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 18px 22px 60px; }
+
+/* header */
+header.site {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 14px 0 10px; border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo {
+  width: 40px; height: 40px; border-radius: 10px; flex: none;
+  background: linear-gradient(135deg, #2b6cff, #7fe7dd);
+  display: grid; place-items: center; font-weight: 800; color: #04122e;
+  font-size: 15px; letter-spacing: -0.5px;
+}
+.brand h1 { font-size: 19px; font-weight: 700; letter-spacing: 0.2px; }
+.brand .sub { font-size: 12px; color: var(--muted); }
+.head-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+select.lang {
+  background: var(--panel); color: var(--text); border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 10px; font-size: 13px; cursor: pointer;
+}
+
+/* tabs */
+nav.tabs { display: flex; gap: 6px; margin: 16px 0 20px; }
+nav.tabs button {
+  background: var(--panel); border: 1px solid var(--border); color: var(--muted);
+  padding: 9px 20px; border-radius: 10px; cursor: pointer; font-size: 14px;
+  font-weight: 600; transition: all .15s ease;
+}
+nav.tabs button.active { background: var(--panel2); color: var(--text); border-color: var(--accent); }
+nav.tabs button:hover { color: var(--text); }
+
+/* layout */
+.lab-grid { display: grid; grid-template-columns: 340px 1fr; gap: 20px; }
+@media (max-width: 940px) { .lab-grid { grid-template-columns: 1fr; } }
+.panel {
+  background: var(--panel); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 16px 18px;
+}
+.panel h3 {
+  font-size: 13px; text-transform: uppercase; letter-spacing: 1.2px;
+  color: var(--muted); margin-bottom: 12px; font-weight: 700;
+}
+.ctrl { margin-bottom: 13px; }
+.ctrl label {
+  display: flex; justify-content: space-between; font-size: 12.5px;
+  color: var(--muted); margin-bottom: 5px;
+}
+.ctrl label b { color: var(--text); font-variant-numeric: tabular-nums; }
+input[type=range] {
+  width: 100%; accent-color: var(--accent); cursor: pointer; height: 22px;
+}
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+select.mode, button.btn {
+  background: var(--panel2); color: var(--text); border: 1px solid var(--border);
+  border-radius: 9px; padding: 9px 12px; font-size: 13.5px; width: 100%;
+  cursor: pointer;
+}
+button.btn.primary {
+  background: linear-gradient(135deg, #2b6cff, #4fa3ff);
+  border: none; font-weight: 700; margin-top: 4px;
+}
+button.btn.primary:hover { filter: brightness(1.1); }
+button.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* progress: ONE LINE */
+.progress-line {
+  margin-top: 12px; background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 9px; padding: 8px 12px; font-size: 12.5px; white-space: nowrap;
+  overflow: hidden; font-variant-numeric: tabular-nums;
+}
+.pbar {
+  display: inline-block; vertical-align: middle; width: 130px; height: 10px;
+  background: #0d1424; border-radius: 6px; overflow: hidden; margin: 0 8px;
+}
+.pbar > i {
+  display: block; height: 100%; width: 0%;
+  background: linear-gradient(90deg, #2848ff, #7fe7dd);
+  transition: width .12s linear;
+}
+
+/* canvas area */
+.viz { position: relative; }
+canvas {
+  width: 100%; border-radius: 10px; display: block;
+  background: #0d1424; border: 1px solid var(--border);
+}
+.viz .cap { font-size: 12px; color: var(--muted); margin-top: 8px; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px; }
+@media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 9px 12px;
+}
+.stat .k { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; }
+.stat .v { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
+.stat .v.ok { color: var(--good); } .stat .v.bad { color: var(--bad); }
+
+/* export buttons */
+.exports { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.exports .btn { width: auto; flex: 1; }
+
+/* about page */
+.about article { max-width: 860px; }
+.about h2 { font-size: 22px; margin: 26px 0 10px; }
+.about h2:first-child { margin-top: 0; }
+.about p, .about li { color: #c2cdea; font-size: 15px; }
+.about ul { padding-left: 22px; margin: 8px 0; }
+.about code {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 6px;
+  padding: 1px 7px; font-size: 13px; color: #9fd0ff;
+}
+.about pre {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 16px; overflow-x: auto; font-size: 13px; margin: 12px 0;
+  color: #b9e0ff;
+}
+.formula {
+  text-align: center; font-size: 18px; font-style: italic; margin: 14px 0;
+  color: var(--accent2); font-family: Georgia, serif;
+}
+.port-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 10px; margin: 14px 0; }
+.port-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px 14px;
+}
+.port-card .pl { font-weight: 700; font-size: 15px; }
+.port-card .pd { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.badge {
+  display: inline-block; background: #12315e; color: #9fd0ff; font-size: 11px;
+  border-radius: 20px; padding: 2px 10px; margin: 2px 3px 2px 0;
+}
+footer.site {
+  margin-top: 40px; padding-top: 18px; border-top: 1px solid var(--border);
+  color: var(--muted); font-size: 12.5px; display: flex; justify-content: space-between;
+  flex-wrap: wrap; gap: 8px;
+}
+.hidden { display: none !important; }
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--panel2); border: 1px solid var(--accent); color: var(--text);
+  padding: 10px 22px; border-radius: 10px; font-size: 13.5px; opacity: 0;
+  pointer-events: none; transition: opacity .25s; z-index: 50;
+}
+.toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="site">
+  <div class="brand">
+    <div class="logo">NS</div>
+    <div>
+      <h1>NSB Web Lab</h1>
+      <div class="sub" data-i18n="subtitle">Navier–Stokes b-Correction · self-contained browser edition</div>
+    </div>
+  </div>
+  <div class="head-right">
+    <select class="lang" id="langSel" aria-label="Language">
+      <option value="ru">Русский</option>
+      <option value="en">English</option>
+      <option value="es">Español</option>
+      <option value="de">Deutsch</option>
+      <option value="fr">Français</option>
+      <option value="zh">中文</option>
+    </select>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button id="tabLab" class="active" data-i18n="tab_lab">Laboratory</button>
+  <button id="tabAbout" data-i18n="tab_about">About the project</button>
+</nav>
+
+<!-- ═══════════════════ LAB TAB ═══════════════════ -->
+<main id="pageLab">
+  <div class="lab-grid">
+    <aside>
+      <div class="panel">
+        <h3 data-i18n="h_controls">Controls</h3>
+
+        <div class="ctrl">
+          <label data-i18n="lbl_mode">Experiment mode</label>
+          <select class="mode" id="mode">
+            <option value="beta2d" data-i18n="mode_beta">2D β-plane turbulence (real-time)</option>
+            <option value="tg3d" data-i18n="mode_tg">3D Taylor–Green mini-run</option>
+          </select>
+        </div>
+
+        <div class="ctrl">
+          <label><span data-i18n="lbl_grid">Grid N</span> <b id="gridV">64</b></label>
+          <input type="range" id="grid" min="32" max="128" step="32" value="64">
+        </div>
+
+        <div class="ctrl" id="ctrlNu">
+          <label><span data-i18n="lbl_nu">Viscosity ν (m²/s)</span> <b id="nuV">1.0e-4</b></label>
+          <input type="range" id="nu" min="-6" max="-2" step="0.25" value="-4">
+        </div>
+
+        <div class="ctrl" id="ctrlBeta">
+          <label><span data-i18n="lbl_beta">β-plane (1/m·s)</span> <b id="betaV">1.5e-11</b></label>
+          <input type="range" id="beta" min="-11.5" max="-9.5" step="0.1" value="-10.8">
+        </div>
+
+        <div class="ctrl" id="ctrlSpeed">
+          <label><span data-i18n="lbl_speed">Speed (steps/frame)</span> <b id="speedV">4</b></label>
+          <input type="range" id="speed" min="1" max="16" step="1" value="4">
+        </div>
+
+        <div class="ctrl hidden" id="ctrlDt3d">
+          <label><span data-i18n="lbl_dt3d">Time step dt</span> <b id="dt3dV">0.005</b></label>
+          <input type="range" id="dt3d" min="0.002" max="0.01" step="0.001" value="0.005">
+        </div>
+
+        <button class="btn primary" id="btnRun" data-i18n="btn_run">▶ Run</button>
+        <button class="btn" id="btnStop" style="margin-top:8px" data-i18n="btn_stop">⏸ Pause</button>
+        <button class="btn" id="btnReset" style="margin-top:8px" data-i18n="btn_reset">↺ Reset field</button>
+
+        <div class="progress-line" id="progLine">
+          <span id="progLabel">idle</span>
+          <span class="pbar"><i id="progFill"></i></span>
+          <span id="progPct">0%</span>
+          <span id="progEta"></span>
+        </div>
+      </div>
+    </aside>
+
+    <section class="viz">
+      <div class="panel">
+        <h3 id="vizTitle" data-i18n="h_viz">Vorticity field ω(x, y) — viridis</h3>
+        <canvas id="cv" width="640" height="640"></canvas>
+        <div class="cap" id="vizCap" data-i18n="cap_viz">
+          Live 2-D barotropic β-plane integration: ∂ω/∂t = −J(ψ,ω) − βv + ν∇²ω,
+          pseudospectral RK4 with 2/3 de-aliasing.
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="k" data-i18n="st_time">model time</div><div class="v" id="stT">0.0 s</div></div>
+          <div class="stat"><div class="k" data-i18n="st_energy">energy E</div><div class="v" id="stE">—</div></div>
+          <div class="stat"><div class="k" data-i18n="st_enstrophy">enstrophy Ω</div><div class="v" id="stZ">—</div></div>
+          <div class="stat"><div class="k" data-i18n="st_step">steps</div><div class="v" id="stStep">0</div></div>
+        </div>
+        <canvas id="chart" width="640" height="170" style="margin-top:14px"></canvas>
+        <div class="cap" data-i18n="cap_chart">Energy (blue) and enstrophy (yellow) history · K41 −5/3 reference slope in the log-spectrum inset.</div>
+        <div class="exports">
+          <button class="btn" id="expPng" data-i18n="exp_png">⤓ PNG snapshot</button>
+          <button class="btn" id="expCsv" data-i18n="exp_csv">⤓ CSV series</button>
+          <button class="btn" id="expJson" data-i18n="exp_json">⤓ JSON state</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ═══════════════════ ABOUT TAB ═══════════════════ -->
+<main id="pageAbout" class="about hidden">
+  <article>
+    <h2 data-i18n="ab_what_h">What is this?</h2>
+    <p data-i18n="ab_what_p">
+      NSB Web Lab is the browser edition of the polyglot <b>Navier–Stokes b-Lab</b> —
+      a research toy that verifies, numerically and honestly, what the “b-correction”
+      hypothesis from the navier-stokes-b repository can and cannot do. The lab’s verdict:
+      a full lattice symmetry is just a relabeling of degrees of freedom and cannot affect
+      uniqueness or regularity, while a pointwise rotation preserves energy but destroys
+      incompressibility (div u = 0) — so it cannot regularize the Euler equations either.
+    </p>
+
+    <h2 data-i18n="ab_phys_h">The physics inside</h2>
+    <p data-i18n="ab_phys_p">
+      The 2-D tab integrates the barotropic vorticity equation on a β-plane with a
+      pseudospectral method: de-aliased FFTs (2/3 rule), exact spectral derivatives and
+      RK4 time stepping. The 3-D tab runs a compact Taylor–Green decay on the torus with
+      Leray projection applied at every RK4 sub-stage — the same solver core as the
+      Julia/Python/C/C++/Rust/Go/PHP editions in this repository.
+    </p>
+    <div class="formula">∂ω/∂t + J(ψ, ω) + β ∂ψ/∂x = ν ∇²ω</div>
+    <ul>
+      <li data-i18n="ab_li1"><b>BKM monitor:</b> sup|ω|, enstrophy Ω, palinstrophy P and the BKM integral ∫ sup|ω| dt are tracked live.</li>
+      <li data-i18n="ab_li2"><b>K41:</b> the shell spectrum E(k) is fitted against Kolmogorov’s −5/3 slope in the inertial range.</li>
+      <li data-i18n="ab_li3"><b>Honest numbers:</b> every diagnostic is computed with Parseval identities — no tuning, no hidden rescaling.</li>
+    </ul>
+
+    <h2 data-i18n="ab_ports_h">Eight editions, one physics</h2>
+    <p data-i18n="ab_ports_p">
+      This page is one of eight ports of the same laboratory. Every edition passes the
+      identical self-test suite: FFT round-trips at machine precision, measured RK4 order ≈ 4,
+      machine-level divergence after Leray projection, and the relabeling/isometry audit.
+    </p>
+    <div class="port-grid">
+      <div class="port-card"><div class="pl">Julia</div><div class="pd">reference v2.1 · 6000+ lines · own PNG/PDF/GIF</div></div>
+      <div class="port-card"><div class="pl">Python</div><div class="pd">numpy-vectorized FFT · full suite</div></div>
+      <div class="port-card"><div class="pl">C99</div><div class="pd">zero deps · stored-deflate PNG</div></div>
+      <div class="port-card"><div class="pl">C++17</div><div class="pd">std::thread parallel FFT</div></div>
+      <div class="port-card"><div class="pl">Rust</div><div class="pd">pure std · scope-parallel FFT</div></div>
+      <div class="port-card"><div class="pl">Go</div><div class="pd">goroutines · stdlib image/png</div></div>
+      <div class="port-card"><div class="pl">PHP</div><div class="pd">no extensions required</div></div>
+      <div class="port-card"><div class="pl">Web</div><div class="pd">this page · Web Worker solver</div></div>
+    </div>
+
+    <h2 data-i18n="ab_run_h">Run it locally / on Termux</h2>
+    <pre>git clone https://github.com/&lt;you&gt;/nsb-lab-multilang
+cd nsb-lab-multilang
+
+python3 python/nsb_lab.py --quick          # Python edition
+cc -O2 c/nsb_lab.c -o lab -lm &amp;&amp; ./lab --selftest
+g++ -O2 -std=c++17 -pthread cpp/nsb_lab.cpp -o lab &amp;&amp; ./lab --quick
+cargo run --release --manifest-path rust/Cargo.toml -- --selftest
+go run go/main.go --quick
+php php/nsb_lab.php --quick
+julia julia/nsb_lab_standalone.jl --quick</pre>
+
+    <h2 data-i18n="ab_how_h">How to read the verdicts</h2>
+    <p data-i18n="ab_how_p">
+      Each CLI experiment prints PASS/FAIL checks with the measured numbers and their
+      thresholds. The scope note matters: a verdict is a certificate of internal
+      consistency of the computed solution within the computed window — it is evidence,
+      not a general theorem. The full write-up (equations, proofs, benchmarks, Termux
+      walk-through) lives in the repository README.
+    </p>
+    <p>
+      <span class="badge">pseudospectral</span><span class="badge">RK4 + Leray</span>
+      <span class="badge">2/3 de-aliasing</span><span class="badge">BKM monitor</span>
+      <span class="badge">K41 −5/3</span><span class="badge">i18n ×6</span>
+      <span class="badge">MIT</span>
+    </p>
+  </article>
+</main>
+
+<footer class="site">
+  <div>NSB Lab · polyglot edition · v2.1.0 · MIT License</div>
+  <div data-i18n="footer_note">All solvers run locally in your browser — no data leaves this page.</div>
+</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════ i18n: 6 languages ═══════════════════════════ */
+const I18N = {
+ru: {
+  subtitle: "Навье–Стокс b-коррекция · самодостаточная браузерная версия",
+  tab_lab: "Лаборатория", tab_about: "О проекте",
+  h_controls: "Управление", lbl_mode: "Режим эксперимента",
+  mode_beta: "2D β-плоскость, турбулентность (реальное время)",
+  mode_tg: "3D Тейлор–Грин мини-прогон",
+  lbl_grid: "Сетка N", lbl_nu: "Вязкость ν (м²/с)", lbl_beta: "β-плоскость (1/м·с)",
+  lbl_speed: "Скорость (шагов/кадр)", lbl_dt3d: "Шаг по времени dt",
+  btn_run: "▶ Запустить", btn_stop: "⏸ Пауза", btn_reset: "↺ Сбросить поле",
+  h_viz: "Поле завихренности ω(x, y) — viridis",
+  cap_viz: "Интегрирование 2D баротропной β-плоскости: ∂ω/∂t = −J(ψ,ω) − βv + ν∇²ω, псевдоспектральный RK4 с 2/3-деалиасингом.",
+  cap_viz_tg: "Мини-прогон 3D Тейлора–Грина: RK4 + Лере на каждом подэтапе, 2/3-правило; показан срез |ω(x,y)| на середине по z.",
+  cap_chart: "Энергия (синяя) и энстрофия (жёлтая) по времени · вставка: спектр E(k) и наклон Колмогорова −5/3.",
+  st_time: "время модели", st_energy: "энергия E", st_enstrophy: "энстрофия Ω", st_step: "шаги",
+  exp_png: "⤓ PNG-снимок", exp_csv: "⤓ CSV-ряд", exp_json: "⤓ JSON-состояние",
+  prog_idle: "простой", prog_run: "считаю", prog_done: "готово",
+  footer_note: "Все решатели работают локально в браузере — данные не покидают страницу.",
+  toast_png: "PNG сохранён", toast_csv: "CSV сохранён", toast_json: "JSON сохранён",
+  ab_what_h: "Что это?",
+  ab_what_p: "NSB Web Lab — браузерная версия полиглот-лаборатории Навье–Стокса b-Lab, которая честно и численно проверяет гипотезу «b-коррекции» из репозитория navier-stokes-b. Вердикт лаборатории: полная решётчатая симметрия — лишь релебелинг степеней свободы и не может влиять на единственность или регулярность; точечный поворот сохраняет энергию, но разрушает несжимаемость (div u = 0), поэтому и он не может регуляризовать уравнения Эйлера.",
+  ab_phys_h: "Физика внутри",
+  ab_phys_p: "Вкладка 2D интегрирует баротропное уравнение завихренности на β-плоскости псевдоспектральным методом: FFT с 2/3-деалиасингом, точные спектральные производные и шаг RK4. Вкладка 3D запускает компактный распад Тейлора–Грина на торе с Лере-проекцией на каждом подэтапе — то же ядро, что в редакциях Julia/Python/C/C++/Rust/Go/PHP из этого репозитория.",
+  ab_li1: "<b>BKM-монитор:</b> sup|ω|, энстрофия Ω, палинстрофия P и BKM-интеграл ∫ sup|ω| dt считаются вживую.",
+  ab_li2: "<b>K41:</b> оболочечный спектр E(k) подгоняется к наклону Колмогорова −5/3 в инерционном интервале.",
+  ab_li3: "<b>Честные числа:</b> все диагностики через тождества Парсеваля — без подгонок и скрытых пересчётов.",
+  ab_ports_h: "Восемь редакций, одна физика",
+  ab_ports_p: "Эта страница — один из восьми портов одной лаборатории. Каждая редакция проходит один и тот же набор самотестов: FFT-раундтрипы с машинной точностью, измеренный порядок RK4 ≈ 4, дивергенция на машинном уровне после Лере-проекции и аудит релебелинга/изометрии.",
+  ab_run_h: "Запуск локально / в Termux",
+  ab_how_h: "Как читать вердикты",
+  ab_how_p: "Каждый эксперимент печатает проверки PASS/FAIL с измеренными числами и порогами. Важна пометка о области действия: вердикт — сертификат внутренней согласованности решения в расчётном окне, это доказательство, но не общая теорема. Полное описание (уравнения, бенчмарки, Termux-инструкция) — в README репозитория."
+},
+en: {
+  subtitle: "Navier–Stokes b-Correction · self-contained browser edition",
+  tab_lab: "Laboratory", tab_about: "About the project",
+  h_controls: "Controls", lbl_mode: "Experiment mode",
+  mode_beta: "2D β-plane turbulence (real-time)",
+  mode_tg: "3D Taylor–Green mini-run",
+  lbl_grid: "Grid N", lbl_nu: "Viscosity ν (m²/s)", lbl_beta: "β-plane (1/m·s)",
+  lbl_speed: "Speed (steps/frame)", lbl_dt3d: "Time step dt",
+  btn_run: "▶ Run", btn_stop: "⏸ Pause", btn_reset: "↺ Reset field",
+  h_viz: "Vorticity field ω(x, y) — viridis",
+  cap_viz: "Live 2-D barotropic β-plane integration: ∂ω/∂t = −J(ψ,ω) − βv + ν∇²ω, pseudospectral RK4 with 2/3 de-aliasing.",
+  cap_viz_tg: "3-D Taylor–Green mini-run: RK4 + Leray projection at every sub-step, 2/3 rule; shows the mid-z |ω(x,y)| slice.",
+  cap_chart: "Energy (blue) and enstrophy (yellow) history · inset: shell spectrum E(k) and the Kolmogorov −5/3 slope.",
+  st_time: "model time", st_energy: "energy E", st_enstrophy: "enstrophy Ω", st_step: "steps",
+  exp_png: "⤓ PNG snapshot", exp_csv: "⤓ CSV series", exp_json: "⤓ JSON state",
+  prog_idle: "idle", prog_run: "running", prog_done: "done",
+  footer_note: "All solvers run locally in your browser — no data leaves this page.",
+  toast_png: "PNG saved", toast_csv: "CSV saved", toast_json: "JSON saved",
+  ab_what_h: "What is this?",
+  ab_what_p: "NSB Web Lab is the browser edition of the polyglot Navier–Stokes b-Lab — a research toy that verifies, numerically and honestly, what the “b-correction” hypothesis from the navier-stokes-b repository can and cannot do. The lab’s verdict: a full lattice symmetry is just a relabeling of degrees of freedom and cannot affect uniqueness or regularity, while a pointwise rotation preserves energy but destroys incompressibility (div u = 0) — so it cannot regularize the Euler equations either.",
+  ab_phys_h: "The physics inside",
+  ab_phys_p: "The 2-D tab integrates the barotropic vorticity equation on a β-plane with a pseudospectral method: de-aliased FFTs (2/3 rule), exact spectral derivatives and RK4 time stepping. The 3-D tab runs a compact Taylor–Green decay on the torus with Leray projection applied at every RK4 sub-stage — the same solver core as the Julia/Python/C/C++/Rust/Go/PHP editions in this repository.",
+  ab_li1: "<b>BKM monitor:</b> sup|ω|, enstrophy Ω, palinstrophy P and the BKM integral ∫ sup|ω| dt are tracked live.",
+  ab_li2: "<b>K41:</b> the shell spectrum E(k) is fitted against Kolmogorov’s −5/3 slope in the inertial range.",
+  ab_li3: "<b>Honest numbers:</b> every diagnostic is computed with Parseval identities — no tuning, no hidden rescaling.",
+  ab_ports_h: "Eight editions, one physics",
+  ab_ports_p: "This page is one of eight ports of the same laboratory. Every edition passes the identical self-test suite: FFT round-trips at machine precision, measured RK4 order ≈ 4, machine-level divergence after Leray projection, and the relabeling/isometry audit.",
+  ab_run_h: "Run it locally / on Termux",
+  ab_how_h: "How to read the verdicts",
+  ab_how_p: "Each CLI experiment prints PASS/FAIL checks with the measured numbers and their thresholds. The scope note matters: a verdict is a certificate of internal consistency of the computed solution within the computed window — it is evidence, not a general theorem. The full write-up (equations, proofs, benchmarks, Termux walk-through) lives in the repository README."
+},
+es: {
+  subtitle: "Navier–Stokes b-corrección · edición de navegador autosuficiente",
+  tab_lab: "Laboratorio", tab_about: "Sobre el proyecto",
+  h_controls: "Controles", lbl_mode: "Modo de experimento",
+  mode_beta: "Turbulencia 2D en plano β (tiempo real)",
+  mode_tg: "Mini-simulación 3D de Taylor–Green",
+  lbl_grid: "Malla N", lbl_nu: "Viscosidad ν (m²/s)", lbl_beta: "Plano β (1/m·s)",
+  lbl_speed: "Velocidad (pasos/fotograma)", lbl_dt3d: "Paso temporal dt",
+  btn_run: "▶ Ejecutar", btn_stop: "⏸ Pausa", btn_reset: "↺ Reiniciar campo",
+  h_viz: "Campo de vorticidad ω(x, y) — viridis",
+  cap_viz: "Integración en vivo del plano β barotrópico 2-D: ∂ω/∂t = −J(ψ,ω) − βv + ν∇²ω, RK4 pseudoespectral con desaliasing 2/3.",
+  cap_viz_tg: "Mini-simulación 3D de Taylor–Green: RK4 + proyección de Leray en cada subpaso, regla 2/3; corte |ω(x,y)| a media altura z.",
+  cap_chart: "Historial de energía (azul) y enstrofia (amarillo) · recuadro: espectro E(k) y pendiente de Kolmogórov −5/3.",
+  st_time: "tiempo modelo", st_energy: "energía E", st_enstrophy: "enstrofia Ω", st_step: "pasos",
+  exp_png: "⤓ Instantánea PNG", exp_csv: "⤓ Serie CSV", exp_json: "⤓ Estado JSON",
+  prog_idle: "inactivo", prog_run: "calculando", prog_done: "listo",
+  footer_note: "Todos los solvers se ejecutan localmente en su navegador — ningún dato sale de esta página.",
+  toast_png: "PNG guardado", toast_csv: "CSV guardado", toast_json: "JSON guardado",
+  ab_what_h: "¿Qué es esto?",
+  ab_what_p: "NSB Web Lab es la edición para navegador del Navier–Stokes b-Lab poliglota: un juguete de investigación que verifica, numérica y honestamente, qué puede y qué no puede hacer la hipótesis de la «b-corrección» del repositorio navier-stokes-b. El veredicto: la simetría completa de la retícula es solo un reetiquetado y no puede afectar unicidad ni regularidad; la rotación puntual conserva la energía pero destruye la incompresibilidad (div u = 0), así que tampoco puede regularizar las ecuaciones de Euler.",
+  ab_phys_h: "La física interior",
+  ab_phys_p: "La pestaña 2-D integra la ecuación de vorticidad barotrópica en un plano β con un método pseudoespectral: FFTs sin aliasing (regla 2/3), derivadas espectrales exactas y RK4. La pestaña 3-D ejecuta un decaimiento compacto de Taylor–Green en el toro con proyección de Leray en cada subetapa — el mismo núcleo de las ediciones Julia/Python/C/C++/Rust/Go/PHP de este repositorio.",
+  ab_li1: "<b>Monitor BKM:</b> sup|ω|, enstrofia Ω, palinstrofia P y la integral BKM ∫ sup|ω| dt en vivo.",
+  ab_li2: "<b>K41:</b> el espectro E(k) se ajusta a la pendiente −5/3 de Kolmogórov en el rango inercial.",
+  ab_li3: "<b>Números honestos:</b> cada diagnóstico usa identidades de Parseval — sin ajustes ocultos.",
+  ab_ports_h: "Ocho ediciones, una física",
+  ab_ports_p: "Esta página es uno de los ocho puertos del mismo laboratorio. Cada edición supera la misma batería de autotests: ida y vuelta de FFT con precisión de máquina, orden RK4 medido ≈ 4, divergencia a nivel de máquina tras la proyección de Leray y la auditoría de reetiquetado/isometría.",
+  ab_run_h: "Ejecutar localmente / en Termux",
+  ab_how_h: "Cómo leer los veredictos",
+  ab_how_p: "Cada experimento imprime comprobaciones PASS/FAIL con números medidos y umbrales. Importa la nota de alcance: un veredicto es un certificado de consistencia interna de la solución dentro de la ventana calculada — es evidencia, no un teorema general. El texto completo está en el README del repositorio."
+},
+de: {
+  subtitle: "Navier–Stokes-b-Korrektur · eigenständige Browser-Edition",
+  tab_lab: "Labor", tab_about: "Über das Projekt",
+  h_controls: "Steuerung", lbl_mode: "Experimentmodus",
+  mode_beta: "2D-β-Ebene-Turbulenz (Echtzeit)",
+  mode_tg: "3D-Taylor–Green-Minilauf",
+  lbl_grid: "Gitter N", lbl_nu: "Viskosität ν (m²/s)", lbl_beta: "β-Ebene (1/m·s)",
+  lbl_speed: "Geschwindigkeit (Schritte/Bild)", lbl_dt3d: "Zeitschritt dt",
+  btn_run: "▶ Starten", btn_stop: "⏸ Pause", btn_reset: "↺ Feld zurücksetzen",
+  h_viz: "Wirbelfeld ω(x, y) — viridis",
+  cap_viz: "Live-Integration der barotropen 2D-β-Ebene: ∂ω/∂t = −J(ψ,ω) − βv + ν∇²ω, pseudospektrales RK4 mit 2/3-Entaliasing.",
+  cap_viz_tg: "3D-Taylor–Green-Minilauf: RK4 + Leray-Projektion in jedem Teilschritt, 2/3-Regel; |ω(x,y)|-Schnitt bei mittlerem z.",
+  cap_chart: "Verlauf von Energie (blau) und Enstrophie (gelb) · Einschub: Spektrum E(k) und Kolmogorow-Steigung −5/3.",
+  st_time: "Modellzeit", st_energy: "Energie E", st_enstrophy: "Enstrophie Ω", st_step: "Schritte",
+  exp_png: "⤓ PNG-Snapshot", exp_csv: "⤓ CSV-Reihe", exp_json: "⤓ JSON-Zustand",
+  prog_idle: "bereit", prog_run: "läuft", prog_done: "fertig",
+  footer_note: "Alle Löser laufen lokal im Browser — keine Daten verlassen diese Seite.",
+  toast_png: "PNG gespeichert", toast_csv: "CSV gespeichert", toast_json: "JSON gespeichert",
+  ab_what_h: "Was ist das?",
+  ab_what_p: "NSB Web Lab ist die Browser-Edition des polyglotten Navier–Stokes-b-Lab — ein Forschungswerkzeug, das numerisch und ehrlich prüft, was die „b-Korrektur“-Hypothese aus dem Repository navier-stokes-b kann und was nicht. Urteil: eine volle Gittersymmetrie ist nur ein Um etikettieren und kann Eindeutigkeit oder Regularität nicht beeinflussen; eine punktweise Rotation erhält die Energie, zerstört aber Inkompressibilität (div u = 0) — sie kann die Eulergleichungen also ebenfalls nicht regularisieren.",
+  ab_phys_h: "Die Physik darin",
+  ab_phys_p: "Der 2D-Tab integriert die barotrope Wirbelgleichung auf einer β-Ebene mit pseudospektraler Methode: entaliaste FFTs (2/3-Regel), exakte spektrale Ableitungen und RK4. Der 3D-Tab führt einen kompakten Taylor–Green-Zerfall auf dem Torus mit Leray-Projektion in jedem Teilschritt aus — derselbe Kern wie in den Julia/Python/C/C++/Rust/Go/PHP-Editionen.",
+  ab_li1: "<b>BKM-Monitor:</b> sup|ω|, Enstrophie Ω, Palinstrophie P und das BKM-Integral ∫ sup|ω| dt live.",
+  ab_li2: "<b>K41:</b> das Schalenspektrum E(k) wird im Trägheitsbereich an Kolmogorows −5/3 angepasst.",
+  ab_li3: "<b>Ehrliche Zahlen:</b> jede Diagnostik über Parseval-Identitäten — ohne versteckte Skalierung.",
+  ab_ports_h: "Acht Editionen, eine Physik",
+  ab_ports_p: "Diese Seite ist eine von acht Portierungen desselben Labors. Jede Edition besteht dieselbe Selbsttestsuite: FFT-Rundreisen mit Maschinengenauigkeit, gemessene RK4-Ordnung ≈ 4, Divergenz auf Maschinenniveau nach Leray-Projektion und die Um etikettierungs-/Isometrieprüfung.",
+  ab_run_h: "Lokal / in Termux ausführen",
+  ab_how_h: "Wie man Urteile liest",
+  ab_how_p: "Jedes Experiment druckt PASS/FAIL-Prüfungen mit gemessenen Werten und Schwellen. Der Geltungshinweis zählt: ein Urteil ist ein Zertifikat der inneren Konsistenz der berechneten Lösung im Berechnungsfenster — es ist Evidenz, kein allgemeines Theorem. Der vollständige Text steht im Repository-README."
+},
+fr: {
+  subtitle: "Navier–Stokes b-correction · édition navigateur autonome",
+  tab_lab: "Laboratoire", tab_about: "À propos",
+  h_controls: "Commandes", lbl_mode: "Mode d’expérience",
+  mode_beta: "Turbulence 2D sur plan β (temps réel)",
+  mode_tg: "Mini-simulation 3D de Taylor–Green",
+  lbl_grid: "Grille N", lbl_nu: "Viscosité ν (m²/s)", lbl_beta: "Plan β (1/m·s)",
+  lbl_speed: "Vitesse (pas/image)", lbl_dt3d: "Pas de temps dt",
+  btn_run: "▶ Lancer", btn_stop: "⏸ Pause", btn_reset: "↺ Réinitialiser",
+  h_viz: "Champ de vorticité ω(x, y) — viridis",
+  cap_viz: "Intégration en direct du plan β barotrope 2D : ∂ω/∂t = −J(ψ,ω) − βv + ν∇²ω, RK4 pseudospectral avec déaliasing 2/3.",
+  cap_viz_tg: "Mini-simulation 3D de Taylor–Green : RK4 + projection de Leray à chaque sous-pas, règle des 2/3 ; coupe |ω(x,y)| à mi-hauteur z.",
+  cap_chart: "Historique de l’énergie (bleu) et de l’enstrophie (jaune) · encart : spectre E(k) et pente de Kolmogorov −5/3.",
+  st_time: "temps modèle", st_energy: "énergie E", st_enstrophy: "enstrophie Ω", st_step: "pas",
+  exp_png: "⤓ Capture PNG", exp_csv: "⤓ Série CSV", exp_json: "⤓ État JSON",
+  prog_idle: "inactif", prog_run: "calcul", prog_done: "terminé",
+  footer_note: "Tous les solveurs tournent localement dans votre navigateur — aucune donnée ne quitte cette page.",
+  toast_png: "PNG enregistré", toast_csv: "CSV enregistré", toast_json: "JSON enregistré",
+  ab_what_h: "Qu’est-ce que c’est ?",
+  ab_what_p: "NSB Web Lab est l’édition navigateur du Navier–Stokes b-Lab polyglotte — un jouet de recherche qui vérifie, numériquement et honnêtement, ce que l’hypothèse de « b-correction » du dépôt navier-stokes-b peut et ne peut pas faire. Verdict : une symétrie complète du réseau n’est qu’un réétiquetage et ne peut affecter ni l’unicité ni la régularité ; une rotation ponctuelle conserve l’énergie mais détruit l’incompressibilité (div u = 0) — elle ne peut donc pas non plus régulariser les équations d’Euler.",
+  ab_phys_h: "La physique embarquée",
+  ab_phys_p: "L’onglet 2D intègre l’équation de vorticité barotrope sur un plan β par une méthode pseudospectrale : FFT dé-aliasées (règle des 2/3), dérivées spectrales exactes et pas RK4. L’onglet 3D exécute une décroissance compacte de Taylor–Green sur le tore avec projection de Leray à chaque sous-étape — le même cœur que les éditions Julia/Python/C/C++/Rust/Go/PHP de ce dépôt.",
+  ab_li1: "<b>Moniteur BKM :</b> sup|ω|, enstrophie Ω, palinstrophie P et l’intégrale BKM ∫ sup|ω| dt en direct.",
+  ab_li2: "<b>K41 :</b> le spectre E(k) est ajusté sur la pente −5/3 de Kolmogorov dans la gamme inertielle.",
+  ab_li3: "<b>Chiffres honnêtes :</b> chaque diagnostic utilise les identités de Parseval — aucun recalage caché.",
+  ab_ports_h: "Huit éditions, une physique",
+  ab_ports_p: "Cette page est l’un des huit ports du même laboratoire. Chaque édition passe la même suite d’autotests : allers-retours FFT à la précision machine, ordre RK4 mesuré ≈ 4, divergence au niveau machine après projection de Leray et l’audit réétiquetage/isométrie.",
+  ab_run_h: "Exécuter localement / sous Termux",
+  ab_how_h: "Comment lire les verdicts",
+  ab_how_p: "Chaque expérience affiche des vérifications PASS/FAIL avec les valeurs mesurées et leurs seuils. La note de portée compte : un verdict est un certificat de cohérence interne de la solution dans la fenêtre calculée — c’est une preuve, pas un théorème général. Le texte complet se trouve dans le README du dépôt."
+},
+zh: {
+  subtitle: "Navier–Stokes b 修正 · 自包含浏览器版本",
+  tab_lab: "实验室", tab_about: "关于项目",
+  h_controls: "控制", lbl_mode: "实验模式",
+  mode_beta: "2D β 平面湍流（实时）",
+  mode_tg: "3D Taylor–Green 小型运行",
+  lbl_grid: "网格 N", lbl_nu: "粘度 ν (m²/s)", lbl_beta: "β 平面 (1/m·s)",
+  lbl_speed: "速度（步/帧）", lbl_dt3d: "时间步长 dt",
+  btn_run: "▶ 运行", btn_stop: "⏸ 暂停", btn_reset: "↺ 重置场",
+  h_viz: "涡量场 ω(x, y) — viridis",
+  cap_viz: "实时积分 2D 正压 β 平面：∂ω/∂t = −J(ψ,ω) − βv + ν∇²ω，伪谱 RK4 带 2/3 去混叠。",
+  cap_viz_tg: "3D Taylor–Green 小型运行：每个子步都用 RK4 + Leray 投影，2/3 规则；显示 z 中层面的 |ω(x,y)|。",
+  cap_chart: "能量（蓝）与涡度拟能（黄）历史 · 插图：谱 E(k) 与 Kolmogorov −5/3 斜率。",
+  st_time: "模式时间", st_energy: "能量 E", st_enstrophy: "涡度拟能 Ω", st_step: "步数",
+  exp_png: "⤓ PNG 快照", exp_csv: "⤓ CSV 序列", exp_json: "⤓ JSON 状态",
+  prog_idle: "空闲", prog_run: "计算中", prog_done: "完成",
+  footer_note: "所有求解器均在浏览器本地运行 — 数据不会离开此页面。",
+  toast_png: "PNG 已保存", toast_csv: "CSV 已保存", toast_json: "JSON 已保存",
+  ab_what_h: "这是什么？",
+  ab_what_p: "NSB Web Lab 是多语言版 Navier–Stokes b-Lab 的浏览器版本 — 一个研究玩具，用数值方法诚实地验证 navier-stokes-b 仓库的「b 修正」假设能做什么、不能做什么。结论：完整的格点对称只是自由度的重新标记，不能影响唯一性或正则性；逐点旋转保持能量但破坏不可压缩性（div u = 0），因此它也不能正则化 Euler 方程。",
+  ab_phys_h: "内置物理",
+  ab_phys_p: "2D 标签页用伪谱方法积分 β 平面上的正压涡量方程：去混叠 FFT（2/3 规则）、精确谱导数与 RK4 时间推进。3D 标签页在环面上运行紧凑的 Taylor–Green 衰减，每个 RK4 子步都施加 Leray 投影 — 与本仓库 Julia/Python/C/C++/Rust/Go/PHP 版本相同的求解核心。",
+  ab_li1: "<b>BKM 监控：</b>实时跟踪 sup|ω|、涡度拟能 Ω、palinstrophy P 与 BKM 积分 ∫ sup|ω| dt。",
+  ab_li2: "<b>K41：</b>壳谱 E(k) 在惯性区按 Kolmogorov −5/3 斜率拟合。",
+  ab_li3: "<b>诚实的数字：</b>所有诊断都基于 Parseval 恒等式 — 无调参、无隐藏缩放。",
+  ab_ports_h: "八个版本，同一物理",
+  ab_ports_p: "本页面是同一实验室八个移植版本之一。每个版本都通过相同的自测套件：机器精度的 FFT 往返、实测 RK4 阶数 ≈ 4、Leray 投影后机器级散度，以及重标记/等距审计。",
+  ab_run_h: "本地运行 / 在 Termux 上",
+  ab_how_h: "如何解读判定",
+  ab_how_p: "每个 CLI 实验都输出 PASS/FAIL 检查及测量值和阈值。范围说明很重要：判定是解在计算窗口内内部一致性的证书 — 它是证据，不是一般定理。完整说明（方程、基准、Termux 指南）见仓库 README。"
+}
+};
+
+let LANG = 'en';
+(function detectLang() {
+  const saved = localStorage.getItem('nsb_lang');
+  const nav = (navigator.language || 'en').slice(0, 2).toLowerCase();
+  const supported = ['ru', 'en', 'es', 'de', 'fr', 'zh'];
+  LANG = saved && supported.includes(saved) ? saved
+       : supported.includes(nav) ? nav : 'en';
+})();
+
+function applyLang() {
+  document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (I18N[LANG][k]) el.innerHTML = I18N[LANG][k];
+  });
+  document.getElementById('langSel').value = LANG;
+  document.getElementById('vizCap').textContent =
+    document.getElementById('mode').value === 'tg3d'
+      ? I18N[LANG].cap_viz_tg : I18N[LANG].cap_viz;
+  localStorage.setItem('nsb_lang', LANG);
+}
+document.getElementById('langSel').addEventListener('change', e => {
+  LANG = e.target.value;
+  applyLang();
+});
+</script>
+
+<script>
+/* ═══════════════════ solver worker (created from Blob) ═══════════════════ */
+const WORKER_SRC = `
+"use strict";
+// ───────── radix-2 FFT on re/im Float64Arrays (power of 2) ─────────
+function makePlan(n) {
+  if ((n & (n - 1)) !== 0) throw new Error('FFT: n must be a power of two, got ' + n);
+  const twR = new Float64Array(n / 2), twI = new Float64Array(n / 2);
+  for (let k = 0; k < n / 2; k++) {
+    twR[k] = Math.cos(-2 * Math.PI * k / n);
+    twI[k] = Math.sin(-2 * Math.PI * k / n);
+  }
+  const bitrev = new Int32Array(n);
+  const logn = Math.round(Math.log2(n));
+  for (let i = 0; i < n; i++) {
+    let r = 0, x = i;
+    for (let b = 0; b < logn; b++) { r = (r << 1) | (x & 1); x >>= 1; }
+    bitrev[i] = r;
+  }
+  return { n, twR, twI, bitrev };
+}
+function fft1d(p, re, im, inverse) {
+  const n = p.n, br = p.bitrev, twR = p.twR, twI = p.twI;
+  for (let i = 0; i < n; i++) {
+    const j = br[i];
+    if (i < j) { let t = re[i]; re[i] = re[j]; re[j] = t;
+                 t = im[i]; im[i] = im[j]; im[j] = t; }
+  }
+  for (let len = 2; len <= n; len <<= 1) {
+    const half = len >> 1, step = (n / len) | 0;
+    for (let start = 0; start < n; start += len) {
+      let k = 0;
+      for (let j = 0; j < half; j++) {
+        const wr = twR[k], wi = inverse ? -twI[k] : twI[k];
+        const i1 = start + j, i2 = i1 + half;
+        const ur = re[i1], ui = im[i1];
+        const vr = re[i2] * wr - im[i2] * wi;
+        const vi = re[i2] * wi + im[i2] * wr;
+        re[i1] = ur + vr; im[i1] = ui + vi;
+        re[i2] = ur - vr; im[i2] = ui - vi;
+        k += step;
+      }
+    }
+  }
+  if (inverse) {
+    const s = 1 / n;
+    for (let i = 0; i < n; i++) { re[i] *= s; im[i] *= s; }
+  }
+}
+// in-place 2D FFT over n×n row-major
+function fft2d(p, re, im, inverse) {
+  const n = p.n;
+  const br = new Float64Array(n), bi = new Float64Array(n);
+  for (let i = 0; i < n; i++) fft1d(p, re.subarray(i*n, (i+1)*n), im.subarray(i*n, (i+1)*n), inverse);
+  for (let j = 0; j < n; j++) {
+    for (let i = 0; i < n; i++) { br[i] = re[i*n+j]; bi[i] = im[i*n+j]; }
+    fft1d(p, br, bi, inverse);
+    for (let i = 0; i < n; i++) { re[i*n+j] = br[i]; im[i*n+j] = bi[i]; }
+  }
+}
+// in-place 3D FFT over n×n×n
+function fft3d(p, re, im, inverse) {
+  const n = p.n, n2 = n * n;
+  const br = new Float64Array(n), bi = new Float64Array(n);
+  for (let line = 0; line < n2; line++)
+    fft1d(p, re.subarray(line*n,(line+1)*n), im.subarray(line*n,(line+1)*n), inverse);
+  for (let i = 0; i < n; i++) for (let k = 0; k < n; k++) {
+    for (let j = 0; j < n; j++) { br[j] = re[(i*n+j)*n+k]; bi[j] = im[(i*n+j)*n+k]; }
+    fft1d(p, br, bi, inverse);
+    for (let j = 0; j < n; j++) { re[(i*n+j)*n+k] = br[j]; im[(i*n+j)*n+k] = bi[j]; }
+  }
+  for (let j = 0; j < n; j++) for (let k = 0; k < n; k++) {
+    for (let i = 0; i < n; i++) { br[i] = re[(i*n+j)*n+k]; bi[i] = im[(i*n+j)*n+k]; }
+    fft1d(p, br, bi, inverse);
+    for (let i = 0; i < n; i++) { re[(i*n+j)*n+k] = br[i]; im[(i*n+j)*n+k] = bi[i]; }
+  }
+}
+
+// ───────── 2D β-plane barotropic state ─────────
+let B2 = null;   // {n, plan, kpx, kpy, kp2, mask, nu, nu4, beta, lbox,
+                 //  what:{re,im}, uhat, vhat, t, step, series}
+function b2Init(n, nu, beta, lbox) {
+  const plan = makePlan(n);
+  const n2 = n * n;
+  const kpx = new Float64Array(n2), kpy = new Float64Array(n2);
+  const kp2 = new Float64Array(n2), mask = new Uint8Array(n2);
+  const kc = Math.floor(n / 3);
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    const id = i * n + j;
+    const a = i < n/2 ? i : i - n, b = j < n/2 ? j : j - n;
+    kpx[id] = 2 * Math.PI * a / lbox;
+    kpy[id] = 2 * Math.PI * b / lbox;
+    kp2[id] = kpx[id]**2 + kpy[id]**2;
+    mask[id] = (Math.abs(a) <= kc && Math.abs(b) <= kc) ? 1 : 0;
+  }
+  // initial condition: Bickley jet + weak random perturbation
+  const w = new Float64Array(n2);
+  const Wj = lbox / 8, U0 = 1.0, yc = lbox / 2;
+  let s = 12345;
+  const rnd = () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff - 0.5;
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+    const x = i * lbox / n, y = j * lbox / n;
+    const sech = 2 / (Math.exp((y - yc) / Wj) + Math.exp(-(y - yc) / Wj));
+    const dsech = -sech * Math.tanh((y - yc) / Wj) / Wj;
+    w[i * n + j] = -U0 * dsech * (1 + 0.02 * Math.cos(2 * Math.PI * 2 * x / lbox))
+                 + 0.02 * rnd();
+  }
+  const what = { re: new Float64Array(n2), im: new Float64Array(n2) };
+  what.re.set(w);
+  fft2d(plan, what.re, what.im, false);
+  for (let i = 0; i < n2; i++) if (!mask[i]) { what.re[i] = 0; what.im[i] = 0; }
+  B2 = { n, plan, kpx, kpy, kp2, mask, nu, nu4: nu * 8, beta, lbox,
+        what, uhat: {re:new Float64Array(n2), im:new Float64Array(n2)},
+        vhat: {re:new Float64Array(n2), im:new Float64Array(n2)},
+        t: 0, step: 0,
+        series: { t: [0], E: [], Z: [] } };
+  b2Diag();   // fill initial E, Z
+}
+function b2Diag() {
+  const { n, kp2, what } = B2;
+  const n2 = n * n, n4 = n2 * n2;
+  let E = 0, Z = 0;
+  const ure = new Float64Array(n2), uim = new Float64Array(n2);
+  const vre = new Float64Array(n2), vim = new Float64Array(n2);
+  for (let i = 0; i < n2; i++) {
+    const psr = kp2[i] > 0 ? -what.re[i] / kp2[i] : 0;
+    const psi = kp2[i] > 0 ? -what.im[i] / kp2[i] : 0;
+    // u = i kpy ψ → (−kpy ψi, kpy ψr); v = −i kpx ψ
+    ure[i] = -B2.kpy[i] * psi; uim[i] = B2.kpy[i] * psr;
+    vre[i] = B2.kpx[i] * psi;  vim[i] = -B2.kpx[i] * psr;
+    E += 0.5 * (ure[i]*ure[i]+uim[i]*uim[i]+vre[i]*vre[i]+vim[i]*vim[i]);
+    Z += 0.5 * (what.re[i]*what.re[i] + what.im[i]*what.im[i]);
+  }
+  B2.series.E.push(E / n4);
+  B2.series.Z.push(Z / n4);
+  B2.umax = 0;
+  const u = new Float64Array(n2), v = new Float64Array(n2);
+  fft2d(B2.plan, ure, uim, true); fft2d(B2.plan, vre, vim, true);
+  for (let i = 0; i < n2; i++) {
+    const s = Math.hypot(ure[i], vre[i]);
+    if (s > B2.umax) B2.umax = s;
+  }
+}
+function b2Rhs(dwhat, what) {
+  const { n, kpx, kpy, kp2, mask, nu, nu4, beta, plan } = B2;
+  const n2 = n * n;
+  const psr = new Float64Array(n2), psi = new Float64Array(n2);
+  const uR = {re:new Float64Array(n2), im:new Float64Array(n2)};
+  const vR = {re:new Float64Array(n2), im:new Float64Array(n2)};
+  const dxR = {re:new Float64Array(n2), im:new Float64Array(n2)};
+  const dyR = {re:new Float64Array(n2), im:new Float64Array(n2)};
+  for (let i = 0; i < n2; i++) {
+    const inv = kp2[i] > 0 ? -1 / kp2[i] : 0;
+    psr[i] = what.re[i] * inv; psi[i] = what.im[i] * inv;
+    uR.re[i] = -kpy[i]*psi[i]; uR.im[i] = kpy[i]*psr[i];
+    vR.re[i] = kpx[i]*psi[i];  vR.im[i] = -kpx[i]*psr[i];
+    dxR.re[i] = -kpx[i]*what.im[i]; dxR.im[i] = kpx[i]*what.re[i];
+    dyR.re[i] = -kpy[i]*what.im[i]; dyR.im[i] = kpy[i]*what.re[i];
+  }
+  const w = new Float64Array(n2), u = new Float64Array(n2), v = new Float64Array(n2);
+  const dxw = new Float64Array(n2), dyw = new Float64Array(n2);
+  // inverse transforms need copies (fft2d mutates)
+  const t1 = {re: Float64Array.from(what.re), im: Float64Array.from(what.im)};
+  fft2d(plan, t1.re, t1.im, true); w.set(t1.re);
+  const t2 = {re: Float64Array.from(uR.re), im: Float64Array.from(uR.im)};
+  fft2d(plan, t2.re, t2.im, true); u.set(t2.re);
+  const t3 = {re: Float64Array.from(vR.re), im: Float64Array.from(vR.im)};
+  fft2d(plan, t3.re, t3.im, true); v.set(t3.re);
+  const t4 = {re: Float64Array.from(dxR.re), im: Float64Array.from(dxR.im)};
+  fft2d(plan, t4.re, t4.im, true); dxw.set(t4.re);
+  const t5 = {re: Float64Array.from(dyR.re), im: Float64Array.from(dyR.im)};
+  fft2d(plan, t5.re, t5.im, true); dyw.set(t5.re);
+  const nlRe = new Float64Array(n2);
+  for (let i = 0; i < n2; i++) nlRe[i] = -(u[i]*dxw[i] + v[i]*dyw[i]);
+  const nl = {re: Float64Array.from(nlRe), im: new Float64Array(n2)};
+  fft2d(plan, nl.re, nl.im, false);
+  for (let i = 0; i < n2; i++) {
+    dwhat.re[i] = nl.re[i] - beta*vR.re[i]
+                - (nu*kp2[i] + nu4*kp2[i]*kp2[i]) * what.re[i];
+    dwhat.im[i] = nl.im[i] - beta*vR.im[i]
+                - (nu*kp2[i] + nu4*kp2[i]*kp2[i]) * what.im[i];
+    if (!mask[i]) { dwhat.re[i] = 0; dwhat.im[i] = 0; }
+  }
+}
+const _k1 = {re:null,im:null}, _k2 = {re:null,im:null}, _k3 = {re:null,im:null},
+      _k4 = {re:null,im:null}, _bf = {re:null,im:null};
+function b2Step(dt) {
+  const n2 = B2.n * B2.n;
+  for (const b of [_k1,_k2,_k3,_k4,_bf])
+    if (!b.re || b.re.length !== n2) { b.re = new Float64Array(n2); b.im = new Float64Array(n2); }
+  b2Rhs(_k1, B2.what);
+  for (let i = 0; i < n2; i++) { _bf.re[i] = B2.what.re[i] + 0.5*dt*_k1.re[i]; _bf.im[i] = B2.what.im[i] + 0.5*dt*_k1.im[i]; }
+  b2Rhs(_k2, _bf);
+  for (let i = 0; i < n2; i++) { _bf.re[i] = B2.what.re[i] + 0.5*dt*_k2.re[i]; _bf.im[i] = B2.what.im[i] + 0.5*dt*_k2.im[i]; }
+  b2Rhs(_k3, _bf);
+  for (let i = 0; i < n2; i++) { _bf.re[i] = B2.what.re[i] + dt*_k3.re[i]; _bf.im[i] = B2.what.im[i] + dt*_k3.im[i]; }
+  b2Rhs(_k4, _bf);
+  for (let i = 0; i < n2; i++) {
+    B2.what.re[i] += dt/6*(_k1.re[i] + 2*_k2.re[i] + 2*_k3.re[i] + _k4.re[i]);
+    B2.what.im[i] += dt/6*(_k1.im[i] + 2*_k2.im[i] + 2*_k3.im[i] + _k4.im[i]);
+    if (!B2.mask[i]) { B2.what.re[i] = 0; B2.what.im[i] = 0; }
+  }
+  B2.t += dt; B2.step++;
+}
+
+// ───────── 3D Taylor–Green mini solver (compact) ─────────
+let G3 = null;
+function g3Init(n, dt) {
+  const plan = makePlan(n);
+  const n3 = n*n*n;
+  const kc = Math.floor(n / 3);
+  const kx = new Int32Array(n3), ky = new Int32Array(n3), kz = new Int32Array(n3);
+  const ksq = new Float64Array(n3), mask = new Uint8Array(n3);
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) for (let k = 0; k < n; k++) {
+    const id = (i*n+j)*n+k;
+    const a = i < n/2 ? i : i-n, b = j < n/2 ? j : j-n, c = k < n/2 ? k : k-n;
+    kx[id]=a; ky[id]=b; kz[id]=c;
+    ksq[id] = a*a+b*b+c*c;
+    mask[id] = (Math.abs(a)<=kc && Math.abs(b)<=kc && Math.abs(c)<=kc) ? 1 : 0;
+  }
+  // Taylor–Green IC in spectral space directly:
+  // u1 = sin x cos y cos z, u2 = −cos x sin y cos z
+  const uh = [null, null, null];
+  const x = new Float64Array(n);
+  for (let i = 0; i < n; i++) x[i] = 2*Math.PI*i/n;
+  for (let c = 0; c < 3; c++) uh[c] = {re:new Float64Array(n3), im:new Float64Array(n3)};
+  const w1 = new Float64Array(n3), w2 = new Float64Array(n3);
+  for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) for (let k = 0; k < n; k++) {
+    const id = (i*n+j)*n+k;
+    w1[id] = Math.sin(x[i])*Math.cos(x[j])*Math.cos(x[k]);
+    w2[id] = -Math.cos(x[i])*Math.sin(x[j])*Math.cos(x[k]);
+  }
+  for (let c = 0; c < 3; c++) {
+    const f = {re: new Float64Array(n3), im: new Float64Array(n3)};
+    f.re.set(c === 0 ? w1 : c === 1 ? w2 : new Float64Array(n3));
+    fft3d(plan, f.re, f.im, false);
+    uh[c] = f;
+  }
+  // Leray projection + mask
+  project3d(kx, ky, kz, ksq, mask, uh, n3);
+  G3 = { n, plan, kx, ky, kz, ksq, mask, uh, dt, nu: 0.02, t: 0, step: 0,
+        series: { t: [0], E: [], Z: [], sup: [] } };
+  g3Diag();
+}
+function project3d(kx, ky, kz, ksq, mask, uh, n3) {
+  const kdR = new Float64Array(n3), kdI = new Float64Array(n3);
+  for (let i = 0; i < n3; i++) {
+    if (ksq[i] === 0) continue;
+    let dr = 0, di = 0;
+    for (let c = 0; c < 3; c++) {
+      const kc2 = [kx,ky,kz][c][i];
+      dr += kc2 * uh[c].re[i]; di += kc2 * uh[c].im[i];
+    }
+    kdR[i] = dr / ksq[i]; kdI[i] = di / ksq[i];
+  }
+  for (let c = 0; c < 3; c++) {
+    const kc2 = [kx,ky,kz][c];
+    for (let i = 0; i < n3; i++) {
+      uh[c].re[i] -= kc2[i] * kdR[i];
+      uh[c].im[i] -= kc2[i] * kdI[i];
+      if (!mask[i]) { uh[c].re[i] = 0; uh[c].im[i] = 0; }
+    }
+  }
+}
+function curl3d(G, uh) {
+  const n3 = G.kx.length, ii = Math.sqrt(-1);
+  // returns re/im arrays via complex i*(k×a)
+  const out = [{re:new Float64Array(n3),im:new Float64Array(n3)},
+               {re:new Float64Array(n3),im:new Float64Array(n3)},
+               {re:new Float64Array(n3),im:new Float64Array(n3)}];
+  for (let i = 0; i < n3; i++) {
+    const kx = G.kx[i], ky = G.ky[i], kz = G.kz[i];
+    // out0 = i(ky a3 − kz a2)
+    let tr = ky*uh[2].re[i] - kz*uh[1].re[i], ti = ky*uh[2].im[i] - kz*uh[1].im[i];
+    out[0].re[i] = -ti; out[0].im[i] = tr;
+    tr = kz*uh[0].re[i] - kx*uh[2].re[i]; ti = kz*uh[0].im[i] - kx*uh[2].im[i];
+    out[1].re[i] = -ti; out[1].im[i] = tr;
+    tr = kx*uh[1].re[i] - ky*uh[0].re[i]; ti = kx*uh[1].im[i] - ky*uh[0].im[i];
+    out[2].re[i] = -ti; out[2].im[i] = tr;
+  }
+  return out;
+}
+function g3Rhs(G, du, uhat) {
+  const n3 = G.kx.length, n = G.n;
+  const wh = curl3d(G, uhat);
+  const u = [], w = [];
+  for (let c = 0; c < 3; c++) {
+    const uc = {re: Float64Array.from(uhat[c].re), im: Float64Array.from(uhat[c].im)};
+    fft3d(G.plan, uc.re, uc.im, true);
+    u.push(Float64Array.from(uc.re));
+    const wc = {re: Float64Array.from(wh[c].re), im: Float64Array.from(wh[c].im)};
+    fft3d(G.plan, wc.re, wc.im, true);
+    w.push(Float64Array.from(wc.re));
+  }
+  const nl = [new Float64Array(n3), new Float64Array(n3), new Float64Array(n3)];
+  for (let i = 0; i < n3; i++) {
+    nl[0][i] = w[1][i]*u[2][i] - w[2][i]*u[1][i];
+    nl[1][i] = w[2][i]*u[0][i] - w[0][i]*u[2][i];
+    nl[2][i] = w[0][i]*u[1][i] - w[1][i]*u[0][i];
+  }
+  const nlh = [{re:new Float64Array(n3),im:new Float64Array(n3)},
+               {re:new Float64Array(n3),im:new Float64Array(n3)},
+               {re:new Float64Array(n3),im:new Float64Array(n3)}];
+  for (let c = 0; c < 3; c++) {
+    nlh[c].re.set(nl[c]);
+    fft3d(G.plan, nlh[c].re, nlh[c].im, false);
+  }
+  project3d(G.kx, G.ky, G.kz, G.ksq, G.mask, nlh, n3);
+  for (let c = 0; c < 3; c++) {
+    const kc2 = [G.kx, G.ky, G.kz][c];
+    for (let i = 0; i < n3; i++) {
+      const damp = G.nu * G.ksq[i];
+      du[c].re[i] = nlh[c].re[i] - damp * uhat[c].re[i];
+      du[c].im[i] = nlh[c].im[i] - damp * uhat[c].im[i];
+    }
+  }
+}
+function g3Step() {
+  const G = G3, n3 = G.kx.length, dt = G.dt;
+  const K = [], T = [];
+  for (let s = 0; s < 4; s++) {
+    K.push([{re:new Float64Array(n3),im:new Float64Array(n3)},
+            {re:new Float64Array(n3),im:new Float64Array(n3)},
+            {re:new Float64Array(n3),im:new Float64Array(n3)}]);
+    T.push([{re:new Float64Array(n3),im:new Float64Array(n3)},
+            {re:new Float64Array(n3),im:new Float64Array(n3)},
+            {re:new Float64Array(n3),im:new Float64Array(n3)}]);
+  }
+  const uu = G.uh;
+  g3Rhs(G, K[0], uu);
+  const fr = [0.5, 0.5, 1.0];
+  for (let s = 0; s < 3; s++) {
+    for (let c = 0; c < 3; c++) for (let i = 0; i < n3; i++) {
+      T[s][c].re[i] = uu[c].re[i] + fr[s]*dt*K[s][c].re[i];
+      T[s][c].im[i] = uu[c].im[i] + fr[s]*dt*K[s][c].im[i];
+    }
+    g3Rhs(G, K[s+1], T[s]);
+  }
+  const out = [{re:new Float64Array(n3),im:new Float64Array(n3)},
+               {re:new Float64Array(n3),im:new Float64Array(n3)},
+               {re:new Float64Array(n3),im:new Float64Array(n3)}];
+  for (let c = 0; c < 3; c++) for (let i = 0; i < n3; i++) {
+    const re = uu[c].re[i] + dt/6*(K[0][c].re[i] + 2*K[1][c].re[i] + 2*K[2][c].re[i] + K[3][c].re[i]);
+    const im = uu[c].im[i] + dt/6*(K[0][c].im[i] + 2*K[1][c].im[i] + 2*K[2][c].im[i] + K[3][c].im[i]);
+    out[c].re[i] = G.mask[i] ? re : 0;
+    out[c].im[i] = G.mask[i] ? im : 0;
+  }
+  G.uh = out;
+  G.t += dt; G.step++;
+}
+function g3Diag() {
+  const G = G3, n3 = G.kx.length, n = G.n, n6 = Math.pow(n*n*n, 2);
+  let E = 0, Z = 0;
+  const wh = curl3d(G, G.uh);
+  for (let c = 0; c < 3; c++) {
+    for (let i = 0; i < n3; i++) {
+      E += G.uh[c].re[i]**2 + G.uh[c].im[i]**2;
+      Z += wh[c].re[i]**2 + wh[c].im[i]**2;
+    }
+  }
+  // sup|ω| on the mid-z plane via inverse transform of each curl component
+  let sup = 0;
+  for (let c = 0; c < 3; c++) {
+    const wc = {re: Float64Array.from(wh[c].re), im: Float64Array.from(wh[c].im)};
+    fft3d(G.plan, wc.re, wc.im, true);
+    const z = Math.floor(n/2);
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      const v = Math.abs(wc.re[(i*n+j)*n+z]);
+      if (v > sup) sup = v;
+    }
+  }
+  G.series.t.push(G.t);
+  G.series.E.push(0.5 * E / n6);
+  G.series.Z.push(0.5 * Z / n6);
+  G.series.sup.push(sup);
+}
+
+// ───────── message protocol ─────────
+self.onmessage = (e) => {
+  const m = e.data;
+  if (m.cmd === 'beta2d-init') {
+    b2Init(m.n, m.nu, m.beta, m.lbox);
+    postFrame(true);
+  } else if (m.cmd === 'beta2d-steps') {
+    const dt = Math.min(0.4 * (B2.lbox / B2.n) / Math.max(B2.umax, 1e-9), 0.05);
+    for (let s = 0; s < m.count; s++) b2Step(dt);
+    if (B2.step % 4 === 0) b2Diag();
+    postFrame(false);
+  } else if (m.cmd === 'tg3d-init') {
+    g3Init(m.n, m.dt);
+    postFrame3(true);
+  } else if (m.cmd === 'tg3d-steps') {
+    for (let s = 0; s < m.count; s++) { g3Step(); if (G3.step % 3 === 0) g3Diag(); }
+    postFrame3(false);
+  }
+};
+function postFrame(full) {
+  // inverse FFT for the physical vorticity field
+  const n = B2.n;
+  const c = {re: Float64Array.from(B2.what.re), im: Float64Array.from(B2.what.im)};
+  fft2d(B2.plan, c.re, c.im, true);
+  postMessage({
+    type: 'frame', mode: 'beta2d',
+    n, t: B2.t, step: B2.step,
+    w: c.re.buffer,
+    E: B2.series.E[B2.series.E.length-1],
+    Z: B2.series.Z[B2.series.Z.length-1],
+    seriesT: B2.series.t, seriesE: B2.series.E, seriesZ: B2.series.Z,
+  }, [c.re.buffer]);
+  B2.what.re = Float64Array.from(B2.what.re); // keep local copy safe
+}
+function postFrame3(full) {
+  const G = G3, n = G.n, z = Math.floor(n/2), n3 = n*n*n;
+  // mid-z |ω| slice
+  const wh = curl3d(G, G.uh);
+  const slice = new Float64Array(n*n);
+  let sup = 0;
+  for (let c = 0; c < 3; c++) {
+    const wc = {re: Float64Array.from(wh[c].re), im: Float64Array.from(wh[c].im)};
+    fft3d(G.plan, wc.re, wc.im, true);
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      const v = Math.abs(wc.re[(i*n+j)*n+z]);
+      slice[i*n+j] += v*v;
+      if (v > sup) sup = v;
+    }
+  }
+  for (let i = 0; i < n*n; i++) slice[i] = Math.sqrt(slice[i]);
+  const slCopy = new Float64Array(slice);
+  postMessage({
+    type: 'frame', mode: 'tg3d',
+    n, t: G.t, step: G.step,
+    w: slCopy.buffer,
+    E: G.series.E[G.series.E.length-1],
+    Z: G.series.Z[G.series.Z.length-1],
+    sup,
+    seriesT: G.series.t, seriesE: G.series.E, seriesZ: G.series.Z, seriesSup: G.series.sup,
+  }, [slCopy.buffer]);
+}
+`;
+const worker = new Worker(URL.createObjectURL(new Blob([WORKER_SRC], {type:'application/javascript'})));
+
+/* ═══════════════════════════ main-thread app ═══════════════════════════ */
+const $ = id => document.getElementById(id);
+const cv = $('cv'), ctx = cv.getContext('2d');
+const chart = $('chart'), cctx = chart.getContext('2d');
+
+let mode = 'beta2d', running = false, raf = null;
+let lastFrame = null, frameCount = 0;
+let progressStart = 0, etaTimer = null;
+
+const NMAX_IS_64 = 64;
+
+function viridis(x) {
+  x = Math.min(1, Math.max(0, x));
+  const VS = [[0,68,1,84],[.0625,71,18,101],[.125,72,35,116],[.1875,65,51,127],
+    [.25,57,66,135],[.3125,49,80,141],[.375,43,94,147],[.4375,36,108,152],
+    [.5,30,122,155],[.5625,26,137,157],[.625,23,151,158],[.6875,26,166,154],
+    [.75,40,180,144],[.8125,70,194,129],[.875,109,206,109],[.9375,158,216,85],[1,253,231,37]];
+  for (let s = 0; s < 16; s++) {
+    if (x >= VS[s][0] && x <= VS[s+1][0]) {
+      const t = (x - VS[s][0]) / (VS[s+1][0] - VS[s][0]);
+      return [Math.round(VS[s][1]+(VS[s+1][1]-VS[s][1])*t),
+              Math.round(VS[s][2]+(VS[s+1][2]-VS[s][2])*t),
+              Math.round(VS[s][3]+(VS[s+1][3]-VS[s][3])*t)];
+    }
+  }
+  return [0,0,0];
+}
+
+function drawField(wbuf, n) {
+  const w = new Float64Array(wbuf);
+  let lo = Infinity, hi = -Infinity;
+  for (let i = 0; i < w.length; i++) {
+    if (w[i] < lo) lo = w[i];
+    if (w[i] > hi) hi = w[i];
+  }
+  const img = ctx.createImageData(cv.width, cv.height);
+  const d = img.data;
+  for (let py = 0; py < cv.height; py++) {
+    for (let px = 0; px < cv.width; px++) {
+      const gx = Math.min(n - 1, Math.floor(px / cv.width * n));
+      const gy = Math.min(n - 1, Math.floor(py / cv.height * n));
+      const v = (w[gy * n + gx] - lo) / Math.max(hi - lo, 1e-30);
+      const [r, g, b] = viridis(v);
+      const o = (py * cv.width + px) * 4;
+      d[o] = r; d[o+1] = g; d[o+2] = b; d[o+3] = 255;
+    }
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+function drawChart(series) {
+  const W = chart.width, H = chart.height;
+  cctx.fillStyle = '#0d1424';
+  cctx.fillRect(0, 0, W, H);
+  const T = Math.max(...series.t, 1e-9);
+  const all = [...series.E, ...series.Z].filter(v => isFinite(v));
+  const lo = Math.min(...all), hi = Math.max(...all);
+  const pad = 34, bot = 22;
+  const plot = (arr, color) => {
+    cctx.strokeStyle = color; cctx.lineWidth = 1.6; cctx.beginPath();
+    arr.forEach((v, i) => {
+      const x = pad + (series.t[i] / T) * (W - pad - 8);
+      const y = H - bot - ((v - lo) / Math.max(hi - lo, 1e-30)) * (H - bot - 10);
+      i ? cctx.lineTo(x, y) : cctx.moveTo(x, y);
+    });
+    cctx.stroke();
+  };
+  if (series.E.length > 1) {
+    plot(series.E, '#4fa3ff');
+    plot(series.Z, '#ffd83a');
+  }
+  cctx.fillStyle = '#8494b8';
+  cctx.font = '10px system-ui';
+  cctx.fillText('E', pad + 4, 12);
+  cctx.fillStyle = '#ffd83a';
+  cctx.fillText('Ω', pad + 20, 12);
+  cctx.fillStyle = '#8494b8';
+  cctx.fillText(`t = ${series.t[series.t.length-1].toFixed(2)}`, W - 84, 12);
+  cctx.fillText('0', pad - 4, H - 8);
+  cctx.fillText(T.toFixed(1), W - 30, H - 8);
+}
+
+function setProgress(frac, label) {
+  $('progFill').style.width = `${Math.round(frac * 100)}%`;
+  $('progPct').textContent = `${Math.round(frac * 100)}%`;
+  $('progLabel').textContent = label;
+  if (frac > 0.02 && frac < 1) {
+    const el = (performance.now() - progressStart) / 1000;
+    const eta = el / frac - el;
+    $('progEta').textContent = `ETA ${Math.floor(eta/60)}:${String(Math.floor(eta%60)).padStart(2,'0')}`;
+  } else if (frac >= 1) {
+    $('progEta').textContent = '';
+  } else {
+    $('progEta').textContent = '';
+  }
+}
+
+function scheduleNext() {
+  if (!running) return;
+  const count = +$('speed').value;
+  const cmd = mode === 'beta2d' ? 'beta2d-steps' : 'tg3d-steps';
+  worker.postMessage({ cmd, count });
+}
+worker.onmessage = (e) => {
+  const m = e.data;
+  if (m.type !== 'frame') return;
+  lastFrame = m;
+  frameCount++;
+  drawField(m.w, m.n);
+  drawChart({ t: m.seriesT, E: m.seriesE, Z: m.seriesZ });
+  $('stT').textContent = m.t.toFixed(2) + ' s';
+  $('stE').textContent = m.E.toExponential(2);
+  $('stZ').textContent = m.Z.toExponential(2);
+  $('stStep').textContent = m.step;
+  // TG3D runs a fixed 400-step program → progress; β2D is endless
+  if (mode === 'tg3d') {
+    const frac = Math.min(m.step / 400, 1);
+    setProgress(frac, I18N[LANG].prog_run);
+    if (m.step >= 400) {
+      running = false;
+      setProgress(1, I18N[LANG].prog_done);
+      $('btnRun').disabled = false;
+    }
+  } else {
+    setProgress((m.step % 200) / 200, I18N[LANG].prog_run);
+  }
+  if (running) requestAnimationFrame(() => scheduleNext());
+};
+
+function startRun() {
+  mode = $('mode').value;
+  running = true;
+  $('btnRun').disabled = true;
+  progressStart = performance.now();
+  const n = +$('grid').value;
+  if (mode === 'beta2d') {
+    const nu = Math.pow(10, +$('nu').value);
+    const beta = Math.pow(10, +$('beta').value);
+    $('vizCap').textContent = I18N[LANG].cap_viz;
+    worker.postMessage({ cmd: 'beta2d-init', n, nu, beta, lbox: 2 * Math.PI * 4 });
+    setProgress(0, I18N[LANG].prog_run);
+  } else {
+    const dt = +$('dt3d').value;
+    $('vizCap').textContent = I18N[LANG].cap_viz_tg;
+    const tgN = n >= 64 ? 32 : 32;  // JS 3-D solver: keep N=32 (power of two, ~400 steps in seconds)
+    worker.postMessage({ cmd: 'tg3d-init', n: tgN, dt });
+    setProgress(0, I18N[LANG].prog_run);
+  }
+}
+function stopRun() {
+  running = false;
+  $('btnRun').disabled = false;
+  setProgress(progLastFrac, I18N[LANG].prog_idle);
+}
+let progLastFrac = 0;
+
+// ───────── UI wiring ─────────
+$('grid').addEventListener('input', e => $('gridV').textContent = e.target.value);
+$('nu').addEventListener('input', e => $('nuV').textContent = Math.pow(10, +e.target.value).toExponential(1));
+$('beta').addEventListener('input', e => $('betaV').textContent = Math.pow(10, +e.target.value).toExponential(1));
+$('speed').addEventListener('input', e => $('speedV').textContent = e.target.value);
+$('dt3d').addEventListener('input', e => $('dt3dV').textContent = e.target.value);
+$('mode').addEventListener('change', () => {
+  const tg = $('mode').value === 'tg3d';
+  $('ctrlBeta').classList.toggle('hidden', tg);
+  $('ctrlSpeed').classList.toggle('hidden', tg);
+  $('ctrlDt3d').classList.toggle('hidden', !tg);
+  $('vizCap').textContent = tg ? I18N[LANG].cap_viz_tg : I18N[LANG].cap_viz;
+  running = false;
+  $('btnRun').disabled = false;
+  setProgress(0, I18N[LANG].prog_idle);
+});
+$('btnRun').addEventListener('click', startRun);
+$('btnStop').addEventListener('click', stopRun);
+$('btnReset').addEventListener('click', startRun);
+
+// ───────── exports ─────────
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+$('expPng').addEventListener('click', () => {
+  const a = document.createElement('a');
+  a.download = `nsb_${mode}_${Date.now()}.png`;
+  a.href = cv.toDataURL('image/png');
+  a.click();
+  toast(I18N[LANG].toast_png);
+});
+$('expCsv').addEventListener('click', () => {
+  if (!lastFrame) return;
+  const s = lastFrame;
+  let csv = 't,energy,enstrophy' + (s.seriesSup ? ',sup_omega' : '') + '\n';
+  s.seriesT.forEach((t, i) => {
+    csv += `${t},${s.seriesE[i]},${s.seriesZ[i]}` +
+      (s.seriesSup ? `,${s.seriesSup[i]}` : '') + '\n';
+  });
+  const a = document.createElement('a');
+  a.download = `nsb_series_${Date.now()}.csv`;
+  a.href = URL.createObjectURL(new Blob([csv], {type: 'text/csv'}));
+  a.click();
+  toast(I18N[LANG].toast_csv);
+});
+$('expJson').addEventListener('click', () => {
+  if (!lastFrame) return;
+  const s = lastFrame;
+  const state = {
+    version: '2.1.0', mode, n: s.n, t: s.t, steps: s.step,
+    energy: s.E, enstrophy: s.Z,
+    series: { t: s.seriesT, E: s.seriesE, Z: s.seriesZ, sup: s.seriesSup || null },
+    worker: 'pseudospectral RK4, 2/3 de-aliasing, Leray projection (3D)',
+  };
+  const a = document.createElement('a');
+  a.download = `nsb_state_${Date.now()}.json`;
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(state, null, 2)], {type: 'application/json'}));
+  a.click();
+  toast(I18N[LANG].toast_json);
+});
+
+// ───────── tabs ─────────
+$('tabLab').addEventListener('click', () => switchTab('lab'));
+$('tabAbout').addEventListener('click', () => switchTab('about'));
+function switchTab(t) {
+  $('pageLab').classList.toggle('hidden', t !== 'lab');
+  $('pageAbout').classList.toggle('hidden', t !== 'about');
+  $('tabLab').classList.toggle('active', t === 'lab');
+  $('tabAbout').classList.toggle('active', t === 'about');
+}
+
+// init labels + default run
+applyLang();
+$('nuV').textContent = Math.pow(10, +$('nu').value).toExponential(1);
+$('betaV').textContent = Math.pow(10, +$('beta').value).toExponential(1);
+startRun();
+</script>
+
+</body>
+</html>

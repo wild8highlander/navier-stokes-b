@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.10)
+project(nsb_lab_cpp CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+find_package(Threads REQUIRED)
+add_executable(nsb_lab nsb_lab.cpp)
+target_link_libraries(nsb_lab PRIVATE Threads::Threads)
+target_compile_options(nsb_lab PRIVATE -O2 -Wall)

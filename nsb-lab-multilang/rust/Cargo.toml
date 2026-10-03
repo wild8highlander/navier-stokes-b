@@ -1,0 +1,13 @@
+[package]
+name = "nsb_lab"
+version = "2.1.0"
+edition = "2021"
+description = "Self-contained Navier-Stokes b-Lab: pseudospectral 3D/2D solvers, BKM diagnostics, zero external crates"
+license = "MIT"
+
+[profile.release]
+opt-level = 3
+codegen-units = 1
+
+[dependencies]
+# none — the whole point of this edition
