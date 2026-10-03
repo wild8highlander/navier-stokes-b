@@ -45,11 +45,9 @@ C, C++, Rust, Go and PHP** — the strongest smoke test this repo has.
 11. [Output layout](#output-layout)
 12. [Performance and benchmarks](#performance-and-benchmarks)
 13. [Repository layout](#repository-layout)
-14. [Pushing to GitHub from Android Termux](#pushing-to-github-from-android-termux)
-15. [Continuous Integration](#continuous-integration)
-16. [Fidelity notes: how the ports were checked against Julia](#fidelity-notes)
-17. [Frequently asked questions](#faq)
-18. [License and how to cite](#license-and-how-to-cite)
+14. [Continuous Integration](#continuous-integration)
+15. [Fidelity notes: how the ports were checked against Julia](#fidelity-notes)
+16. [Frequently asked questions](#faq)
 
 ---
 
@@ -396,55 +394,6 @@ nsb-lab-multilang/
     ├── build_all.sh               build every CLI edition
     └── termux_setup_and_push.sh   Termux one-shot: toolchains + git push
 ```
-
-## Pushing to GitHub from Android Termux
-
-The repository is designed to be cloned, built and pushed **entirely on an
-Android phone**. The one-shot helper does everything:
-
-```bash
-pkg install git curl      # if not yet
-bash scripts/termux_setup_and_push.sh
-```
-
-The script:
-
-1. installs the toolchains that Termux provides (`pkg install python clang \
-   rust go php binutils make`) and offers the community `julia` package;
-2. builds every CLI edition and runs `--selftest` for each one, printing a
-   PASS/FAIL table;
-3. initialises `git` if needed, sets the default branch to `main`, makes the
-   first commit if the tree is clean-new;
-4. asks for your GitHub username / repository / PAT (stored via
-   `git credential-store` or an `origin` remote you already have) and pushes:
-   `git push -u origin main`.
-
-Manual walk-through (if you prefer to type the commands yourself) — including
-how to create the PAT, how to work over SSH with `termux-keygen`, and how to
-verify the push from the phone's browser — is in
-[`scripts/termux_setup_and_push.sh`](scripts/termux_setup_and_push.sh) header
-comment. The short version:
-
-```bash
-pkg install git python clang rust go php make binutils -y
-git clone https://github.com/<you>/nsb-lab-multilang.git
-cd nsb-lab-multilang
-bash scripts/build_all.sh            # builds + selftests everything
-git config user.name "You"; git config user.email "you@example.com"
-git add -A && git commit -m "NSB lab: initial polyglot push"
-git remote add origin https://<TOKEN>@github.com/<you>/nsb-lab-multilang.git
-git push -u origin main
-```
-
-## Continuous Integration
-
-`.github/workflows/ci.yml` builds and self-tests every CLI edition on every
-push and PR: Python 3.10/3.12 (numpy), C (gcc/clang), C++17 (gcc/clang),
-Rust stable (`cargo build --release`), Go 1.21+, PHP 8.1+, and Julia 1.10 via
-`julia-actions/setup-julia`. The physics job additionally runs the Python
-`--experiment tg --n 16` suite and asserts that the verdict JSON reports
-`ok: true` for every check — so a physics regression fails CI, not just a
-build error.
 
 ## Fidelity notes
 
