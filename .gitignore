@@ -133,57 +133,6 @@ output/
 *.agdai
 MAlonzo/
 
-# ─── LaTeX ───
-*.aux
-*.bbl
-*.blg
-*.fdb_latexmk
-*.fls
-*.log
-*.out
-*.pdf
-*.snm
-*.synctex.gz
-*.toc
-*.nav
-*.run.xml
-*.bcf
-*.cut
-*.idx
-*.ilg
-*.ind
-*.ist
-*.lof
-*.lot
-*.maf
-*.mtc
-*.mtc1
-*.mw
-*.xdy
-_minted-*/
-src/_build/
-
-# ─── Docker ───
-.docker/
-
-# ─── Documentation ───
-site/
-docs/_build/
-
-# ─── IDE and Editors ───
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-.project
-.classpath
-.settings/
-*.sublime-project
-*.sublime-workspace
-.clangd/
-.cache/
-
 # ─── OS ───
 .DS_Store
 .DS_Store?
