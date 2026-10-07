@@ -22,7 +22,6 @@ obtained is recorded explicitly.
 | [`code/`](code/README.md) | the runnable scripts (fixed seeds), one per problem + the aggregator |
 | [`results/`](results/README.md) | the JSON protocols — every number of the master document |
 | [`figures/`](figures/README.md) | the figures generated from the JSONs |
-| `push_open_problems.sh` | Termux/POSIX helper that commits and pushes this package |
 
 ## One command
 
