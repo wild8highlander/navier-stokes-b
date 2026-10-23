@@ -28,8 +28,8 @@
       "bytes": 463
     },
     ".github/ISSUE_TEMPLATE/README.md": {
-      "sha256": "510cec37ed3d8283215eae09f8f05e771d530df286f5ba6ce83867910b8921ab",
-      "bytes": 1218
+      "sha256": "81f8e09e226b2e39889d7dc87b796aa91f4d22071e0617bdf051eef2bfe2dbde",
+      "bytes": 1063
     },
     ".github/ISSUE_TEMPLATE/bug_report.yml": {
       "sha256": "9a6981bf1f49602ae8e4bc97092f572693e35580fca210c95aed21e7172955b8",
@@ -56,8 +56,8 @@
       "bytes": 915
     },
     ".github/scripts/README.md": {
-      "sha256": "c750180970c5d8840ead3541c3b71646cd57874790b6f66779bb05f275134552",
-      "bytes": 1197
+      "sha256": "a662e8c2df907164d8a0f8c32cf3f076bccb2f6c1e0f754f5e46d6a136359c03",
+      "bytes": 1042
     },
     ".github/scripts/check_readmes.py": {
       "sha256": "cecf830330f197d8932210e59a975de8e18681444920cfbaa1d121557aae68da",
@@ -72,8 +72,8 @@
       "bytes": 1574
     },
     ".github/workflows/README.md": {
-      "sha256": "c22f00e730ca3cbeb914c765443a32fcba1f56781a2351fa099e510f201c28c1",
-      "bytes": 1381
+      "sha256": "8a1d1d10582b068c841d1dc3809a8ce9667c433a1c99b5e7aaa56341551bd241",
+      "bytes": 1226
     },
     ".github/workflows/ci.yml": {
       "sha256": "f108c1809b0dc54efebd286ad87a29b42f1735ac49fd53eacdd7cdb325cb9c15",

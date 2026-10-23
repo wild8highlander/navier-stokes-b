@@ -64,8 +64,8 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - name: Install numpy
-        run: pip install numpy
+      - name: Install numpy and pytest
+        run: pip install numpy pytest
       - name: Run all four lab experiments (smoke preset, EN + RU output)
         run: |
           python -m research_lab.run_lab --experiment taylor_green --preset smoke
