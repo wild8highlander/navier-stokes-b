@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../assets/brand/header_papers.svg" alt="typeset papers of the b-correction program" width="100%"/>
+</p>
+
 # `papers/` — Typeset Articles of the b-Correction Program (PDF)
 
 > **Navigation:** [repository root](../README.md) › **`papers`**
@@ -15,6 +20,10 @@ in [`docs/`](../docs/README.md); the numerical protocols behind every
 quantitative claim live in [`data/results/`](../data/results/README.md).
 
 ## Collections
+
+<p align="center">
+  <img src="../assets/brand/pipeline_animated.svg" alt="repository pipeline — seven modules lighting up in sequence" width="100%"/>
+</p>
 
 | Collection | Editions | Program |
 |---|---|---|

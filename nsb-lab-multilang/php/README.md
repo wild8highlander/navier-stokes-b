@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # NSB PHP Lab — the no-extensions edition
 
 **`php/nsb_lab.php`** — the Navier–Stokes b-Laboratory in ~1 600 lines of

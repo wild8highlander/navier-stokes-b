@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # `section2_preprint` — Preprint NSE — the regularity chain (C++17)
 
 > **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [cpp](../README.md) › **section 2**

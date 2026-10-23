@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # NSB C++ Lab — the std::thread-parallel edition
 
 **`nsb_lab.cpp`** — the Navier–Stokes b-Laboratory in ~2 200 lines of

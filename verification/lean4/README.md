@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_verification.svg" alt="verification matrix — cells lighting up" width="100%"/>
+</p>
+
 # `lean4/` — the Lean 4 formal tier
 
 > **Navigation:** [repository root](../README.md) › [verification](../README.md) › **`lean4`**

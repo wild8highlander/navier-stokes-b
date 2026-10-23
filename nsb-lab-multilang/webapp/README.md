@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_fluid.svg" alt="vortex field of the browser fluid laboratory" width="100%"/>
+</p>
+
 # NSB Web Lab — the browser edition
 
 **`index.html`** — the entire Navier–Stokes b-Laboratory as a single

@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="224" viewBox="0 0 1280 224" role="img" aria-label="navier-stokes-b — ELEVEN-LANGUAGE LAB animated header">
+<defs>
+
+<linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#0D1117"/><stop offset=".55" stop-color="#0A0E1A"/><stop offset="1" stop-color="#0B1226"/>
+</linearGradient>
+<linearGradient id="cyA" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#A855F7"/>
+</linearGradient>
+<linearGradient id="cyAm" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#F59E0B"/>
+</linearGradient>
+<linearGradient id="amG" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#FBBF24"/><stop offset="1" stop-color="#F59E0B"/>
+</linearGradient>
+<radialGradient id="glowC" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#00E5FF" stop-opacity=".5"/><stop offset="1" stop-color="#00E5FF" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="glowA" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#F59E0B" stop-opacity=".45"/><stop offset="1" stop-color="#F59E0B" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="glowV" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#A855F7" stop-opacity=".4"/><stop offset="1" stop-color="#A855F7" stop-opacity="0"/>
+</radialGradient>
+<pattern id="bpGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+  <path d="M40 0H0V40" fill="none" stroke="#16233F" stroke-width="1"/>
+</pattern>
+<pattern id="bpGridFine" width="16" height="16" patternUnits="userSpaceOnUse">
+  <path d="M16 0H0V16" fill="none" stroke="#16233F" stroke-width=".5" opacity=".6"/>
+</pattern>
+<filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+  <feGaussianBlur stdDeviation="3"/>
+</filter>
+<filter id="soft8" x="-80%" y="-80%" width="260%" height="260%">
+  <feGaussianBlur stdDeviation="8"/>
+</filter>
+<filter id="soft16" x="-120%" y="-120%" width="340%" height="340%">
+  <feGaussianBlur stdDeviation="16"/>
+</filter>
+
+</defs>
+<style>
+.flow  { animation: dashflow var(--fd,7s) linear infinite; }
+.flowr { animation: dashflowr var(--fd,7s) linear infinite; }
+.comet { animation: comet var(--fd,6s) linear infinite; }
+.spin  { animation: spin360 var(--fd,26s) linear infinite; transform-box: fill-box; transform-origin: center; }
+.spinr { animation: spinrev var(--fd,26s) linear infinite; transform-box: fill-box; transform-origin: center; }
+.pulse { animation: pulseop var(--fd,3.2s) ease-in-out infinite; }
+.breathe { animation: breathe var(--fd,4.2s) ease-in-out infinite; }
+.glow  { animation: glowpulse var(--fd,3.6s) ease-in-out infinite; }
+.floaty{ animation: floaty var(--fd,5.5s) ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.driftx{ animation: driftx var(--fd,6s) ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.flicker { animation: flicker var(--fd,2.6s) ease-in-out infinite; }
+.blink { animation: blinkop var(--fd,1.8s) steps(2,end) infinite; }
+@keyframes dashflow  { to { stroke-dashoffset: -640; } }
+@keyframes dashflowr { to { stroke-dashoffset: 640; } }
+@keyframes spin360 { to { transform: rotate(360deg); } }
+@keyframes spinrev { to { transform: rotate(-360deg); } }
+@keyframes pulseop { 0%,100% { opacity: .18; } 50% { opacity: 1; } }
+@keyframes breathe { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+@keyframes glowpulse { 0%,100% { opacity: .3; } 50% { opacity: .9; } }
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes driftx { 0%,100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+@keyframes flicker { 0%,100% { opacity: .82; } 42% { opacity: .95; } 55% { opacity: .68; } 70% { opacity: .9; } }
+@keyframes blinkop { 0%,49% { opacity: 1; } 50%,100% { opacity: .15; } }
+@keyframes comet { 0% { stroke-dashoffset: var(--c0,1040); } 100% { stroke-dashoffset: var(--c1,-1000); } }
+</style>
+<rect width="1280" height="224" rx="22" fill="url(#bgG)"/>
+<g clip-path="none" opacity=".55"><rect width="1280" height="224" rx="22" fill="url(#bpGrid)"/></g>
+<g opacity=".28"><rect width="1280" height="224" rx="22" fill="url(#bpGridFine)"/></g>
+<rect x="1.5" y="1.5" width="1277" height="221" rx="20.5" fill="none" stroke="#1E2A44" stroke-width="2"/>
+<ellipse cx="1126.4" cy="22.400000000000002" rx="384.0" ry="179.20000000000002" fill="url(#glowC)" opacity=".5"/>
+<ellipse cx="704.0" cy="246.40000000000003" rx="320.0" ry="156.79999999999998" fill="url(#glowV)" opacity=".4"/>
+<clipPath id="scClip"><rect x="240" y="8" width="1020" height="208" rx="16"/></clipPath>
+<g clip-path="url(#scClip)"><path d="M 240 25.333333333333332 C 648.0 25.333333333333332, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#A855F7" stroke-width="1.4" opacity=".22"/>
+<path d="M 240 25.333333333333332 C 648.0 25.333333333333332, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#A855F7" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:4.5s; animation-delay:0.0s" opacity="0.85" stroke-linecap="round"/><text x="236" y="17.333333333333332" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 240 42.666666666666664 C 648.0 42.666666666666664, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#A855F7" stroke-width="1.4" opacity=".22"/>
+<path d="M 240 42.666666666666664 C 648.0 42.666666666666664, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#A855F7" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:4.85s; animation-delay:0.4s" opacity="0.85" stroke-linecap="round"/><text x="236" y="46.666666666666664" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 240 60.0 C 648.0 60.0, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#A855F7" stroke-width="1.4" opacity=".22"/>
+<path d="M 240 60.0 C 648.0 60.0, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#A855F7" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:5.2s; animation-delay:0.8s" opacity="0.85" stroke-linecap="round"/><text x="236" y="64.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 240 77.33333333333333 C 648.0 77.33333333333333, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#A855F7" stroke-width="1.4" opacity=".22"/>
+<path d="M 240 77.33333333333333 C 648.0 77.33333333333333, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#A855F7" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:5.55s; animation-delay:1.2000000000000002s" opacity="0.85" stroke-linecap="round"/><text x="236" y="81.33333333333333" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 240 94.66666666666666 C 648.0 94.66666666666666, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 240 94.66666666666666 C 648.0 94.66666666666666, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:5.9s; animation-delay:1.6s" opacity="0.85" stroke-linecap="round"/><text x="236" y="98.66666666666666" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 240 112.0 C 648.0 112.0, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 240 112.0 C 648.0 112.0, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:6.25s; animation-delay:2.0s" opacity="0.85" stroke-linecap="round"/><text x="236" y="116.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 240 129.33333333333331 C 648.0 129.33333333333331, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 240 129.33333333333331 C 648.0 129.33333333333331, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:6.6s; animation-delay:2.4000000000000004s" opacity="0.85" stroke-linecap="round"/><text x="236" y="133.33333333333331" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 240 146.66666666666666 C 648.0 146.66666666666666, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 240 146.66666666666666 C 648.0 146.66666666666666, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:6.949999999999999s; animation-delay:2.8000000000000003s" opacity="0.85" stroke-linecap="round"/><text x="236" y="150.66666666666666" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 240 164.0 C 648.0 164.0, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 240 164.0 C 648.0 164.0, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:7.3s; animation-delay:3.2s" opacity="0.85" stroke-linecap="round"/><text x="236" y="168.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 240 181.33333333333331 C 648.0 181.33333333333331, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 240 181.33333333333331 C 648.0 181.33333333333331, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:7.65s; animation-delay:3.6s" opacity="0.85" stroke-linecap="round"/><text x="236" y="185.33333333333331" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 240 198.66666666666666 C 648.0 198.66666666666666, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 240 198.66666666666666 C 648.0 198.66666666666666, 872.4 112.0, 1103.1999999999998 112.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:8.0s; animation-delay:4.0s" opacity="0.85" stroke-linecap="round"/><text x="236" y="202.66666666666666" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><circle cx="1117.1999999999998" cy="112.0" r="13" fill="#0A0E1A" stroke="#F59E0B" stroke-width="2.4" class="breathe" style="--fd:2.8s"/>
+<circle cx="1117.1999999999998" cy="112.0" r="22" fill="#F59E0B" opacity=".2" filter="url(#soft8)" class="glow" style="--fd:2.8s"/>
+<text x="1117.1999999999998" y="116.5" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="12" fill="#FBBF24" text-anchor="middle" font-weight="700">✓</text>
+</g>
+<clipPath id="emClip"><rect x="36" y="37" width="150" height="150" rx="34"/></clipPath>
+<g transform="translate(36,37)" class="floaty" style="--fd:6s"><rect x="0" y="0" width="150" height="150" rx="34" fill="url(#bgG)" stroke="#1E2A44" stroke-width="2.5"/>
+<rect x="0" y="0" width="150" height="150" rx="34" fill="url(#bpGrid)" opacity=".35"/>
+<g clip-path="url(#emClip)"><path d="M 6 14.166666666666666 C 61.2 14.166666666666666, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#A855F7" stroke-width="1.4" opacity=".22"/>
+<path d="M 6 14.166666666666666 C 61.2 14.166666666666666, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#A855F7" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:4.5s; animation-delay:0.0s" opacity="0.85" stroke-linecap="round"/><text x="2" y="6.166666666666666" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 6 26.333333333333332 C 61.2 26.333333333333332, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#A855F7" stroke-width="1.4" opacity=".22"/>
+<path d="M 6 26.333333333333332 C 61.2 26.333333333333332, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#A855F7" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:4.85s; animation-delay:0.4s" opacity="0.85" stroke-linecap="round"/><text x="2" y="30.333333333333332" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 6 38.5 C 61.2 38.5, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#A855F7" stroke-width="1.4" opacity=".22"/>
+<path d="M 6 38.5 C 61.2 38.5, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#A855F7" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:5.2s; animation-delay:0.8s" opacity="0.85" stroke-linecap="round"/><text x="2" y="42.5" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 6 50.666666666666664 C 61.2 50.666666666666664, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#A855F7" stroke-width="1.4" opacity=".22"/>
+<path d="M 6 50.666666666666664 C 61.2 50.666666666666664, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#A855F7" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:5.55s; animation-delay:1.2000000000000002s" opacity="0.85" stroke-linecap="round"/><text x="2" y="54.666666666666664" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 6 62.83333333333333 C 61.2 62.83333333333333, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 6 62.83333333333333 C 61.2 62.83333333333333, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:5.9s; animation-delay:1.6s" opacity="0.85" stroke-linecap="round"/><text x="2" y="66.83333333333333" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 6 75.0 C 61.2 75.0, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 6 75.0 C 61.2 75.0, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:6.25s; animation-delay:2.0s" opacity="0.85" stroke-linecap="round"/><text x="2" y="79.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 6 87.16666666666666 C 61.2 87.16666666666666, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 6 87.16666666666666 C 61.2 87.16666666666666, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:6.6s; animation-delay:2.4000000000000004s" opacity="0.85" stroke-linecap="round"/><text x="2" y="91.16666666666666" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 6 99.33333333333333 C 61.2 99.33333333333333, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 6 99.33333333333333 C 61.2 99.33333333333333, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:6.949999999999999s; animation-delay:2.8000000000000003s" opacity="0.85" stroke-linecap="round"/><text x="2" y="103.33333333333333" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 6 111.5 C 61.2 111.5, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 6 111.5 C 61.2 111.5, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:7.3s; animation-delay:3.2s" opacity="0.85" stroke-linecap="round"/><text x="2" y="115.5" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 6 123.66666666666666 C 61.2 123.66666666666666, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 6 123.66666666666666 C 61.2 123.66666666666666, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:7.65s; animation-delay:3.6s" opacity="0.85" stroke-linecap="round"/><text x="2" y="127.66666666666666" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><path d="M 6 135.83333333333331 C 61.2 135.83333333333331, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.4" opacity=".22"/>
+<path d="M 6 135.83333333333331 C 61.2 135.83333333333331, 91.56 75.0, 110.67999999999999 75.0" fill="none" stroke="#00E5FF" stroke-width="1.6" stroke-dasharray="7 13" class="flow" style="--fd:8.0s; animation-delay:4.0s" opacity="0.85" stroke-linecap="round"/><text x="2" y="139.83333333333331" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="8" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><circle cx="124.67999999999999" cy="75.0" r="13" fill="#0A0E1A" stroke="#F59E0B" stroke-width="2.4" class="breathe" style="--fd:2.8s"/>
+<circle cx="124.67999999999999" cy="75.0" r="22" fill="#F59E0B" opacity=".2" filter="url(#soft8)" class="glow" style="--fd:2.8s"/>
+<text x="124.67999999999999" y="79.5" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="12" fill="#FBBF24" text-anchor="middle" font-weight="700">✓</text>
+</g>
+</g>
+<rect x="36" y="197" width="150" height="3" rx="1.5" fill="url(#cyAm)" opacity=".8"/>
+<text x="38" y="30" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="15" fill="#E6F1FF" text-anchor="start" letter-spacing="3" opacity="0.92" font-weight="700" >ELEVEN-LANGUAGE LAB</text><text x="38" y="46" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="10" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><rect x="537.6" y="182" width="716.8000000000001" height="34" rx="12" fill="#0A0E1A" opacity=".5"/>
+<text x="1252" y="206" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11" fill="#8CA3C7" text-anchor="end" letter-spacing="2" opacity="0.92" font-weight="600" >one contract · eleven arithmetics · zero drift</text>
+</svg>

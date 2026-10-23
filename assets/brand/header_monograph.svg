@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="224" viewBox="0 0 1280 224" role="img" aria-label="navier-stokes-b — MONOGRAPHS animated header">
+<defs>
+
+<linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#0D1117"/><stop offset=".55" stop-color="#0A0E1A"/><stop offset="1" stop-color="#0B1226"/>
+</linearGradient>
+<linearGradient id="cyA" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#A855F7"/>
+</linearGradient>
+<linearGradient id="cyAm" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#F59E0B"/>
+</linearGradient>
+<linearGradient id="amG" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#FBBF24"/><stop offset="1" stop-color="#F59E0B"/>
+</linearGradient>
+<radialGradient id="glowC" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#00E5FF" stop-opacity=".5"/><stop offset="1" stop-color="#00E5FF" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="glowA" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#F59E0B" stop-opacity=".45"/><stop offset="1" stop-color="#F59E0B" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="glowV" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#A855F7" stop-opacity=".4"/><stop offset="1" stop-color="#A855F7" stop-opacity="0"/>
+</radialGradient>
+<pattern id="bpGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+  <path d="M40 0H0V40" fill="none" stroke="#16233F" stroke-width="1"/>
+</pattern>
+<pattern id="bpGridFine" width="16" height="16" patternUnits="userSpaceOnUse">
+  <path d="M16 0H0V16" fill="none" stroke="#16233F" stroke-width=".5" opacity=".6"/>
+</pattern>
+<filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+  <feGaussianBlur stdDeviation="3"/>
+</filter>
+<filter id="soft8" x="-80%" y="-80%" width="260%" height="260%">
+  <feGaussianBlur stdDeviation="8"/>
+</filter>
+<filter id="soft16" x="-120%" y="-120%" width="340%" height="340%">
+  <feGaussianBlur stdDeviation="16"/>
+</filter>
+
+</defs>
+<style>
+.flow  { animation: dashflow var(--fd,7s) linear infinite; }
+.flowr { animation: dashflowr var(--fd,7s) linear infinite; }
+.comet { animation: comet var(--fd,6s) linear infinite; }
+.spin  { animation: spin360 var(--fd,26s) linear infinite; transform-box: fill-box; transform-origin: center; }
+.spinr { animation: spinrev var(--fd,26s) linear infinite; transform-box: fill-box; transform-origin: center; }
+.pulse { animation: pulseop var(--fd,3.2s) ease-in-out infinite; }
+.breathe { animation: breathe var(--fd,4.2s) ease-in-out infinite; }
+.glow  { animation: glowpulse var(--fd,3.6s) ease-in-out infinite; }
+.floaty{ animation: floaty var(--fd,5.5s) ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.driftx{ animation: driftx var(--fd,6s) ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.flicker { animation: flicker var(--fd,2.6s) ease-in-out infinite; }
+.blink { animation: blinkop var(--fd,1.8s) steps(2,end) infinite; }
+@keyframes dashflow  { to { stroke-dashoffset: -640; } }
+@keyframes dashflowr { to { stroke-dashoffset: 640; } }
+@keyframes spin360 { to { transform: rotate(360deg); } }
+@keyframes spinrev { to { transform: rotate(-360deg); } }
+@keyframes pulseop { 0%,100% { opacity: .18; } 50% { opacity: 1; } }
+@keyframes breathe { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+@keyframes glowpulse { 0%,100% { opacity: .3; } 50% { opacity: .9; } }
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes driftx { 0%,100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+@keyframes flicker { 0%,100% { opacity: .82; } 42% { opacity: .95; } 55% { opacity: .68; } 70% { opacity: .9; } }
+@keyframes blinkop { 0%,49% { opacity: 1; } 50%,100% { opacity: .15; } }
+@keyframes comet { 0% { stroke-dashoffset: var(--c0,1040); } 100% { stroke-dashoffset: var(--c1,-1000); } }
+</style>
+<rect width="1280" height="224" rx="22" fill="url(#bgG)"/>
+<g clip-path="none" opacity=".55"><rect width="1280" height="224" rx="22" fill="url(#bpGrid)"/></g>
+<g opacity=".28"><rect width="1280" height="224" rx="22" fill="url(#bpGridFine)"/></g>
+<rect x="1.5" y="1.5" width="1277" height="221" rx="20.5" fill="none" stroke="#1E2A44" stroke-width="2"/>
+<ellipse cx="1126.4" cy="22.400000000000002" rx="384.0" ry="179.20000000000002" fill="url(#glowC)" opacity=".5"/>
+<ellipse cx="704.0" cy="246.40000000000003" rx="320.0" ry="156.79999999999998" fill="url(#glowV)" opacity=".4"/>
+<clipPath id="scClip"><rect x="240" y="8" width="1020" height="208" rx="16"/></clipPath>
+<g clip-path="url(#scClip)"><g class="floaty" style="--fd:5s"><path d="M 494.0 110.96000000000001 C 526.0 92.96000000000001, 566.0 92.96000000000001, 598.0 110.96000000000001 L 598.0 162.96 C 566.0 146.96, 526.0 146.96, 494.0 162.96 Z" fill="#0D1526" stroke="#22D3EE" stroke-width="2"/>
+<path d="M 546.0 100.96000000000001 L 546.0 154.96" stroke="#22D3EE" stroke-width="1.6" opacity=".7"/>
+<path d="M 506.0 122.96000000000001 H 538.0 M 506.0 134.96 H 534.0 M 506.0 146.96 H 530.0 M 554.0 122.96000000000001 H 586.0 M 558.0 134.96 H 586.0 M 562.0 146.96 H 586.0" stroke="#8CA3C7" stroke-width="1.6" opacity=".8"/></g>
+<text x="770.4" y="70.4" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#00E5FF" opacity=".9" class="floaty" style="--fd:4.0s; animation-delay:0.00s">∫</text>
+<text x="887.7" y="70.4" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#F59E0B" opacity=".9" class="floaty" style="--fd:4.6s; animation-delay:0.35s">ω̂</text>
+<text x="1005.0" y="70.4" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#00E5FF" opacity=".9" class="floaty" style="--fd:5.2s; animation-delay:0.70s">∇²</text>
+<text x="1122.3" y="70.4" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#F59E0B" opacity=".9" class="floaty" style="--fd:5.8s; animation-delay:1.05s">π</text>
+<text x="770.4" y="141.12" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#00E5FF" opacity=".9" class="floaty" style="--fd:6.4s; animation-delay:1.40s">√3</text>
+<text x="887.7" y="141.12" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#F59E0B" opacity=".9" class="floaty" style="--fd:7.0s; animation-delay:1.75s">∂u/∂t</text>
+<text x="1005.0" y="141.12" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#00E5FF" opacity=".9" class="floaty" style="--fd:7.6s; animation-delay:2.10s">θ_b</text>
+<text x="1122.3" y="141.12" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#F59E0B" opacity=".9" class="floaty" style="--fd:8.2s; animation-delay:2.45s">ξ</text>
+</g>
+<clipPath id="emClip"><rect x="36" y="37" width="150" height="150" rx="34"/></clipPath>
+<g transform="translate(36,37)" class="floaty" style="--fd:6s"><rect x="0" y="0" width="150" height="150" rx="34" fill="url(#bgG)" stroke="#1E2A44" stroke-width="2.5"/>
+<rect x="0" y="0" width="150" height="150" rx="34" fill="url(#bpGrid)" opacity=".35"/>
+<g clip-path="url(#emClip)"><g class="floaty" style="--fd:5s"><path d="M -4.600000000000001 66.52 C 27.4 48.519999999999996, 67.4 48.519999999999996, 99.4 66.52 L 99.4 118.52 C 67.4 102.52, 27.4 102.52, -4.600000000000001 118.52 Z" fill="#0D1526" stroke="#22D3EE" stroke-width="2"/>
+<path d="M 47.4 56.519999999999996 L 47.4 110.52" stroke="#22D3EE" stroke-width="1.6" opacity=".7"/>
+<path d="M 7.399999999999999 78.52 H 39.4 M 7.399999999999999 90.52 H 35.4 M 7.399999999999999 102.52 H 31.4 M 55.4 78.52 H 87.4 M 59.4 90.52 H 87.4 M 63.4 102.52 H 87.4" stroke="#8CA3C7" stroke-width="1.6" opacity=".8"/></g>
+<text x="77.76" y="45.8" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#00E5FF" opacity=".9" class="floaty" style="--fd:4.0s; animation-delay:0.00s">∫</text>
+<text x="93.63000000000001" y="45.8" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#F59E0B" opacity=".9" class="floaty" style="--fd:4.6s; animation-delay:0.35s">ω̂</text>
+<text x="109.5" y="45.8" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#00E5FF" opacity=".9" class="floaty" style="--fd:5.2s; animation-delay:0.70s">∇²</text>
+<text x="125.37" y="45.8" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#F59E0B" opacity=".9" class="floaty" style="--fd:5.8s; animation-delay:1.05s">π</text>
+<text x="77.76" y="95.44" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#00E5FF" opacity=".9" class="floaty" style="--fd:6.4s; animation-delay:1.40s">√3</text>
+<text x="93.63000000000001" y="95.44" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#F59E0B" opacity=".9" class="floaty" style="--fd:7.0s; animation-delay:1.75s">∂u/∂t</text>
+<text x="109.5" y="95.44" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#00E5FF" opacity=".9" class="floaty" style="--fd:7.6s; animation-delay:2.10s">θ_b</text>
+<text x="125.37" y="95.44" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="19" fill="#F59E0B" opacity=".9" class="floaty" style="--fd:8.2s; animation-delay:2.45s">ξ</text>
+</g>
+</g>
+<rect x="36" y="197" width="150" height="3" rx="1.5" fill="url(#cyAm)" opacity=".8"/>
+<text x="38" y="30" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="15" fill="#E6F1FF" text-anchor="start" letter-spacing="3" opacity="0.92" font-weight="700" >MONOGRAPHS</text><text x="38" y="46" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="10" fill="#E6F1FF" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" ></text><rect x="537.6" y="182" width="716.8000000000001" height="34" rx="12" fill="#0A0E1A" opacity=".5"/>
+<text x="1252" y="206" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11" fill="#8CA3C7" text-anchor="end" letter-spacing="2" opacity="0.92" font-weight="600" >RU/EN · PDF/DOCX · open-problems appendices</text>
+</svg>

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/banner.svg" alt="navier-stokes-b — the universal b-correction program" width="100%"/>
+<img src="assets/brand/hero_animated.svg" alt="navier-stokes-b — the universal b-correction program" width="100%"/>
 
 # navier-stokes-b
 
@@ -170,6 +170,13 @@ geometry, many systems.
 
 ![The Rodrigues form of the b-rotation and its energy-neutrality](assets/figures/fig_rodrigues_rotation.png)
 
+<p align="center">
+  <img src="assets/brand/chaos_order_animated.svg" alt="chaotic streamlines stabilizing into ordered vortex rings" width="100%"/>
+</p>
+<p align="center">
+  <img src="assets/brand/b_dial_animated.svg" alt="the b-rotation dial sweeping to theta_b with the velocity decomposition" width="100%"/>
+</p>
+
 **The constant, at full precision:**
 
 | Quantity | Exact value |
@@ -185,6 +192,10 @@ Every one of these digits is recomputed by each of the eleven verification
 ports from the closed form alone — no port ever reads a constant from a
 file. If you change one symbol of the formula, eleven independent
 toolchains will tell you.
+
+<p align="center">
+  <img src="assets/charts/chart_b_digits.png" alt="b digits" width="100%"/>
+</p>
 
 **Watch it move** — the repository ships its physics as live animations
 (GIF, rendered natively by GitHub):
@@ -213,6 +224,10 @@ pinned verdicts: [`data/results/baseline/`](data/results/baseline/README.md)):
 
 ![Headline residuals of the executed program](assets/figures/fig_headline_results.png)
 
+<p align="center">
+  <img src="assets/charts/chart_energy_neutrality.png" alt="energy neutrality" width="100%"/>
+</p>
+
 The executed open-problems program **P1–P7** (protocols:
 [`data/results/`](data/results/README.md), plots:
 [`data/plots/`](data/plots/README.md), registry:
@@ -231,6 +246,10 @@ The executed open-problems program **P1–P7** (protocols:
 The program's honesty rule, fixed *before* the runs: **both outcomes are
 results** — a measurable effect or a strict bound; which one was obtained
 is recorded verbatim, and "bound" outcomes are not painted as effects.
+
+<p align="center">
+  <img src="assets/charts/chart_open_problems.png" alt="open problems" width="100%"/>
+</p>
 
 
 ## 4. The NSB-96 upgrade: thirteen laboratories, one scoreboard
@@ -266,6 +285,13 @@ and the human-readable reports in
 | **L17** | **φ-attractor monograph audit** — independent recomputation of every load-bearing formula | WIN 13 · 0 · 2 | φ-algebra to `1.1×10⁻¹⁶`; two **documented corrections** (fixes I3-I4) |
 
 ![The NSB-96 scoreboard: thirteen laboratories](assets/figures/fig_labs_scoreboard.png)
+
+<p align="center">
+  <img src="assets/brand/scoreboard_animated.svg" alt="animated NSB-96 scoreboard with per-lab verdicts" width="100%"/>
+</p>
+<p align="center">
+  <img src="assets/charts/chart_scoreboard.png" alt="scoreboard" width="100%"/>
+</p>
 
 **Aggregate: WIN 67 · DRAW 7 · LOSS 2.** The two losses are the honest
 heart of the package: the L17 audit found that two frequency formulas
@@ -313,6 +339,13 @@ contract.
 
 ![The master relation C_s(C_K) and its exact −3/4 exponent](assets/figures/fig_master_relation.png)
 
+<p align="center">
+  <img src="assets/brand/spectrum_animated.svg" alt="energy spectrum with Kolmogorov and dissipative slopes" width="100%"/>
+</p>
+<p align="center">
+  <img src="assets/charts/chart_master_relation.png" alt="master relation" width="100%"/>
+</p>
+
 ## 6. The KdV continuation: chapter 16, §16.29
 
 The same polarization geometry surfaces a second time in the
@@ -331,6 +364,13 @@ lab L2 above re-checks it inside the NSB-96 suite.
 
 ![The hyperdissipative KdV family (L13): cutoff law and exact mass conservation](assets/figures/fig_kdv_bfamily.png)
 
+<p align="center">
+  <img src="assets/brand/kdv_collision_animated.svg" alt="two KdV solitons colliding and passing through — seamless loop" width="100%"/>
+</p>
+<p align="center">
+  <img src="assets/charts/chart_kdv_family.png" alt="kdv family" width="100%"/>
+</p>
+
 ## 7. The fluid laboratory (web app)
 
 [`research_webapp_fluid/`](research_webapp_fluid/README.md) is a
@@ -341,7 +381,15 @@ k⁻⁵/³ and k⁻³ spectral slopes, decay versus forced regimes, and drag wit
 your mouse to inject momentum. EN/RU interface, works offline and on
 GitHub Pages, runs on any modern phone.
 
+<p align="center">
+  <img src="assets/brand/fluid_vortex_animated.svg" alt="two vortices spiraling into one — the fluid laboratory" width="100%"/>
+</p>
+
 ## 8. Repository architecture
+
+<p align="center">
+  <img src="assets/brand/pipeline_animated.svg" alt="repository pipeline — seven modules lighting up in sequence" width="100%"/>
+</p>
 
 The tree is organised by *role*, not by file type — evidence, sources,
 verification and infrastructure are separated so that a reviewer can audit
@@ -558,6 +606,13 @@ interrupt and rerun.
 
 ## 11. The eleven-language verification framework
 
+<p align="center">
+  <img src="assets/brand/lanes11_animated.svg" alt="eleven verification lanes converging into one checksum-verified node" width="100%"/>
+</p>
+<p align="center">
+  <img src="assets/charts/chart_verification_matrix.png" alt="verification matrix" width="100%"/>
+</p>
+
 Every headline claim of the program is re-derived in **eleven languages
 across seven research sections** from a single shared contract, organized
 as two tiers plus infrastructure. The point is redundancy across
@@ -603,6 +658,10 @@ trust base is enumerable, and in Agda it is literally two postulates
 
 ## 12. The seven open problems program
 
+<p align="center">
+  <img src="assets/charts/chart_residuals.png" alt="residuals" width="100%"/>
+</p>
+
 The research program was operationalized as seven open problems, each
 pre-registered with a statement, a step plan and success criteria
 *before* execution; the registry lives in
@@ -644,6 +703,19 @@ GitHub renders all of them natively — every claim above has its picture.
 ![The P6 universality of θ_b across five geometries](assets/figures/fig_p6_universality.png)
 
 ![L16 self-convergence of the P5 solver](assets/figures/fig_convergence_l16.png)
+
+<p align="center">
+  <img src="assets/charts/chart_timeline.png" alt="timeline" width="100%"/>
+</p>
+<p align="center">
+  <img src="assets/charts/chart_universality.png" alt="universality" width="100%"/>
+</p>
+<p align="center">
+  <img src="assets/charts/chart_convergence.png" alt="convergence" width="100%"/>
+</p>
+<p align="center">
+  <img src="assets/charts/chart_ci_pipeline.png" alt="ci pipeline" width="100%"/>
+</p>
 
 ## 14. Verification, provenance and integrity
 
@@ -770,7 +842,7 @@ archives the exact tree; GitHub releases (tags `v*`) additionally publish
 
 <div align="center">
 
-<img src="assets/logo.svg" alt="navier-stokes-b logo" width="96"/>
+<img src="assets/brand/logo_animated.svg" alt="navier-stokes-b logo" width="96"/>
 
 **navier-stokes-b** — the universal b-correction program ·
 [b = 1/(4π + 2√3)](https://github.com/wild8highlander/navier-stokes-b)

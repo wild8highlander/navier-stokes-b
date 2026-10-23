@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_research.svg" alt="research laboratory waveform" width="100%"/>
+</p>
+
 # 📚 `monographs/` — the b-volume research monographs (RU · EN · PDF · DOCX)
 
 Four complete documents, **one shared verified content tree**: the full

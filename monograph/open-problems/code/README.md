@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_monograph.svg" alt="open monograph with floating mathematical glyphs" width="100%"/>
+</p>
+
 # `monograph/open-problems/code/` — the Runnable Scripts of P1–P7
 
 > **Navigation:** [`open-problems`](../README.md) › **`code`**

@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../assets/brand/header_verification.svg" alt="verification matrix — cells lighting up" width="100%"/>
+</p>
+
 # 🔬 `verification/` — the Eleven-Language Verification Framework
 
 > **Navigation:** [repository root](../README.md) › **`verification`**
@@ -28,6 +33,10 @@ modelling, not in the mechanics.
 ![The verification matrix — sections 1–7 in every language](../assets/figures/fig_verification_matrix.png)
 
 ## The two tiers, precisely
+
+<p align="center">
+  <img src="../assets/brand/lanes11_animated.svg" alt="eleven verification lanes converging into one checksum-verified node" width="100%"/>
+</p>
 
 **Tier 1 — proof assistants (formal verification):**
 
@@ -91,6 +100,10 @@ modelling, not in the mechanics.
 - [`docs/`](docs/README.md) — notes on the extended toolchains.
 
 ## The seven sections
+
+<p align="center">
+  <img src="../assets/charts/chart_verification_matrix.png" alt="verification matrix" width="100%"/>
+</p>
 
 The seven research sections map 1-to-1 onto the research program of the
 root README:

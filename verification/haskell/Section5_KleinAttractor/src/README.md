@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # `Section5_KleinAttractor/src/` — the Haskell module of section 5
 
 > **Navigation:** [repository root](../../../README.md) › [verification](../../../verification/README.md) › [haskell](../../README.md) › [`Section5_KleinAttractor`](../README.md) › **`src/`**

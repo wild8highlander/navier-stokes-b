@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # `Section2_PreprintNSE` — Preprint NSE — the regularity chain (Haskell)
 
 > **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [haskell](../README.md) › **section 2**

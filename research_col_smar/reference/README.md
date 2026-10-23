@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_data.svg" alt="pinned JSON evidence layer" width="100%"/>
+</p>
+
 # `research_col_smar/reference/` — the pinned reference states and curves
 
 > **Navigation:** [repository root](../../README.md) › [research_col_smar](../README.md) › **`reference`**

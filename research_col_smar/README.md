@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../assets/brand/header_smagorinsky.svg" alt="turbulent cascade and the Smagorinsky–Kolmogorov master relation" width="100%"/>
+</p>
+
 # `research_col_smar/` — The Smagorinsky–Kolmogorov Constants Program
 
 > **Navigation:** [repository root](../README.md) › **`research_col_smar`**
@@ -178,6 +183,10 @@ filter shape), and *documenting* it to monograph standard.
 
 ## 3. The master relation and its derivation chain
 
+<p align="center">
+  <img src="../assets/charts/chart_master_relation.png" alt="master relation" width="100%"/>
+</p>
+
 The full logical chain, each link executed as a numbered program:
 
 | # | Link | Type | Program | Result |
@@ -197,6 +206,10 @@ Chapters 3–9 and 12 of the monograph walk this table line by line; every row h
 its executable counterpart in `code/` and its pinned numbers in `results/`.
 
 ## 4. The executed program P1–P5
+
+<p align="center">
+  <img src="../assets/brand/spectrum_animated.svg" alt="energy spectrum with Kolmogorov and dissipative slopes" width="100%"/>
+</p>
 
 Five programs, each with a pinned JSON protocol in `results/`:
 

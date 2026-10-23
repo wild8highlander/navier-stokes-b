@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_data.svg" alt="pinned JSON evidence layer" width="100%"/>
+</p>
+
 # `data/results/` — JSON Run Protocols of the Executed Program
 
 > **Navigation:** [repository root](../../README.md) › [`data`](../README.md) › **`results`**

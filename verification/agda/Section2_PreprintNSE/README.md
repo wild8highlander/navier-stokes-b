@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_verification.svg" alt="verification matrix — cells lighting up" width="100%"/>
+</p>
+
 # `Section2_PreprintNSE` — Preprint NSE — the analytical regularity chain (Agda)
 
 > **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [agda](../README.md) › **section 2**

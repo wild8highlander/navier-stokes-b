@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_verification.svg" alt="verification matrix — cells lighting up" width="100%"/>
+</p>
+
 # `Section5_KleinAttractor` — Klein attractor — ergodic dynamics and the NSE bridge (Isabelle/HOL)
 
 > **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [isabelle](../README.md) › **section 5**

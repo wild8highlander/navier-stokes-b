@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_runtime.svg" alt="output contract — terminal, PASS marks and JSON verdict" width="100%"/>
+</p>
+
 # `common/python/` — the runner, the registry, the base class
 
 > **Navigation:** [repository root](../../README.md) › [verification](../../README.md) › [common](../README.md) › **`python/`**

@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_kdv.svg" alt="two KdV solitons colliding" width="100%"/>
+</p>
+
 # `papers/kdv/` — the KdV continuation: chapter 16 with the exact §16.29 edition
 
 > **Navigation:** [repository root](../README.md) › [papers](../README.md) › **`kdv`**
@@ -35,6 +40,10 @@ Backup copies of the previous editions are kept alongside in
 (`*_backup_before_exact_edition.docx`).
 
 ## What §16.29 adds — the exact-solver protocol
+
+<p align="center">
+  <img src="../../assets/brand/kdv_collision_animated.svg" alt="two KdV solitons colliding and passing through — seamless loop" width="100%"/>
+</p>
 
 The 2026-10-01 edition appends section **16.29 — "Improved numerical
 implementation: the exact Lax combination, the Hirota benchmark and

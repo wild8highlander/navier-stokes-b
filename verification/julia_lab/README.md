@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # ⚡ NSB Julia Lab
 
 *A self-contained Navier–Stokes laboratory in Julia — zero external packages.*

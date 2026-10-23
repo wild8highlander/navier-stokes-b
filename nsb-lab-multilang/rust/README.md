@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # NSB Rust Lab — the safe-systems edition (zero crates)
 
 **`rust/src/main.rs`** — the Navier–Stokes b-Laboratory in ~2 800 lines of

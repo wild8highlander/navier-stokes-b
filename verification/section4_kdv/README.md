@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_sections.svg" alt="research sections 1–7 lighting up in sequence" width="100%"/>
+</p>
+
 # `section4_kdv/` — KdV — soliton interactions under the b-correction
 
 > **Navigation:** [repository root](../../README.md) › [verification](../README.md) › **`section4_kdv`**

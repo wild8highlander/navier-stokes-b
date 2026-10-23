@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_papers.svg" alt="typeset papers of the b-correction program" width="100%"/>
+</p>
+
 # `papers/preprint/` — the Compact NSE Regularity Preprint
 
 > **Navigation:** [`papers`](../README.md) › **`preprint`**

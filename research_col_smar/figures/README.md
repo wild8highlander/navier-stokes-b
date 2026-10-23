@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_generic.svg" alt="navier-stokes-b flowing streamlines" width="100%"/>
+</p>
+
 # `figures/` — Monograph Figure Editions
 
 `ru/` and `en/` contain the Russian and English editions of the same

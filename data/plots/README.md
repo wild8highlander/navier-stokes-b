@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_data.svg" alt="pinned JSON evidence layer" width="100%"/>
+</p>
+
 # `data/plots/` — Publication Plots at 300 dpi
 
 > **Navigation:** [repository root](../../README.md) › [`data`](../README.md) › **`plots`**

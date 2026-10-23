@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_kdv.svg" alt="two KdV solitons colliding" width="100%"/>
+</p>
+
 # `assets/animations/` — the physics animation set
 
 > **Navigation:** [repository root](../README.md) › [assets](../README.md) › **`animations`**

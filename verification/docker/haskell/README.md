@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_runtime.svg" alt="output contract — terminal, PASS marks and JSON verdict" width="100%"/>
+</p>
+
 # `docker/haskell/` — the GHC 9.4 + Cabal image
 
 > **Navigation:** [repository root](../../../README.md) › [verification](../../verification/README.md) › [docker](../README.md) › **`haskell`**

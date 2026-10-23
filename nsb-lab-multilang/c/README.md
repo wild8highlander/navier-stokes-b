@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # NSB C Lab — the zero-dependency C99 edition
 
 **`nsb_lab.c`** — the complete Navier–Stokes b-Laboratory in ~2 700 lines of

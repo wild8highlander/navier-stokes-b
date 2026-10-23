@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" role="img" aria-label="eleven verification lanes converging into one checksum-verified node">
+<defs>
+
+<linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#0D1117"/><stop offset=".55" stop-color="#0A0E1A"/><stop offset="1" stop-color="#0B1226"/>
+</linearGradient>
+<linearGradient id="cyA" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#A855F7"/>
+</linearGradient>
+<linearGradient id="cyAm" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#F59E0B"/>
+</linearGradient>
+<linearGradient id="amG" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#FBBF24"/><stop offset="1" stop-color="#F59E0B"/>
+</linearGradient>
+<radialGradient id="glowC" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#00E5FF" stop-opacity=".5"/><stop offset="1" stop-color="#00E5FF" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="glowA" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#F59E0B" stop-opacity=".45"/><stop offset="1" stop-color="#F59E0B" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="glowV" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#A855F7" stop-opacity=".4"/><stop offset="1" stop-color="#A855F7" stop-opacity="0"/>
+</radialGradient>
+<pattern id="bpGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+  <path d="M40 0H0V40" fill="none" stroke="#16233F" stroke-width="1"/>
+</pattern>
+<pattern id="bpGridFine" width="16" height="16" patternUnits="userSpaceOnUse">
+  <path d="M16 0H0V16" fill="none" stroke="#16233F" stroke-width=".5" opacity=".6"/>
+</pattern>
+<filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+  <feGaussianBlur stdDeviation="3"/>
+</filter>
+<filter id="soft8" x="-80%" y="-80%" width="260%" height="260%">
+  <feGaussianBlur stdDeviation="8"/>
+</filter>
+<filter id="soft16" x="-120%" y="-120%" width="340%" height="340%">
+  <feGaussianBlur stdDeviation="16"/>
+</filter>
+
+</defs>
+<style>
+.flow  { animation: dashflow var(--fd,7s) linear infinite; }
+.flowr { animation: dashflowr var(--fd,7s) linear infinite; }
+.comet { animation: comet var(--fd,6s) linear infinite; }
+.spin  { animation: spin360 var(--fd,26s) linear infinite; transform-box: fill-box; transform-origin: center; }
+.spinr { animation: spinrev var(--fd,26s) linear infinite; transform-box: fill-box; transform-origin: center; }
+.pulse { animation: pulseop var(--fd,3.2s) ease-in-out infinite; }
+.breathe { animation: breathe var(--fd,4.2s) ease-in-out infinite; }
+.glow  { animation: glowpulse var(--fd,3.6s) ease-in-out infinite; }
+.floaty{ animation: floaty var(--fd,5.5s) ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.driftx{ animation: driftx var(--fd,6s) ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.flicker { animation: flicker var(--fd,2.6s) ease-in-out infinite; }
+.blink { animation: blinkop var(--fd,1.8s) steps(2,end) infinite; }
+@keyframes dashflow  { to { stroke-dashoffset: -640; } }
+@keyframes dashflowr { to { stroke-dashoffset: 640; } }
+@keyframes spin360 { to { transform: rotate(360deg); } }
+@keyframes spinrev { to { transform: rotate(-360deg); } }
+@keyframes pulseop { 0%,100% { opacity: .18; } 50% { opacity: 1; } }
+@keyframes breathe { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+@keyframes glowpulse { 0%,100% { opacity: .3; } 50% { opacity: .9; } }
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes driftx { 0%,100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+@keyframes flicker { 0%,100% { opacity: .82; } 42% { opacity: .95; } 55% { opacity: .68; } 70% { opacity: .9; } }
+@keyframes blinkop { 0%,49% { opacity: 1; } 50%,100% { opacity: .15; } }
+@keyframes comet { 0% { stroke-dashoffset: var(--c0,1040); } 100% { stroke-dashoffset: var(--c1,-1000); } }
+</style>
+<rect width="1280" height="420" rx="24" fill="url(#bgG)"/>
+<g clip-path="none" opacity=".55"><rect width="1280" height="420" rx="24" fill="url(#bpGrid)"/></g>
+<g opacity=".28"><rect width="1280" height="420" rx="24" fill="url(#bpGridFine)"/></g>
+<rect x="1.5" y="1.5" width="1277" height="417" rx="22.5" fill="none" stroke="#1E2A44" stroke-width="2"/>
+<path d="M 148 37.8 C 486.4 37.8, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#A855F7" stroke-width="1.3" opacity=".2"/>
+<path d="M 148 37.8 C 486.4 37.8, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#A855F7" stroke-width="1.7" stroke-dasharray="8 14" class="flow" style="--fd:3.6s; animation-delay:0.0s" opacity="0.9" stroke-linecap="round"/><rect x="34" y="22.799999999999997" width="100" height="30" rx="8" fill="#0D1526" stroke="#A855F7" stroke-width="1.6" class="breathe" style="--fd:2.80s; animation-delay:0.00s"/>
+<text x="84" y="41.8" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11" fill="#A855F7" text-anchor="middle" letter-spacing="1.5" opacity="0.92" font-weight="600" >LEAN 4</text><path d="M 148 72.24 C 486.4 72.24, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#A855F7" stroke-width="1.3" opacity=".2"/>
+<path d="M 148 72.24 C 486.4 72.24, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#A855F7" stroke-width="1.7" stroke-dasharray="8 14" class="flow" style="--fd:3.9s; animation-delay:0.28s" opacity="0.9" stroke-linecap="round"/><rect x="34" y="57.239999999999995" width="100" height="30" rx="8" fill="#0D1526" stroke="#A855F7" stroke-width="1.6" class="breathe" style="--fd:3.10s; animation-delay:0.22s"/>
+<text x="84" y="76.24" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11" fill="#E6F1FF" text-anchor="middle" letter-spacing="1.5" opacity="0.92" font-weight="600" >COQ</text><path d="M 148 106.67999999999999 C 486.4 106.67999999999999, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#A855F7" stroke-width="1.3" opacity=".2"/>
+<path d="M 148 106.67999999999999 C 486.4 106.67999999999999, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#A855F7" stroke-width="1.7" stroke-dasharray="8 14" class="flow" style="--fd:4.2s; animation-delay:0.56s" opacity="0.9" stroke-linecap="round"/><rect x="34" y="91.67999999999999" width="100" height="30" rx="8" fill="#0D1526" stroke="#A855F7" stroke-width="1.6" class="breathe" style="--fd:3.40s; animation-delay:0.44s"/>
+<text x="84" y="110.67999999999999" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11" fill="#A855F7" text-anchor="middle" letter-spacing="1.5" opacity="0.92" font-weight="600" >ISABELLE</text><path d="M 148 141.11999999999998 C 486.4 141.11999999999998, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#A855F7" stroke-width="1.3" opacity=".2"/>
+<path d="M 148 141.11999999999998 C 486.4 141.11999999999998, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#A855F7" stroke-width="1.7" stroke-dasharray="8 14" class="flow" style="--fd:4.5s; animation-delay:0.8400000000000001s" opacity="0.9" stroke-linecap="round"/><rect x="34" y="126.11999999999998" width="100" height="30" rx="8" fill="#0D1526" stroke="#A855F7" stroke-width="1.6" class="breathe" style="--fd:3.70s; animation-delay:0.66s"/>
+<text x="84" y="145.11999999999998" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11" fill="#E6F1FF" text-anchor="middle" letter-spacing="1.5" opacity="0.92" font-weight="600" >AGDA</text><path d="M 148 175.56 C 486.4 175.56, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.3" opacity=".2"/>
+<path d="M 148 175.56 C 486.4 175.56, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.7" stroke-dasharray="8 14" class="flow" style="--fd:4.8s; animation-delay:1.12s" opacity="0.9" stroke-linecap="round"/><rect x="34" y="160.56" width="100" height="30" rx="8" fill="#0D1526" stroke="#00E5FF" stroke-width="1.6" class="breathe" style="--fd:4.00s; animation-delay:0.88s"/>
+<text x="84" y="179.56" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11" fill="#00E5FF" text-anchor="middle" letter-spacing="1.5" opacity="0.92" font-weight="600" >PYTHON</text><path d="M 148 210.0 C 486.4 210.0, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.3" opacity=".2"/>
+<path d="M 148 210.0 C 486.4 210.0, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.7" stroke-dasharray="8 14" class="flow" style="--fd:5.1s; animation-delay:1.4000000000000001s" opacity="0.9" stroke-linecap="round"/><rect x="34" y="195.0" width="100" height="30" rx="8" fill="#0D1526" stroke="#00E5FF" stroke-width="1.6" class="breathe" style="--fd:4.30s; animation-delay:1.10s"/>
+<text x="84" y="214.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11" fill="#E6F1FF" text-anchor="middle" letter-spacing="1.5" opacity="0.92" font-weight="600" >C++</text><path d="M 148 244.43999999999994 C 486.4 244.43999999999994, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.3" opacity=".2"/>
+<path d="M 148 244.43999999999994 C 486.4 244.43999999999994, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.7" stroke-dasharray="8 14" class="flow" style="--fd:5.4s; animation-delay:1.6800000000000002s" opacity="0.9" stroke-linecap="round"/><rect x="34" y="229.43999999999994" width="100" height="30" rx="8" fill="#0D1526" stroke="#00E5FF" stroke-width="1.6" class="breathe" style="--fd:4.60s; animation-delay:1.32s"/>
+<text x="84" y="248.43999999999994" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11" fill="#00E5FF" text-anchor="middle" letter-spacing="1.5" opacity="0.92" font-weight="600" >RUST</text><path d="M 148 278.88 C 486.4 278.88, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.3" opacity=".2"/>
+<path d="M 148 278.88 C 486.4 278.88, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.7" stroke-dasharray="8 14" class="flow" style="--fd:5.7s; animation-delay:1.9600000000000002s" opacity="0.9" stroke-linecap="round"/><rect x="34" y="263.88" width="100" height="30" rx="8" fill="#0D1526" stroke="#00E5FF" stroke-width="1.6" class="breathe" style="--fd:4.90s; animation-delay:1.54s"/>
+<text x="84" y="282.88" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11" fill="#E6F1FF" text-anchor="middle" letter-spacing="1.5" opacity="0.92" font-weight="600" >HASKELL</text><path d="M 148 313.32 C 486.4 313.32, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.3" opacity=".2"/>
+<path d="M 148 313.32 C 486.4 313.32, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.7" stroke-dasharray="8 14" class="flow" style="--fd:6.0s; animation-delay:2.24s" opacity="0.9" stroke-linecap="round"/><rect x="34" y="298.32" width="100" height="30" rx="8" fill="#0D1526" stroke="#00E5FF" stroke-width="1.6" class="breathe" style="--fd:5.20s; animation-delay:1.76s"/>
+<text x="84" y="317.32" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11" fill="#00E5FF" text-anchor="middle" letter-spacing="1.5" opacity="0.92" font-weight="600" >JULIA</text><path d="M 148 347.76 C 486.4 347.76, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.3" opacity=".2"/>
+<path d="M 148 347.76 C 486.4 347.76, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.7" stroke-dasharray="8 14" class="flow" style="--fd:6.3s; animation-delay:2.5200000000000005s" opacity="0.9" stroke-linecap="round"/><rect x="34" y="332.76" width="100" height="30" rx="8" fill="#0D1526" stroke="#00E5FF" stroke-width="1.6" class="breathe" style="--fd:5.50s; animation-delay:1.98s"/>
+<text x="84" y="351.76" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11" fill="#E6F1FF" text-anchor="middle" letter-spacing="1.5" opacity="0.92" font-weight="600" >PORT·A</text><path d="M 148 382.2 C 486.4 382.2, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.3" opacity=".2"/>
+<path d="M 148 382.2 C 486.4 382.2, 716.8000000000001 210.0, 978.4000000000001 210.0" fill="none" stroke="#00E5FF" stroke-width="1.7" stroke-dasharray="8 14" class="flow" style="--fd:6.6s; animation-delay:2.8000000000000003s" opacity="0.9" stroke-linecap="round"/><rect x="34" y="367.2" width="100" height="30" rx="8" fill="#0D1526" stroke="#00E5FF" stroke-width="1.6" class="breathe" style="--fd:5.80s; animation-delay:2.20s"/>
+<text x="84" y="386.2" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11" fill="#00E5FF" text-anchor="middle" letter-spacing="1.5" opacity="0.92" font-weight="600" >PORT·B</text><circle cx="998.4000000000001" cy="210.0" r="46" fill="url(#glowA)" class="glow" style="--fd:2.6s"/>
+<circle cx="998.4000000000001" cy="210.0" r="30" fill="#0A0E1A" stroke="#F59E0B" stroke-width="3" class="breathe" style="--fd:2.6s"/>
+<circle cx="998.4000000000001" cy="210.0" r="44" fill="none" stroke="#F59E0B" stroke-width="1.4" stroke-dasharray="6 10" class="spin" style="--fd:12s; transform-box: fill-box; transform-origin: center"/>
+<text x="998.4000000000001" y="217.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="26" fill="#FBBF24" text-anchor="middle" font-weight="700">✓</text>
+<path d="M 1032.4 210.0 H 1130" fill="none" stroke="#00E5FF" stroke-width="2.4" stroke-dasharray="10 14" class="flow" style="--fd:1.8s; animation-delay:0s" opacity="0.95" stroke-linecap="round"/><path d="M 1032.4 210.0 H 1130" fill="none" stroke="#FBBF24" stroke-width="2.6" stroke-dasharray="46 144" class="comet" style="--c0:144; --c1:-144; --fd:2.6s; animation-delay:0.4s" stroke-linecap="round" filter="url(#soft)" opacity=".9"/><path d="M 1032.4 210.0 H 1130" fill="none" stroke="#FFFFFF" stroke-width="1.3" stroke-dasharray="46 144" class="comet" style="--c0:144; --c1:-144; --fd:2.6s; animation-delay:0.4s" stroke-linecap="round" opacity=".95"/><rect x="1138" y="176.0" width="106" height="68" rx="12" fill="#0D1526" stroke="#1E2A44" stroke-width="1.8"/>
+<text x="1191" y="202.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11.5" fill="#E6F1FF" text-anchor="middle" letter-spacing="1" opacity="0.92" font-weight="600" >checksum</text><text x="1191" y="224.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11.5" fill="#FBBF24" text-anchor="middle" letter-spacing="1" opacity="0.92" font-weight="600" >verified</text><text x="34" y="404" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11.5" fill="#8CA3C7" text-anchor="start" letter-spacing="1.5" opacity="0.92" font-weight="600" >four proof kernels + seven arithmetics must all agree</text>
+</svg>

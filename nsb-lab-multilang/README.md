@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # NSB Lab — the Navier–Stokes b-Correction Laboratory, in 8 Languages
 
 [![CI](https://img.shields.io/badge/CI-8%20editions-37d67a.svg)](.github/workflows/ci.yml)
@@ -53,6 +58,10 @@ C, C++, Rust, Go and PHP** — the strongest smoke test this repo has.
 
 ## What problem does this lab study?
 
+<p align="center">
+  <img src="../assets/brand/lanes11_animated.svg" alt="eleven verification lanes converging into one checksum-verified node" width="100%"/>
+</p>
+
 The three-dimensional incompressible Euler equations,
 
 <div align="center"><i>∂<sub>t</sub>u + (u·∇)u = −∇p,  ∇·u = 0,</i></div>
@@ -106,6 +115,10 @@ internal consistency* for the computed window, and the lab is careful to say
 so in every verdict it prints (the scope note is part of the output).
 
 ## What the numerics actually compute
+
+<p align="center">
+  <img src="../assets/charts/chart_residuals.png" alt="residuals" width="100%"/>
+</p>
 
 All editions share the same solver core, ported line-by-line from the Julia
 reference (see [`docs/PORTING.md`](docs/PORTING.md) for the function-by-function map):

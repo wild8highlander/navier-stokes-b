@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../assets/brand/header_research.svg" alt="research laboratory waveform" width="100%"/>
+</p>
+
 # `research_lab/` — динамическая исследовательская лаборатория
 
 > **Навигация:** [корень репозитория](../README.md) › **`research_lab`**
@@ -29,6 +34,10 @@
 ---
 
 ## Часть I — что численно можно и нельзя проверить
+
+<p align="center">
+  <img src="../assets/brand/chaos_order_animated.svg" alt="chaotic streamlines stabilizing into ordered vortex rings" width="100%"/>
+</p>
 
 ### Постановка задачи
 

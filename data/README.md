@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../assets/brand/header_data.svg" alt="pinned JSON evidence layer" width="100%"/>
+</p>
+
 # `data/` — Results and Plots of the Executed Program
 
 > **Navigation:** [repository root](../README.md) › **`data`**
@@ -26,6 +31,10 @@ by which an image could disagree with its data.
 
 ## Directory contents
 
+<p align="center">
+  <img src="../assets/charts/chart_timeline.png" alt="timeline" width="100%"/>
+</p>
+
 | Directory | Contents |
 |---|---|
 | [`results/`](results/README.md) | JSON run protocols P1–P6, the aggregate `summary_numbers.json`, binary field snapshots (`.npz`/`.npy`), and [`baseline/`](results/baseline/README.md) with the pinned L1–L5 chain verdicts |
@@ -46,6 +55,10 @@ by which an image could disagree with its data.
 4. [`plots/`](plots/README.md) — the visual form of the same numbers.
 
 ## The contract
+
+<p align="center">
+  <img src="../assets/charts/chart_b_digits.png" alt="b digits" width="100%"/>
+</p>
 
 These files are **immutable evidence**: the documentation quotes them, the
 manifest pins their sha256, and CI checks that nothing drifts. Regenerating

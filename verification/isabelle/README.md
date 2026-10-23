@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_verification.svg" alt="verification matrix — cells lighting up" width="100%"/>
+</p>
+
 # `isabelle/` — the Isabelle/HOL formal tier
 
 > **Navigation:** [repository root](../README.md) › [verification](../README.md) › **`isabelle`**

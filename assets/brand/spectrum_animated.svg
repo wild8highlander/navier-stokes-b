@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="340" viewBox="0 0 1200 340" role="img" aria-label="energy spectrum with Kolmogorov and dissipation slopes">
+<defs>
+
+<linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#0D1117"/><stop offset=".55" stop-color="#0A0E1A"/><stop offset="1" stop-color="#0B1226"/>
+</linearGradient>
+<linearGradient id="cyA" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#A855F7"/>
+</linearGradient>
+<linearGradient id="cyAm" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#F59E0B"/>
+</linearGradient>
+<linearGradient id="amG" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#FBBF24"/><stop offset="1" stop-color="#F59E0B"/>
+</linearGradient>
+<radialGradient id="glowC" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#00E5FF" stop-opacity=".5"/><stop offset="1" stop-color="#00E5FF" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="glowA" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#F59E0B" stop-opacity=".45"/><stop offset="1" stop-color="#F59E0B" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="glowV" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#A855F7" stop-opacity=".4"/><stop offset="1" stop-color="#A855F7" stop-opacity="0"/>
+</radialGradient>
+<pattern id="bpGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+  <path d="M40 0H0V40" fill="none" stroke="#16233F" stroke-width="1"/>
+</pattern>
+<pattern id="bpGridFine" width="16" height="16" patternUnits="userSpaceOnUse">
+  <path d="M16 0H0V16" fill="none" stroke="#16233F" stroke-width=".5" opacity=".6"/>
+</pattern>
+<filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+  <feGaussianBlur stdDeviation="3"/>
+</filter>
+<filter id="soft8" x="-80%" y="-80%" width="260%" height="260%">
+  <feGaussianBlur stdDeviation="8"/>
+</filter>
+<filter id="soft16" x="-120%" y="-120%" width="340%" height="340%">
+  <feGaussianBlur stdDeviation="16"/>
+</filter>
+
+</defs>
+<style>
+.flow  { animation: dashflow var(--fd,7s) linear infinite; }
+.flowr { animation: dashflowr var(--fd,7s) linear infinite; }
+.comet { animation: comet var(--fd,6s) linear infinite; }
+.spin  { animation: spin360 var(--fd,26s) linear infinite; transform-box: fill-box; transform-origin: center; }
+.spinr { animation: spinrev var(--fd,26s) linear infinite; transform-box: fill-box; transform-origin: center; }
+.pulse { animation: pulseop var(--fd,3.2s) ease-in-out infinite; }
+.breathe { animation: breathe var(--fd,4.2s) ease-in-out infinite; }
+.glow  { animation: glowpulse var(--fd,3.6s) ease-in-out infinite; }
+.floaty{ animation: floaty var(--fd,5.5s) ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.driftx{ animation: driftx var(--fd,6s) ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.flicker { animation: flicker var(--fd,2.6s) ease-in-out infinite; }
+.blink { animation: blinkop var(--fd,1.8s) steps(2,end) infinite; }
+@keyframes dashflow  { to { stroke-dashoffset: -640; } }
+@keyframes dashflowr { to { stroke-dashoffset: 640; } }
+@keyframes spin360 { to { transform: rotate(360deg); } }
+@keyframes spinrev { to { transform: rotate(-360deg); } }
+@keyframes pulseop { 0%,100% { opacity: .18; } 50% { opacity: 1; } }
+@keyframes breathe { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+@keyframes glowpulse { 0%,100% { opacity: .3; } 50% { opacity: .9; } }
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes driftx { 0%,100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+@keyframes flicker { 0%,100% { opacity: .82; } 42% { opacity: .95; } 55% { opacity: .68; } 70% { opacity: .9; } }
+@keyframes blinkop { 0%,49% { opacity: 1; } 50%,100% { opacity: .15; } }
+@keyframes comet { 0% { stroke-dashoffset: var(--c0,1040); } 100% { stroke-dashoffset: var(--c1,-1000); } }
+@keyframes drawline { to { stroke-dashoffset: 0; } }
+</style>
+<rect width="1200" height="340" rx="24" fill="url(#bgG)"/>
+<g clip-path="none" opacity=".55"><rect width="1200" height="340" rx="24" fill="url(#bpGrid)"/></g>
+<g opacity=".28"><rect width="1200" height="340" rx="24" fill="url(#bpGridFine)"/></g>
+<rect x="1.5" y="1.5" width="1197" height="337" rx="22.5" fill="none" stroke="#1E2A44" stroke-width="2"/>
+<path d="M 90 40 V 276 H 1140" fill="none" stroke="#1E2A44" stroke-width="1.6"/>
+<text x="76" y="52" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="12.5" fill="#8CA3C7" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" >E(k)</text><text x="1144" y="298" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="12.5" fill="#8CA3C7" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" >k</text><rect x="330" y="40" width="260" height="236" fill="#00E5FF" opacity=".06" class="breathe" style="--fd:4s"/>
+<path d="M 90.0 48.6 L 101.4 48.6 L 112.9 48.6 L 124.3 48.6 L 135.8 58.0 L 147.2 74.1 L 158.7 87.4 L 170.1 98.7 L 181.6 108.3 L 193.0 116.7 L 204.4 124.0 L 215.9 130.6 L 227.3 136.4 L 238.8 141.7 L 250.2 146.5 L 261.7 150.9 L 273.1 154.9 L 284.6 158.5 L 296.0 161.9 L 307.4 165.1 L 318.9 168.0 L 330.3 170.8 L 341.8 173.3 L 353.2 175.8 L 364.7 178.0 L 376.1 180.2 L 387.6 182.2 L 399.0 184.1 L 410.4 185.9 L 421.9 187.6 L 433.3 189.3 L 444.8 190.8 L 456.2 192.3 L 467.7 193.7 L 479.1 195.1 L 490.6 196.4 L 502.0 197.7 L 513.4 198.9 L 524.9 200.0 L 536.3 201.1 L 547.8 202.2 L 559.2 203.2 L 570.7 204.2 L 582.1 205.2 L 593.6 206.1 L 605.0 207.0 L 616.4 207.9 L 627.9 208.7 L 639.3 209.5 L 650.8 210.3 L 662.2 211.1 L 673.7 211.8 L 685.1 212.5 L 696.6 213.2 L 708.0 213.9 L 719.4 214.6 L 730.9 215.2 L 742.3 215.8 L 753.8 216.4 L 765.2 217.0 L 776.7 217.6 L 788.1 218.2 L 799.6 218.7 L 811.0 219.3 L 822.4 219.8 L 833.9 220.3 L 845.3 220.8 L 856.8 221.3 L 868.2 221.7 L 879.7 222.2 L 891.1 222.7 L 902.6 223.1 L 914.0 223.5 L 925.4 224.0 L 936.9 224.4 L 948.3 224.8 L 959.8 225.2 L 971.2 225.6 L 982.7 226.0 L 994.1 226.3 L 1005.6 226.7 L 1017.0 227.1 L 1028.4 227.4 L 1039.9 227.8 L 1051.3 228.1 L 1062.8 228.5 L 1074.2 228.8 L 1085.7 229.1 L 1097.1 229.4 L 1108.6 229.7 L 1120.0 230.0 " fill="none" stroke="#00E5FF" stroke-width="3.2" opacity=".95"/>
+<path d="M 90.0 48.6 L 101.4 48.6 L 112.9 48.6 L 124.3 48.6 L 135.8 58.0 L 147.2 74.1 L 158.7 87.4 L 170.1 98.7 L 181.6 108.3 L 193.0 116.7 L 204.4 124.0 L 215.9 130.6 L 227.3 136.4 L 238.8 141.7 L 250.2 146.5 L 261.7 150.9 L 273.1 154.9 L 284.6 158.5 L 296.0 161.9 L 307.4 165.1 L 318.9 168.0 L 330.3 170.8 L 341.8 173.3 L 353.2 175.8 L 364.7 178.0 L 376.1 180.2 L 387.6 182.2 L 399.0 184.1 L 410.4 185.9 L 421.9 187.6 L 433.3 189.3 L 444.8 190.8 L 456.2 192.3 L 467.7 193.7 L 479.1 195.1 L 490.6 196.4 L 502.0 197.7 L 513.4 198.9 L 524.9 200.0 L 536.3 201.1 L 547.8 202.2 L 559.2 203.2 L 570.7 204.2 L 582.1 205.2 L 593.6 206.1 L 605.0 207.0 L 616.4 207.9 L 627.9 208.7 L 639.3 209.5 L 650.8 210.3 L 662.2 211.1 L 673.7 211.8 L 685.1 212.5 L 696.6 213.2 L 708.0 213.9 L 719.4 214.6 L 730.9 215.2 L 742.3 215.8 L 753.8 216.4 L 765.2 217.0 L 776.7 217.6 L 788.1 218.2 L 799.6 218.7 L 811.0 219.3 L 822.4 219.8 L 833.9 220.3 L 845.3 220.8 L 856.8 221.3 L 868.2 221.7 L 879.7 222.2 L 891.1 222.7 L 902.6 223.1 L 914.0 223.5 L 925.4 224.0 L 936.9 224.4 L 948.3 224.8 L 959.8 225.2 L 971.2 225.6 L 982.7 226.0 L 994.1 226.3 L 1005.6 226.7 L 1017.0 227.1 L 1028.4 227.4 L 1039.9 227.8 L 1051.3 228.1 L 1062.8 228.5 L 1074.2 228.8 L 1085.7 229.1 L 1097.1 229.4 L 1108.6 229.7 L 1120.0 230.0 " fill="none" stroke="#00E5FF" stroke-width="9" opacity=".14"/>
+<path d="M 290 66 L 610 246" stroke="#F59E0B" stroke-width="1.8" stroke-dasharray="7 8" opacity=".75" class="flow" style="--fd:5s"/>
+<text x="620" y="236" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="12.5" fill="#FBBF24" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" >k⁻⁵/³  (Kolmogorov)</text><path d="M 650 81 L 970 221" stroke="#A855F7" stroke-width="1.6" stroke-dasharray="5 8" opacity=".6" class="flow" style="--fd:6.5s"/>
+<text x="978" y="212" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="12.5" fill="#A855F7" text-anchor="start" letter-spacing="2.5" opacity="0.92" font-weight="600" >k⁻³</text><text x="340" y="256" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11.5" fill="#22D3EE" text-anchor="start" letter-spacing="1.5" opacity="0.92" font-weight="600" class="breathe" style="--fd:4s">inertial range</text><text x="730" y="256" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11.5" fill="#8CA3C7" text-anchor="start" letter-spacing="1.5" opacity="0.92" font-weight="600" >dissipative range</text><text x="1140" y="324" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11.5" fill="#8CA3C7" text-anchor="end" letter-spacing="1" opacity="0.92" font-weight="600" >E(k) = C_K · ε^(2/3) · k^(−5/3) · C_K ≈ 1.50</text>
+</svg>

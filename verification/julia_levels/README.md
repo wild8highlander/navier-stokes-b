@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # `julia_levels/` — the independent Julia chain (L1–L5 + L7)
 
 > **Navigation:** [repository root](../README.md) › [verification](../README.md) › **`julia_levels`**

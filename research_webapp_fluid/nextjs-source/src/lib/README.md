@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../../assets/brand/header_fluid.svg" alt="vortex field of the browser fluid laboratory" width="100%"/>
+</p>
+
 # nextjs-source — React (Next.js 16) edition of the Fluid Lab
 
 The same 2D Navier-Stokes simulator as the standalone `index.html`,

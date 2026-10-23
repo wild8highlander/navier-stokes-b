@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # `section1_correction_b` — Correction b — the universal polarization constant (Rust)
 
 > **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [rust](../README.md) › **section 1**

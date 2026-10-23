@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_research.svg" alt="research laboratory waveform" width="100%"/>
+</p>
+
 # 🧪 `research/` — the experiment suite
 
 Deterministic numerical verification of the **b-correction ↔ vortex volume**

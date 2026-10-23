@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # `python_levels/results/` — chain verdict mirror
 
 > **Navigation:** [repository root](../../../README.md) › [verification](../../README.md) › [python_levels](../README.md) › **`results/`**

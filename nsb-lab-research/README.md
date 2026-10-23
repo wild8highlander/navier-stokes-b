@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../assets/brand/header_research.svg" alt="research laboratory waveform" width="100%"/>
+</p>
+
 <div align="center">
 
 <img src="assets/logo.png" width="150" alt="b-volume research logo"/>
@@ -44,6 +49,10 @@ Navier–Stokes b-Lab audit (v2.2.0).
 
 ## 🧭 The idea in one minute
 
+<p align="center">
+  <img src="../assets/brand/chaos_order_animated.svg" alt="chaotic streamlines stabilizing into ordered vortex rings" width="100%"/>
+</p>
+
 The [b-Lab](https://github.com/wild8highlander/navier-stokes-b) defines the
 **b-correction** as a pure mathematical angle:
 
@@ -76,6 +85,10 @@ This repository **proves the mechanism and measures the constant**:
 ---
 
 ## 🧪 Twelve experiments — all PASS
+
+<p align="center">
+  <img src="../assets/charts/chart_scoreboard.png" alt="scoreboard" width="100%"/>
+</p>
 
 | # | Exp | Verifies | Key result | Status |
 |---|-----|----------|------------|--------|

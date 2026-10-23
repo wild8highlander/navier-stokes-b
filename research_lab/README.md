@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../assets/brand/header_research.svg" alt="research laboratory waveform" width="100%"/>
+</p>
+
 # `research_lab/` — the dynamical research laboratory
 
 > **Navigation:** [repository root](../README.md) › **`research_lab`**
@@ -27,6 +32,10 @@ a laboratory built around them can genuinely falsify or support claims.
 ---
 
 ## Part I — What numerics can and cannot verify
+
+<p align="center">
+  <img src="../assets/brand/chaos_order_animated.svg" alt="chaotic streamlines stabilizing into ordered vortex rings" width="100%"/>
+</p>
 
 ### The problem, precisely
 
@@ -166,6 +175,10 @@ the laboratory itself stays working.
 ---
 
 ## Part IV — First results (v0.1.0, smoke/default presets)
+
+<p align="center">
+  <img src="../assets/charts/chart_convergence.png" alt="convergence" width="100%"/>
+</p>
 
 | Quantity | Value | Meaning |
 |---|---|---|

@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_verification.svg" alt="verification matrix — cells lighting up" width="100%"/>
+</p>
+
 # `Section6_RiemannZeros` — Riemann zeros — the Hilbert–Pólya programme (Coq/Rocq)
 
 > **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [coq](../README.md) › **section 6**

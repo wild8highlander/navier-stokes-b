@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../../assets/brand/header_kdv.svg" alt="two KdV solitons colliding" width="100%"/>
+</p>
+
 # `docs/kdv/en/` — the English Edition of the kdv Monograph
 
 > **Navigation:** [`docs`](../../README.md) › [`kdv/`](../README.md) › **`en`**

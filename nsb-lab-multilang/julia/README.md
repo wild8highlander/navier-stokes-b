@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # NSB Julia Lab — the reference edition
 
 **`nsb_lab_standalone.jl`** — a single-file, self-contained laboratory for

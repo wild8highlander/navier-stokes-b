@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_verification.svg" alt="verification matrix — cells lighting up" width="100%"/>
+</p>
+
 # `code/` — The Physics Runs P1–P6 and the Core Libraries
 
 > **Navigation:** [repository root](../README.md) › **`code`**

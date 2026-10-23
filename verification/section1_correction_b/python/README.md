@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_sections.svg" alt="research sections 1–7 lighting up in sequence" width="100%"/>
+</p>
+
 # `section1_correction_b/python/` — the reference port (Python)
 
 > **Navigation:** [repository root](../../../README.md) › [verification](../../README.md) › [`section1_correction_b`](../README.md) › **`python/`**

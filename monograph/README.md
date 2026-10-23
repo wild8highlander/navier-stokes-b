@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../assets/brand/header_monograph.svg" alt="open monograph with floating mathematical glyphs" width="100%"/>
+</p>
+
 # `monograph/` — The Two-Language Monograph and the Open-Problems Appendices
 
 > **Navigation:** [repository root](../README.md) › **`monograph`**
@@ -16,6 +21,10 @@ connect the constant to neighbouring systems — including the
 hadron-collider scale discussion.
 
 ## Contents
+
+<p align="center">
+  <img src="../assets/charts/chart_open_problems.png" alt="open problems" width="100%"/>
+</p>
 
 | File / directory | Description |
 |---|---|

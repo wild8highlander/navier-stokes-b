@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_kdv.svg" alt="two KdV solitons colliding" width="100%"/>
+</p>
+
 # `papers/kdv/kdv/` — `kdv_improved.py`, the §16.29 numerical implementation
 
 > **Navigation:** [repository root](../../README.md) › [papers](../../papers/README.md) › [kdv](../README.md) › **`kdv/`**

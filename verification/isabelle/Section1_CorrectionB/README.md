@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_verification.svg" alt="verification matrix — cells lighting up" width="100%"/>
+</p>
+
 # `Section1_CorrectionB` — Correction b — the universal polarization constant (Isabelle/HOL)
 
 > **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [isabelle](../README.md) › **section 1**

@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_papers.svg" alt="typeset papers of the b-correction program" width="100%"/>
+</p>
+
 # `src/` — Compilable LaTeX Sources of the Papers
 
 > **Navigation:** [repository root](../README.md) › **`src`**

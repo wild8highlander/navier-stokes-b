@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_labs.svg" alt="NSB-96 laboratory scoreboard — 67 WIN, 7 DRAW, 2 LOSS" width="100%"/>
+</p>
+
 # `research_col_smar/reports/` — the NSB-96 laboratory reports
 
 > **Navigation:** [repository root](../../README.md) › [research_col_smar](../README.md) › **`reports`**

@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_runtime.svg" alt="output contract — terminal, PASS marks and JSON verdict" width="100%"/>
+</p>
+
 # 🔭 `lab-monitor/` — the `Q/(θ_b·B)` monitor inside the b-Lab (v2.2.0)
 
 The research needed a *live* measurement of the flux-identity monitor inside

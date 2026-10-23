@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_monograph.svg" alt="open monograph with floating mathematical glyphs" width="100%"/>
+</p>
+
 # `research_col_smar/monograph/research_col_smar/` — the constants monograph (updated editions)
 
 > **Navigation:** [repository root](../../../README.md) › [research_col_smar](../../README.md) › [monograph](../README.md) › **`research_col_smar`**

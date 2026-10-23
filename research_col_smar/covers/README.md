@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_data.svg" alt="pinned JSON evidence layer" width="100%"/>
+</p>
+
 # `covers/` — Print-Ready Cover PDFs
 
 Rendered single-page vector covers for the two monograph editions,

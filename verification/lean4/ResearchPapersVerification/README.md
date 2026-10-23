@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_verification.svg" alt="verification matrix — cells lighting up" width="100%"/>
+</p>
+
 # `ResearchPapersVerification/` — the Lean 4 package
 
 > **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [lean4](../README.md) › **`ResearchPapersVerification`**

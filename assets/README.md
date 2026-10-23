@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../assets/brand/header_generic.svg" alt="navier-stokes-b flowing streamlines" width="100%"/>
+</p>
+
 # `assets/` — Brand and Visual Assets
 
 > **Navigation:** [repository root](../README.md) › **`assets`**
@@ -31,8 +36,15 @@ embedded across the READMEs:
 |---|---|---|
 | [`figures/`](figures/README.md) | **11 academic figures at 300 dpi** — the anatomy of b, the Rodrigues geometry, the headline residuals, the NSB-96 scoreboard, the master relation, the verification matrix, the program timeline, the KdV b-family, the L16 convergence, the P6 universality, the BKM protocol | every number from a pinned protocol |
 | [`animations/`](animations/README.md) | **4 physics GIF animations** — the stepwise b-rotation, the exact Hirota two-soliton collision, the Taylor–Green decay (real pseudo-spectral solver), the E(k, t) cascade | illustrative physics, deterministic seeds |
+| [`brand/`](brand/README.md) | **26 animated SVGs — the animated brand kit** — the hero banner, the animated logo and avatar, 15 topic headers (one per README family) and 8 animated diagrams (chaos→order, the pipeline, the eleven lanes, the θ_b dial, the scoreboard, the spectrum, the soliton collision, vortex merging) | CSS-keyframe motion inside each file, no JS, 6–63 KB each |
+| [`charts/`](charts/README.md) | **14 dark-theme summary charts** — the scoreboard donut + per-lab bars, the verification matrix, the residual ladder, the b-digit strip, the cascade slopes, the master relation, the convergence twins, the KdV family, the P1–P7 outcomes, the timeline, energy neutrality, θ_b universality, the CI gates, the social card | every number quoted from the pinned protocols |
 
 ## Design notes
+
+<p align="center">
+  <img src="brand/logo_animated.svg" alt="animated logo" width="180"/>&nbsp;&nbsp;
+  <img src="brand/avatar_animated.svg" alt="animated avatar" width="180"/>
+</p>
 
 The assets are plain, script-generated SVG (see `scripts/make_logo_svg.py`
 in the author's toolchain): no raster layers, no embedded fonts, no

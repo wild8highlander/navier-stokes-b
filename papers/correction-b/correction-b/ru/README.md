@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../../assets/brand/header_core.svg" alt="the b-correction — unit circle with the theta_b angle" width="100%"/>
+</p>
+
 # `docs/correction-b/ru/` — the Russian Edition of the correction-b Monograph
 
 > **Navigation:** [`docs`](../../README.md) › [`correction-b/`](../README.md) › **`ru`**

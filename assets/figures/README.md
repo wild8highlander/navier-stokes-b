@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_generic.svg" alt="navier-stokes-b flowing streamlines" width="100%"/>
+</p>
+
 # `assets/figures/` — the academic figure set
 
 > **Navigation:** [repository root](../README.md) › [assets](../README.md) › **`figures`**

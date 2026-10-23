@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../../assets/brand/header_verification.svg" alt="verification matrix — cells lighting up" width="100%"/>
+</p>
+
 # `Section4_KdV` — KdV — soliton interactions under the b-correction (Lean 4)
 
 > **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [lean4](../README.md) › **section 4**

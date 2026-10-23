@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # `cpp/` — the C++17 recomputation tier
 
 > **Navigation:** [repository root](../README.md) › [verification](../README.md) › **`cpp`**

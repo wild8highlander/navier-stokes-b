@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # `section3_ab_cloud/src/` — the Rust module of section 3
 
 > **Navigation:** [repository root](../../../README.md) › [verification](../../../verification/README.md) › [rust](../../README.md) › [`section3_ab_cloud`](../README.md) › **`src/`**

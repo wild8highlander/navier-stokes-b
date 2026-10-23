@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_research.svg" alt="research laboratory waveform" width="100%"/>
+</p>
+
 # 🖼 `research/figures/` — the figure gallery
 
 13 publication-grade figures. **English set** (titled — this directory) and

@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../assets/brand/header_fluid.svg" alt="vortex field of the browser fluid laboratory" width="100%"/>
+</p>
+
 # `research_webapp_fluid/` — Navier–Stokes Fluid Lab (Web Application)
 
 > **Navigation:** [repository root](../README.md) › **`research_webapp_fluid`**
@@ -23,6 +28,10 @@ simulation starts. The file also works offline and on GitHub Pages.
 ---
 
 ## 1. What it shows
+
+<p align="center">
+  <img src="../assets/brand/fluid_vortex_animated.svg" alt="two vortices spiraling into one — the fluid laboratory" width="100%"/>
+</p>
 
 | Panel | Content |
 |---|---|

@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # `Section7_SmagorinskyKolmogorov` — Smagorinsky–Kolmogorov — the master relation (Haskell)
 
 > **Navigation:** [repository root](../../README.md) › [verification](../../verification/README.md) › [haskell](../README.md) › **section 7**

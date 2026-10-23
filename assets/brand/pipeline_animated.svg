@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="380" viewBox="0 0 1280 380" role="img" aria-label="repository pipeline — seven modules lighting up in sequence">
+<defs>
+
+<linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#0D1117"/><stop offset=".55" stop-color="#0A0E1A"/><stop offset="1" stop-color="#0B1226"/>
+</linearGradient>
+<linearGradient id="cyA" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#A855F7"/>
+</linearGradient>
+<linearGradient id="cyAm" x1="0" y1="0" x2="1" y2="0">
+  <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#F59E0B"/>
+</linearGradient>
+<linearGradient id="amG" x1="0" y1="0" x2="0" y2="1">
+  <stop offset="0" stop-color="#FBBF24"/><stop offset="1" stop-color="#F59E0B"/>
+</linearGradient>
+<radialGradient id="glowC" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#00E5FF" stop-opacity=".5"/><stop offset="1" stop-color="#00E5FF" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="glowA" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#F59E0B" stop-opacity=".45"/><stop offset="1" stop-color="#F59E0B" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="glowV" cx=".5" cy=".5" r=".5">
+  <stop offset="0" stop-color="#A855F7" stop-opacity=".4"/><stop offset="1" stop-color="#A855F7" stop-opacity="0"/>
+</radialGradient>
+<pattern id="bpGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+  <path d="M40 0H0V40" fill="none" stroke="#16233F" stroke-width="1"/>
+</pattern>
+<pattern id="bpGridFine" width="16" height="16" patternUnits="userSpaceOnUse">
+  <path d="M16 0H0V16" fill="none" stroke="#16233F" stroke-width=".5" opacity=".6"/>
+</pattern>
+<filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+  <feGaussianBlur stdDeviation="3"/>
+</filter>
+<filter id="soft8" x="-80%" y="-80%" width="260%" height="260%">
+  <feGaussianBlur stdDeviation="8"/>
+</filter>
+<filter id="soft16" x="-120%" y="-120%" width="340%" height="340%">
+  <feGaussianBlur stdDeviation="16"/>
+</filter>
+
+</defs>
+<style>
+.flow  { animation: dashflow var(--fd,7s) linear infinite; }
+.flowr { animation: dashflowr var(--fd,7s) linear infinite; }
+.comet { animation: comet var(--fd,6s) linear infinite; }
+.spin  { animation: spin360 var(--fd,26s) linear infinite; transform-box: fill-box; transform-origin: center; }
+.spinr { animation: spinrev var(--fd,26s) linear infinite; transform-box: fill-box; transform-origin: center; }
+.pulse { animation: pulseop var(--fd,3.2s) ease-in-out infinite; }
+.breathe { animation: breathe var(--fd,4.2s) ease-in-out infinite; }
+.glow  { animation: glowpulse var(--fd,3.6s) ease-in-out infinite; }
+.floaty{ animation: floaty var(--fd,5.5s) ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.driftx{ animation: driftx var(--fd,6s) ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.flicker { animation: flicker var(--fd,2.6s) ease-in-out infinite; }
+.blink { animation: blinkop var(--fd,1.8s) steps(2,end) infinite; }
+@keyframes dashflow  { to { stroke-dashoffset: -640; } }
+@keyframes dashflowr { to { stroke-dashoffset: 640; } }
+@keyframes spin360 { to { transform: rotate(360deg); } }
+@keyframes spinrev { to { transform: rotate(-360deg); } }
+@keyframes pulseop { 0%,100% { opacity: .18; } 50% { opacity: 1; } }
+@keyframes breathe { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+@keyframes glowpulse { 0%,100% { opacity: .3; } 50% { opacity: .9; } }
+@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes driftx { 0%,100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
+@keyframes flicker { 0%,100% { opacity: .82; } 42% { opacity: .95; } 55% { opacity: .68; } 70% { opacity: .9; } }
+@keyframes blinkop { 0%,49% { opacity: 1; } 50%,100% { opacity: .15; } }
+@keyframes comet { 0% { stroke-dashoffset: var(--c0,1040); } 100% { stroke-dashoffset: var(--c1,-1000); } }
+</style>
+<rect width="1280" height="380" rx="24" fill="url(#bgG)"/>
+<g clip-path="none" opacity=".55"><rect width="1280" height="380" rx="24" fill="url(#bpGrid)"/></g>
+<g opacity=".28"><rect width="1280" height="380" rx="24" fill="url(#bpGridFine)"/></g>
+<rect x="1.5" y="1.5" width="1277" height="377" rx="22.5" fill="none" stroke="#1E2A44" stroke-width="2"/>
+<path d="M 177.0 196.0 H 205.66666666666666" stroke="#1E2A44" stroke-width="2"/>
+<path d="M 195.66666666666666 191.0 L 205.66666666666666 196.0 L 195.66666666666666 201.0" fill="none" stroke="#8CA3C7" stroke-width="2"/>
+<path d="M 177.0 196.0 H 205.66666666666666" fill="none" stroke="#00E5FF" stroke-width="2.2" stroke-dasharray="6 10" class="flow" style="--fd:1.6s; animation-delay:0.0s" opacity="0.9" stroke-linecap="round"/><rect x="35.0" y="111.0" width="138" height="170" rx="16" fill="#0D1526" stroke="#00E5FF" stroke-width="2.2" opacity=".97" class="breathe" style="--fd:3.00s; animation-delay:0.00s"/>
+<rect x="35.0" y="111.0" width="138" height="170" rx="16" fill="#00E5FF" opacity=".12" filter="url(#soft16)" class="glow" style="--fd:3.40s; animation-delay:0.00s"/>
+<text x="104.0" y="185.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="40" fill="#00E5FF" text-anchor="middle" font-weight="700" class="floaty" style="--fd:4.0s; animation-delay:0.00s">b</text>
+<rect x="49.0" y="207.0" width="110" height="14" rx="7" fill="#0D1117" stroke="#1E2A44" stroke-width="1"/>
+<rect x="49.0" y="207.0" width="61" height="14" rx="7" fill="#00E5FF" opacity=".4" class="growbar" style="--fd:.8s; animation-delay:0.00s; transform-box: fill-box; transform-origin: left"/>
+<text x="104.0" y="249.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="12.5" fill="#E6F1FF" text-anchor="middle" letter-spacing="1" opacity="0.92" font-weight="600" >constant</text><text x="104.0" y="269.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="10.5" fill="#8CA3C7" text-anchor="middle" letter-spacing="2" opacity="0.92" font-weight="600" >01</text><path d="M 355.66666666666663 196.0 H 384.3333333333333" stroke="#1E2A44" stroke-width="2"/>
+<path d="M 374.3333333333333 191.0 L 384.3333333333333 196.0 L 374.3333333333333 201.0" fill="none" stroke="#8CA3C7" stroke-width="2"/>
+<path d="M 355.66666666666663 196.0 H 384.3333333333333" fill="none" stroke="#22D3EE" stroke-width="2.2" stroke-dasharray="6 10" class="flow" style="--fd:1.6s; animation-delay:0.3s" opacity="0.9" stroke-linecap="round"/><rect x="213.66666666666666" y="111.0" width="138" height="170" rx="16" fill="#0D1526" stroke="#22D3EE" stroke-width="2.2" opacity=".97" class="breathe" style="--fd:3.45s; animation-delay:0.50s"/>
+<rect x="213.66666666666666" y="111.0" width="138" height="170" rx="16" fill="#22D3EE" opacity=".12" filter="url(#soft16)" class="glow" style="--fd:3.85s; animation-delay:0.50s"/>
+<text x="282.66666666666663" y="185.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="40" fill="#22D3EE" text-anchor="middle" font-weight="700" class="floaty" style="--fd:4.5s; animation-delay:0.30s">∂</text>
+<rect x="227.66666666666666" y="207.0" width="110" height="14" rx="7" fill="#0D1117" stroke="#1E2A44" stroke-width="1"/>
+<rect x="227.66666666666666" y="207.0" width="69" height="14" rx="7" fill="#22D3EE" opacity=".4" class="growbar" style="--fd:.8s; animation-delay:0.50s; transform-box: fill-box; transform-origin: left"/>
+<text x="282.66666666666663" y="249.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="12.5" fill="#E6F1FF" text-anchor="middle" letter-spacing="1" opacity="0.92" font-weight="600" >derivation</text><text x="282.66666666666663" y="269.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="10.5" fill="#8CA3C7" text-anchor="middle" letter-spacing="2" opacity="0.92" font-weight="600" >02</text><path d="M 534.3333333333333 196.0 H 562.9999999999999" stroke="#1E2A44" stroke-width="2"/>
+<path d="M 552.9999999999999 191.0 L 562.9999999999999 196.0 L 552.9999999999999 201.0" fill="none" stroke="#8CA3C7" stroke-width="2"/>
+<path d="M 534.3333333333333 196.0 H 562.9999999999999" fill="none" stroke="#A855F7" stroke-width="2.2" stroke-dasharray="6 10" class="flow" style="--fd:1.6s; animation-delay:0.6s" opacity="0.9" stroke-linecap="round"/><rect x="392.3333333333333" y="111.0" width="138" height="170" rx="16" fill="#0D1526" stroke="#A855F7" stroke-width="2.2" opacity=".97" class="breathe" style="--fd:3.90s; animation-delay:1.00s"/>
+<rect x="392.3333333333333" y="111.0" width="138" height="170" rx="16" fill="#A855F7" opacity=".12" filter="url(#soft16)" class="glow" style="--fd:4.30s; animation-delay:1.00s"/>
+<text x="461.3333333333333" y="185.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="40" fill="#A855F7" text-anchor="middle" font-weight="700" class="floaty" style="--fd:5.0s; animation-delay:0.60s">∑</text>
+<rect x="406.3333333333333" y="207.0" width="110" height="14" rx="7" fill="#0D1117" stroke="#1E2A44" stroke-width="1"/>
+<rect x="406.3333333333333" y="207.0" width="78" height="14" rx="7" fill="#A855F7" opacity=".4" class="growbar" style="--fd:.8s; animation-delay:1.00s; transform-box: fill-box; transform-origin: left"/>
+<text x="461.3333333333333" y="249.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="12.5" fill="#E6F1FF" text-anchor="middle" letter-spacing="1" opacity="0.92" font-weight="600" >proof L1–L5</text><text x="461.3333333333333" y="269.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="10.5" fill="#8CA3C7" text-anchor="middle" letter-spacing="2" opacity="0.92" font-weight="600" >03</text><path d="M 713.0 196.0 H 741.6666666666666" stroke="#1E2A44" stroke-width="2"/>
+<path d="M 731.6666666666666 191.0 L 741.6666666666666 196.0 L 731.6666666666666 201.0" fill="none" stroke="#8CA3C7" stroke-width="2"/>
+<path d="M 713.0 196.0 H 741.6666666666666" fill="none" stroke="#00E5FF" stroke-width="2.2" stroke-dasharray="6 10" class="flow" style="--fd:1.6s; animation-delay:0.8999999999999999s" opacity="0.9" stroke-linecap="round"/><rect x="571.0" y="111.0" width="138" height="170" rx="16" fill="#0D1526" stroke="#00E5FF" stroke-width="2.2" opacity=".97" class="breathe" style="--fd:4.35s; animation-delay:1.50s"/>
+<rect x="571.0" y="111.0" width="138" height="170" rx="16" fill="#00E5FF" opacity=".12" filter="url(#soft16)" class="glow" style="--fd:4.75s; animation-delay:1.50s"/>
+<text x="640.0" y="185.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="40" fill="#00E5FF" text-anchor="middle" font-weight="700" class="floaty" style="--fd:5.5s; animation-delay:0.90s">N</text>
+<rect x="585.0" y="207.0" width="110" height="14" rx="7" fill="#0D1117" stroke="#1E2A44" stroke-width="1"/>
+<rect x="585.0" y="207.0" width="87" height="14" rx="7" fill="#00E5FF" opacity=".4" class="growbar" style="--fd:.8s; animation-delay:1.50s; transform-box: fill-box; transform-origin: left"/>
+<text x="640.0" y="249.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="12.5" fill="#E6F1FF" text-anchor="middle" letter-spacing="1" opacity="0.92" font-weight="600" >numerics P1–P7</text><text x="640.0" y="269.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="10.5" fill="#8CA3C7" text-anchor="middle" letter-spacing="2" opacity="0.92" font-weight="600" >04</text><path d="M 891.6666666666666 196.0 H 920.3333333333333" stroke="#1E2A44" stroke-width="2"/>
+<path d="M 910.3333333333333 191.0 L 920.3333333333333 196.0 L 910.3333333333333 201.0" fill="none" stroke="#8CA3C7" stroke-width="2"/>
+<path d="M 891.6666666666666 196.0 H 920.3333333333333" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-dasharray="6 10" class="flow" style="--fd:1.6s; animation-delay:1.2s" opacity="0.9" stroke-linecap="round"/><rect x="749.6666666666666" y="111.0" width="138" height="170" rx="16" fill="#0D1526" stroke="#F59E0B" stroke-width="2.2" opacity=".97" class="breathe" style="--fd:4.80s; animation-delay:2.00s"/>
+<rect x="749.6666666666666" y="111.0" width="138" height="170" rx="16" fill="#F59E0B" opacity=".12" filter="url(#soft16)" class="glow" style="--fd:5.20s; animation-delay:2.00s"/>
+<text x="818.6666666666666" y="185.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="40" fill="#F59E0B" text-anchor="middle" font-weight="700" class="floaty" style="--fd:6.0s; animation-delay:1.20s">×11</text>
+<rect x="763.6666666666666" y="207.0" width="110" height="14" rx="7" fill="#0D1117" stroke="#1E2A44" stroke-width="1"/>
+<rect x="763.6666666666666" y="207.0" width="96" height="14" rx="7" fill="#F59E0B" opacity=".4" class="growbar" style="--fd:.8s; animation-delay:2.00s; transform-box: fill-box; transform-origin: left"/>
+<text x="818.6666666666666" y="249.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="12.5" fill="#E6F1FF" text-anchor="middle" letter-spacing="1" opacity="0.92" font-weight="600" >verification</text><text x="818.6666666666666" y="269.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="10.5" fill="#8CA3C7" text-anchor="middle" letter-spacing="2" opacity="0.92" font-weight="600" >05</text><path d="M 1070.3333333333333 196.0 H 1099.0" stroke="#1E2A44" stroke-width="2"/>
+<path d="M 1089.0 191.0 L 1099.0 196.0 L 1089.0 201.0" fill="none" stroke="#8CA3C7" stroke-width="2"/>
+<path d="M 1070.3333333333333 196.0 H 1099.0" fill="none" stroke="#A855F7" stroke-width="2.2" stroke-dasharray="6 10" class="flow" style="--fd:1.6s; animation-delay:1.5s" opacity="0.9" stroke-linecap="round"/><rect x="928.3333333333333" y="111.0" width="138" height="170" rx="16" fill="#0D1526" stroke="#A855F7" stroke-width="2.2" opacity=".97" class="breathe" style="--fd:5.25s; animation-delay:2.50s"/>
+<rect x="928.3333333333333" y="111.0" width="138" height="170" rx="16" fill="#A855F7" opacity=".12" filter="url(#soft16)" class="glow" style="--fd:5.65s; animation-delay:2.50s"/>
+<text x="997.3333333333333" y="185.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="40" fill="#A855F7" text-anchor="middle" font-weight="700" class="floaty" style="--fd:6.5s; animation-delay:1.50s">◍</text>
+<rect x="942.3333333333333" y="207.0" width="110" height="14" rx="7" fill="#0D1117" stroke="#1E2A44" stroke-width="1"/>
+<rect x="942.3333333333333" y="207.0" width="105" height="14" rx="7" fill="#A855F7" opacity=".4" class="growbar" style="--fd:.8s; animation-delay:2.50s; transform-box: fill-box; transform-origin: left"/>
+<text x="997.3333333333333" y="249.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="12.5" fill="#E6F1FF" text-anchor="middle" letter-spacing="1" opacity="0.92" font-weight="600" >satellites</text><text x="997.3333333333333" y="269.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="10.5" fill="#8CA3C7" text-anchor="middle" letter-spacing="2" opacity="0.92" font-weight="600" >06</text><rect x="1107.0" y="111.0" width="138" height="170" rx="16" fill="#0D1526" stroke="#FBBF24" stroke-width="2.2" opacity=".97" class="breathe" style="--fd:5.70s; animation-delay:3.00s"/>
+<rect x="1107.0" y="111.0" width="138" height="170" rx="16" fill="#FBBF24" opacity=".12" filter="url(#soft16)" class="glow" style="--fd:6.10s; animation-delay:3.00s"/>
+<text x="1176.0" y="185.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="40" fill="#FBBF24" text-anchor="middle" font-weight="700" class="floaty" style="--fd:7.0s; animation-delay:1.80s">‖</text>
+<rect x="1121.0" y="207.0" width="110" height="14" rx="7" fill="#0D1117" stroke="#1E2A44" stroke-width="1"/>
+<rect x="1121.0" y="207.0" width="113" height="14" rx="7" fill="#FBBF24" opacity=".4" class="growbar" style="--fd:.8s; animation-delay:3.00s; transform-box: fill-box; transform-origin: left"/>
+<text x="1176.0" y="249.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="12.5" fill="#E6F1FF" text-anchor="middle" letter-spacing="1" opacity="0.92" font-weight="600" >scoreboard</text><text x="1176.0" y="269.0" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="10.5" fill="#8CA3C7" text-anchor="middle" letter-spacing="2" opacity="0.92" font-weight="600" >07</text><text x="1250" y="362" font-family="'JetBrains Mono','Cascadia Code','Fira Code',Consolas,Menlo,monospace" font-size="11.5" fill="#8CA3C7" text-anchor="end" letter-spacing="2" opacity="0.92" font-weight="600" >closed-form → proof → executed → verified</text>
+</svg>

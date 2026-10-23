@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../assets/brand/header_monograph.svg" alt="open monograph with floating mathematical glyphs" width="100%"/>
+</p>
+
 # `monograph/open-problems/figures/` — the Program's Figures
 
 > **Navigation:** [`open-problems`](../README.md) › **`figures`**

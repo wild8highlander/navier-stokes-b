@@ -1,3 +1,8 @@
+<!-- nsb-brand:v1 -->
+<p align="center">
+  <img src="../../../../assets/brand/header_multilang.svg" alt="eleven verification lanes converging into one checksum node" width="100%"/>
+</p>
+
 # `section7_smagorinsky_kolmogorov/src/` — the Rust module of section 7
 
 > **Navigation:** [repository root](../../../README.md) › [verification](../../../verification/README.md) › [rust](../../README.md) › [`section7_smagorinsky_kolmogorov`](../README.md) › **`src/`**
