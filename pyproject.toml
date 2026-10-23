@@ -50,10 +50,12 @@ target-version = "py310"
 # symbols (N802/N803/N806), semicolon-packed derivation lines (E702), long
 # formulas (E501). Rewriting them risks changing published numbers, so they
 # are excluded from linting; everything else (CI scripts, common verifier,
-# tests, API, demo apps) is linted strictly in CI.
+# tests, API, demo apps, the research_lab package) is linted strictly in CI.
 extend-exclude = [
     "code",
     "monograph",
+    "nsb-lab-multilang",
+    "nsb-lab-research",
     "papers",
     "research_col_smar",
     "verification/python_levels",

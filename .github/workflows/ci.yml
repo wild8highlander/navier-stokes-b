@@ -50,8 +50,9 @@ jobs:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      - name: Install scientific stack
-        run: pip install numpy scipy matplotlib mpmath
+      # No third-party install needed: the section-1 verifier and the
+      # aggregate runner are stdlib-only (json/math/subprocess), so the job
+      # has no pip dependency at all and stays reproducible.
       - name: Run section 1 (correction b) Python verification
         run: python verification/common/python/main.py --section 1 --preset default
 
