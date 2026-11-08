@@ -38,7 +38,8 @@ Python-монолит (b, θ_b, C_s, Кассини, KdV, Родриг, Кирх
 =#
 
 module VFAUI
-    export paint, badge, box_lines, bar_line, erase_line, state, detect!
+    export paint, badge, box_lines, bar_line, erase_line, state, detect!,
+           sticker, aurora_sep, aurora_title, sparkline_verdict
 
     state = Dict(:color => true, :unicode => true, :theme => "aurora")
 
@@ -52,6 +53,9 @@ module VFAUI
         "emerald" => ("\x1b[48;5;233m", "\x1b[38;5;250m", "\x1b[38;5;85m",
                       "\x1b[38;5;84m", "\x1b[38;5;185m", "\x1b[38;5;167m"))
     RESET = "\x1b[0m"
+
+    # §4.1 aurora-стикеры: плавающий декор для баннера, меню и вердиктов
+    const STICKERS = ["✦", "❋", "✺", "❊", "✿", "✦", "✧", "❃"]
 
     function detect!()
         if haskey(ENV, "NO_COLOR") || get(ENV, "TERM", "") == "dumb"
@@ -71,15 +75,94 @@ module VFAUI
     paint(text::AbstractString, idx::Int) = state[:color] ? ccolor(idx) * text * RESET : String(text)
     badge(v::AbstractString) = paint("[$v]", v in ("PASS", "DONE") ? 4 : v in ("FAIL", "ERROR") ? 6 : 5)
 
+    "Aurora-стикер по индексу: символ из STICKERS + цвет темы (idx→mod1(i,6))"
+    function sticker(i::Int)
+        sym = STICKERS[mod1(i, length(STICKERS))]
+        return state[:color] ? ccolor(mod1(i, 6)) * sym * RESET : sym
+    end
+
+    "Aurora-разделитель: ╭─╮ с бегущими точками и искрами (phase — фаза бега)"
+    function aurora_sep(width::Int = 66; phase::Int = 0)
+        state[:unicode] || return "+" * "-"^(width - 2) * "+"
+        c = state[:color]
+        spk = c ? ccolor(3) * "✦" * RESET : "✦"
+        out = IOBuffer()
+        print(out, c ? ccolor(3) * "╭" * RESET : "╭")
+        for i in 1:width - 2
+            if mod(i + phase, 8) == 0
+                print(out, spk)
+            elseif mod(i + phase, 4) == 0
+                print(out, "·")
+            else
+                print(out, "─")
+            end
+        end
+        print(out, c ? ccolor(3) * "╮" * RESET : "╮")
+        return String(take!(out))
+    end
+
+    "Плавающий заголовок: буквы в aurora-градиенте, по стикеру с каждого края"
+    function aurora_title(text::AbstractString; accent::Int = 3, deco::Bool = true)
+        u = state[:unicode]
+        col = state[:color]
+        buf = IOBuffer()
+        if deco && u
+            print(buf, "  ", sticker(1), " ")
+        end
+        for (i, ch) in enumerate(text)
+            if col
+                print(buf, ccolor(accent + (i % 3)), ch)
+            else
+                print(buf, ch)
+            end
+        end
+        col && print(buf, RESET)
+        if deco && u
+            print(buf, " ", sticker(5))
+        end
+        return String(take!(buf))
+    end
+
+    "Мини-вердикт со спарклайн-скобками (для CI-логов — ASCII при !unicode)"
+    function sparkline_verdict(verdict::AbstractString)
+        state[:unicode] || return "[$verdict]"
+        return verdict in ("PASS", "DONE") ? "✦[" * verdict * "]✦" :
+               verdict in ("FAIL", "ERROR") ? "❋[" * verdict * "]❋" :
+               "✺[" * verdict * "]✺"
+    end
+
     function box_lines(lines::Vector{<:AbstractString}, width::Int = 66)
         u = state[:unicode]
-        top = u ? "┌" * "─"^(width - 2) * "┐" : "+" * "-"^(width - 2) * "+"
+        c = state[:color]
+        if !u
+            top = "+" * "-"^(width - 2) * "+"
+            out = [top]
+            for ln in lines
+                body = first(ln, min(length(ln), width - 4))
+                push!(out, "| " * rpad(body, width - 4) * " |")
+            end
+            push!(out, "+" * "-"^(width - 2) * "+")
+            return out
+        end
+        # aurora: скруглённые углы + бегущие искры по верхней кромке;
+        # RESET только на концах строки — иначе ANSI-коды ломают ширину
+        tl, tr, bl, br, hz, vt = "╭", "╮", "╰", "╯", "─", "│"
+        spk = c ? ccolor(3) * "✦" * ccolor(2) : "✦"
+        top = c ? ccolor(3) * tl * ccolor(2) : tl
+        for i in 1:width - 2
+            top *= (mod(i, 6) == 0 ? spk : hz)
+        end
+        top *= (c ? ccolor(3) * tr * RESET : tr)
         out = [top]
         for ln in lines
             body = first(ln, min(length(ln), width - 4))
-            push!(out, (u ? "│" : "|") * " " * rpad(body, width - 4) * " " * (u ? "│" : "|"))
+            pad = rpad(body, width - 4)
+            lbar = c ? ccolor(3) * vt * RESET : vt
+            push!(out, lbar * " " * pad * " " * lbar)
         end
-        push!(out, u ? "└" * "─"^(width - 2) * "┘" : "+" * "-"^(width - 2) * "+")
+        bot = (c ? ccolor(3) * bl * ccolor(2) : bl) * hz^(width - 2) *
+              (c ? ccolor(3) * br * RESET : br)
+        push!(out, bot)
         return out
     end
 
@@ -87,15 +170,34 @@ module VFAUI
                       monitor::AbstractString = "", t0::Float64 = 0.0)
         width = 72
         frac = total <= 0 ? 0.0 : min(1.0, done / total)
-        filln = round(Int, (width - 20 - length(monitor)) * frac)  # Int() от дробного = InexactError
-        glyph = state[:unicode] ? ("█"^filln * "·"^max(0, width - 20 - length(monitor) - filln)) :
-                                  ("#"^filln * "-"^max(0, width - 20 - length(monitor) - filln))
+        # B1: длинный monitor уводил (width-20-len)*frac в минус → "█"^filln
+        # бросал DomainError; клампим и ширину, и заполнение
+        avail = max(4, width - 20 - length(monitor))
+        filln = clamp(round(Int, avail * frac), 0, avail)
+        remn = avail - filln
+        u = state[:unicode]
+        c = state[:color]
+        fill_ch = u ? "█" : "#"
+        empty_ch = u ? "·" : "-"
+        if c
+            # aurora-пульс: заполнение бежит тремя цветами темы
+            buf = IOBuffer()
+            stepn = max(1, filln ÷ 3)
+            for i in 1:filln
+                print(buf, ccolor(3 + ((i - 1) ÷ stepn) % 3), fill_ch)
+            end
+            print(buf, ccolor(2), empty_ch^remn, RESET)
+            glyph = String(take!(buf))
+        else
+            glyph = fill_ch^filln * empty_ch^remn
+        end
         eta = ""
         if frac > 0.02 && t0 > 0
             el = time() - t0
-            eta = " eta $(max(0.0, el / frac - el))s"
+            eta = " eta $(round(max(0.0, el / frac - el); digits = 0))s"
         end
-        return "\r$glyph $done/$total $(first(label, 14))$monitor$eta   "
+        tag = u && c ? ccolor(4) * "✦" * RESET : ">"
+        return "\r$tag $glyph $done/$total $(first(label, 14))$monitor$eta   "
     end
 
     function erase_line()
@@ -138,7 +240,7 @@ module VFABanner
         push!(lines, "  Navier-Stokes-B " * sep * " full verification")
         isempty(subtitle) || push!(lines, "  " * subtitle)
         push!(lines, "  julia " * string(VERSION) * " " * sep * " " *
-                     Main.VFAMon.platform_tag() * " " * sep * " v1.2.0")
+                     Main.VFAMon.platform_tag() * " " * sep * " v1.3.0")
         return lines
     end
 
@@ -467,7 +569,10 @@ module VFAPlot
         raw = UInt8[]
         for y in 0:h - 1
             push!(raw, UInt8(0))                     # фильтр 0 (None): stored-deflate
-            append!(raw, c.buf[y * 3w .+ (1:3w)])
+            # B2: @view вместо копии среза; B-NEW-7: база строки — явные
+            # умножения (y*3w-конкатенация хрупка при рефакторинге)
+            base = y * 3 * w
+            append!(raw, @view c.buf[(base + 1):(base + 3 * w)])
         end
         ihdr = vcat(reinterpret(UInt8, [hton(UInt32(w))]),
                     reinterpret(UInt8, [hton(UInt32(h))]), UInt8[8, 2, 0, 0, 0])
@@ -533,9 +638,15 @@ module VFAPlot
     function save_gif(path::AbstractString, frames::Vector{Canvas}; delay_cs = 2)
         isempty(frames) && return path
         w, h = frames[1].w, frames[1].h
-        pal_rgb = [(18, 20, 28), (26, 29, 40), (55, 60, 80), (150, 160, 190),
-                   (220, 225, 240), (80, 170, 255), (255, 140, 105), (110, 220, 150),
-                   (200, 150, 255), (255, 210, 90), (90, 230, 220), (40, 44, 60)]
+        # B7: палитра объявляет 256 цветов (0xF7), но была заполнена только
+        # 12; квантование тёмных пикселей (bg 18,20,28) проваливалось в чёрный
+        # (0,0,0). Расширяем: тёмный фон, промежуточные тона, белый.
+        pal_rgb = [(12, 14, 22), (18, 20, 28), (26, 29, 40), (40, 44, 60),
+                   (55, 60, 80), (90, 95, 115), (150, 160, 190),
+                   (220, 225, 240), (255, 255, 255),
+                   (80, 170, 255), (255, 140, 105), (110, 220, 150),
+                   (200, 150, 255), (255, 210, 90), (90, 230, 220),
+                   (160, 120, 200)]
         palette = UInt8[]
         for rgb in pal_rgb
             append!(palette, UInt8.(collect(rgb)))
@@ -553,9 +664,11 @@ module VFAPlot
             for p in 1:w * h
                 r, g, b = Int(fr.buf[3p - 2]), Int(fr.buf[3p - 1]), Int(fr.buf[3p])
                 best, bd = 0, typemax(Int)
-                for (pi, pr) in enumerate(pal_rgb)
+                # B3: `pi` затенял Base.pi на всю область цикла — хрупко;
+                # переименовали в cidx
+                for (cidx, pr) in enumerate(pal_rgb)
                     d = (r - pr[1])^2 + (g - pr[2])^2 + (b - pr[3])^2
-                    d < bd && (best, bd = pi - 1, d)
+                    d < bd && (best, bd = cidx - 1, d)
                 end
                 idx[p] = UInt8(best)
             end
@@ -768,6 +881,289 @@ end
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+# §27b 3D vortex field: рендер реального вихревого жгута, затухающего во
+# времени под слоистой b-поправкой Γ(z,t) = Γ0(z)·e^(−b(z)·t), t = frac·T.
+# Сетка N×N×N, N ∈ [24, 256] (clamp для защиты памяти); при N³ > 96³
+# выборка децимируется вдвое по оси до ≤96³ точек на кадр.
+# Рендер: изометрическая проекция, сортировка по глубине, цвет по |u|
+# (aurora-палитра). Вывод: анимированный GIF через VFAPlot.save_gif
+# (stdlib only). Текст на канве — ASCII (шрифт FONT3X5).
+# ═══════════════════════════════════════════════════════════════════════════
+
+module VFAVortex3D
+    using ..VFAPlot: Canvas, save_gif, draw_text, rect!, px!
+    import ..VFALayer3D
+
+    export render_vortex_animation, render_frame, vortex_preset,
+           analyze_evolution, sample_velocity, v_azimuthal
+
+    # ── Aurora-палитра (совпадает с VFAPlot.THEMES["aurora"]["series"])
+    const AURORA_SERIES = [
+        ( 80, 170, 255),   # cobalt
+        (255, 140, 105),   # coral
+        (110, 220, 150),   # mint
+        (200, 150, 255),   # lilac
+        (255, 210,  90),   # amber
+        ( 90, 230, 220)]   # cyan
+    const BG_DARK = (12, 14, 22)
+    const GRID_DIM = (55, 60, 80)
+
+    # ── Lamb-Oseen: азимутальная скорость на радиусе r (циркуляция Γ, ядро rc)
+    function v_azimuthal(r::Real, Γ::Real, rc::Real)
+        r < 1e-12 && return 0.0
+        return Γ / (2π * r) * (1 - exp(-(r / rc)^2))
+    end
+
+    # ── Скорость (ux, uy, uz) в точке 3D для слоистого вихря: ядро на x=y=0,
+    # слой z_i несёт циркуляцию Γ_i и ширину W_i; линейная интерполяция по z,
+    # затем азимутальная Lamb-Oseen. Единичный азимутальный вектор (-y/r, x/r, 0).
+    function sample_velocity(x::Real, y::Real, z::Real,
+                             Γs::AbstractVector{<:Real},
+                             hs::AbstractVector{<:Real},
+                             Ws::AbstractVector{<:Real}; L = 4.0)
+        n = length(hs)
+        n == 0 && return (0.0, 0.0, 0.0)
+        zc = clamp(Float64(z), 0.0, Float64(L))
+        idx = clamp(searchsortedfirst(hs, zc), 1, n)
+        lo = clamp(idx - 1, 1, n)
+        hi = clamp(idx, 1, n)
+        Γloc, Wloc = if hi == lo
+            (Float64(Γs[lo]), Float64(Ws[lo]))
+        else
+            t = (zc - hs[lo]) / (hs[hi] - hs[lo] + 1e-30)
+            ((1 - t) * Γs[lo] + t * Γs[hi], (1 - t) * Ws[lo] + t * Ws[hi])
+        end
+        rc = max(Wloc, 0.05)
+        r = sqrt(x^2 + y^2)
+        r < 1e-12 && return (0.0, 0.0, 0.0)
+        vθ = v_azimuthal(r, Γloc, rc)
+        return (-vθ * y / r, vθ * x / r, 0.0)
+    end
+
+    # ── Изометрическая проекция с глубиной: (screenX, screenY, depth)
+    function _iso(x::Float64, y::Float64, z::Float64, az::Float64, el::Float64)
+        ca, sa = cos(az), sin(az)
+        ce, se = cos(el), sin(el)
+        X = ca * x - sa * y
+        Y = sa * x + ca * y
+        return (X, ce * Y - se * z, se * Y + ce * z)
+    end
+
+    # ── Aurora-цвет по модулю скорости: интерполяция по палитре
+    function _colormap(v::Float64, vmax::Float64)
+        vmax < 1e-12 && return AURORA_SERIES[1]
+        t = clamp(v / vmax, 0.0, 1.0)
+        k = 1 + t * (length(AURORA_SERIES) - 1)
+        i0 = clamp(floor(Int, k), 1, length(AURORA_SERIES))
+        i1 = clamp(i0 + 1, 1, length(AURORA_SERIES))
+        f = k - i0
+        c0, c1 = AURORA_SERIES[i0], AURORA_SERIES[i1]
+        return (round(Int, (1 - f) * c0[1] + f * c1[1]),
+                round(Int, (1 - f) * c0[2] + f * c1[2]),
+                round(Int, (1 - f) * c0[3] + f * c1[3]))
+    end
+
+    # ── Рендер одного кадра (возвращает Canvas width×height).
+    # Depth = se·Y + ce·z растёт от камеры → farther = больше depth.
+    # Рисуем FAR FIRST (painter's algorithm), ближние ярче (fade), авто-фит
+    # по bbox проекции — вихрь целиком в кадре при любом el/az. Сетки нет:
+    # её цвет (55,60,80) совпадал с тусклыми ближними точками.
+    function render_frame(N::Int, Γs::AbstractVector{<:Real},
+                          hs::AbstractVector{<:Real},
+                          Ws::AbstractVector{<:Real};
+                          width = 900, height = 640,
+                          az = 0.55, el = 0.42,
+                          title = "3D VORTEX", sub = "",
+                          overlay::Vector{String} = String[])
+        W, H = width * 2, height * 2      # supersample ×2
+        cv = Canvas(W, H, BG_DARK)
+        # защита памяти: держим выборку ≤ 96³ точек, децимация вдвое по оси
+        N_eff = N
+        while N_eff^3 > 96^3 && N_eff > 24
+            N_eff ÷= 2
+        end
+        L = 4.0
+        x_r = 1.5    # радиальный размах
+        vmax = 0.0
+        raw = Tuple{Float64, Float64, Float64, Float64}[]   # (depth, sx, sy, m)
+        ca, sa = cos(az), sin(az)
+        ce, se = cos(el), sin(el)
+        inv = 1.0 / max(1, N_eff - 1)
+        # pass 1: выборка + проекция
+        for i in 0:N_eff - 1
+            x = -x_r + 2x_r * i * inv
+            for j in 0:N_eff - 1
+                y = -x_r + 2x_r * j * inv
+                for k in 0:N_eff - 1
+                    z = L * k * inv
+                    ux, uy, _ = sample_velocity(x, y, z, Γs, hs, Ws; L = L)
+                    m = sqrt(ux^2 + uy^2)
+                    m > vmax && (vmax = m)
+                    X = ca * x - sa * y
+                    Y = sa * x + ca * y
+                    push!(raw, (se * Y + ce * z, X, ce * Y - se * z, m))
+                end
+            end
+        end
+        # pass 2: отсечение слабых точек (~90% работы) ДО сортировки
+        pts = filter(p -> p[4] >= vmax * 0.02, raw)
+        isempty(pts) && (pts = raw)
+        # pass 3: авто-фит по bbox проекции (раньше фикс. scale резал верх)
+        sx_min = minimum(p[2] for p in pts); sx_max = maximum(p[2] for p in pts)
+        sy_min = minimum(p[3] for p in pts); sy_max = maximum(p[3] for p in pts)
+        sz_min = minimum(p[1] for p in pts); sz_max = maximum(p[1] for p in pts)
+        span_x = max(sx_max - sx_min, 1e-6)
+        span_y = max(sy_max - sy_min, 1e-6)
+        span_z = max(sz_max - sz_min, 1e-9)
+        margin = 60
+        scale = 0.9 * min((W - 2margin) / span_x, (H - 2margin) / span_y)
+        cx = W / 2 - (sx_min + sx_max) / 2 * scale
+        cy = H / 2 - (sy_min + sy_max) / 2 * scale
+        # pass 4: FAR FIRST (было наоборот — дальние перекрывали ближние)
+        sort!(pts; by = p -> -p[1])
+        inv_vmax = 1.0 / max(vmax, 1e-12)
+        for (depth, sx, sy, m) in pts
+            pxi = round(Int, cx + sx * scale)
+            pyi = round(Int, cy + sy * scale)
+            rr = 2 + round(Int, 3 * m * inv_vmax)
+            base = _colormap(m, vmax)
+            # near = BRIGHT (t_depth 0 → 1.0), far тусклее (→ 0.55)
+            t_depth = (depth - sz_min) / span_z
+            fade = 1.0 - 0.45 * t_depth
+            col = (round(Int, base[1] * fade), round(Int, base[2] * fade),
+                   round(Int, base[3] * fade))
+            rect!(cv, pxi - rr, pyi - rr, pxi + rr, pyi + rr, col)
+        end
+        # заголовок и легенда (ASCII: шрифт FONT3X5 не знает Γ/·/—)
+        draw_text(cv, title, 40, 24, (220, 225, 240), 4)
+        isempty(sub) || draw_text(cv, sub, 40, 52, (150, 160, 190), 3)
+        # overlay: метрики стабилизации (правый низ); шаг 20 при глифе 15
+        for (idx, line) in enumerate(overlay)
+            draw_text(cv, line, W - 760, H - 62 - (idx - 1) * 20,
+                      (200, 215, 240), 3)
+        end
+        draw_text(cv, "|u|max = $(round(vmax; sigdigits = 3))", 40, H - 40,
+                  (220, 225, 240), 3)
+        # даунсэмпл ×2 (box filter)
+        out = Canvas(width, height, BG_DARK)
+        for yy in 0:height - 1, xx in 0:width - 1
+            r = g = b = 0
+            for j in 0:1, i in 0:1
+                p0 = 3 * ((yy * 2 + j) * W + xx * 2 + i) + 1
+                r += cv.buf[p0]; g += cv.buf[p0 + 1]; b += cv.buf[p0 + 2]
+            end
+            q0 = 3 * (yy * width + xx) + 1
+            out.buf[q0] = UInt8(r ÷ 4)
+            out.buf[q0 + 1] = UInt8(g ÷ 4)
+            out.buf[q0 + 2] = UInt8(b ÷ 4)
+        end
+        return out
+    end
+
+    # ── Временная серия метрик затухания + milestones + verdict:
+    # Γ_total(t), v_peak (пик на кромке ядра), %Γ(t), t50/t10/t01,
+    # Γ-взвешенный mean_b. Имена полей ASCII — общие с Python-эталоном.
+    function analyze_evolution(hs::AbstractVector{<:Real},
+                               Ws::AbstractVector{<:Real},
+                               Γs0::AbstractVector{<:Real},
+                               T::Float64, nframes::Int;
+                               h0::Float64 = 1.0, W0::Float64 = 1.0)
+        n = length(hs)
+        bs = [VFALayer3D.b_layer(hs[i], Ws[i]; h0 = h0, W0 = W0) for i in 1:n]
+        halflife = [b > 1e-12 ? log(2.0) / b : Inf for b in bs]
+        Γ0tot = sum(Γs0)
+        frames = NamedTuple[]
+        for fi in 0:nframes - 1
+            frac = nframes == 1 ? 0.0 : fi / (nframes - 1)
+            t = frac * T
+            Γs = [Γs0[i] * exp(-bs[i] * t) for i in 1:n]
+            Γtot = sum(Γs)
+            v_peak = n == 0 ? 0.0 :
+                     maximum(Γs[i] / (2π * max(Ws[i], 0.05)) * (1 - exp(-1.0))
+                             for i in 1:n)
+            push!(frames, (i = fi + 1, frac = frac, t = t,
+                           G_total = Γtot, v_peak = v_peak,
+                           G_frac = Γ0tot > 1e-12 ? Γtot / Γ0tot : 0.0))
+        end
+        find_cross(target_frac) = begin
+            target = target_frac * Γ0tot
+            for f in frames
+                f.G_total <= target && return f.t
+            end
+            return nothing
+        end
+        mean_b = Γ0tot > 1e-12 ?
+                 sum(Γs0[i] * bs[i] for i in 1:n) / Γ0tot : 0.0
+        final_frac = isempty(frames) ? 1.0 : frames[end].G_frac
+        verdict = final_frac < 0.01 ? "STABILIZED" :
+                  final_frac < 0.10 ? "DAMPED" :
+                  final_frac < 0.50 ? "DECAYING" : "PERSISTENT"
+        return (n = n, T = T, nframes = nframes,
+                layers = [(i = i, h = Float64(hs[i]), W = Float64(Ws[i]),
+                           b = bs[i], halflife = halflife[i], G0 = Float64(Γs0[i]),
+                           G_end = Float64(Γs0[i]) * exp(-bs[i] * T)) for i in 1:n],
+                frames = frames,
+                milestones = (t50 = find_cross(0.50),
+                              t10 = find_cross(0.10),
+                              t01 = find_cross(0.01)),
+                mean_b = mean_b, final_frac = final_frac, verdict = verdict)
+    end
+
+    # ── Пресет: слоистый профиль по умолчанию с красивым затуханием;
+    # Γ_i(z) = Γ0·(1 − 0.5·z/L)·(W_i²/0.25) — ядро сильнее у поверхности
+    function vortex_preset(; nlayers = 20, Γ0 = 2.0, L = 4.0)
+        zs, hs, Ws = VFALayer3D.default_profile(L = L, N = nlayers, W0 = 0.5)
+        Γs0 = [Γ0 * (1 - 0.5 * z / L) * (W^2 / 0.25) for (z, W) in zip(zs, Ws)]
+        return hs, Ws, Γs0
+    end
+
+    # ── Полная анимация: t = frac·T ∈ [0, T]; Γ_i(t) = Γ_i(0)·exp(−b_i·t) —
+    # точное послойное затухание. Дефолт T=40: при b≈0.03–0.06 даёт видимое
+    # затухание до ~31% (при T=4 оставалось ~88% — «вихрь не затухает»).
+    # nframes клампится [2, 240] — B-NEW-2: TOML/env могли задать 0/1.
+    function render_vortex_animation(path::AbstractString;
+                                     N::Int = 48,
+                                     nframes::Int = 24,
+                                     T::Float64 = 40.0,
+                                     h0::Float64 = 1.0,
+                                     W0::Float64 = 1.0,
+                                     width::Int = 900,
+                                     height::Int = 640,
+                                     callback = nothing)
+        N < 24 && error("N must be >= 24 (got $N)")
+        N > 256 && (N = 256)       # защита памяти
+        nframes = max(2, min(240, nframes))
+        hs, Ws, Γs0 = vortex_preset()
+        analysis = analyze_evolution(hs, Ws, Γs0, T, nframes;
+                                     h0 = h0, W0 = W0)
+        frames = Canvas[]
+        t0 = time()
+        for (fi, fmeta) in enumerate(analysis.frames)
+            Γs = [Γs0[i] * exp(-analysis.layers[i].b * fmeta.t)
+                  for i in 1:length(hs)]
+            overlay = ["t=$(round(fmeta.t; digits = 2))  " *
+                       "G=$(round(fmeta.G_total; digits = 2))  " *
+                       "($(round(100 * fmeta.G_frac; digits = 1))%)",
+                       "vmax=$(round(fmeta.v_peak; digits = 3))  " *
+                       "$(analysis.verdict)"]
+            cv = render_frame(N, Γs, hs, Ws;
+                              width = width, height = height,
+                              az = 0.55 + 0.15 * sin(fmeta.frac * pi),
+                              el = 0.42,
+                              title = "3D VORTEX - LAYERED B-CORRECTION",
+                              sub = "t/T = $(round(fmeta.frac; digits = 2))  N = $N",
+                              overlay = overlay)
+            push!(frames, cv)
+            callback !== nothing && callback(fi, nframes)
+        end
+        save_gif(path, frames; delay_cs = 6)
+        return (path = String(path), frames = nframes,
+                sec = round(time() - t0; digits = 2), analysis = analysis)
+    end
+end
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 # Конфигурация §3, платформа, CLI
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -819,27 +1215,74 @@ Base.@kwdef mutable struct VfaConfig
     layer_model::String = "default"     # --layer-model default|radial
     layer_h0::Float64 = 1.0             # --layer-h0
     layer_W0::Float64 = 1.0             # --layer-W0
+    # §27b: 3D-вихрь (анимация затухания под b-поправкой)
+    vortex_N::Int = 0                   # --vortex N (0 = выключено; ≥24 = рендер)
+    vortex_frames::Int = 24             # --vortex-frames K
+    vortex_T::Float64 = 40.0            # --vortex-T (горизонт времени)
+    vortex_quick::Bool = false          # --vortex-quick (превью 640×440)
     fuzz::Int = 0                       # --fuzz N (0 = использовать preset)
     sweep::String = ""                  # --sweep KEY=V1,V2,...
     cross_check::String = ""            # --cross-check ПУТЬ (§32: сверка с results.json)
     rlimit::String = ""                 # --rlimit kind=v[,kind=v...]
 end
 
-MSG = Dict(
-    "en" => Dict("title" => "VFA · Navier-Stokes-B full verification (Julia)",
-                 "run_dir" => "run directory: {d}", "select" => "select #: ",
-                 "quit" => "quit", "back" => "returning to menu"),
-    "ru" => Dict("title" => "VFA · полная перепроверка Navier-Stokes-B (Julia)",
-                 "run_dir" => "каталог прогона: {d}", "select" => "выберите пункт #: ",
-                 "quit" => "выход", "back" => "возврат в меню"))
+# §2-локализация: расширенный словарь ru/en для всех пользовательских строк;
+# отсутствующий ключ возвращает сам ключ (никаких KeyError в меню)
+const VFA_MSG = Dict(
+    "ru" => Dict(
+        "title"        => "VFA · полная перепроверка Navier-Stokes-B (Julia)",
+        "menu_header"  => "VFA · главное меню",
+        "menu_core"    => "ЯДРО (контракт Python):",
+        "menu_layers"  => "СЛОИ 3D (§27):",
+        "menu_keys"    => "[a] все   [1..{n}] задача   [r] последняя   [p] пресет   [2] two-pass   [th] тема   [v] вихрь 3D",
+        "menu_keys2"   => "[l] последние результаты   [c] конфиг   [t] самотест   [?] помощь   [q] выход",
+        "run_dir"      => "каталог прогона: {d}",
+        "select"       => "выберите пункт #: ",
+        "back"         => "возврат в меню",
+        "quit"         => "выход",
+        "no_runs"      => "прогонов нет",
+        "no_last"      => "последней задачи нет",
+        "last_run"     => "последний прогон",
+        "vortex_title" => "3D-вихрь: затухание под b-поправкой",
+        "vortex_busy"  => "рендер кадров… {k}/{n}",
+        "vortex_done"  => "готово: {path} ({frames} кадров, {sec}s)",
+        "vortex_n"     => "размер матрицы N (≥24): ",
+        "vortex_bad"   => "N должно быть ≥ 24",
+        "vortex_clamp" => "N ограничено до 256 (защита памяти)",
+        "vortex_frames_prompt" => "кадров (по умолчанию 24): "),
+    "en" => Dict(
+        "title"        => "VFA · full Navier-Stokes-B verification (Julia)",
+        "menu_header"  => "VFA · main menu",
+        "menu_core"    => "CORE (Python contract):",
+        "menu_layers"  => "3D LAYERS (§27):",
+        "menu_keys"    => "[a] all   [1..{n}] task   [r] rerun last   [p] preset   [2] two-pass   [th] theme   [v] 3D vortex",
+        "menu_keys2"   => "[l] last results   [c] config   [t] selftest   [?] help   [q] quit",
+        "run_dir"      => "run directory: {d}",
+        "select"       => "select #: ",
+        "back"         => "returning to menu",
+        "quit"         => "quit",
+        "no_runs"      => "no runs yet",
+        "no_last"      => "no last task",
+        "last_run"     => "last run",
+        "vortex_title" => "3D vortex: decay under b-correction",
+        "vortex_busy"  => "rendering frames… {k}/{n}",
+        "vortex_done"  => "done: {path} ({frames} frames, {sec}s)",
+        "vortex_n"     => "matrix size N (≥24): ",
+        "vortex_bad"   => "N must be ≥ 24",
+        "vortex_clamp" => "N clamped to 256 (memory guard)",
+        "vortex_frames_prompt" => "frames (default 24): "))
 
 fmt(cfg, key; kw...) = begin
-    s = MSG[cfg.lang][key]
+    lang = get(VFA_MSG, cfg.lang, VFA_MSG["ru"])
+    s = get(lang, key, key)
     for (k, v) in kw
         s = replace(s, "{$k}" => string(v))
     end
     return s
 end
+
+"Локализованная строка с подстановкой {k}→v (алиас fmt, §2)"
+vfa_tr(cfg::VfaConfig, key::AbstractString; kw...) = fmt(cfg, key; kw...)
 
 "§10.1/§23.6: GC ×2 + malloc_trim (Linux)"
 function vfa_gc_full()
@@ -993,6 +1436,25 @@ function vfa_parse_args!(cfg::VfaConfig, argv::Vector{String})
         elseif flag == "layer-W0"
             i += 1; cfg.layer_W0 = parse(Float64, argv[i])
             cfg.layer_W0 > 0 || error("--layer-W0: ожидается y > 0")
+        elseif flag == "vortex"
+            # §27b: точное сравнение (flag == "vortex") — --vortex-frames
+            # сюда не попадает; рендер вихря по N ≥ 24
+            i += 1
+            i <= length(argv) || error("--vortex ожидает N")
+            cfg.vortex_N = parse(Int, argv[i])
+            cfg.vortex_N >= 24 || error("--vortex: ожидается N ≥ 24")
+        elseif flag == "vortex-frames"
+            i += 1
+            i <= length(argv) || error("--vortex-frames ожидает K")
+            cfg.vortex_frames = parse(Int, argv[i])
+            cfg.vortex_frames >= 2 || error("--vortex-frames: ожидается ≥ 2")
+        elseif flag == "vortex-T"
+            i += 1
+            i <= length(argv) || error("--vortex-T ожидает T")
+            cfg.vortex_T = parse(Float64, argv[i])
+            cfg.vortex_T > 0 || error("--vortex-T: ожидается T > 0")
+        elseif flag == "vortex-quick"
+            cfg.vortex_quick = true
         elseif flag == "fuzz"
             i += 1; cfg.fuzz = parse(Int, argv[i])
             cfg.fuzz >= 0 || error("--fuzz: ожидается N ≥ 0")
@@ -1612,8 +2074,15 @@ function task10_suite(cfg::VfaConfig)
         saved = VFALog.G.quiet
         VFALog.G.quiet = true
         try
+            # B4: исключение задачи не должно ронять task10 целиком —
+            # ловим и засчитываем провал
             for tid in missing_ids
-                ok &= vfa_dispatch(tid, cfg)
+                try
+                    ok &= vfa_dispatch(tid, cfg)
+                catch e
+                    ok = false
+                    VFALog.log_comp("task10: внутренний прогон $tid упал: $e", "warn")
+                end
             end
         finally
             VFALog.G.quiet = saved
@@ -2679,6 +3148,9 @@ function vfa_run_once(cfg::VfaConfig)
         # B1: флаг --no-report наконец действует
         cfg.no_report || vfa_write_reports(cfg)
         cfg.junit !== nothing && vfa_write_junit(cfg, String(cfg.junit))
+        # B-NEW-8: мёртвый vortex-хук удалён — vfa_main при vortex_N > 0
+        # всегда уходит в vfa_vortex_cli раньше dispatch, сюда не доходит;
+        # рендер в каталоге прогона больше не обещается (см. NOTE в --help)
     finally
         # баг 3: даже при исключении монитор и watchdog не остаются висеть
         VFALog.finish!()
@@ -2763,9 +3235,9 @@ function vfa_selftest(cfg::VfaConfig)
                                 catch
                                     false
                                 end, ("bash", "zsh", "fish"))))
-        push!(results, ("contract: help описывает флаги §27",
+        push!(results, ("contract: help описывает флаги §27/§27b",
                         occursin("--layers", VFA_HELP) && occursin("--fuzz", VFA_HELP) &&
-                        occursin("--sweep", VFA_HELP)))
+                        occursin("--sweep", VFA_HELP) && occursin("--vortex", VFA_HELP)))
     end
     # §28: баннер и служебные поля (без stdin — не падают)
     push!(results, ("banner: непустой, содержит платформу/версию",
@@ -2886,11 +3358,51 @@ function vfa_selftest(cfg::VfaConfig)
                         ok2 = vfa_json_str("a\"b\\c") == "\"a\\\"b\\\\c\""
                         ok1 && ok2
                     end))
+    # §27b: изолированный рендер кадра вихря (маленькая сетка, быстро)
+    push!(results, ("vortex§27b: изолированный рендер кадра",
+                    begin
+                        ok_v = try
+                            hs_v, Ws_v, Γs_v = VFAVortex3D.vortex_preset(nlayers = 8)
+                            cv_v = VFAVortex3D.render_frame(48, Γs_v, hs_v, Ws_v;
+                                                            width = 320, height = 240,
+                                                            title = "selftest", sub = "")
+                            cv_v.w == 320 && cv_v.h == 240 &&
+                                length(cv_v.buf) == 320 * 240 * 3
+                        catch
+                            false
+                        end
+                        ok_v
+                    end))
+    push!(results, ("vortex§27b: analyze_evolution даёт монотонное затухание",
+                    begin
+                        ok_a = try
+                            hs_v, Ws_v, Γs_v = VFAVortex3D.vortex_preset(nlayers = 8)
+                            an = VFAVortex3D.analyze_evolution(hs_v, Ws_v, Γs_v,
+                                                               40.0, 12)
+                            length(an.frames) == 12 &&
+                                an.frames[end].G_total < an.frames[1].G_total &&
+                                an.verdict in ("STABILIZED", "DAMPED",
+                                               "DECAYING", "PERSISTENT") &&
+                                (an.milestones.t50 === nothing ||
+                                 0.0 < an.milestones.t50 <= 40.0)
+                        catch
+                            false
+                        end
+                        ok_a
+                    end))
+    # §4.4: aurora-стиль отчёта самотеста (стикеры + спарклайн-вердикты)
     npass = count(r -> r[2], results)
     mode = (cfg.selftest_props ? "+props" : "") *
            (cfg.selftest_contract ? "+contract" : "")
-    println("SELFTEST$mode: ", npass == length(results) ? "PASS" : "FAIL",
-            " $npass/", length(results))
+    badge_str = npass == length(results) ?
+                VFAUI.sticker(1) * " PASS " * VFAUI.sticker(3) :
+                VFAUI.sticker(6) * " FAIL " * VFAUI.sticker(6)
+    println(VFAUI.aurora_title("SELFTEST" * mode), " ", badge_str,
+            "  $npass/", length(results))
+    println("  ", VFAUI.aurora_sep())
+    for (name, ok) in results
+        println("  ", VFAUI.sparkline_verdict(ok ? "PASS" : "FAIL"), " ", name)
+    end
     return npass == length(results) ? 0 : 1
 end
 
@@ -2904,11 +3416,11 @@ VFA_RU = Dict('й' => 'q', 'ц' => 'w', 'у' => 'e', 'к' => 'r', 'е' => 't', '
 
 VFA_HELP_KEYS = Dict(
     "ru" => "Клавиши: [a] все задачи  [N] задача N  [r] повтор последней  [p] пресет\n" *
-            "  [2] two-pass вкл/выкл  [th] тема  [l] последние результаты\n" *
-            "  [c] показать конфиг  [t] самотест  [?] эта справка  [q] выход",
+            "  [2] two-pass вкл/выкл  [th] тема  [v] 3D-вихрь (GIF, N ≥ 24)\n" *
+            "  [l] последние результаты  [c] конфиг  [t] самотест  [?] эта справка  [q] выход",
     "en" => "Keys: [a] all tasks  [N] task N  [r] rerun last  [p] preset\n" *
-            "  [2] toggle two-pass  [th] theme  [l] last run results\n" *
-            "  [c] show config  [t] self-test  [?] this help  [q] quit")
+            "  [2] toggle two-pass  [th] theme  [v] 3D vortex (GIF, N ≥ 24)\n" *
+            "  [l] last run results  [c] config  [t] self-test  [?] this help  [q] quit")
 
 "§28: выбор значения из списка (меню [p]); Ctrl+C уходит в меню"
 function vfa_choose(cfg::VfaConfig, what::AbstractString, options)
@@ -2926,6 +3438,232 @@ function vfa_choose(cfg::VfaConfig, what::AbstractString, options)
     end
 end
 
+"§27b: каталог вывода вихря (report_dir/vortex или results/vortex)"
+vfa_vortex_dir(cfg::VfaConfig) = joinpath(
+    cfg.report_dir === nothing ? "results" : String(cfg.report_dir), "vortex")
+
+# Число в JSON: inf/nan → null (строгий JSON); round до 6 знаков
+_vfa_jfm(x::Nothing) = "null"
+function _vfa_jfm(x::Real)
+    v = Float64(x)
+    (isnan(v) || isinf(v)) && return "null"
+    return string(round(v; digits = 6))
+end
+
+"§27b: companion-отчёт (MD + JSON) рядом с GIF: per-layer таблица,
+milestones, временная серия, вердикт. JSON — вручную (в stdlib нет JSON)."
+function vfa_vortex_write_report(analysis, gif_path::AbstractString)
+    base = splitext(String(gif_path))[1]
+    md_path = base * ".md"
+    json_path = base * ".json"
+    ms = analysis.milestones
+    lines = String[
+        "# 3D Vortex — Stabilization Report",
+        "",
+        "- layers: $(analysis.n), frames: $(analysis.nframes), T: $(round(analysis.T; digits = 1))",
+        "- mean_b (Γ-weighted): $(round(analysis.mean_b; digits = 6))",
+        "- final Γ/Γ₀: $(round(100 * analysis.final_frac; digits = 2))%",
+        "- **verdict: $(analysis.verdict)**",
+        "",
+        "## Milestones",
+        "",
+        "| threshold | t |",
+        "|---|---|",
+    ]
+    for (label, v) in (("50% Γ (half-life)", ms.t50), ("10% Γ", ms.t10),
+                       ("1% Γ", ms.t01))
+        push!(lines, "| $label | " *
+                     (v === nothing ? "> T = $(round(analysis.T; digits = 1))" :
+                      string(round(v; digits = 3))) * " |")
+    end
+    push!(lines, "")
+    push!(lines, "## Per-layer")
+    push!(lines, "")
+    push!(lines, "| i | h | W | b_i | half-life | Γ₀ | Γ_T |")
+    push!(lines, "|---|---|---|---|---|---|---|")
+    for L in analysis.layers
+        hl = L.halflife == Inf ? "∞" : string(round(L.halflife; digits = 2))
+        push!(lines, "| $(L.i) | $(round(L.h; digits = 3)) | " *
+                     "$(round(L.W; digits = 3)) | $(round(L.b; digits = 5)) | " *
+                     "$hl | $(round(L.G0; digits = 3)) | " *
+                     "$(round(L.G_end; digits = 4)) |")
+    end
+    push!(lines, "")
+    push!(lines, "## Time series")
+    push!(lines, "")
+    push!(lines, "| t | Γ_total | % of Γ₀ | v_peak |")
+    push!(lines, "|---|---|---|---|")
+    for f in analysis.frames
+        push!(lines, "| $(round(f.t; digits = 3)) | " *
+                     "$(round(f.G_total; digits = 4)) | " *
+                     "$(round(100 * f.G_frac; digits = 2))% | " *
+                     "$(round(f.v_peak; digits = 4)) |")
+    end
+    open(md_path, "w") do fh
+        foreach(ln -> println(fh, ln), lines)
+    end
+    jio = IOBuffer()
+    println(jio, "{")
+    println(jio, "  \"n\": $(analysis.n),")
+    println(jio, "  \"T\": $(_vfa_jfm(analysis.T)),")
+    println(jio, "  \"nframes\": $(analysis.nframes),")
+    println(jio, "  \"mean_b\": $(_vfa_jfm(analysis.mean_b)),")
+    println(jio, "  \"final_frac\": $(_vfa_jfm(analysis.final_frac)),")
+    println(jio, "  \"verdict\": \"$(analysis.verdict)\",")
+    println(jio, "  \"milestones\": {\"t50\": $(_vfa_jfm(ms.t50)), " *
+                 "\"t10\": $(_vfa_jfm(ms.t10)), \"t01\": $(_vfa_jfm(ms.t01))},")
+    println(jio, "  \"layers\": [")
+    for (k, L) in enumerate(analysis.layers)
+        comma = k < length(analysis.layers) ? "," : ""
+        println(jio, "    {\"i\": $(L.i), \"h\": $(_vfa_jfm(L.h)), " *
+                     "\"W\": $(_vfa_jfm(L.W)), \"b\": $(_vfa_jfm(L.b)), " *
+                     "\"halflife\": $(_vfa_jfm(L.halflife)), " *
+                     "\"G0\": $(_vfa_jfm(L.G0)), \"G_end\": $(_vfa_jfm(L.G_end))}$comma")
+    end
+    println(jio, "  ],")
+    println(jio, "  \"frames\": [")
+    for (k, f) in enumerate(analysis.frames)
+        comma = k < length(analysis.frames) ? "," : ""
+        println(jio, "    {\"i\": $(f.i), \"frac\": $(_vfa_jfm(f.frac)), " *
+                     "\"t\": $(_vfa_jfm(f.t)), \"G_total\": $(_vfa_jfm(f.G_total)), " *
+                     "\"v_peak\": $(_vfa_jfm(f.v_peak)), " *
+                     "\"G_frac\": $(_vfa_jfm(f.G_frac))}$comma")
+    end
+    println(jio, "  ]")
+    println(jio, "}")
+    open(json_path, "w") do fh
+        write(fh, take!(jio))
+    end
+    return md_path, json_path
+end
+
+"§27b: короткая числовая сводка стабилизации (stderr)."
+function vfa_vortex_print_summary(analysis; io = stderr)
+    frames, ms = analysis.frames, analysis.milestones
+    println(io, "\n  ── stabilization summary ──")
+    println(io, "  Γ_total: $(round(frames[1].G_total; digits = 3)) → ",
+            "$(round(frames[end].G_total; digits = 4)) ",
+            "($(round(100 * analysis.final_frac; digits = 2))%)")
+    println(io, "  mean_b: $(round(analysis.mean_b; digits = 6))")
+    for (label, v) in (("t50 (half-life)", ms.t50),
+                       ("t10 (90% decayed)", ms.t10),
+                       ("t01 (99% decayed)", ms.t01))
+        println(io, "  $label: " *
+                (v === nothing ? "> T = $(round(analysis.T; digits = 1))" :
+                 "t = $(round(v; digits = 3))"))
+    end
+    println(io, "  verdict: ", analysis.verdict)
+    println(io, "    i       h       W         b   halflife      G_end")
+    for L in analysis.layers
+        hl = L.halflife == Inf ? "∞" : string(round(L.halflife; digits = 2))
+        println(io, "  $(lpad(L.i, 3)) $(lpad(round(L.h; digits = 3), 7)) ",
+                "$(lpad(round(L.W; digits = 3), 7)) ",
+                "$(lpad(round(L.b; digits = 5), 9)) ",
+                "$(lpad(hl, 9)) ",
+                "$(lpad(round(L.G_end; digits = 4), 9))")
+    end
+    println(io)
+end
+
+"§27b: интерактивный рендер 3D-вихря (пункт [v] меню, legacy и TUI);
+N ∈ [24, ∞), clamp до 256 — защита памяти; после рендера — отчёт и сводка"
+function vfa_menu_vortex(cfg::VfaConfig, _s = nothing)
+    println(VFAUI.aurora_title(fmt(cfg, "vortex_title")))
+    print("  ", fmt(cfg, "vortex_n"))
+    line = try
+        strip(readline(stdin))
+    catch
+        ""
+    end
+    N = try
+        parse(Int, line)
+    catch
+        48
+    end
+    if N < 24
+        println("  ? ", fmt(cfg, "vortex_bad"))
+        return
+    end
+    if N > 256
+        println("  ", fmt(cfg, "vortex_clamp"))
+        N = 256
+    end
+    print("  ", fmt(cfg, "vortex_frames_prompt"))
+    fline = try
+        strip(readline(stdin))
+    catch
+        ""
+    end
+    nframes = try
+        max(2, min(240, parse(Int, fline)))
+    catch
+        24
+    end
+    mkpath(vfa_vortex_dir(cfg))
+    path = joinpath(vfa_vortex_dir(cfg),
+                    "vortex_N$(N)_$(Libc.strftime("%Y%m%d_%H%M%S", time())).gif")
+    t_bar = time()
+    print(stderr, VFAUI.bar_line(0, nframes, "vortex", "  N=$N", t_bar))
+    flush(stderr)
+    res = VFAVortex3D.render_vortex_animation(path;
+                                              N = N, nframes = nframes,
+                                              T = cfg.vortex_T,
+                                              h0 = cfg.layer_h0, W0 = cfg.layer_W0,
+                                              callback = (k, n) -> begin
+                                                  (k % 2 == 0 || k == n) || return
+                                                  print(stderr,
+                                                        VFAUI.bar_line(k, n,
+                                                                       "vortex",
+                                                                       "  N=$N",
+                                                                       t_bar))
+                                                  flush(stderr)
+                                              end)
+    println(stderr, "\r  ", fmt(cfg, "vortex_done"; path = res.path,
+                                frames = res.frames, sec = res.sec))
+    md_path, json_path = vfa_vortex_write_report(res.analysis, path)
+    println(stderr, "  report: $md_path")
+    println(stderr, "  json:   $json_path")
+    vfa_vortex_print_summary(res.analysis)
+    return
+end
+
+"§27b: неконфликтный CLI-рендер --vortex N (stdout/CI-safe, без stdin);
+--vortex-quick → превью 32/8/640×440; после рендера — отчёт и сводка"
+function vfa_vortex_cli(cfg::VfaConfig)
+    mkpath(vfa_vortex_dir(cfg))
+    N, nframes = cfg.vortex_N, cfg.vortex_frames
+    width, height = 900, 640
+    if cfg.vortex_quick        # U-2: быстрое превью (CI-проверка вихря)
+        N, nframes, width, height = 32, 8, 640, 440
+    end
+    path = joinpath(vfa_vortex_dir(cfg),
+                    "vortex_N$(N)_$(Libc.strftime("%Y%m%d_%H%M%S", time())).gif")
+    t_bar = time()
+    print(stderr, VFAUI.bar_line(0, nframes, "vortex", "  N=$N", t_bar))
+    flush(stderr)
+    res = VFAVortex3D.render_vortex_animation(path;
+                                              N = N, nframes = nframes,
+                                              T = cfg.vortex_T,
+                                              h0 = cfg.layer_h0, W0 = cfg.layer_W0,
+                                              width = width, height = height,
+                                              callback = (k, n) -> begin
+                                                  (k % 2 == 0 || k == n) || return
+                                                  print(stderr,
+                                                        VFAUI.bar_line(k, n,
+                                                                       "vortex",
+                                                                       "  N=$N",
+                                                                       t_bar))
+                                                  flush(stderr)
+                                              end)
+    println(stderr, "\r  ", fmt(cfg, "vortex_done"; path = res.path,
+                                frames = res.frames, sec = res.sec))
+    md_path, json_path = vfa_vortex_write_report(res.analysis, path)
+    println(stderr, "  report: $md_path")
+    println(stderr, "  json:   $json_path")
+    vfa_vortex_print_summary(res.analysis)
+    return 0
+end
+
 "§28: главное меню с группировкой, последним прогоном и быстрыми клавишами"
 function vfa_menu(cfg::VfaConfig)
     eof_streak = 0
@@ -2934,7 +3672,7 @@ function vfa_menu(cfg::VfaConfig)
     while true
         # ── шапка
         println(join(VFAUI.box_lines([
-            "VFA · главное меню",
+            fmt(cfg, "menu_header"),
             "preset=$(cfg.preset) · two-pass=$(cfg.two_pass ? "ON" : "OFF") · " *
             "seed=$(cfg.seed) · theme=$(cfg.theme) · lang=$(cfg.lang)",
         ]), "\n"))
@@ -2945,13 +3683,13 @@ function vfa_menu(cfg::VfaConfig)
             nP = count(v -> v == "PASS", values(last_verdicts))
             nF = count(v -> v in ("FAIL", "ERROR"), values(last_verdicts))
             nS = count(v -> v == "SKIP", values(last_verdicts))
-            println("  ⤷ последний прогон: ", basename(last_run),
+            println("  ⤷ ", fmt(cfg, "last_run"), ": ", basename(last_run),
                     "  [", nP, " PASS · ", nF, " FAIL · ", nS, " SKIP]")
         end
         # ── группы задач
         core_t = [t for t in TASKS if t["id"] <= 10]
         lay_t = [t for t in TASKS if t["id"] > 10]
-        println("  ЯДРО (контракт Python):")
+        println("  ", fmt(cfg, "menu_core"))
         for t in core_t
             mark = t["id"] == last_task ? " ←" : ""
             v = get(last_verdicts, t["id"], "—")
@@ -2959,7 +3697,7 @@ function vfa_menu(cfg::VfaConfig)
                     rpad(t["slug"], 22), rpad(v, 6), mark)
         end
         if !isempty(lay_t)
-            println("  СЛОИ 3D (§27):")
+            println("  ", fmt(cfg, "menu_layers"))
             for t in lay_t
                 mark = t["id"] == last_task ? " ←" : ""
                 v = get(last_verdicts, t["id"], "—")
@@ -2968,10 +3706,8 @@ function vfa_menu(cfg::VfaConfig)
             end
         end
         println()
-        println("  [a] все   [1..", VFA_N_TASKS, "] задача   [r] последняя   ",
-                "[p] пресет   [2] two-pass   [th] тема")
-        println("  [l] последние результаты   [c] конфиг   [t] самотест   ",
-                "[?] помощь   [q] выход")
+        println("  ", fmt(cfg, "menu_keys"; n = VFA_N_TASKS))
+        println("  ", fmt(cfg, "menu_keys2"))
         print("  > ")
         line = ""
         eof_hit = false
@@ -3000,8 +3736,12 @@ function vfa_menu(cfg::VfaConfig)
             elseif key == "a"
                 cfg.tasks = copy(SUITE_IDS)
             elseif key == "r"
-                last_task == 0 && (println("  (последней задачи нет)"); continue)
+                last_task == 0 && (println("  (", fmt(cfg, "no_last"), ")"); continue)
                 cfg.tasks = [last_task]
+            elseif key == "v"
+                # §27b: 3D-вихрь (интерактивный рендер GIF)
+                vfa_menu_vortex(cfg)
+                continue
             elseif key == "p"
                 cfg.preset = vfa_choose(cfg, "preset", ("quick", "full", "deep"))
                 continue
@@ -3014,7 +3754,7 @@ function vfa_menu(cfg::VfaConfig)
                 VFAUI.state[:theme] = cfg.theme
                 continue
             elseif key == "l"
-                last_run === nothing && (println("  (прогонов нет)"); continue)
+                last_run === nothing && (println("  (", fmt(cfg, "no_runs"), ")"); continue)
                 println("  ── ", last_run)
                 for (tid, v) in sort(collect(last_verdicts); by = first)
                     t = try vfa_find_task(tid) catch; nothing end
@@ -3057,6 +3797,14 @@ VFA_HELP = """verify_ns_full.jl — Julia-адаптер контракта §0�
   --task-timeout s --global-timeout s (кооперативно: между задачами и по heartbeat)
   --rlimit kind=v[,kind=v...] (as|cpu|fsize; best-effort)
   --layers N --layer-model default|radial --layer-h0 x --layer-W0 y
+  --vortex N --vortex-frames K --vortex-T T   (§27b) GIF 3D-вихря, N ≥ 24
+             (до 256, кадры ≥ 2; T — горизонт времени, по умолчанию 40);
+             рендер в results/vortex/*.gif + отчёт *.md/*.json и выход
+  --vortex-quick        быстрое превью (N=32, 8 кадров, 640×440); без
+             --vortex N запускает превью само
+             NOTE: vortex_N, заданный в --config-file/TOML или env, тоже
+             запускает рендер вихря ВМЕСТО обычного прогона задач — для
+             параллельного рендера и прогоняйте отдельными вызовами
   --fuzz N --sweep KEY=V1,V2,... (--sweep можно повторять; KEY — любое поле
              конфига кроме report_dir/sweep; декартово произведение свипов,
              бандлы в results/lab_*, индексы experiment.md/.toml)
@@ -3074,6 +3822,7 @@ function vfa_completions(shell::AbstractString)
              "--print-config", "--config-file", "--self-test", "--self-test-props",
              "--self-test-contract", "--task-timeout", "--global-timeout", "--rlimit",
              "--layers", "--layer-model", "--layer-h0", "--layer-W0", "--fuzz",
+             "--vortex", "--vortex-frames", "--vortex-T", "--vortex-quick",
              "--sweep", "--cross-check", "--generate-completions",
              "--help", "--version")
     ids = join(SUITE_IDS, " ")
@@ -4058,6 +4807,9 @@ module VFAMenu
                      "например: 3 7 11"),
             MenuItem("Лаборатория", "3", GotoMenu(:lab), "свипы и эксперименты"),
             MenuItem("Бенчмарки точных решений", "4", GotoMenu(:bench), "задачи 16–22"),
+            MenuItem("3D-вихрь (затухание)", "v",
+                     ActionFn((c, s) -> Main.vfa_menu_vortex(c, s), "рендер GIF"),
+                     "N ≥ 24, до 256"),
             MenuItem("Результаты и отчёты", "5", GotoMenu(:results), ""),
             MenuItem("Настройки", "6", GotoMenu(:settings), ""),
             MenuItem("Самотест / диагностика", "7", GotoMenu(:diag), ""),
@@ -4247,17 +4999,30 @@ function vfa_main(argv::Vector{String} = ARGS)
     end
     cfg.help && (println(VFA_HELP); return 0)
     cfg.version &&
-        (println("vfa 1.2.0-jl (julia $VERSION, $(VFAMon.platform_tag()))"); return 0)
+        (println("vfa 1.3.0-jl (julia $VERSION, $(VFAMon.platform_tag()))"); return 0)
     !isempty(cfg.completions) && (print(vfa_completions(cfg.completions)); return 0)
     if cfg.list_tasks
         for t in vcat(TASKS, VFA_BENCH)
             println("$(t["id"])\t$(t["slug"])\t$(t["title"])\t$(t["pass2"] === nothing ? "no" : "yes")")
         end
+        # U-4: --vortex — не задача, но пусть виден в списке возможностей
+        println("-\t(vortex)\t3D vortex render (--vortex N, §27b)\tno")
         return 0
     end
     cfg.print_config && (vfa_print_config(cfg); return 0)
     if cfg.selftest
         return vfa_selftest(cfg)
+    end
+    if cfg.vortex_N > 0 || cfg.vortex_quick
+        # §27b: неконфликтный рендер вихря (--vortex N / --vortex-quick,
+        # в т.ч. из TOML) — рендерим и выходим; NOTE в --help про приоритет
+        try
+            cfg.vortex_quick && cfg.vortex_N == 0 && (cfg.vortex_N = 32)
+            return vfa_vortex_cli(cfg)
+        catch e
+            println(stderr, "vortex: ERROR $e")
+            return 3
+        end
     end
     try
         # §29 (§16, ред. 1.2, вариант «б»): TUI-меню по умолчанию только для
