@@ -240,7 +240,7 @@ module VFABanner
         push!(lines, "  Navier-Stokes-B " * sep * " full verification")
         isempty(subtitle) || push!(lines, "  " * subtitle)
         push!(lines, "  julia " * string(VERSION) * " " * sep * " " *
-                     Main.VFAMon.platform_tag() * " " * sep * " v1.3.1")
+                     Main.VFAMon.platform_tag())
         return lines
     end
 
@@ -476,6 +476,10 @@ module VFAPlot
     end
 
     function rect!(c::Canvas, x0, y0, x1, y1, col::Tuple{Int, Int, Int})
+        # нормализация инвертированных прямоугольников: HUD-скобки передают
+        # dx/dy = ±1, без свапа 3 из 4 углов молча не рисовались
+        (x0 > x1) && ((x0, x1) = (x1, x0))
+        (y0 > y1) && ((y0, y1) = (y1, y0))
         for y in max(0, y0):min(c.h - 1, y1), x in max(0, x0):min(c.w - 1, x1)
             px!(c, x, y, col)
         end
@@ -509,7 +513,9 @@ module VFAPlot
             ch == ' ' && (cx += 4 * scale; continue)
             for bit in 0:14
                 (g >> bit) & 1 == 1 || continue
-                gx, gy = bit % 3, 4 - div(bit, 3)
+                # старший бит тройки — ЛЕВАЯ колонка (иначе каждый
+                # асимметричный глиф зеркалится: «3D» → «EO»)
+                gx, gy = 2 - bit % 3, 4 - div(bit, 3)
                 rect!(c, cx + gx * scale, y0 + gy * scale,
                       cx + gx * scale + scale - 1, y0 + gy * scale + scale - 1, col)
             end
@@ -591,7 +597,7 @@ module VFAPlot
     end
 
     # LZW для GIF89a — тот же алгоритм, что в Python-версии (LSB-first, 9→12).
-    # v1.3.1: рост ширины кода — ПОСЛЕ добавления записи со значением 2^cs
+    # Рост ширины кода — ПОСЛЕ добавления записи со значением 2^cs
     # (nxt == (1<<cs)+1): декодер добавляет записи на один код позже энкодера,
     # ранний bump рассинхронизировал поток (PIL: broken data stream).
     function lzw(indices::Vector{UInt8}, min_code_size::Int = 8)
@@ -638,7 +644,7 @@ module VFAPlot
         return out
     end
 
-    # Референсный GIF-LZW декодер, парный к lzw (selftest §9, v1.3.1):
+    # Референсный GIF-LZW декодер, парный к lzw (selftest §9):
     # запись добавляется при приёме каждого кода (кроме первого после CLEAR),
     # ширина растёт, когда next_code декодера достигает 1<<cs. Round-trip
     # в selftest ловит любой рассинхрон ширины без внешних декодеров.
@@ -691,17 +697,30 @@ module VFAPlot
     function save_gif(path::AbstractString, frames::Vector{Canvas}; delay_cs = 2)
         isempty(frames) && return path
         w, h = frames[1].w, frames[1].h
-        # B7: палитра объявляет 256 цветов (0xF7), но была заполнена только
-        # 12; квантование тёмных пикселей (bg 18,20,28) проваливалось в чёрный
-        # (0,0,0). Расширяем: тёмный фон, промежуточные тона, белый.
-        pal_rgb = [(12, 14, 22), (18, 20, 28), (26, 29, 40), (40, 44, 60),
-                   (55, 60, 80), (90, 95, 115), (150, 160, 190),
-                   (220, 225, 240), (255, 255, 255),
-                   (80, 170, 255), (255, 140, 105), (110, 220, 150),
-                   (200, 150, 255), (255, 210, 90), (90, 230, 220),
-                   (160, 120, 200)]
+        # Палитра ДИНАМИЧЕСКАЯ — гистограмма bucket-цветов (>>3) по
+        # репрезентативным кадрам (начало/середина/конец); ≤255 bucket'ов →
+        # точные цвета, переполнение → 255 самых частых + квантование к
+        # ближайшему. Фикс-палитра из 16 цветов постеризовала мягкие
+        # градиенты фона и свечение филаментов в полосы.
+        reps = (1, length(frames) ÷ 2 + 1, length(frames))
+        sums = Dict{Tuple{Int, Int, Int}, Tuple{Int, Tuple{Int, Int, Int}}}()
+        for fi in reps
+            fr = frames[fi]
+            for p in 1:w * h
+                r0, g0, b0 = Int(fr.buf[3p - 2]), Int(fr.buf[3p - 1]), Int(fr.buf[3p])
+                key = (r0 >> 3, g0 >> 3, b0 >> 3)
+                s = get(sums, key, nothing)
+                sums[key] = s === nothing ? (1, (r0, g0, b0)) : (s[1] + 1, s[2])
+            end
+        end
+        pal = if length(sums) <= 255
+            [s[2] for s in values(sums)]
+        else
+            top = sort!(collect(values(sums)); by = s -> -s[1])[1:255]
+            [s[2] for s in top]
+        end
         palette = UInt8[]
-        for rgb in pal_rgb
+        for rgb in pal
             append!(palette, UInt8.(collect(rgb)))
         end
         append!(palette, zeros(UInt8, 768 - length(palette)))
@@ -714,14 +733,20 @@ module VFAPlot
         write(out, UInt8[0x03, 0x01, 0x00, 0x00, 0x00])
         for fr in frames
             idx = zeros(UInt8, w * h)
+            lut = Dict{Tuple{Int, Int, Int}, UInt8}()
             for p in 1:w * h
                 r, g, b = Int(fr.buf[3p - 2]), Int(fr.buf[3p - 1]), Int(fr.buf[3p])
-                best, bd = 0, typemax(Int)
-                # B3: `pi` затенял Base.pi на всю область цикла — хрупко;
-                # переименовали в cidx
-                for (cidx, pr) in enumerate(pal_rgb)
-                    d = (r - pr[1])^2 + (g - pr[2])^2 + (b - pr[3])^2
-                    d < bd && (best, bd = cidx - 1, d)
+                key = (r >> 3, g >> 3, b >> 3)
+                best = get(lut, key, nothing)
+                if best === nothing
+                    best, bd = 0, typemax(Int)
+                    # B3: `pi` затенял Base.pi на всю область цикла — хрупко;
+                    # переименовали в cidx
+                    for (cidx, pr) in enumerate(pal)
+                        d = (r - pr[1])^2 + (g - pr[2])^2 + (b - pr[3])^2
+                        d < bd && (best, bd = cidx - 1, d)
+                    end
+                    lut[key] = best
                 end
                 idx[p] = UInt8(best)
             end
@@ -934,21 +959,31 @@ end
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# §27b 3D vortex field: рендер реального вихревого жгута, затухающего во
-# времени под слоистой b-поправкой Γ(z,t) = Γ0(z)·e^(−b(z)·t), t = frac·T.
-# Сетка N×N×N, N ∈ [24, 256] (clamp для защиты памяти); при N³ > 96³
-# выборка децимируется вдвое по оси до ≤96³ точек на кадр.
-# Рендер: изометрическая проекция, сортировка по глубине, цвет по |u|
-# (aurora-палитра). Вывод: анимированный GIF через VFAPlot.save_gif
-# (stdlib only). Текст на канве — ASCII (шрифт FONT3X5).
+# §27b 3D vortex filaments: настоящее вычисление вместо предписан-
+# ного профиля. Метод вихревых филаментов с блоб-регуляризацией
+# (Rosenhead / Moore–Saffman / Chorin): кольца дискретизируются на M сегмен-
+# тов, скорость каждого узла — сумма вкладов Био–Савара ВСЕХ сегментов
+#   u(x) = Σ Γ/(4π)·dl×(x−xm)/(|x−xm|²+ε²)^{3/2},  xm — середина сегмента,
+# интегрирование по времени — RK4; вязкость — расплывание ядра (core
+# spreading): ε²(t) = ε₀² + 4νt. Циркуляция сохраняется по построению,
+# растяжение вихрей возникает само (длина филамента — из динамики).
+# Сценарий leapfrog: два коаксиальных кольца, взаимная индукция.
+# Валидация ядра (selftest §27b): сходимость к точному интегралу по отрезку,
+# тонкое кольцо на оси vs ΓR²/(2(R²+z²)^{3/2}), масштаб-инвариантность,
+# лог-закон отсечки d(U·4πR/Γ)/d ln q = −1. Рендер («блеск и шёлк»):
+# изометрия, painter's algorithm, точки вдоль сегментов, цвет по |u| (aurora),
+# white-hot ядро, двухслойное аддитивное bloom-свечение, ghost-трейлы,
+# фон-градиент со звёздной пылью, виньетка, HUD. GIF — через VFAPlot.save_gif
+# (динамическая палитра). Текст на канве — ASCII (FONT3X5).
 # ═══════════════════════════════════════════════════════════════════════════
 
 module VFAVortex3D
     using ..VFAPlot: Canvas, save_gif, draw_text, rect!, px!
-    import ..VFALayer3D
+    import Random
 
-    export render_vortex_animation, render_frame, vortex_preset,
-           analyze_evolution, sample_velocity, v_azimuthal
+    export render_vortex_animation, render_frame, validate_kernel, simulate,
+           leapfrog_preset, velocity_all, velocity_at, frame_nonbg,
+           frame_active
 
     # ── Aurora-палитра (совпадает с VFAPlot.THEMES["aurora"]["series"])
     const AURORA_SERIES = [
@@ -960,37 +995,165 @@ module VFAVortex3D
         ( 90, 230, 220)]   # cyan
     const BG_DARK = (12, 14, 22)
     const GRID_DIM = (55, 60, 80)
+    const TITLE = "3D VORTEX FILAMENTS - RK4 BIOT-SAVART"
+    const NU = 0.004          # ν: кинематическая вязкость (Re_Γ = Γ/ν = 250)
+    const EPS0 = 0.08         # ε₀: радиус ядра на t=0 (ε²=ε₀²+4νt)
+    const DT = 0.05           # шаг RK4: 0.01→0.05 без потери точности
+                              # (замер: E_variation и L совпадают с dt=0.01
+                              # до 5 знака, динамика T=8 N=48 — в ~4.5 раза
+                              # быстрее); дрейф O(dt⁴) на гладком поле мал
+    const RING_R = 1.0        # радиус колец (безразмерные единицы)
+    const RING_DZ = 1.6       # начальный зазор колец по z (leapfrog)
 
-    # ── Lamb-Oseen: азимутальная скорость на радиусе r (циркуляция Γ, ядро rc)
-    function v_azimuthal(r::Real, Γ::Real, rc::Real)
-        r < 1e-12 && return 0.0
-        return Γ / (2π * r) * (1 - exp(-(r / rc)^2))
+    dist3(a::NTuple{3,Float64}, b::NTuple{3,Float64}) =
+        sqrt((a[1]-b[1])^2 + (a[2]-b[2])^2 + (a[3]-b[3])^2)
+
+    # ── сегментный вклад Био–Савара: u ∝ dl×(x−xm)/(|x−xm|²+ε²)^{3/2}
+    # Анкер — середина сегмента: квадратура 2-го порядка (selftest: err(64)
+    # ≈ 2e-5 против точного интеграла; анкер на начале давал ~2e-3).
+    function seg_ind(x::NTuple{3,Float64}, a::NTuple{3,Float64},
+                     b::NTuple{3,Float64}, eps::Float64)
+        xm = ((a[1]+b[1])/2, (a[2]+b[2])/2, (a[3]+b[3])/2)
+        dx = (x[1]-xm[1], x[2]-xm[2], x[3]-xm[3])
+        dl = (b[1]-a[1], b[2]-a[2], b[3]-a[3])
+        cx = dl[2]*dx[3] - dl[3]*dx[2]
+        cy = dl[3]*dx[1] - dl[1]*dx[3]
+        cz = dl[1]*dx[2] - dl[2]*dx[1]
+        r2 = dx[1]^2 + dx[2]^2 + dx[3]^2
+        den = (r2 + eps*eps)^1.5
+        return (cx/den, cy/den, cz/den)   # Γ/(4π) прикладывается снаружи
     end
 
-    # ── Скорость (ux, uy, uz) в точке 3D для слоистого вихря: ядро на x=y=0,
-    # слой z_i несёт циркуляцию Γ_i и ширину W_i; линейная интерполяция по z,
-    # затем азимутальная Lamb-Oseen. Единичный азимутальный вектор (-y/r, x/r, 0).
-    function sample_velocity(x::Real, y::Real, z::Real,
-                             Γs::AbstractVector{<:Real},
-                             hs::AbstractVector{<:Real},
-                             Ws::AbstractVector{<:Real}; L = 4.0)
-        n = length(hs)
-        n == 0 && return (0.0, 0.0, 0.0)
-        zc = clamp(Float64(z), 0.0, Float64(L))
-        idx = clamp(searchsortedfirst(hs, zc), 1, n)
-        lo = clamp(idx - 1, 1, n)
-        hi = clamp(idx, 1, n)
-        Γloc, Wloc = if hi == lo
-            (Float64(Γs[lo]), Float64(Ws[lo]))
-        else
-            t = (zc - hs[lo]) / (hs[hi] - hs[lo] + 1e-30)
-            ((1 - t) * Γs[lo] + t * Γs[hi], (1 - t) * Ws[lo] + t * Ws[hi])
+    function velocity_all(rings::Vector{Vector{NTuple{3,Float64}}},
+                          eps::Float64, gammas::Vector{Float64})
+        segs = Tuple{NTuple{3,Float64}, NTuple{3,Float64}, Float64}[]
+        for (ri, nodes) in enumerate(rings)
+            M = length(nodes)
+            for j in 1:M
+                push!(segs, (nodes[j], nodes[mod1(j+1, M)], gammas[ri]))
+            end
         end
-        rc = max(Wloc, 0.05)
-        r = sqrt(x^2 + y^2)
-        r < 1e-12 && return (0.0, 0.0, 0.0)
-        vθ = v_azimuthal(r, Γloc, rc)
-        return (-vθ * y / r, vθ * x / r, 0.0)
+        out = Vector{NTuple{3,Float64}}[]
+        for nodes in rings
+            us = NTuple{3,Float64}[]
+            for x in nodes
+                ux = uy = uz = 0.0
+                for (a, b, g) in segs
+                    c = seg_ind(x, a, b, eps)
+                    k = g / (4π)    # Γ СВОЕГО сегмента: раньше k брался
+                    # после цикла (γ последнего сегмента) — при разных Γ по
+                    # кольцам физика молча искажалась
+                    ux += c[1] * k; uy += c[2] * k; uz += c[3] * k
+                end
+                push!(us, (ux, uy, uz))
+            end
+            push!(out, us)
+        end
+        return out
+    end
+
+    function velocity_at(x::NTuple{3,Float64}, rings,
+                         eps::Float64, gammas::Vector{Float64})
+        ux = uy = uz = 0.0
+        for (ri, nodes) in enumerate(rings)
+            M = length(nodes)
+            k = gammas[ri] / (4π)
+            for j in 1:M
+                c = seg_ind(x, nodes[j], nodes[mod1(j+1, M)], eps)
+                ux += c[1]*k; uy += c[2]*k; uz += c[3]*k
+            end
+        end
+        return (ux, uy, uz)
+    end
+
+    function rk4_step(rings::Vector{Vector{NTuple{3,Float64}}},
+                      eps::Float64, gammas::Vector{Float64}, dt::Float64)
+        sizes = [length(r) for r in rings]
+        regroup(flat) = begin
+            out = Vector{NTuple{3,Float64}}[]
+            i = 1
+            for n in sizes
+                push!(out, flat[i:i+n-1]); i += n
+            end
+            return out
+        end
+        f(state) = begin
+            v = velocity_all(state, eps, gammas)
+            return [t for row in v for t in row]
+        end
+        mk(flat, k, coef) = [(p[1] + coef*k[n][1], p[2] + coef*k[n][2],
+                              p[3] + coef*k[n][3])
+                             for (n, p) in enumerate(flat)]
+        flat = [p for r in rings for p in r]
+        k1 = f(rings)
+        s2 = regroup(mk(flat, k1, 0.5*dt))
+        k2 = f(s2)
+        s3 = regroup(mk(flat, k2, 0.5*dt))
+        k3 = f(s3)
+        s4 = regroup(mk(flat, k3, dt))
+        k4 = f(s4)
+        new = Vector{NTuple{3,Float64}}[]
+        n = 1
+        for nodes in rings
+            nn = NTuple{3,Float64}[]
+            for p in nodes
+                push!(nn, (p[1] + dt/6*(k1[n][1] + 2*k2[n][1] + 2*k3[n][1] + k4[n][1]),
+                           p[2] + dt/6*(k1[n][2] + 2*k2[n][2] + 2*k3[n][2] + k4[n][2]),
+                           p[3] + dt/6*(k1[n][3] + 2*k2[n][3] + 2*k3[n][3] + k4[n][3])))
+                n += 1
+            end
+            push!(new, nn)
+        end
+        return new
+    end
+
+    function leapfrog_preset(N::Int)
+        rings = Vector{NTuple{3,Float64}}[]
+        gammas = Float64[]
+        for z0 in (0.0, RING_DZ)
+            nodes = NTuple{3,Float64}[
+                (RING_R * cos(2π * i / N), RING_R * sin(2π * i / N), z0)
+                for i in 0:N-1]
+            push!(rings, nodes)
+            push!(gammas, 1.0)
+        end
+        return rings, gammas
+    end
+
+    function ring_length(nodes::Vector{NTuple{3,Float64}})
+        M = length(nodes)
+        s = 0.0
+        for j in 1:M
+            s += dist3(nodes[j], nodes[mod1(j+1, M)])
+        end
+        return s
+    end
+
+    length_total(rings) = sum(ring_length(r) for r in rings)
+
+    function energy_ind(rings, eps::Float64, gammas::Vector{Float64})
+        segs = Tuple{NTuple{3,Float64}, NTuple{3,Float64}, Float64}[]
+        for (ri, nodes) in enumerate(rings)
+            M = length(nodes)
+            for j in 1:M
+                a = nodes[j]; b = nodes[mod1(j+1, M)]
+                m = ((a[1]+b[1])/2, (a[2]+b[2])/2, (a[3]+b[3])/2)
+                dl = (b[1]-a[1], b[2]-a[2], b[3]-a[3])
+                push!(segs, (m, dl, gammas[ri]))
+            end
+        end
+        E = 0.0
+        n = length(segs)
+        for i in 1:n
+            mi, dli, gi = segs[i]
+            for j in i+1:n
+                mj, dlj, gj = segs[j]
+                d = dist3(mi, mj)
+                dot = dli[1]*dlj[1] + dli[2]*dlj[2] + dli[3]*dlj[3]
+                E += gi * gj * dot / (4π * sqrt(d*d + eps*eps))
+            end
+        end
+        return E
     end
 
     # ── Изометрическая проекция с глубиной: (screenX, screenY, depth)
@@ -1016,165 +1179,522 @@ module VFAVortex3D
                 round(Int, (1 - f) * c0[3] + f * c1[3]))
     end
 
-    # ── Рендер одного кадра (возвращает Canvas width×height).
-    # Depth = se·Y + ce·z растёт от камеры → farther = больше depth.
-    # Рисуем FAR FIRST (painter's algorithm), ближние ярче (fade), авто-фит
-    # по bbox проекции — вихрь целиком в кадре при любом el/az. Сетки нет:
-    # её цвет (55,60,80) совпадал с тусклыми ближними точками.
-    function render_frame(N::Int, Γs::AbstractVector{<:Real},
-                          hs::AbstractVector{<:Real},
-                          Ws::AbstractVector{<:Real};
-                          width = 900, height = 640,
-                          az = 0.55, el = 0.42,
-                          title = "3D VORTEX", sub = "",
-                          overlay::Vector{String} = String[])
-        W, H = width * 2, height * 2      # supersample ×2
-        cv = Canvas(W, H, BG_DARK)
-        # защита памяти: держим выборку ≤ 96³ точек, децимация вдвое по оси
-        N_eff = N
-        while N_eff^3 > 96^3 && N_eff > 24
-            N_eff ÷= 2
-        end
-        L = 4.0
-        x_r = 1.5    # радиальный размах
-        vmax = 0.0
-        raw = Tuple{Float64, Float64, Float64, Float64}[]   # (depth, sx, sy, m)
-        ca, sa = cos(az), sin(az)
-        ce, se = cos(el), sin(el)
-        inv = 1.0 / max(1, N_eff - 1)
-        # pass 1: выборка + проекция
-        for i in 0:N_eff - 1
-            x = -x_r + 2x_r * i * inv
-            for j in 0:N_eff - 1
-                y = -x_r + 2x_r * j * inv
-                for k in 0:N_eff - 1
-                    z = L * k * inv
-                    ux, uy, _ = sample_velocity(x, y, z, Γs, hs, Ws; L = L)
-                    m = sqrt(ux^2 + uy^2)
-                    m > vmax && (vmax = m)
-                    X = ca * x - sa * y
-                    Y = sa * x + ca * y
-                    push!(raw, (se * Y + ce * z, X, ce * Y - se * z, m))
+    # ── «шёлк и блеск»: кэшированные фоны/виньетки + аддитивное
+    # свечение. Фон — вертикальный градиент и звёздная пыль (детерминиро-
+    # ванный посев), виньетка — мягкое затемнение к углам, bloom — два
+    # аддитивных прохода. frame_active — толерантный аудит кадра по bg-LUT.
+    const BG_TOP = (13, 15, 26)
+    const BG_BOT = (7, 8, 14)
+    const _BG_CACHE = Dict{Tuple{Int, Int}, Vector{UInt8}}()
+    const _VIGN_CACHE = Dict{Tuple{Int, Int}, Vector{Float64}}()
+
+    function _bg_bytes(w::Int, h::Int)
+        get!(_BG_CACHE, (w, h)) do
+            rng = Random.MersenneTwister(27072018)
+            stars = Tuple{Int, Int, Int, Bool}[]
+            for _ in 1:max(1, h ÷ 5)
+                push!(stars, (rand(rng, 1:w), rand(rng, 1:h),
+                              rand(rng, 12:38), rand(rng) < 0.12))
+            end
+            rows = Vector{UInt8}(undef, w * h * 3)
+            for y in 1:h
+                t = (y - 1) / max(1, h - 1)
+                r = round(Int, BG_TOP[1] + (BG_BOT[1] - BG_TOP[1]) * t)
+                g = round(Int, BG_TOP[2] + (BG_BOT[2] - BG_TOP[2]) * t)
+                b = round(Int, BG_TOP[3] + (BG_BOT[3] - BG_TOP[3]) * t)
+                off = (y - 1) * w * 3
+                for x in 1:w
+                    i = off + 3x - 2
+                    rows[i] = r; rows[i + 1] = g; rows[i + 2] = b
                 end
             end
+            for (x, y, b, big) in stars
+                pts_ = (big && x < w && y < h) ?
+                       ((x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)) :
+                       ((x, y),)
+                for (sx_, sy_) in pts_
+                    j = ((sy_ - 1) * w + sx_ - 1) * 3 + 1
+                    for c in 1:3
+                        nb = rows[j + c - 1] + b
+                        rows[j + c - 1] = nb > 255 ? UInt8(255) : UInt8(nb)
+                    end
+                end
+            end
+            rows
         end
-        # pass 2: отсечение слабых точек (~90% работы) ДО сортировки
-        pts = filter(p -> p[4] >= vmax * 0.02, raw)
-        isempty(pts) && (pts = raw)
-        # pass 3: авто-фит по bbox проекции (раньше фикс. scale резал верх)
-        sx_min = minimum(p[2] for p in pts); sx_max = maximum(p[2] for p in pts)
-        sy_min = minimum(p[3] for p in pts); sy_max = maximum(p[3] for p in pts)
-        sz_min = minimum(p[1] for p in pts); sz_max = maximum(p[1] for p in pts)
+    end
+
+    function _vign_lut(w::Int, h::Int)
+        get!(_VIGN_CACHE, (w, h)) do
+            hx, hy = (w - 1) / 2.0, (h - 1) / 2.0
+            lut = Vector{Float64}(undef, w * h)
+            n = 0
+            for y in 0:h - 1
+                dy = (y - hy) / hy
+                for x in 0:w - 1
+                    dx = (x - hx) / hx
+                    n += 1
+                    lut[n] = 1.0 - 0.28 * (min(dx * dx + dy * dy, 1.0))^1.4
+                end
+            end
+            lut
+        end
+    end
+
+    function glow_rect!(cv::Canvas, x0, y0, x1, y1, col, wgt::Float64)
+        # аддитивный прямоугольник: buf += col·w с клампом — свечение
+        # НАКАПЛИВАЕТСЯ (перекрывающиеся halo складываются), настоящее bloom
+        x0 = max(x0, 1); y0 = max(y0, 1)
+        x1 = min(x1, cv.w); y1 = min(y1, cv.h)
+        (x1 < x0 || y1 < y0) && return
+        r = min(255, round(Int, col[1] * wgt))
+        g = min(255, round(Int, col[2] * wgt))
+        b = min(255, round(Int, col[3] * wgt))
+        (r == 0 && g == 0 && b == 0) && return
+        buf = cv.buf
+        for y in y0:y1
+            i = ((y - 1) * cv.w + x0 - 1) * 3 + 1
+            for _ in x0:x1
+                nb = buf[i] + r
+                buf[i] = nb > 255 ? UInt8(255) : UInt8(nb)
+                nb = buf[i + 1] + g
+                buf[i + 1] = nb > 255 ? UInt8(255) : UInt8(nb)
+                nb = buf[i + 2] + b
+                buf[i + 2] = nb > 255 ? UInt8(255) : UInt8(nb)
+                i += 3
+            end
+        end
+        return
+    end
+
+    # Фон ФИНАЛЬНОГО кадра ровно такой, как его кладёт render_frame:
+    # downsample ×2 из _bg_bytes(2w, 2h) и виньетка (кэш по размеру).
+    # Раньше frame_active сравнивал кадр с _bg_bytes(w, h) — другим посевом
+    # звёзд и иным масштабом градиента, поэтому даже пустой кадр давал
+    # ~38k «активных» пикселей и проверка пустоты никогда не срабатывала.
+    const _BGOUT_CACHE = Dict{Tuple{Int, Int}, Vector{UInt8}}()
+
+    function _bg_out_bytes(w::Int, h::Int)
+        get!(_BGOUT_CACHE, (w, h)) do
+            sb = _bg_bytes(2w, 2h)
+            vig = _vign_lut(w, h)
+            W = 2 * w
+            W3 = W * 3
+            out = Vector{UInt8}(undef, w * h * 3)
+            for yy in 0:h - 1
+                row0 = yy * 2 * W
+                orow = yy * w
+                for xx in 0:w - 1
+                    p00 = (row0 + xx * 2) * 3
+                    f = vig[orow + xx + 1]
+                    o = (orow + xx) * 3
+                    out[o + 1] = round(UInt8, ((Int(sb[p00 + 1]) +
+                                                Int(sb[p00 + 4]) +
+                                                Int(sb[p00 + W3 + 1]) +
+                                                Int(sb[p00 + W3 + 4])) ÷ 4) * f)
+                    out[o + 2] = round(UInt8, ((Int(sb[p00 + 2]) +
+                                                Int(sb[p00 + 5]) +
+                                                Int(sb[p00 + W3 + 2]) +
+                                                Int(sb[p00 + W3 + 5])) ÷ 4) * f)
+                    out[o + 3] = round(UInt8, ((Int(sb[p00 + 3]) +
+                                                Int(sb[p00 + 6]) +
+                                                Int(sb[p00 + W3 + 3]) +
+                                                Int(sb[p00 + W3 + 6])) ÷ 4) * f)
+                end
+            end
+            out
+        end
+    end
+
+    function frame_active(cv::Canvas)
+        # пиксели, ЗНАЧИМО отличающиеся от реального фона кадра
+        # (downsample bg + виньетка), порог 14 на канал; frame_nonbg
+        # остался для однотонных канвасов selftest
+        bg = _bg_out_bytes(cv.w, cv.h)
+        buf = cv.buf
+        n = 0
+        for p in 1:cv.w * cv.h
+            i = 3p - 2
+            if (abs(Int(buf[i]) - Int(bg[i])) > 14 ||
+                abs(Int(buf[i + 1]) - Int(bg[i + 1])) > 14 ||
+                abs(Int(buf[i + 2]) - Int(bg[i + 2])) > 14)
+                n += 1
+            end
+        end
+        return n
+    end
+
+    # ── Рендер одного кадра «блеск и шёлк»: фон-градиент со звёзд-
+    # ной пылью, ghost-трейлы предыдущих состояний (silk-хвост движения),
+    # двухслойное аддитивное bloom-свечение вдоль филаментов, white-hot
+    # ядро при |u|→vmax, атмосферный depth-тинт, даунсэмпл ×2 со виньеткой
+    # (один сплавленный проход), HUD (линейка, угловые скобки, легенда |u|)
+    # на финальном разрешении — хрустящий текст вне виньетки.
+    function render_frame(rings, us, eps::Float64;
+                          width = 900, height = 640,
+                          az = 0.55, el = 0.42,
+                          title = "3D vortex filaments", sub = "",
+                          overlay::Vector{String} = String[],
+                          ghosts::Vector{Tuple{Any, Any, Float64}} =
+                          Tuple{Any, Any, Float64}[])
+        W, H = width * 2, height * 2      # supersample ×2
+        cv = Canvas(W, H, BG_DARK)
+        copyto!(cv.buf, _bg_bytes(W, H))
+        ca, sa = cos(az), sin(az)
+        ce, se = cos(el), sin(el)
+
+        function sample_points(rings_, us_)
+            segs_ = Tuple{NTuple{3,Float64}, NTuple{3,Float64}, Float64}[]
+            vmax_ = 0.0
+            for (ri, nodes_) in enumerate(rings_)
+                M = length(nodes_)
+                for j in 1:M
+                    a = nodes_[j]; b = nodes_[mod1(j + 1, M)]
+                    ua = us_[ri][j]; ub = us_[ri][mod1(j + 1, M)]
+                    ma = sqrt(ua[1]^2 + ua[2]^2 + ua[3]^2)
+                    mb = sqrt(ub[1]^2 + ub[2]^2 + ub[3]^2)
+                    m = 0.5 * (ma + mb)
+                    m > vmax_ && (vmax_ = m)
+                    push!(segs_, (a, b, m))
+                end
+            end
+            s_ = clamp(round(Int, 24000 / max(1, length(segs_))), 2, 600)
+            raw_ = Tuple{Float64,Float64,Float64,Float64}[]
+            for (a, b, m) in segs_
+                for k in 0:s_ - 1
+                    t = (k + 0.5) / s_
+                    ppx = a[1] + t * (b[1] - a[1])
+                    ppy = a[2] + t * (b[2] - a[2])
+                    ppz = a[3] + t * (b[3] - a[3])
+                    X = ca * ppx - sa * ppy
+                    Y = sa * ppx + ca * ppy
+                    push!(raw_, (se * Y + ce * ppz, X, ce * Y - se * ppz, m))
+                end
+            end
+            return raw_, vmax_, s_
+        end
+
+        pts, vmax, s = sample_points(rings, us)
+        fpts = filter(p -> p[4] >= vmax * 0.02, pts)
+        isempty(fpts) && (fpts = pts)
+        # авто-фит по bbox проекции ТЕКУЩИХ колец (ghost-хвост может слегка
+        # выходить — это художественно: движение уходит за кадр)
+        sx_min = minimum(p[2] for p in fpts); sx_max = maximum(p[2] for p in fpts)
+        sy_min = minimum(p[3] for p in fpts); sy_max = maximum(p[3] for p in fpts)
+        sz_min = minimum(p[1] for p in fpts); sz_max = maximum(p[1] for p in fpts)
         span_x = max(sx_max - sx_min, 1e-6)
         span_y = max(sy_max - sy_min, 1e-6)
         span_z = max(sz_max - sz_min, 1e-9)
-        margin = 60
-        scale = 0.9 * min((W - 2margin) / span_x, (H - 2margin) / span_y)
+        margin = 70
+        scale = 0.88 * min((W - 2margin) / span_x, (H - 2margin) / span_y)
         cx = W / 2 - (sx_min + sx_max) / 2 * scale
         cy = H / 2 - (sy_min + sy_max) / 2 * scale
-        # pass 4: FAR FIRST (было наоборот — дальние перекрывали ближние)
-        sort!(pts; by = p -> -p[1])
         inv_vmax = 1.0 / max(vmax, 1e-12)
-        for (depth, sx, sy, m) in pts
-            pxi = round(Int, cx + sx * scale)
-            pyi = round(Int, cy + sy * scale)
+
+        # ── ghost-трейлы (silk): предыдущие состояния, тусклые и тонкие
+        for (gr, gu, galpha) in ghosts
+            gpts, gvmax, _ = sample_points(gr, gu)
+            gfpts = filter(p -> p[4] >= gvmax * 0.02, gpts)
+            isempty(gfpts) && (gfpts = gpts)
+            sort!(gfpts; by = p -> -p[1])
+            for (sz, sx_, sy_, m) in gfpts
+                pxi = round(Int, cx + sx_ * scale)
+                pyi = round(Int, cy + sy_ * scale)
+                t_depth = (sz - sz_min) / span_z
+                base = _colormap(m, gvmax)
+                a_ = galpha * (1.0 - 0.3 * t_depth)
+                col = (round(Int, base[1] * a_), round(Int, base[2] * a_),
+                       round(Int, base[3] * a_))
+                rect!(cv, pxi - 2, pyi - 2, pxi + 2, pyi + 2, col)
+            end
+        end
+
+        # ── halo-проход: двухслойное аддитивное свечение (bloom):
+        # внутренний ореол у каждой 5-й точки + широкий внешний купол
+        stride = max(1, s ÷ 5)
+        for idx in 1:stride:length(fpts)
+            (sz, sx_, sy_, m) = fpts[idx]
+            pxi = round(Int, cx + sx_ * scale)
+            pyi = round(Int, cy + sy_ * scale)
+            base = _colormap(m, vmax)
+            glow_rect!(cv, pxi - 10, pyi - 10, pxi + 10, pyi + 10, base, 0.28)
+        end
+        stride2 = max(1, s ÷ 2)
+        for idx in 1:stride2:length(fpts)
+            (sz, sx_, sy_, m) = fpts[idx]
+            pxi = round(Int, cx + sx_ * scale)
+            pyi = round(Int, cy + sy_ * scale)
+            base = _colormap(m, vmax)
+            glow_rect!(cv, pxi - 17, pyi - 17, pxi + 17, pyi + 17, base, 0.10)
+        end
+
+        # ── core-проход: FAR FIRST (painter's), white-hot + depth-тинт
+        sort!(fpts; by = p -> -p[1])
+        for (sz, sx_, sy_, m) in fpts
+            pxi = round(Int, cx + sx_ * scale)
+            pyi = round(Int, cy + sy_ * scale)
             rr = 2 + round(Int, 3 * m * inv_vmax)
             base = _colormap(m, vmax)
-            # near = BRIGHT (t_depth 0 → 1.0), far тусклее (→ 0.55)
-            t_depth = (depth - sz_min) / span_z
-            fade = 1.0 - 0.45 * t_depth
+            v_ = m * inv_vmax
+            if v_ > 0.82                    # white-hot: ядро скорости белеет
+                f = (v_ - 0.82) / 0.18 * 0.55
+                base = (base[1] + (255 - base[1]) * f,
+                        base[2] + (250 - base[2]) * f,
+                        base[3] + (238 - base[3]) * f)
+            end
+            t_depth = (sz - sz_min) / span_z
+            if t_depth > 0.0                # атмосферный тинт вдаль (синева)
+                f = 0.30 * t_depth
+                base = (base[1] + (70 - base[1]) * f,
+                        base[2] + (90 - base[2]) * f,
+                        base[3] + (140 - base[3]) * f)
+            end
+            fade = 1.0 - 0.42 * t_depth
             col = (round(Int, base[1] * fade), round(Int, base[2] * fade),
                    round(Int, base[3] * fade))
             rect!(cv, pxi - rr, pyi - rr, pxi + rr, pyi + rr, col)
         end
-        # заголовок и легенда (ASCII: шрифт FONT3X5 не знает Γ/·/—)
-        draw_text(cv, title, 40, 24, (220, 225, 240), 4)
-        isempty(sub) || draw_text(cv, sub, 40, 52, (150, 160, 190), 3)
-        # overlay: метрики стабилизации (правый низ); шаг 20 при глифе 15
-        for (idx, line) in enumerate(overlay)
-            draw_text(cv, line, W - 760, H - 62 - (idx - 1) * 20,
-                      (200, 215, 240), 3)
-        end
-        draw_text(cv, "|u|max = $(round(vmax; sigdigits = 3))", 40, H - 40,
-                  (220, 225, 240), 3)
-        # даунсэмпл ×2 (box filter)
+
+        # ── даунсэмпл ×2 (box) + виньетка — одним сплавленным проходом
         out = Canvas(width, height, BG_DARK)
-        for yy in 0:height - 1, xx in 0:width - 1
-            r = g = b = 0
-            for j in 0:1, i in 0:1
-                p0 = 3 * ((yy * 2 + j) * W + xx * 2 + i) + 1
-                r += cv.buf[p0]; g += cv.buf[p0 + 1]; b += cv.buf[p0 + 2]
+        vig = _vign_lut(width, height)
+        sb, ob = cv.buf, out.buf
+        W3 = W * 3
+        for yy in 0:height - 1
+            row0 = yy * 2 * W
+            orow = yy * width
+            for xx in 0:width - 1
+                p00 = (row0 + xx * 2) * 3 + 1
+                p01 = p00 + 3
+                p10 = p00 + W3
+                p11 = p10 + 3
+                f = vig[orow + xx + 1]
+                o = (orow + xx) * 3 + 1
+                ob[o] = round(UInt8, ((Int(sb[p00]) + Int(sb[p01]) +
+                                       Int(sb[p10]) + Int(sb[p11])) ÷ 4) * f)
+                ob[o + 1] = round(UInt8, ((Int(sb[p00 + 1]) + Int(sb[p01 + 1]) +
+                                           Int(sb[p10 + 1]) + Int(sb[p11 + 1])) ÷ 4) * f)
+                ob[o + 2] = round(UInt8, ((Int(sb[p00 + 2]) + Int(sb[p01 + 2]) +
+                                           Int(sb[p10 + 2]) + Int(sb[p11 + 2])) ÷ 4) * f)
             end
-            q0 = 3 * (yy * width + xx) + 1
-            out.buf[q0] = UInt8(r ÷ 4)
-            out.buf[q0 + 1] = UInt8(g ÷ 4)
-            out.buf[q0 + 2] = UInt8(b ÷ 4)
         end
+
+        # ── HUD: текст на финальном разрешении (вне виньетки)
+        ink_hi = (226, 231, 245)
+        ink_mid = (150, 160, 190)
+        ink_lo = (106, 116, 150)
+        rect!(out, 40, 56, width - 40, 56, (58, 66, 98))          # линейка
+        for (bx, by, dx, dy) in ((16, 16, 1, 1), (width - 16, 16, -1, 1),
+                                 (16, height - 16, 1, -1),
+                                 (width - 16, height - 16, -1, -1))
+            rect!(out, bx, by, bx + 18 * dx, by, (70, 80, 112))   # скобки
+            rect!(out, bx, by, bx, by + 18 * dy, (70, 80, 112))
+        end
+        draw_text(out, title, 40, 22, ink_hi, 4)
+        isempty(sub) || draw_text(out, sub, 40, 64, ink_mid, 3)
+        # общий right-align по самой длинной строке: иначе при пересечении
+        # L/E степеней десятки текст «плывёт» по кадрам на 12 px за символ
+        if !isempty(overlay)
+            w_max = maximum(length(s) for s in overlay)
+            lx = width - 12 * w_max - 34
+            for (idx, line) in enumerate(overlay)
+                draw_text(out, line, lx, height - 92 + (idx - 1) * 18,
+                          (206, 219, 243), 3)
+            end
+        end
+        # легенда |u|: полоса-градиент (реальная _colormap) + подписи
+        lx0, ly0, lw = 40, height - 26, 150
+        for i in 0:29
+            rect!(out, lx0 + i * 5, ly0, lx0 + i * 5 + 4, ly0 + 3,
+                  _colormap((i + 0.5) / 30 * vmax, vmax))
+        end
+        draw_text(out, "|u| = 0", lx0, ly0 - 15, ink_lo, 2)
+        draw_text(out, "vmax", lx0 + lw + 8, ly0 - 15, ink_lo, 2)
+        draw_text(out, "|u|max = $(round(vmax; sigdigits = 3))", lx0, ly0 - 36,
+                  ink_hi, 3)
+        stamp = "RK4 BIOT-SAVART"
+        draw_text(out, stamp, width - 12 * length(stamp) - 30, height - 22,
+                  ink_lo, 2)
         return out
     end
 
-    # ── Временная серия метрик затухания + milestones + verdict:
-    # Γ_total(t), v_peak (пик на кромке ядра), %Γ(t), t50/t10/t01,
-    # Γ-взвешенный mean_b. Имена полей ASCII — общие с Python-эталоном.
-    function analyze_evolution(hs::AbstractVector{<:Real},
-                               Ws::AbstractVector{<:Real},
-                               Γs0::AbstractVector{<:Real},
-                               T::Float64, nframes::Int;
-                               h0::Float64 = 1.0, W0::Float64 = 1.0)
-        n = length(hs)
-        bs = [VFALayer3D.b_layer(hs[i], Ws[i]; h0 = h0, W0 = W0) for i in 1:n]
-        halflife = [b > 1e-12 ? log(2.0) / b : Inf for b in bs]
-        Γ0tot = sum(Γs0)
-        frames = NamedTuple[]
-        for fi in 0:nframes - 1
-            frac = nframes == 1 ? 0.0 : fi / (nframes - 1)
-            t = frac * T
-            Γs = [Γs0[i] * exp(-bs[i] * t) for i in 1:n]
-            Γtot = sum(Γs)
-            v_peak = n == 0 ? 0.0 :
-                     maximum(Γs[i] / (2π * max(Ws[i], 0.05)) * (1 - exp(-1.0))
-                             for i in 1:n)
-            push!(frames, (i = fi + 1, frac = frac, t = t,
-                           G_total = Γtot, v_peak = v_peak,
-                           G_frac = Γ0tot > 1e-12 ? Γtot / Γ0tot : 0.0))
+    # ── «Истина» для валидации ядра: точный BS-интеграл по отрезку,
+    # u = (b−a)×Q, Q = ∫₀¹ (x−x'(t))/|x−x'(t)|³ dt (Simpson).
+    function _seg_bs_truth(x::NTuple{3,Float64}, a::NTuple{3,Float64},
+                           b::NTuple{3,Float64}, n::Int = 800)
+        dt = 1.0 / n
+        qx = qy = qz = 0.0
+        for i in 0:n
+            f = i * dt
+            xp = (a[1]+(b[1]-a[1])*f, a[2]+(b[2]-a[2])*f, a[3]+(b[3]-a[3])*f)
+            dx = (x[1]-xp[1], x[2]-xp[2], x[3]-xp[3])
+            r3 = (dx[1]^2 + dx[2]^2 + dx[3]^2)^1.5
+            w = (i == 0 || i == n) ? 1.0 : (iseven(i) ? 2.0 : 4.0)
+            qx += w * dx[1] / r3 * dt / 3.0
+            qy += w * dx[2] / r3 * dt / 3.0
+            qz += w * dx[3] / r3 * dt / 3.0
         end
-        find_cross(target_frac) = begin
-            target = target_frac * Γ0tot
-            for f in frames
-                f.G_total <= target && return f.t
+        return ((b[2]-a[2])*qz - (b[3]-a[3])*qy,
+                (b[3]-a[3])*qx - (b[1]-a[1])*qz,
+                (b[1]-a[1])*qy - (b[2]-a[2])*qx)
+    end
+
+    # ── Безразмерная самоскорость кольца U·4πR/Γ при ε = q·2πR/M
+    # (средняя z-компонента скорости узлов на старте).
+    function _ring_speed_dimless(M::Int, R::Float64, q::Float64)
+        eps = q * 2π * R / M
+        nodes = NTuple{3,Float64}[(R*cos(2π * i / M), R*sin(2π * i / M), 0.0)
+                                  for i in 0:M-1]
+        us = velocity_all([nodes], eps, [1.0])[1]
+        return sum(u[3] for u in us) / M * 4π * R
+    end
+
+    # ── Валидация ядра Био–Савара против точной аналитики (selftest §27b
+    # и отчёт): (1) сходимость блоб-суммы к точному отрезку при измельчении
+    # сегментов, (2) тонкое кольцо на оси vs ΓR²/(2(R²+z²)^{3/2}),
+    # (3) масштаб-инвариантность U·4πR/Γ, (4) лог-закон отсечки
+    # d(U·4πR/Γ)/d ln q = −1 (режим q = ε/Δl ≥ 2).
+    function validate_kernel()
+        # (1) блоб → точный интеграл: err(64) и отношение err(64)/err(8)
+        a = (0.0, -0.7, 0.3); b = (1.3, 0.4, 0.9); x = (0.5, 0.9, -0.4)
+        tru = _seg_bs_truth(x, a, b)
+        nu_t = sqrt(sum(v^2 for v in tru))
+        errs = Float64[]
+        for m in (8, 64)
+            acc = [0.0, 0.0, 0.0]
+            for i in 0:m-1
+                t0 = i / m; t1 = (i + 1) / m
+                a_i = (a[1]+(b[1]-a[1])*t0, a[2]+(b[2]-a[2])*t0,
+                       a[3]+(b[3]-a[3])*t0)
+                b_i = (a[1]+(b[1]-a[1])*t1, a[2]+(b[2]-a[2])*t1,
+                       a[3]+(b[3]-a[3])*t1)
+                c = seg_ind(x, a_i, b_i, 1e-12)
+                for k in 1:3
+                    acc[k] += c[k]
+                end
+            end
+            push!(errs, sqrt(sum((acc[k]-tru[k])^2 for k in 1:3)) / nu_t)
+        end
+        conv_ratio = errs[2] / max(errs[1], 1e-30)
+        # (2) кольцо на оси: точная формула тонкого кольца
+        M = 64
+        nodes = NTuple{3,Float64}[(cos(2π * i / M), sin(2π * i / M), 0.0)
+                                  for i in 0:M-1]
+        axis_err = 0.0
+        for zz in (-1.2, 0.7)
+            uz = velocity_at((0.0, 0.0, zz), [nodes], 1e-6, [1.0])[3]
+            exact = 1.0 / (2.0 * (1.0 + zz^2)^1.5)
+            axis_err = max(axis_err, abs(uz - exact) / abs(exact))
+        end
+        # (3) масштаб-инвариантность
+        ys = [_ring_speed_dimless(24, Float64(R), 0.1) for R in (0.7, 1.3)]
+        spread = (maximum(ys) - minimum(ys)) /
+                 (abs(sum(ys) / length(ys)) + 1e-30)
+        # (4) лог-закон отсечки: y(q=2)−y(q=4) ≈ ln 2
+        y2 = _ring_speed_dimless(48, 1.0, 2.0)
+        y4 = _ring_speed_dimless(48, 1.0, 4.0)
+        slope_dev = abs((y2 - y4) / log(2.0) - 1.0)
+        ok_conv = errs[2] < 3e-3 && conv_ratio < 0.35
+        ok_axis = axis_err < 1e-3
+        ok_scale = spread < 1e-10
+        ok_slope = slope_dev < 0.10
+        return (conv_err8 = errs[1], conv_err64 = errs[2],
+                conv_ratio = conv_ratio, ok_conv = ok_conv,
+                axis_err = axis_err, ok_axis = ok_axis,
+                scale_spread = spread, ok_scale = ok_scale,
+                slope_dev = slope_dev, ok_slope = ok_slope,
+                all_ok = ok_conv && ok_axis && ok_scale && ok_slope)
+    end
+
+    # ── Полный прогон leapfrog: RK4 по узлам, core spreading ε²=ε₀²+4νt
+    # (среднее по шагу — 2-й порядок расщепления), снимки кадров и честные
+    # серии диагностик: длина филаментов, E_ind, v_peak, z-центроиды.
+    function simulate(T::Float64, nframes::Int, N::Int;
+                      nu::Float64 = NU, eps0::Float64 = EPS0,
+                      dt::Float64 = DT)
+        N < 24 && error("N must be >= 24 (got $N)")
+        N = min(N, 64)                  # O(N²)·RK4·steps — guard скорости
+        nframes = max(2, min(240, nframes))
+        # шаг ≥ nframes-1: иначе при коротком T несколько fi попадают в один
+        # шаг и Dict теряет кадры (T=0.1, 24 кадров → было 11)
+        steps = max(nframes - 1, clamp(ceil(Int, T / dt), 1, 900))
+        h = T / steps
+        rings, gammas = leapfrog_preset(N)
+        frame_idx = Dict{Int, Int}()
+        for fi in 0:nframes-1
+            s_i = round(Int, fi * steps / (nframes - 1))
+            if !haskey(frame_idx, s_i)     # first-write-wins
+                frame_idx[s_i] = fi
+            end
+        end
+        frames_out = NamedTuple[]
+        snapshots = NamedTuple[]
+        L0 = length_total(rings)
+        E0 = energy_ind(rings, eps0, gammas)
+        for s_i in 0:steps
+            t = s_i * h
+            eps_t = sqrt(eps0^2 + 4nu * t)
+            if haskey(frame_idx, s_i)
+                fi = frame_idx[s_i]
+                us = velocity_all(rings, eps_t, gammas)
+                v_peak = maximum(sqrt(u[1]^2 + u[2]^2 + u[3]^2)
+                                 for row in us for u in row)
+                L = length_total(rings)
+                E = energy_ind(rings, eps_t, gammas)
+                zc = [sum(p[3] for p in r) / length(r) for r in rings]
+                Lr = [ring_length(r) for r in rings]
+                push!(frames_out,
+                      (i = fi + 1, frac = fi / (nframes - 1), t = t,
+                       eps = eps_t, L_total = L, L_rings = Lr, E_ind = E,
+                       v_peak = v_peak, z_centroids = zc))
+                push!(snapshots, (rings = rings, us = us, eps = eps_t,
+                                  frac = fi / (nframes - 1)))
+            end
+            s_i == steps && break
+            for r in rings, p in r, c in p
+                isfinite(c) || error("vortex: RK4 разошёлся (NaN/inf) — " *
+                                     "уменьшите --vortex-T или N")
+            end
+            eps_mid = sqrt(eps0^2 + 4nu * (t + 0.5h))
+            rings = rk4_step(rings, eps_mid, gammas, h)
+        end
+        E_end = frames_out[end].E_ind
+        L_end = frames_out[end].L_total
+        # изменение конфигурационной энергии при фиксированном ядре ε₀ —
+        # отражает эволюцию ФОРМЫ колец (не ошибку интегратора: траектория
+        # dt-сходится, selftest 13g); истинное сохранение — selftest 13c (ν=0)
+        E_fix0 = energy_ind(snapshots[1].rings, eps0, gammas)
+        E_fix1 = energy_ind(snapshots[end].rings, eps0, gammas)
+        E_variation = abs(E_fix1 - E_fix0) / max(abs(E_fix0), 1e-30)
+        first_t(pred) = begin
+            for f in frames_out
+                pred(f) && return f.t
             end
             return nothing
         end
-        mean_b = Γ0tot > 1e-12 ?
-                 sum(Γs0[i] * bs[i] for i in 1:n) / Γ0tot : 0.0
-        final_frac = isempty(frames) ? 1.0 : frames[end].G_frac
-        verdict = final_frac < 0.01 ? "STABILIZED" :
-                  final_frac < 0.10 ? "DAMPED" :
-                  final_frac < 0.50 ? "DECAYING" : "PERSISTENT"
-        return (n = n, T = T, nframes = nframes,
-                layers = [(i = i, h = Float64(hs[i]), W = Float64(Ws[i]),
-                           b = bs[i], halflife = halflife[i], G0 = Float64(Γs0[i]),
-                           G_end = Float64(Γs0[i]) * exp(-bs[i] * T)) for i in 1:n],
-                frames = frames,
-                milestones = (t50 = find_cross(0.50),
-                              t10 = find_cross(0.10),
-                              t01 = find_cross(0.01)),
-                mean_b = mean_b, final_frac = final_frac, verdict = verdict)
+        t_stretch = first_t(f -> abs(f.L_total / L0 - 1.0) > 0.05)
+        t_pass = first_t(f -> f.z_centroids[1] >= f.z_centroids[2])
+        t_halfE = first_t(f -> f.E_ind < 0.5 * E0)
+        verdict = E_end < 0.5 * E0 ? "VISCOUS DECAY" :
+                  L_end > 1.05 * L0 ? "STRETCHING" :
+                  t_pass !== nothing ? "LEAPFROG" : "ACTIVE DYNAMICS"
+        analysis = (model = "vortex-filament RK4 (Biot-Savart blob core)",
+                    N = N, T = T, nframes = nframes, nu = nu, eps0 = eps0,
+                    dt = h, steps = steps,
+                    Re_Gamma = nu > 0 ? gammas[1] / nu : nothing,
+                    rings = [(i = 1, Gamma = gammas[1], R = RING_R,
+                              z0 = 0.0, M = N),
+                             (i = 2, Gamma = gammas[2], R = RING_R,
+                              z0 = RING_DZ, M = N)],
+                    frames = frames_out,
+                    milestones = (t_stretch = t_stretch, t_pass = t_pass,
+                                  t_halfE = t_halfE),
+                    E_variation = E_variation, L0 = L0, E0 = E0,
+                    verdict = verdict)
+        return (analysis = analysis, snapshots = snapshots)
     end
 
-    # ── Пресет: слоистый профиль по умолчанию с красивым затуханием;
-    # Γ_i(z) = Γ0·(1 − 0.5·z/L)·(W_i²/0.25) — ядро сильнее у поверхности
-    function vortex_preset(; nlayers = 20, Γ0 = 2.0, L = 4.0)
-        zs, hs, Ws = VFALayer3D.default_profile(L = L, N = nlayers, W0 = 0.5)
-        Γs0 = [Γ0 * (1 - 0.5 * z / L) * (W^2 / 0.25) for (z, W) in zip(zs, Ws)]
-        return hs, Ws, Γs0
-    end
-
-    # ── Полная анимация: t = frac·T ∈ [0, T]; Γ_i(t) = Γ_i(0)·exp(−b_i·t) —
-    # точное послойное затухание. Дефолт T=40: при b≈0.03–0.06 даёт видимое
-    # затухание до ~31% (при T=4 оставалось ~88% — «вихрь не затухает»).
-    # nframes клампится [2, 240] — B-NEW-2: TOML/env могли задать 0/1.
-    # Аудит (v1.3.1): пиксели, отличные от BG_DARK (12,14,22); ~0 = пустой кадр.
+    # ── Аудит: пиксели, отличные от BG_DARK (12,14,22); ~0 = пустой кадр.
     function frame_nonbg(cv::Canvas)
         n = 0
         b = cv.buf
@@ -1186,51 +1706,70 @@ module VFAVortex3D
         return n
     end
 
+    # ── Филаментная динамика (RK4 + core spreading) → снимки → кадры → GIF.
+    # N ∈ [24, 64] (узлов на кольцо; O(N²)·RK4·steps — guard скорости),
+    # nframes ∈ [2, 240]. Валидация ядра выполняется на каждом прогоне
+    # и попадает в отчёт (analysis.validation).
+    # Камера — бесшовный цикл (азимут 2π·frac — последний кадр
+    # совпадает с первым по ракурсу, GIF зацикливается без скачка),
+    # дыхание элевации, ghost-трейлы двух предыдущих состояний.
     function render_vortex_animation(path::AbstractString;
                                      N::Int = 48,
                                      nframes::Int = 24,
-                                     T::Float64 = 40.0,
-                                     h0::Float64 = 1.0,
-                                     W0::Float64 = 1.0,
+                                     T::Float64 = 8.0,
+                                     nu::Float64 = NU,
+                                     eps0::Float64 = EPS0,
                                      width::Int = 900,
                                      height::Int = 640,
                                      callback = nothing)
-        N < 24 && error("N must be >= 24 (got $N)")
-        N > 256 && (N = 256)       # защита памяти
+        N = clamp(N, 24, 64)
         nframes = max(2, min(240, nframes))
-        hs, Ws, Γs0 = vortex_preset()
-        analysis = analyze_evolution(hs, Ws, Γs0, T, nframes;
-                                     h0 = h0, W0 = W0)
-        frames = Canvas[]
-        min_nonbg = -1
         t0 = time()
-        for (fi, fmeta) in enumerate(analysis.frames)
-            Γs = [Γs0[i] * exp(-analysis.layers[i].b * fmeta.t)
-                  for i in 1:length(hs)]
-            overlay = ["t=$(round(fmeta.t; digits = 2))  " *
-                       "G=$(round(fmeta.G_total; digits = 2))  " *
-                       "($(round(100 * fmeta.G_frac; digits = 1))%)",
-                       "vmax=$(round(fmeta.v_peak; digits = 3))  " *
-                       "$(analysis.verdict)"]
-            cv = render_frame(N, Γs, hs, Ws;
+        sim = simulate(Float64(T), nframes, N; nu = nu, eps0 = eps0)
+        analysis = merge(sim.analysis, (validation = validate_kernel(),))
+        frames = Canvas[]
+        min_active = -1
+        snaps = sim.snapshots
+        for fi in 1:length(snaps)
+            snap = snaps[fi]
+            f = analysis.frames[fi]
+            # fixed-width формат: одинаковая длина строк во всех кадрах
+            overlay = [
+                "t=$(lpad(round(f.t; digits = 2), 5))  " *
+                "eps=$(lpad(round(f.eps; digits = 3), 5))  " *
+                "nu=$(lpad(round(nu; digits = 3), 5))",
+                "L=$(lpad(round(f.L_total; digits = 3), 7))  " *
+                "E=$(lpad(round(f.E_ind; digits = 3), 7))",
+                "vpk=$(lpad(round(f.v_peak; digits = 3), 5))  " *
+                "$(lpad(analysis.verdict, 16))",
+            ]
+            w_max = maximum(length(s) for s in overlay)
+            overlay = [rpad(s, w_max) for s in overlay]
+            ghosts = Tuple{Any, Any, Float64}[]
+            fi > 1 && push!(ghosts,
+                            (snaps[fi - 1].rings, snaps[fi - 1].us, 0.25))
+            fi > 2 && push!(ghosts,
+                            (snaps[fi - 2].rings, snaps[fi - 2].us, 0.11))
+            cv = render_frame(snap.rings, snap.us, snap.eps;
                               width = width, height = height,
-                              az = 0.55 + 0.15 * sin(fmeta.frac * pi),
-                              el = 0.42,
-                              title = "3D VORTEX - LAYERED B-CORRECTION",
-                              sub = "t/T = $(round(fmeta.frac; digits = 2))  N = $N",
-                              overlay = overlay)
-            nonbg = frame_nonbg(cv)
-            if nonbg * 200 < cv.w * cv.h   # < 0.5% не-фона — кадр пуст
-                error("vortex: кадр $fi/$nframes пуст (non-bg $nonbg/" *
+                              az = 0.55 + 2.0 * pi * f.frac,
+                              el = 0.42 + 0.05 * sin(2.0 * pi * f.frac),
+                              title = TITLE,
+                              sub = "leapfrog  M = $N/ring  " *
+                                    "t/T = $(round(f.frac; digits = 2))",
+                              overlay = overlay, ghosts = ghosts)
+            active = frame_active(cv)
+            if active * 200 < cv.w * cv.h  # < 0.5% активных — кадр пуст
+                error("vortex: кадр $fi/$nframes пуст (active $active/" *
                       "$(cv.w * cv.h)) — render_frame/lzw?")
             end
-            min_nonbg = min_nonbg < 0 ? nonbg : min(min_nonbg, nonbg)
+            min_active = min_active < 0 ? active : min(min_active, active)
             push!(frames, cv)
             callback !== nothing && callback(fi, nframes)
         end
         save_gif(path, frames; delay_cs = 6)
         return (path = String(path), frames = nframes,
-                sec = round(time() - t0; digits = 2), min_nonbg = min_nonbg,
+                sec = round(time() - t0; digits = 2), min_nonbg = min_active,
                 analysis = analysis)
     end
 end
@@ -1288,10 +1827,10 @@ Base.@kwdef mutable struct VfaConfig
     layer_model::String = "default"     # --layer-model default|radial
     layer_h0::Float64 = 1.0             # --layer-h0
     layer_W0::Float64 = 1.0             # --layer-W0
-    # §27b: 3D-вихрь (анимация затухания под b-поправкой)
+    # §27b: 3D-вихрь (филаменты: RK4 Био–Савар + core spreading)
     vortex_N::Int = 0                   # --vortex N (0 = выключено; ≥24 = рендер)
     vortex_frames::Int = 24             # --vortex-frames K
-    vortex_T::Float64 = 40.0            # --vortex-T (горизонт времени)
+    vortex_T::Float64 = 8.0             # --vortex-T (горизонт времени динамики)
     vortex_quick::Bool = false          # --vortex-quick (превью 640×440)
     fuzz::Int = 0                       # --fuzz N (0 = использовать preset)
     sweep::String = ""                  # --sweep KEY=V1,V2,...
@@ -1316,12 +1855,12 @@ const VFA_MSG = Dict(
         "no_runs"      => "прогонов нет",
         "no_last"      => "последней задачи нет",
         "last_run"     => "последний прогон",
-        "vortex_title" => "3D-вихрь: затухание под b-поправкой",
+        "vortex_title" => "3D-вихрь: динамика филаментов (RK4, Био–Савар)",
         "vortex_busy"  => "рендер кадров… {k}/{n}",
         "vortex_done"  => "готово: {path} ({frames} кадров, {sec}s)",
-        "vortex_n"     => "размер матрицы N (≥24): ",
+        "vortex_n"     => "узлов на кольцо N (24-64): ",
         "vortex_bad"   => "N должно быть ≥ 24",
-        "vortex_clamp" => "N ограничено до 256 (защита памяти)",
+        "vortex_clamp" => "N ограничено до 64 (скорость солвера)",
         "vortex_frames_prompt" => "кадров (по умолчанию 24): "),
     "en" => Dict(
         "title"        => "VFA · full Navier-Stokes-B verification (Julia)",
@@ -1337,12 +1876,12 @@ const VFA_MSG = Dict(
         "no_runs"      => "no runs yet",
         "no_last"      => "no last task",
         "last_run"     => "last run",
-        "vortex_title" => "3D vortex: decay under b-correction",
+        "vortex_title" => "3D vortex: filament dynamics (RK4 Biot-Savart)",
         "vortex_busy"  => "rendering frames… {k}/{n}",
         "vortex_done"  => "done: {path} ({frames} frames, {sec}s)",
-        "vortex_n"     => "matrix size N (≥24): ",
+        "vortex_n"     => "nodes per ring N (24-64): ",
         "vortex_bad"   => "N must be ≥ 24",
-        "vortex_clamp" => "N clamped to 256 (memory guard)",
+        "vortex_clamp" => "N clamped to 64 (solver speed guard)",
         "vortex_frames_prompt" => "frames (default 24): "))
 
 fmt(cfg, key; kw...) = begin
@@ -3431,33 +3970,37 @@ function vfa_selftest(cfg::VfaConfig)
                         ok2 = vfa_json_str("a\"b\\c") == "\"a\\\"b\\\\c\""
                         ok1 && ok2
                     end))
-    # §27b: изолированный рендер кадра вихря (маленькая сетка, быстро)
+    # §27b: изолированный рендер кадра вихря (малое число узлов, быстро)
     push!(results, ("vortex§27b: изолированный рендер кадра",
                     begin
                         ok_v = try
-                            hs_v, Ws_v, Γs_v = VFAVortex3D.vortex_preset(nlayers = 8)
-                            cv_v = VFAVortex3D.render_frame(48, Γs_v, hs_v, Ws_v;
+                            rings_v, gam_v = VFAVortex3D.leapfrog_preset(16)
+                            us_v = VFAVortex3D.velocity_all(rings_v, 0.08, gam_v)
+                            cv_v = VFAVortex3D.render_frame(rings_v, us_v, 0.08;
                                                             width = 320, height = 240,
                                                             title = "selftest", sub = "")
                             cv_v.w == 320 && cv_v.h == 240 &&
-                                length(cv_v.buf) == 320 * 240 * 3
+                                length(cv_v.buf) == 320 * 240 * 3 &&
+                                VFAVortex3D.frame_active(cv_v) > 200
                         catch
                             false
                         end
                         ok_v
                     end))
-    push!(results, ("vortex§27b: analyze_evolution даёт монотонное затухание",
+    push!(results, ("vortex§27b: simulate — ν=0: |ΔE|<0.5% (RK4), ν>0: E падает (вязкость)",
                     begin
                         ok_a = try
-                            hs_v, Ws_v, Γs_v = VFAVortex3D.vortex_preset(nlayers = 8)
-                            an = VFAVortex3D.analyze_evolution(hs_v, Ws_v, Γs_v,
-                                                               40.0, 12)
-                            length(an.frames) == 12 &&
-                                an.frames[end].G_total < an.frames[1].G_total &&
-                                an.verdict in ("STABILIZED", "DAMPED",
-                                               "DECAYING", "PERSISTENT") &&
-                                (an.milestones.t50 === nothing ||
-                                 0.0 < an.milestones.t50 <= 40.0)
+                            c0 = VFAVortex3D.simulate(1.0, 3, 24; nu = 0.0).analysis
+                            d0 = VFAVortex3D.simulate(1.0, 3, 24).analysis
+                            E0_v = d0.frames[1].E_ind
+                            E1_v = d0.frames[end].E_ind
+                            i0_v = c0.frames[1].E_ind
+                            i1_v = c0.frames[end].E_ind
+                            d0.frames[end].v_peak > 0.0 &&
+                                abs(i1_v - i0_v) < 5e-3 * abs(i0_v) &&
+                                E1_v < E0_v &&
+                                d0.verdict in ("VISCOUS DECAY", "STRETCHING",
+                                               "LEAPFROG", "ACTIVE DYNAMICS")
                         catch
                             false
                         end
@@ -3485,6 +4028,58 @@ function vfa_selftest(cfg::VfaConfig)
                         VFAVortex3D.frame_nonbg(blank_v) == 0 &&
                             VFAVortex3D.frame_nonbg(dotted_v) == 1
                     end))
+    # §27b: ядро Био–Савара против точной аналитики: сходимость
+    # блоб-суммы к точному отрезку, кольцо на оси, масштаб-инвариантность,
+    # лог-закон отсечки d(U·4πR/Γ)/d ln q = −1
+    push!(results, ("vortex§27b: ядро BS — отрезок/кольцо/масштаб/лог-отсечка",
+                    begin
+                        ok_k = try
+                            VFAVortex3D.validate_kernel().all_ok
+                        catch
+                            false
+                        end
+                        ok_k
+                    end))
+    push!(results, ("vortex§27b: RK4 dt-сходимость z/L (dt → dt/4)",
+                    begin
+                        ok_g = try
+                            a_g = VFAVortex3D.simulate(0.5, 3, 24; dt = 0.02).analysis
+                            b_g = VFAVortex3D.simulate(0.5, 3, 24; dt = 0.005).analysis
+                            za = a_g.frames[end].z_centroids
+                            zb = b_g.frames[end].z_centroids
+                            La = a_g.frames[end].L_total
+                            Lb = b_g.frames[end].L_total
+                            abs(za[1] - zb[1]) < 1e-6 &&
+                                abs(za[2] - zb[2]) < 1e-6 &&
+                                abs(La - Lb) < 1e-6 * La
+                        catch
+                            false
+                        end
+                        ok_g
+                    end))
+    # 13h: ориентация глифов FONT3X5 — старший бит тройки = ЛЕВАЯ колонка
+    # (регрессия рендера текста: gx = bit%3 зеркалил каждый асимметричный
+    # глиф — заголовок вихря читался «EO … - RHP BIOT-3AVART»; симметричные
+    # глифы A/I/M/N/O/T/U/V/W/X/0/8 маскировали баг в коротких подписях)
+    function glyph_grid(ch::Char)
+        g = VFAPlot.Canvas(3, 5, (0, 0, 0))
+        VFAPlot.draw_text(g, string(ch), 0, 0, (255, 255, 255), 1)
+        [[g.buf[3 * (y * 3 + x) + 1] > 0 for x in 0:2] for y in 0:4]
+    end
+    push!(results, ("font§9: глифы 'P'/'L' — вертикаль слева, не зеркально",
+                    glyph_grid('P') == [[true, true, false], [true, false, true],
+                                        [true, true, false], [true, false, false],
+                                        [true, false, false]] &&
+                    glyph_grid('L') == [[true, false, false], [true, false, false],
+                                        [true, false, false], [true, false, false],
+                                        [true, true, true]]))
+    push!(results, ("font§9: глифы '3'/'2' — открыты справа, не зеркально",
+                    glyph_grid('3') == [[true, true, true], [false, false, true],
+                                        [true, true, true], [false, false, true],
+                                        [true, true, true]] &&
+                    glyph_grid('2') == [[true, true, true], [false, false, true],
+                                        [true, true, true], [true, false, false],
+                                        [true, true, true]]))
     # §4.4: aurora-стиль отчёта самотеста (стикеры + спарклайн-вердикты)
     npass = count(r -> r[2], results)
     mode = (cfg.selftest_props ? "+props" : "") *
@@ -3545,86 +4140,161 @@ function _vfa_jfm(x::Real)
     return string(round(v; digits = 6))
 end
 
-"§27b: companion-отчёт (MD + JSON) рядом с GIF: per-layer таблица,
-milestones, временная серия, вердикт. JSON — вручную (в stdlib нет JSON)."
+# Научный формат для отчёта/сводки (Printf в монолит не тянем): 2.41e-05
+function _vfa_sci(x)
+    x === nothing && return "null"
+    v = Float64(x)
+    (isnan(v) || isinf(v)) && return "null"
+    v == 0.0 && return "0.00e+00"
+    e = floor(Int, log10(abs(v)))
+    m = round(v / 10.0^e; digits = 2)
+    if abs(m) >= 10.0
+        m = round(m / 10.0; digits = 2)
+        e += 1
+    end
+    return "$(m)e$(e < 0 ? "-" : "+")$(lpad(abs(e), 2, "0"))"
+end
+
+# Спарклайн ▁▂▃▄▅▆▇█ по серии значений (нормировка на min/max серии);
+# для отчёта и сводки — динамика видна одним взглядом.
+function _vfa_spark(vals::Vector{<:Real})::String
+    blocks = collect("▁▂▃▄▅▆▇█")
+    lo, hi = minimum(vals), maximum(vals)
+    rng = (hi - lo) == 0 ? 1.0 : hi - lo
+    return String(blocks[clamp(round(Int, (v - lo) / rng * 7.0) + 1, 1, 8)]
+                  for v in vals)
+end
+
+"§27b: companion-отчёт (MD + JSON) рядом с GIF: модель, валидация ядра
+Био–Савара, кольца, временная серия, milestones, вердикт. JSON — вручную
+(в stdlib нет JSON)."
 function vfa_vortex_write_report(analysis, gif_path::AbstractString)
     base = splitext(String(gif_path))[1]
     md_path = base * ".md"
     json_path = base * ".json"
     ms = analysis.milestones
+    va = analysis.validation
+    T = analysis.T
     lines = String[
-        "# 3D Vortex — Stabilization Report",
+        "# 3D Vortex — Filament Dynamics Report",
         "",
-        "- layers: $(analysis.n), frames: $(analysis.nframes), T: $(round(analysis.T; digits = 1))",
-        "- mean_b (Γ-weighted): $(round(analysis.mean_b; digits = 6))",
-        "- final Γ/Γ₀: $(round(100 * analysis.final_frac; digits = 2))%",
+        "- model: $(analysis.model)",
+        "- rings: $(length(analysis.rings)) (leapfrog), nodes/ring M: $(analysis.N), frames: $(analysis.nframes), T: $(round(T; digits = 1))",
+        "- nu = $(round(analysis.nu; sigdigits = 2)), eps0 = $(round(analysis.eps0; sigdigits = 2)), dt = $(round(analysis.dt; digits = 4)), steps = $(analysis.steps), Re_Gamma = $(analysis.Re_Gamma === nothing ? "—" : round(Int, analysis.Re_Gamma))",
+        "- E_ind(eps0-kernel) variation: $(round(100 * analysis.E_variation; digits = 3))%  (L0 = $(round(analysis.L0; digits = 3)), E0 = $(round(analysis.E0; digits = 3)))",
         "- **verdict: $(analysis.verdict)**",
+        "- v_peak: `$(_vfa_spark([f.v_peak for f in analysis.frames]))` " *
+        "$(round(analysis.frames[1].v_peak; digits = 3)) → " *
+        "$(round(analysis.frames[end].v_peak; digits = 3))",
+        "- E_ind: `$(_vfa_spark([f.E_ind for f in analysis.frames]))` " *
+        "$(round(analysis.frames[1].E_ind; digits = 3)) → " *
+        "$(round(analysis.frames[end].E_ind; digits = 3))",
+        "- L_total: `$(_vfa_spark([f.L_total for f in analysis.frames]))` " *
+        "$(round(analysis.frames[1].L_total; digits = 3)) → " *
+        "$(round(analysis.frames[end].L_total; digits = 3))",
         "",
-        "## Milestones",
+        "## Kernel validation (Biot-Savart)",
         "",
-        "| threshold | t |",
-        "|---|---|",
+        "| check | value | threshold | status |",
+        "|---|---|---|---|",
+        "| blob->exact convergence err(64) | $(_vfa_sci(va.conv_err64)) | < 3e-3 | $(va.ok_conv ? "PASS" : "FAIL") |",
+        "| convergence ratio err(64)/err(8) | $(round(va.conv_ratio; digits = 3)) | < 0.35 | $(va.ok_conv ? "PASS" : "FAIL") |",
+        "| ring on-axis vs exact Gamma R^2/(2(R^2+z^2)^1.5) | $(_vfa_sci(va.axis_err)) | < 1e-3 | $(va.ok_axis ? "PASS" : "FAIL") |",
+        "| scale invariance spread | $(_vfa_sci(va.scale_spread)) | < 1e-10 | $(va.ok_scale ? "PASS" : "FAIL") |",
+        "| log-cutoff slope dev (q: 2->4) | $(round(100 * va.slope_dev; digits = 1))% | < 10% | $(va.ok_slope ? "PASS" : "FAIL") |",
+        "",
+        "## Rings",
+        "",
+        "| i | Gamma | R | z0 | M |",
+        "|---|---|---|---|---|",
     ]
-    for (label, v) in (("50% Γ (half-life)", ms.t50), ("10% Γ", ms.t10),
-                       ("1% Γ", ms.t01))
-        push!(lines, "| $label | " *
-                     (v === nothing ? "> T = $(round(analysis.T; digits = 1))" :
-                      string(round(v; digits = 3))) * " |")
-    end
-    push!(lines, "")
-    push!(lines, "## Per-layer")
-    push!(lines, "")
-    push!(lines, "| i | h | W | b_i | half-life | Γ₀ | Γ_T |")
-    push!(lines, "|---|---|---|---|---|---|---|")
-    for L in analysis.layers
-        hl = L.halflife == Inf ? "∞" : string(round(L.halflife; digits = 2))
-        push!(lines, "| $(L.i) | $(round(L.h; digits = 3)) | " *
-                     "$(round(L.W; digits = 3)) | $(round(L.b; digits = 5)) | " *
-                     "$hl | $(round(L.G0; digits = 3)) | " *
-                     "$(round(L.G_end; digits = 4)) |")
+    for R in analysis.rings
+        push!(lines, "| $(R.i) | $(round(R.Gamma; digits = 3)) | " *
+                     "$(round(R.R; digits = 3)) | $(round(R.z0; digits = 3)) | " *
+                     "$(R.M) |")
     end
     push!(lines, "")
     push!(lines, "## Time series")
     push!(lines, "")
-    push!(lines, "| t | Γ_total | % of Γ₀ | v_peak |")
-    push!(lines, "|---|---|---|---|")
+    push!(lines, "| t | eps | L_total | L_A | L_B | E_ind | v_peak | z_A | z_B |")
+    push!(lines, "|---|---|---|---|---|---|---|---|---|")
     for f in analysis.frames
         push!(lines, "| $(round(f.t; digits = 3)) | " *
-                     "$(round(f.G_total; digits = 4)) | " *
-                     "$(round(100 * f.G_frac; digits = 2))% | " *
-                     "$(round(f.v_peak; digits = 4)) |")
+                     "$(round(f.eps; digits = 3)) | " *
+                     "$(round(f.L_total; digits = 4)) | " *
+                     "$(round(f.L_rings[1]; digits = 4)) | " *
+                     "$(round(f.L_rings[2]; digits = 4)) | " *
+                     "$(round(f.E_ind; digits = 4)) | " *
+                     "$(round(f.v_peak; digits = 4)) | " *
+                     "$(round(f.z_centroids[1]; digits = 3)) | " *
+                     "$(round(f.z_centroids[2]; digits = 3)) |")
+    end
+    push!(lines, "")
+    push!(lines, "## Milestones")
+    push!(lines, "")
+    push!(lines, "| event | t |")
+    push!(lines, "|---|---|")
+    for (label, v) in (("stretch: L/L0-1 > 5%", ms.t_stretch),
+                       ("leapfrog pass z_A >= z_B", ms.t_pass),
+                       ("E_ind < 0.5 E0", ms.t_halfE))
+        push!(lines, "| $label | " *
+                     (v === nothing ? "> T = $(round(T; digits = 1))" :
+                      string(round(v; digits = 3))) * " |")
     end
     open(md_path, "w") do fh
         foreach(ln -> println(fh, ln), lines)
     end
     jio = IOBuffer()
     println(jio, "{")
-    println(jio, "  \"n\": $(analysis.n),")
+    println(jio, "  \"model\": \"$(analysis.model)\",")
+    println(jio, "  \"N\": $(analysis.N),")
     println(jio, "  \"T\": $(_vfa_jfm(analysis.T)),")
     println(jio, "  \"nframes\": $(analysis.nframes),")
-    println(jio, "  \"mean_b\": $(_vfa_jfm(analysis.mean_b)),")
-    println(jio, "  \"final_frac\": $(_vfa_jfm(analysis.final_frac)),")
-    println(jio, "  \"verdict\": \"$(analysis.verdict)\",")
-    println(jio, "  \"milestones\": {\"t50\": $(_vfa_jfm(ms.t50)), " *
-                 "\"t10\": $(_vfa_jfm(ms.t10)), \"t01\": $(_vfa_jfm(ms.t01))},")
-    println(jio, "  \"layers\": [")
-    for (k, L) in enumerate(analysis.layers)
-        comma = k < length(analysis.layers) ? "," : ""
-        println(jio, "    {\"i\": $(L.i), \"h\": $(_vfa_jfm(L.h)), " *
-                     "\"W\": $(_vfa_jfm(L.W)), \"b\": $(_vfa_jfm(L.b)), " *
-                     "\"halflife\": $(_vfa_jfm(L.halflife)), " *
-                     "\"G0\": $(_vfa_jfm(L.G0)), \"G_end\": $(_vfa_jfm(L.G_end))}$comma")
+    println(jio, "  \"nu\": $(_vfa_jfm(analysis.nu)),")
+    println(jio, "  \"eps0\": $(_vfa_jfm(analysis.eps0)),")
+    println(jio, "  \"dt\": $(_vfa_jfm(analysis.dt)),")
+    println(jio, "  \"steps\": $(analysis.steps),")
+    println(jio, "  \"Re_Gamma\": $(_vfa_jfm(analysis.Re_Gamma)),")
+    println(jio, "  \"rings\": [")
+    for (k, R) in enumerate(analysis.rings)
+        comma = k < length(analysis.rings) ? "," : ""
+        println(jio, "    {\"i\": $(R.i), \"Gamma\": $(_vfa_jfm(R.Gamma)), " *
+                     "\"R\": $(_vfa_jfm(R.R)), \"z0\": $(_vfa_jfm(R.z0)), " *
+                     "\"M\": $(R.M)}$comma")
     end
     println(jio, "  ],")
     println(jio, "  \"frames\": [")
     for (k, f) in enumerate(analysis.frames)
         comma = k < length(analysis.frames) ? "," : ""
         println(jio, "    {\"i\": $(f.i), \"frac\": $(_vfa_jfm(f.frac)), " *
-                     "\"t\": $(_vfa_jfm(f.t)), \"G_total\": $(_vfa_jfm(f.G_total)), " *
+                     "\"t\": $(_vfa_jfm(f.t)), \"eps\": $(_vfa_jfm(f.eps)), " *
+                     "\"L_total\": $(_vfa_jfm(f.L_total)), " *
+                     "\"L_rings\": [$(_vfa_jfm(f.L_rings[1])), " *
+                     "$(_vfa_jfm(f.L_rings[2]))], " *
+                     "\"E_ind\": $(_vfa_jfm(f.E_ind)), " *
                      "\"v_peak\": $(_vfa_jfm(f.v_peak)), " *
-                     "\"G_frac\": $(_vfa_jfm(f.G_frac))}$comma")
+                     "\"z_centroids\": [$(_vfa_jfm(f.z_centroids[1])), " *
+                     "$(_vfa_jfm(f.z_centroids[2]))]}$comma")
     end
-    println(jio, "  ]")
+    println(jio, "  ],")
+    println(jio, "  \"milestones\": {\"t_stretch\": $(_vfa_jfm(ms.t_stretch)), " *
+                 "\"t_pass\": $(_vfa_jfm(ms.t_pass)), " *
+                 "\"t_halfE\": $(_vfa_jfm(ms.t_halfE))},")
+    println(jio, "  \"E_variation\": $(_vfa_jfm(analysis.E_variation)),")
+    println(jio, "  \"L0\": $(_vfa_jfm(analysis.L0)),")
+    println(jio, "  \"E0\": $(_vfa_jfm(analysis.E0)),")
+    println(jio, "  \"verdict\": \"$(analysis.verdict)\",")
+    println(jio, "  \"validation\": {\"conv_err8\": $(_vfa_jfm(va.conv_err8)), " *
+                 "\"conv_err64\": $(_vfa_jfm(va.conv_err64)), " *
+                 "\"conv_ratio\": $(_vfa_jfm(va.conv_ratio)), " *
+                 "\"ok_conv\": $(va.ok_conv), " *
+                 "\"axis_err\": $(_vfa_jfm(va.axis_err)), " *
+                 "\"ok_axis\": $(va.ok_axis), " *
+                 "\"scale_spread\": $(_vfa_jfm(va.scale_spread)), " *
+                 "\"ok_scale\": $(va.ok_scale), " *
+                 "\"slope_dev\": $(_vfa_jfm(va.slope_dev)), " *
+                 "\"ok_slope\": $(va.ok_slope), " *
+                 "\"all_ok\": $(va.all_ok)}")
     println(jio, "}")
     open(json_path, "w") do fh
         write(fh, take!(jio))
@@ -3632,36 +4302,39 @@ function vfa_vortex_write_report(analysis, gif_path::AbstractString)
     return md_path, json_path
 end
 
-"§27b: короткая числовая сводка стабилизации (stderr)."
+"§27b: короткая числовая сводка динамики филаментов (stderr)."
 function vfa_vortex_print_summary(analysis; io = stderr)
-    frames, ms = analysis.frames, analysis.milestones
-    println(io, "\n  ── stabilization summary ──")
-    println(io, "  Γ_total: $(round(frames[1].G_total; digits = 3)) → ",
-            "$(round(frames[end].G_total; digits = 4)) ",
-            "($(round(100 * analysis.final_frac; digits = 2))%)")
-    println(io, "  mean_b: $(round(analysis.mean_b; digits = 6))")
-    for (label, v) in (("t50 (half-life)", ms.t50),
-                       ("t10 (90% decayed)", ms.t10),
-                       ("t01 (99% decayed)", ms.t01))
-        println(io, "  $label: " *
-                (v === nothing ? "> T = $(round(analysis.T; digits = 1))" :
-                 "t = $(round(v; digits = 3))"))
-    end
+    frames = analysis.frames
+    va = analysis.validation
+    f0, f1 = frames[1], frames[end]
+    println(io, "\n  ── filament dynamics summary ──")
+    println(io, "  v_peak: $(round(f0.v_peak; digits = 3)) → ",
+            "$(round(f1.v_peak; digits = 3))   ",
+            "eps: $(round(f0.eps; digits = 3)) → ",
+            "$(round(f1.eps; digits = 3))")
+    println(io, "    v_peak ",
+            _vfa_spark([f.v_peak for f in frames]), "   E_ind ",
+            _vfa_spark([f.E_ind for f in frames]))
+    println(io, "  L_total: $(round(f0.L_total; digits = 3)) → ",
+            "$(round(f1.L_total; digits = 3))   ",
+            "E_ind(eps0) variation: ",
+            "$(round(100 * analysis.E_variation; digits = 3))%")
+    println(io, "  z-центроиды: ",
+            "$(round(f0.z_centroids[1]; digits = 2)) → ",
+            "$(round(f1.z_centroids[1]; digits = 2)), ",
+            "$(round(f0.z_centroids[2]; digits = 2)) → ",
+            "$(round(f1.z_centroids[2]; digits = 2))")
+    println(io, "  kernel: conv $(_vfa_sci(va.conv_err64)), ",
+            "axis $(_vfa_sci(va.axis_err)), ",
+            "scale $(_vfa_sci(va.scale_spread)), ",
+            "slope $(round(100 * va.slope_dev; digits = 1))% ",
+            "($(va.all_ok ? "ALL PASS" : "FAIL"))")
     println(io, "  verdict: ", analysis.verdict)
-    println(io, "    i       h       W         b   halflife      G_end")
-    for L in analysis.layers
-        hl = L.halflife == Inf ? "∞" : string(round(L.halflife; digits = 2))
-        println(io, "  $(lpad(L.i, 3)) $(lpad(round(L.h; digits = 3), 7)) ",
-                "$(lpad(round(L.W; digits = 3), 7)) ",
-                "$(lpad(round(L.b; digits = 5), 9)) ",
-                "$(lpad(hl, 9)) ",
-                "$(lpad(round(L.G_end; digits = 4), 9))")
-    end
     println(io)
 end
 
 "§27b: интерактивный рендер 3D-вихря (пункт [v] меню, legacy и TUI);
-N ∈ [24, ∞), clamp до 256 — защита памяти; после рендера — отчёт и сводка"
+N ∈ [24, 64), clamp до 64 — guard скорости солвера; после рендера — отчёт и сводка"
 function vfa_menu_vortex(cfg::VfaConfig, _s = nothing)
     println(VFAUI.aurora_title(fmt(cfg, "vortex_title")))
     print("  ", fmt(cfg, "vortex_n"))
@@ -3679,9 +4352,9 @@ function vfa_menu_vortex(cfg::VfaConfig, _s = nothing)
         println("  ? ", fmt(cfg, "vortex_bad"))
         return
     end
-    if N > 256
+    if N > 64
         println("  ", fmt(cfg, "vortex_clamp"))
-        N = 256
+        N = 64
     end
     print("  ", fmt(cfg, "vortex_frames_prompt"))
     fline = try
@@ -3703,7 +4376,6 @@ function vfa_menu_vortex(cfg::VfaConfig, _s = nothing)
     res = VFAVortex3D.render_vortex_animation(path;
                                               N = N, nframes = nframes,
                                               T = cfg.vortex_T,
-                                              h0 = cfg.layer_h0, W0 = cfg.layer_W0,
                                               callback = (k, n) -> begin
                                                   (k % 2 == 0 || k == n) || return
                                                   print(stderr,
@@ -3723,13 +4395,16 @@ function vfa_menu_vortex(cfg::VfaConfig, _s = nothing)
 end
 
 "§27b: неконфликтный CLI-рендер --vortex N (stdout/CI-safe, без stdin);
---vortex-quick → превью 32/8/640×440; после рендера — отчёт и сводка"
+--vortex-quick → превью 32/8/640×440 (T=2); после рендера — отчёт и сводка"
 function vfa_vortex_cli(cfg::VfaConfig)
     mkpath(vfa_vortex_dir(cfg))
     N, nframes = cfg.vortex_N, cfg.vortex_frames
     width, height = 900, 640
     if cfg.vortex_quick        # U-2: быстрое превью (CI-проверка вихря)
         N, nframes, width, height = 32, 8, 640, 440
+        # quick ускоряет и физику: без этого T=8 при dt=DT давал ~200 шагов
+        # RK4 и превью занимало десятки секунд
+        cfg.vortex_T = 2.0
     end
     path = joinpath(vfa_vortex_dir(cfg),
                     "vortex_N$(N)_$(Libc.strftime("%Y%m%d_%H%M%S", time())).gif")
@@ -3739,7 +4414,6 @@ function vfa_vortex_cli(cfg::VfaConfig)
     res = VFAVortex3D.render_vortex_animation(path;
                                               N = N, nframes = nframes,
                                               T = cfg.vortex_T,
-                                              h0 = cfg.layer_h0, W0 = cfg.layer_W0,
                                               width = width, height = height,
                                               callback = (k, n) -> begin
                                                   (k % 2 == 0 || k == n) || return
@@ -3893,9 +4567,10 @@ VFA_HELP = """verify_ns_full.jl — Julia-адаптер контракта §0�
   --rlimit kind=v[,kind=v...] (as|cpu|fsize; best-effort)
   --layers N --layer-model default|radial --layer-h0 x --layer-W0 y
   --vortex N --vortex-frames K --vortex-T T   (§27b) GIF 3D-вихря, N ≥ 24
-             (до 256, кадры ≥ 2; T — горизонт времени, по умолчанию 40);
+             (узлов на кольцо, до 64; кадры ≥ 2; T — горизонт времени
+             физической динамики, по умолчанию 8);
              рендер в results/vortex/*.gif + отчёт *.md/*.json и выход
-  --vortex-quick        быстрое превью (N=32, 8 кадров, 640×440); без
+  --vortex-quick        быстрое превью (N=32, 8 кадров, 640×440, T=2); без
              --vortex N запускает превью само
              NOTE: vortex_N, заданный в --config-file/TOML или env, тоже
              запускает рендер вихря ВМЕСТО обычного прогона задач — для

@@ -25,6 +25,10 @@ Navier-Stokes-B (домен: перепроверка формального я�
   * вихри Кирхгофа: гамильтоновость RK4 (дрейф ~dt⁴), порядок 4, изометрия;
   * 3D-слоистая b-поправка (§27, задачи 11–15): b(h, W), синхронизация
     Кирхгоф↔Родриг по слоям, торможение ствола, динамика, динамические тесты;
+  * 3D-вихревые филаменты (§27b): сегментный Био–Савар с блоб-ядром,
+    RK4, расплывание ядра ε²=ε₀²+4νt, leapfrog двух колец; валидация ядра
+    против точной аналитики (отрезок, кольцо на оси, масштаб-инвариантность,
+    лог-отсечка ln(8R/ε));
   * бенчмарки точных решений НС (§31, задачи 16–22): Тейлор-Грин, Ковазнай,
     Стокс II, инвариант Лере-Хопф, ABC-поток, Бюргерс, Ричардсон;
   * мост к прогону второго монолита (§32): задача 8 сверяет вердикты
@@ -49,7 +53,6 @@ Navier-Stokes-B (домен: перепроверка формального я�
 
 from __future__ import annotations
 
-import bisect
 import contextlib
 import copy
 import ctypes
@@ -78,7 +81,6 @@ from datetime import datetime
 from decimal import Decimal, getcontext, localcontext
 from pathlib import Path
 
-__version__ = "1.3.1"
 VFA_FILE = Path(__file__).resolve().name if "__file__" in globals() else "verify_ns_full.py"
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -166,12 +168,12 @@ MSG = {
         "no_runs": "no runs yet",
         "no_last": "no last task",
         "last_run": "last run",
-        "vortex_title": "3D vortex: decay under b-correction",
+        "vortex_title": "3D vortex: filament dynamics (RK4 Biot-Savart)",
         "vortex_busy": "rendering frames… {k}/{n}",
         "vortex_done": "done: {path} ({frames} frames, {sec}s)",
-        "vortex_n": "matrix size N (≥24): ",
+        "vortex_n": "nodes per ring N (24-64): ",
         "vortex_bad": "N must be ≥ 24",
-        "vortex_clamp": "N clamped to 256 (memory guard)",
+        "vortex_clamp": "N clamped to 64 (solver speed guard)",
         "vortex_frames": "frames (default 24): ",
     },
     "ru": {
@@ -206,12 +208,12 @@ MSG = {
         "no_runs": "прогонов нет",
         "no_last": "последней задачи нет",
         "last_run": "последний прогон",
-        "vortex_title": "3D-вихрь: затухание под b-поправкой",
+        "vortex_title": "3D-вихрь: динамика филаментов (RK4, Био–Савар)",
         "vortex_busy": "рендер кадров… {k}/{n}",
         "vortex_done": "готово: {path} ({frames} кадров, {sec}s)",
-        "vortex_n": "размер матрицы N (≥24): ",
+        "vortex_n": "узлов на кольцо N (24-64): ",
         "vortex_bad": "N должно быть ≥ 24",
-        "vortex_clamp": "N ограничено до 256 (защита памяти)",
+        "vortex_clamp": "N ограничено до 64 (скорость солвера)",
         "vortex_frames": "кадров (по умолчанию 24): ",
     },
 }
@@ -465,7 +467,7 @@ class VFABanner:
         if subtitle:
             out.append("  " + subtitle)
         out.append(f"  python {sys.version.split()[0]} {sep} "
-                   f"{VFA_PLATFORM()} {sep} v{__version__}")
+                   f"{VFA_PLATFORM()}")
         return out
 
     @classmethod
@@ -949,7 +951,7 @@ class VFAPlot:
         Ширина отслеживается в момент ВЫДАЧИ кода; при переполнении таблицы
         (nxt >= 4096) эмитится CLEAR. Начальный CLEAR и финальный EOI —
         обязательны, иначе декодеры (PIL, браузеры) отвергают поток.
-        v1.3.1: рост ширины — ПОСЛЕ добавления записи со значением 2^cs
+        Рост ширины — ПОСЛЕ добавления записи со значением 2^cs
         (условие nxt == (1<<cs)+1), а не 2^cs−1: декодер добавляет записи
         на один код позже энкодера, поэтому «наивный» ранний bump рассинхро-
         низирует поток ровно на записи 511/512 (PIL: broken data stream;
@@ -998,7 +1000,7 @@ class VFAPlot:
     @staticmethod
     def _lzw_decode_ref(data: bytes, min_code_size: int,
                         n_expect: int) -> bytes:
-        """Референсный GIF-LZW декодер, парный к _lzw (selftest §9, v1.3.1).
+        """Референсный GIF-LZW декодер, парный к _lzw (selftest §9).
         Каноническое правило декодера: запись добавляется при приёме каждого
         кода (кроме первого после CLEAR), ширина кода растёт, когда next_code
         декодера достигает 1<<cs. Декодер отстаёт от энкодера ровно на один
@@ -1046,18 +1048,38 @@ class VFAPlot:
 
     @classmethod
     def save_gif(cls, path: Path, frames: list["VFAPlot.Canvas"], delay_cs: int = 25) -> None:
+        """GIF89a + собственный LZW (§9: классический источник ошибок —
+        endianness). Палитра ДИНАМИЧЕСКАЯ — гистограмма bucket-цветов
+        (>>3) по репрезентативным кадрам; ≤255 bucket'ов → точные цвета,
+        переполнение → 255 самых частых + квантование к ближайшему.
+        Фикс-палитра из 16 цветов постеризовала мягкие градиенты фона и
+        свечение филаментов в полосы."""
         import struct
         if not frames:
             return
         w, h = frames[0].w, frames[0].h
+        # гистограмма bucket'ов по 3 репрезентативным кадрам (начало/середина/
+        # конец — цветовой набор анимации стабилен, полный проход дорог)
+        reps = {0, len(frames) // 2, len(frames) - 1}
+        sums = {}                       # bucket -> [count, (r, g, b)]
+        for fi in reps:
+            fr = frames[fi]
+            buf = fr.buf
+            for p in range(w * h):
+                k = (buf[p * 3] >> 3, buf[p * 3 + 1] >> 3, buf[p * 3 + 2] >> 3)
+                s = sums.get(k)
+                if s is None:
+                    sums[k] = [1, (buf[p * 3], buf[p * 3 + 1], buf[p * 3 + 2])]
+                else:
+                    s[0] += 1
+        if len(sums) <= 255:
+            pal = [s[1] for s in sums.values()]
+        else:                           # 255 самых частых, прочие — ближайший
+            pal = [s[1] for s in sorted(sums.values(),
+                                        key=lambda s: -s[0])[:255]]
         palette = []
-        for rgb in [(12, 14, 22), (18, 20, 28), (26, 29, 40), (40, 44, 60),
-                    (55, 60, 80), (90, 95, 115), (150, 160, 190),
-                    (220, 225, 240), (255, 255, 255),
-                    (80, 170, 255), (255, 140, 105), (110, 220, 150),
-                    (200, 150, 255), (255, 210, 90), (90, 230, 220),
-                    (160, 120, 200)]:
-            palette.extend(rgb)
+        for rgb in pal:
+            palette.extend(int(c) for c in rgb)
         while len(palette) < 768:
             palette.append(0)
         out = bytearray(b"GIF89a")
@@ -1068,7 +1090,6 @@ class VFAPlot:
             # квантование к палитре ближайшим индексом
             idx = bytearray(w * h)
             lut = {}
-            pal = [tuple(palette[i:i + 3]) for i in range(0, 768, 3)]
             for p in range(w * h):
                 rgb = (fr.buf[p * 3], fr.buf[p * 3 + 1], fr.buf[p * 3 + 2])
                 key = (rgb[0] >> 3, rgb[1] >> 3, rgb[2] >> 3)
@@ -1276,7 +1297,9 @@ def vfa_draw_text(cv: "VFAPlot.Canvas", text: str, x: int, y: int,
             glyph = VFAPlot.FONT3X5.get("?", 0)
         for bit in range(15):
             if glyph >> bit & 1:
-                gx, gy = bit % 3, 4 - bit // 3
+                # старший бит тройки — ЛЕВАЯ колонка (иначе каждый
+                # асимметричный глиф зеркалится: «3D» → «EO»)
+                gx, gy = 2 - bit % 3, 4 - bit // 3
                 cv.rect(cx + gx * scale, y + gy * scale,
                         cx + gx * scale + scale - 1, y + gy * scale + scale - 1, color)
         cx += 4 * scale
@@ -1577,10 +1600,10 @@ class VfaConfig:
         self.layer_h0: float = 1.0                # --layer-h0
         self.layer_W0: float = 1.0                # --layer-W0
         self.fuzz: int = 0                        # --fuzz N (0 = использовать preset)
-        # §27b: 3D-вихрь (анимация затухания под b-поправкой)
+        # §27b: 3D-вихрь (филаменты: RK4 Био–Савар + core spreading)
         self.vortex_N: int = 0                    # --vortex N (0 = выкл; ≥24 = рендер)
         self.vortex_frames: int = 24              # --vortex-frames K
-        self.vortex_T: float = 40.0               # --vortex-T (горизонт времени)
+        self.vortex_T: float = 8.0                # --vortex-T (горизонт времени динамики)
         self.vortex_quick: bool = False           # --vortex-quick (превью 640×440)
         # §30: свипы (повторные --sweep склеиваются через ';')
         self.sweep: str = ""
@@ -2805,17 +2828,28 @@ def vfa_layer_profile(cfg: VfaConfig):
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# §27b 3D vortex: реальный вихревой жгут, затухающий под слоистой
-# b-поправкой Γ(z,t) = Γ0(z)·e^(−b(z)·t), t = frac·T.
-# Сетка N×N×N, N ∈ [24, 256]; при N³ > 96³ выборка децимируется вдвое по оси.
-# Рендер: изометрия, сортировка по глубине, цвет по |u| (aurora-палитра),
-# быстрое заполнение прямоугольников строками bytearray. Кадры идут через
-# VFAPlot.save_gif (stdlib only). Текст на канве — ASCII (шрифт FONT3X5).
+# §27b 3D vortex filaments: настоящее вычисление вместо предписан-
+# ного профиля. Метод вихревых филаментов с блоб-регуляризацией
+# (Rosenhead / Moore–Saffman / Chorin): кольца дискретизируются на M сегмен-
+# тов, скорость каждого узла — сумма вкладов Био–Савара ВСЕХ сегментов
+#   u(x) = Σ Γ/(4π)·dl×(x−xm)/(|x−xm|²+ε²)^{3/2},  xm — середина сегмента,
+# интегрирование по времени — RK4; вязкость — расплывание ядра (core
+# spreading): ε²(t) = ε₀² + 4νt. Циркуляция сохраняется по построению,
+# растяжение вихрей возникает само (длина филамента — из динамики).
+# Сценарий leapfrog: два коаксиальных кольца, взаимная индукция.
+# Валидация ядра (selftest §27b): сходимость к точному интегралу по отрезку,
+# тонкое кольцо на оси vs ΓR²/(2(R²+z²)^{3/2}), масштаб-инвариантность,
+# лог-закон отсечки d(U·4πR/Γ)/d ln q = −1. Рендер («блеск и шёлк»):
+# изометрия, painter's algorithm, точки вдоль сегментов, цвет по |u| (aurora),
+# white-hot ядро, аддитивное bloom-свечение, ghost-трейлы, фон-градиент со
+# звёздной пылью, виньетка, HUD. GIF — через VFAPlot.save_gif (динамическая
+# палитра). Текст на канве — ASCII (FONT3X5).
 # ═══════════════════════════════════════════════════════════════════════════
 
 class VFAVortex3D:
-    """§27b: 3D-визуализатор вихря. Переиспользует VFAPlot.Canvas + save_gif
-    и VFALayer3D.b_layer для физически согласованного затухания."""
+    """§27b: 3D-вихревые филаменты — RK4-динамика Био–Савара с блоб-ядром.
+    Переиспользует VFAPlot.Canvas + save_gif; вся наблюдаемая эволюция —
+    вычисление, ни одна метрика не задана аналитической формулой затухания."""
 
     AURORA_SERIES = [
         ( 80, 170, 255), (255, 140, 105), (110, 220, 150),
@@ -2823,37 +2857,142 @@ class VFAVortex3D:
     ]
     BG_DARK = (12, 14, 22)
     GRID_DIM = (55, 60, 80)
+    TITLE = "3D VORTEX FILAMENTS - RK4 BIOT-SAVART"
+    NU = 0.004            # ν: кинематическая вязкость (Re_Γ = Γ/ν = 250)
+    EPS0 = 0.08           # ε₀: радиус ядра на t=0 (core spreading ε²=ε₀²+4νt)
+    DT = 0.05             # шаг RK4: 0.01→0.05 без потери точности (замер:
+                          # E_variation и L совпадают с dt=0.01 до 5 знака,
+                          # динамика T=8 N=48 ускорилась в ~4.5 раза);
+                          # дрейф O(dt⁴) на гладком поле Био–Савара мал
+    RING_R = 1.0          # радиус колец (безразмерные единицы)
+    RING_DZ = 1.6         # начальный зазор колец по z (leapfrog)
 
-    # ── Lamb-Oseen: азимутальная скорость на радиусе r (циркуляция Γ, ядро rc)
+    # ── сегментный вклад Био–Савара: u ∝ dl×(x−xm)/(|x−xm|²+ε²)^{3/2}
+    # Анкер — середина сегмента: квадратура 2-го порядка (selftest: err(64)
+    # ≈ 2e-5 против точного интеграла; анкер на начале давал ~2e-3).
     @staticmethod
-    def v_azimuthal(r: float, Gamma: float, rc: float) -> float:
-        if r < 1e-12:
-            return 0.0
-        return Gamma / (2.0 * math.pi * r) * (1.0 - math.exp(-(r / rc) ** 2))
+    def seg_ind(x, a, b, eps):
+        xm = ((a[0] + b[0]) * 0.5, (a[1] + b[1]) * 0.5, (a[2] + b[2]) * 0.5)
+        dx = (x[0] - xm[0], x[1] - xm[1], x[2] - xm[2])
+        dl = (b[0] - a[0], b[1] - a[1], b[2] - a[2])
+        cx = dl[1] * dx[2] - dl[2] * dx[1]
+        cy = dl[2] * dx[0] - dl[0] * dx[2]
+        cz = dl[0] * dx[1] - dl[1] * dx[0]
+        r2 = dx[0] * dx[0] + dx[1] * dx[1] + dx[2] * dx[2]
+        den = (r2 + eps * eps) ** 1.5
+        return (cx / den, cy / den, cz / den)   # Γ/(4π) прикладывается снаружи
 
     @staticmethod
-    def sample_velocity(x, y, z, Gs, hs, Ws, L: float = 4.0):
-        """Скорость (ux, uy, uz): линейная по z интерполяция (Γ_i, W_i),
-        затем азимутальный Lamb-Oseen; единичный азимут (-y/r, x/r, 0)."""
-        n = len(hs)
-        if n == 0:
-            return 0.0, 0.0, 0.0
-        zc = max(0.0, min(float(z), L))
-        idx = max(1, min(n, bisect.bisect_left(hs, zc) + 1))
-        lo = max(1, idx - 1)
-        hi = max(1, min(n, idx))
-        if hi == lo:
-            Gloc, Wloc = Gs[lo - 1], Ws[lo - 1]
-        else:
-            t = (zc - hs[lo - 1]) / (hs[hi - 1] - hs[lo - 1] + 1e-30)
-            Gloc = (1.0 - t) * Gs[lo - 1] + t * Gs[hi - 1]
-            Wloc = (1.0 - t) * Ws[lo - 1] + t * Ws[hi - 1]
-        rc = max(Wloc, 0.05)
-        r = math.hypot(x, y)
-        if r < 1e-12:
-            return 0.0, 0.0, 0.0
-        vt = VFAVortex3D.v_azimuthal(r, Gloc, rc)
-        return -vt * y / r, vt * x / r, 0.0
+    def velocity_all(rings, eps, gammas):
+        """Скорость во всех узлах всех колец: сумма по всем сегментам
+        всех колец, O(M²) на узел. Возвращает структуру как rings."""
+        segs = []
+        for ri, nodes in enumerate(rings):
+            M = len(nodes)
+            for j in range(M):
+                segs.append((nodes[j], nodes[(j + 1) % M], gammas[ri]))
+        out = []
+        for nodes in rings:
+            us = []
+            for x in nodes:
+                ux = uy = uz = 0.0
+                for (a, b, g) in segs:
+                    c = VFAVortex3D.seg_ind(x, a, b, eps)
+                    k = g / (4.0 * math.pi)     # Γ СВОЕГО сегмента: раньше
+                    # k брался после цикла (γ последнего сегмента) — при
+                    # разных Γ по кольцам физика молча искажалась
+                    ux += c[0] * k; uy += c[1] * k; uz += c[2] * k
+                us.append((ux, uy, uz))
+            out.append(us)
+        return out
+
+    @staticmethod
+    def rk4_step(rings, eps, gammas, dt):
+        """Классический RK4 по узлам филаментов (dp/dt = u_ind(p))."""
+        sizes = [len(r) for r in rings]
+
+        def regroup(flat):
+            out, i = [], 0
+            for n in sizes:
+                out.append(flat[i:i + n]); i += n
+            return out
+
+        def f(state):
+            return [t for row in VFAVortex3D.velocity_all(state, eps, gammas)
+                    for t in row]
+
+        flat = [p for r in rings for p in r]
+        k1 = f(rings)
+        s2 = regroup([tuple(p[i] + 0.5 * dt * k1[n][i] for i in range(3))
+                      for n, p in enumerate(flat)])
+        k2 = f(s2)
+        s3 = regroup([tuple(p[i] + 0.5 * dt * k2[n][i] for i in range(3))
+                      for n, p in enumerate(flat)])
+        k3 = f(s3)
+        s4 = regroup([tuple(p[i] + dt * k3[n][i] for i in range(3))
+                      for n, p in enumerate(flat)])
+        k4 = f(s4)
+        new = []
+        n = 0
+        for nodes in rings:
+            nn = []
+            for p in nodes:
+                nn.append(tuple(p[i] + dt / 6.0 * (k1[n][i] + 2.0 * k2[n][i]
+                                                   + 2.0 * k3[n][i]
+                                                   + k4[n][i])
+                                for i in range(3)))
+                n += 1
+            new.append(nn)
+        return new
+
+    @staticmethod
+    def leapfrog_preset(N: int = 48):
+        """Сценарий: два коаксиальных кольца (Γ=1, R=1, z=0 и z=1.6), по
+        N узлов каждое. Возвращает (rings, gammas)."""
+        rings, gammas = [], []
+        for z0 in (0.0, VFAVortex3D.RING_DZ):
+            nodes = [(VFAVortex3D.RING_R * math.cos(2.0 * math.pi * i / N),
+                      VFAVortex3D.RING_R * math.sin(2.0 * math.pi * i / N),
+                      z0) for i in range(N)]
+            rings.append(nodes)
+            gammas.append(1.0)
+        return rings, gammas
+
+    @staticmethod
+    def length_total(rings) -> float:
+        """Суммарная длина филаментов — мера растяжения вихрей."""
+        L = 0.0
+        for nodes in rings:
+            M = len(nodes)
+            for j in range(M):
+                a, b = nodes[j], nodes[(j + 1) % M]
+                L += math.dist(a, b)
+        return L
+
+    @staticmethod
+    def energy_ind(rings, eps, gammas) -> float:
+        """Регуляризованная энергия взаимной индукции (гамильтониан-прокси):
+        Σ_{a<b} Γ_aΓ_b·(dl_a·dl_b)/(4π·|ma−mb|_ε), ma — середины сегментов.
+        Дрейф при RK4 — качество интегратора (selftest: < 2% на T=1)."""
+        segs = []
+        for ri, nodes in enumerate(rings):
+            M = len(nodes)
+            for j in range(M):
+                a, b = nodes[j], nodes[(j + 1) % M]
+                m = ((a[0] + b[0]) * 0.5, (a[1] + b[1]) * 0.5,
+                     (a[2] + b[2]) * 0.5)
+                dl = (b[0] - a[0], b[1] - a[1], b[2] - a[2])
+                segs.append((m, dl, gammas[ri]))
+        E = 0.0
+        n = len(segs)
+        for i in range(n):
+            mi, dli, gi = segs[i]
+            for j in range(i + 1, n):
+                mj, dlj, gj = segs[j]
+                d = math.dist(mi, mj)
+                dot = dli[0] * dlj[0] + dli[1] * dlj[1] + dli[2] * dlj[2]
+                E += gi * gj * dot / (4.0 * math.pi * math.sqrt(d * d + eps * eps))
+        return E
 
     @staticmethod
     def _iso(x, y, z, az, el):
@@ -2882,7 +3021,13 @@ class VFAVortex3D:
     @staticmethod
     def _fill_rect_fast(cv: "VFAPlot.Canvas", x0, y0, x1, y1, color):
         """Заполнение строк bytearray — заметно быстрее Canvas.rect для
-        крупных квадратов (один slice-присваив на строку)."""
+        крупных квадратов (один slice-присваив на строку). Нормализуем
+        инвертированные прямоугольники (x1 < x0 или y1 < y0): HUD-скобки
+        передают dx/dy = ±1, без свапа 3 из 4 молча не рисовались."""
+        if x0 > x1:
+            x0, x1 = x1, x0
+        if y0 > y1:
+            y0, y1 = y1, y0
         x0 = max(0, x0); y0 = max(0, y0)
         x1 = min(cv.w - 1, x1); y1 = min(cv.h - 1, y1)
         if x1 < x0 or y1 < y0:
@@ -2894,144 +3039,522 @@ class VFAVortex3D:
             i = (y * cv.w + x0) * 3
             cv.buf[i:i + 3 * w] = row
 
+    # ── «шёлк и блеск»: кэшированные фоны/виньетки + аддитивное
+    # свечение. Фон — вертикальный градиент и звёздная пыль; виньетка —
+    # мягкое затемнение к углам; свечение — bloom из двух проходов.
+    BG_TOP = (13, 15, 26)
+    BG_BOT = (7, 8, 14)
+    _bg_cache: dict = {}
+    _vign_cache: dict = {}
+
     @classmethod
-    def render_frame(cls, N: int, Gs, hs, Ws,
+    def _bg_bytes(cls, w: int, h: int) -> bytes:
+        """Фон кадра (кэш по размеру): вертикальный градиент BG_TOP→BG_BOT
+        + звёздная пыль (детерминированный посев — кадры воспроизводимы)."""
+        key = (w, h)
+        hit = cls._bg_cache.get(key)
+        if hit is not None:
+            return hit
+        import random
+        tr, tg, tb = cls.BG_TOP
+        br, bg_, bb = cls.BG_BOT
+        rows = bytearray(w * h * 3)
+        rng = random.Random(27072018)
+        stars = []
+        for _ in range(h // 5):
+            stars.append((rng.randrange(w), rng.randrange(h),
+                          rng.randint(12, 38), rng.random() < 0.12))
+        for y in range(h):
+            t = y / max(1, h - 1)
+            i = y * w * 3
+            rows[i:i + w * 3] = bytes((int(tr + (br - tr) * t),
+                                       int(tg + (bg_ - tg) * t),
+                                       int(tb + (bb - tb) * t))) * w
+        for (x, y, b, big) in stars:
+            pts_ = ((x, y),) if not (big and x + 1 < w and y + 1 < h) else \
+                   ((x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1))
+            for (sx_, sy_) in pts_:
+                j = (sy_ * w + sx_) * 3
+                nb = rows[j] + b
+                rows[j] = 255 if nb > 255 else nb
+                nb = rows[j + 1] + b
+                rows[j + 1] = 255 if nb > 255 else nb
+                nb = rows[j + 2] + b
+                rows[j + 2] = 255 if nb > 255 else nb
+        out = bytes(rows)
+        cls._bg_cache[key] = out
+        return out
+
+    @classmethod
+    def _vign_lut(cls, w: int, h: int) -> list:
+        """Виньетка (кэш): мягкое затемнение к углам (×0.72), центр нетронут."""
+        key = (w, h)
+        hit = cls._vign_cache.get(key)
+        if hit is not None:
+            return hit
+        hx, hy = (w - 1) / 2.0, (h - 1) / 2.0
+        lut = []
+        for y in range(h):
+            dy = (y - hy) / hy
+            for x in range(w):
+                dx = (x - hx) / hx
+                d2 = dx * dx + dy * dy        # 0 в центре, 1 в углах
+                lut.append(1.0 - 0.28 * (min(d2, 1.0) ** 1.4))
+        cls._vign_cache[key] = lut
+        return lut
+
+    @staticmethod
+    def _glow_rect(cv, x0, y0, x1, y1, color, wgt: float):
+        """Аддитивный прямоугольник: buf += color·w с клампом. Свечение
+        НАКАПЛИВАЕТСЯ (перекрывающиеся halo складываются) — настоящее bloom.
+        Сложение каналов через bytes.translate (C-уровень) — на bloom-проходах
+        в разы быстрее per-pixel цикла."""
+        x0 = max(0, x0); y0 = max(0, y0)
+        x1 = min(cv.w - 1, x1); y1 = min(cv.h - 1, y1)
+        if x1 < x0 or y1 < y0:
+            return
+        r = min(255, int(color[0] * wgt))
+        g = min(255, int(color[1] * wgt))
+        b = min(255, int(color[2] * wgt))
+        if r == 0 and g == 0 and b == 0:
+            return
+        lut_r = bytes(min(255, i + r) for i in range(256))
+        lut_g = bytes(min(255, i + g) for i in range(256))
+        lut_b = bytes(min(255, i + b) for i in range(256))
+        buf = cv.buf
+        cw = cv.w
+        w = x1 - x0 + 1
+        for y in range(y0, y1 + 1):
+            i = (y * cw + x0) * 3
+            seg = bytes(buf[i:i + 3 * w])
+            merged = bytearray(3 * w)
+            merged[0::3] = seg[0::3].translate(lut_r)
+            merged[1::3] = seg[1::3].translate(lut_g)
+            merged[2::3] = seg[2::3].translate(lut_b)
+            buf[i:i + 3 * w] = merged
+
+    @classmethod
+    def _bg_out_bytes(cls, w: int, h: int):
+        """Фон ФИНАЛЬНОГО кадра ровно такой, как его кладёт render_frame:
+        downsample ×2 из _bg_bytes(2w, 2h) и виньетка. Раньше frame_active
+        сравнивал кадр с _bg_bytes(w, h) — другим посевом звёзд и иным
+        масштабом градиента, поэтому даже пустой кадр давал ~38k «активных»
+        пикселей и проверка пустоты никогда не срабатывала."""
+        key = (w, h)
+        hit = cls._bg_cache.get(("out",) + key)
+        if hit is not None:
+            return hit
+        sb = cls._bg_bytes(2 * w, 2 * h)
+        vig = cls._vign_lut(w, h)
+        W = 2 * w
+        W3 = W * 3
+        out = bytearray(w * h * 3)
+        for yy in range(h):
+            row0 = yy * 2 * W
+            orow = yy * w
+            for xx in range(w):
+                p00 = (row0 + xx * 2) * 3
+                f = vig[orow + xx]
+                o = (orow + xx) * 3
+                out[o] = int(((sb[p00] + sb[p00 + 3] + sb[p00 + W3]
+                               + sb[p00 + W3 + 3]) >> 2) * f)
+                out[o + 1] = int(((sb[p00 + 1] + sb[p00 + 4] + sb[p00 + W3 + 1]
+                                   + sb[p00 + W3 + 4]) >> 2) * f)
+                out[o + 2] = int(((sb[p00 + 2] + sb[p00 + 5] + sb[p00 + W3 + 2]
+                                   + sb[p00 + W3 + 5]) >> 2) * f)
+        res = bytes(out)
+        cls._bg_cache[("out",) + key] = res
+        return res
+
+    @classmethod
+    def frame_active(cls, cv) -> int:
+        """Аудит: пиксели, ЗНАЧИМО отличающиеся от фона, который render_frame
+        реально кладёт под эту сцену (downsample bg + виньетка), порог 14 на
+        канал. frame_nonbg остался для однотонных канвасов selftest."""
+        bg = cls._bg_out_bytes(cv.w, cv.h)
+        buf = cv.buf
+        n = 0
+        for p in range(cv.w * cv.h):
+            i = p * 3
+            if (abs(buf[i] - bg[i]) > 14 or abs(buf[i + 1] - bg[i + 1]) > 14
+                    or abs(buf[i + 2] - bg[i + 2]) > 14):
+                n += 1
+        return n
+
+    @classmethod
+    def render_frame(cls, rings, us, eps,
                      width: int = 900, height: int = 640,
                      az: float = 0.55, el: float = 0.42,
-                     title: str = "3D vortex", sub: str = "",
-                     overlay: list[str] | None = None) -> "VFAPlot.Canvas":
-        """Один кадр: суперсэмплинг ×2, точки поля, текст, даунсэмпл ×2.
-        Depth = se·Y + ce·z растёт от камеры → farther = больше depth.
-        Рисуем FAR FIRST (painter's algorithm), ближние ярче (fade),
-        авто-фит по bbox проекции — вихрь целиком в кадре при любом el/az.
-        Сетки нет: её цвет (55,60,80) совпадал с тусклыми ближними точками."""
+                     title: str = "3D vortex filaments", sub: str = "",
+                     overlay: list[str] | None = None,
+                     ghosts: tuple = ()) -> "VFAPlot.Canvas":
+        """Один кадр «блеск и шёлк»: фон-градиент со звёздной пылью,
+        ghost-трейлы предыдущих состояний (silk-хвост движения), аддитивное
+        bloom-свечение вдоль филаментов, white-hot ядро при |u|→vmax,
+        атмосферный depth-тинт, даунсэмпл ×2 со виньеткой, HUD (линейка,
+        угловые скобки, легенда |u|)."""
         W, H = width * 2, height * 2     # supersample ×2
         cv = VFAPlot.Canvas(W, H, cls.BG_DARK)
-        # защита памяти: держим выборку ≤ 96³ точек, децимация вдвое по оси
-        N_eff = N
-        while N_eff ** 3 > 96 ** 3 and N_eff > 24:
-            N_eff //= 2
-        x_r, L = 1.5, 4.0
-        inv = 1.0 / max(1, N_eff - 1)
-        vmax = 0.0
-        raw = []                        # список (depth, sx, sy, m)
+        cv.buf[:] = cls._bg_bytes(W, H)
         ca, sa = math.cos(az), math.sin(az)
         ce, se = math.cos(el), math.sin(el)
-        two_xr = 2 * x_r
-        # pass 1: выборка + проекция
-        for i in range(N_eff):
-            x = -x_r + two_xr * i * inv
-            for j in range(N_eff):
-                y = -x_r + two_xr * j * inv
-                for k in range(N_eff):
-                    z = L * k * inv
-                    ux, uy, _uz = cls.sample_velocity(x, y, z, Gs, hs, Ws, L)
-                    m = math.sqrt(ux * ux + uy * uy)
-                    if m > vmax:
-                        vmax = m
-                    X = ca * x - sa * y
-                    Y = sa * x + ca * y
-                    raw.append((se * Y + ce * z, X, ce * Y - se * z, m))
-        # pass 2: отсечение слабых точек (~90% работы) ДО сортировки
-        pts = [p for p in raw if p[3] >= vmax * 0.02] or raw
-        # pass 3: авто-фит по bbox проекции (раньше фикс. scale резал верх)
+
+        def sample_points(rings_, us_):
+            """Точки (depth, sx, sy, m) вдоль сегментов; m = среднее |u|."""
+            segs_ = []
+            vmax_ = 0.0
+            for ri, nodes_ in enumerate(rings_):
+                M = len(nodes_)
+                for j in range(M):
+                    a, b = nodes_[j], nodes_[(j + 1) % M]
+                    ua, ub = us_[ri][j], us_[ri][(j + 1) % M]
+                    ma = math.sqrt(ua[0] * ua[0] + ua[1] * ua[1] + ua[2] * ua[2])
+                    mb = math.sqrt(ub[0] * ub[0] + ub[1] * ub[1] + ub[2] * ub[2])
+                    m = 0.5 * (ma + mb)
+                    if m > vmax_:
+                        vmax_ = m
+                    segs_.append((a, b, m))
+            s_ = max(2, min(600, round(24000 / max(1, len(segs_)))))
+            raw_ = []
+            inv_s = 1.0 / s_
+            for (a, b, m) in segs_:
+                for k in range(s_):
+                    t = (k + 0.5) * inv_s
+                    ppx = a[0] + t * (b[0] - a[0])
+                    ppy = a[1] + t * (b[1] - a[1])
+                    ppz = a[2] + t * (b[2] - a[2])
+                    X = ca * ppx - sa * ppy
+                    Y = sa * ppx + ca * ppy
+                    raw_.append((se * Y + ce * ppz, X, ce * Y - se * ppz, m))
+            return raw_, vmax_, s_
+
+        pts, vmax, s = sample_points(rings, us)
+        # отсечение слабых точек ДО сортировки
+        pts = [p for p in pts if p[3] >= vmax * 0.02] or pts
+        # авто-фит по bbox проекции ТЕКУЩИХ колец (ghost-хвост может слегка
+        # выходить — это художественно: движение уходит за кадр)
         sx_min = min(p[1] for p in pts); sx_max = max(p[1] for p in pts)
         sy_min = min(p[2] for p in pts); sy_max = max(p[2] for p in pts)
         sz_min = min(p[0] for p in pts); sz_max = max(p[0] for p in pts)
         span_x = max(sx_max - sx_min, 1e-6)
         span_y = max(sy_max - sy_min, 1e-6)
         span_z = max(sz_max - sz_min, 1e-9)
-        margin = 60
-        scale = 0.9 * min((W - 2 * margin) / span_x, (H - 2 * margin) / span_y)
+        margin = 70
+        scale = 0.88 * min((W - 2 * margin) / span_x, (H - 2 * margin) / span_y)
         cx = W / 2 - (sx_min + sx_max) / 2 * scale
         cy = H / 2 - (sy_min + sy_max) / 2 * scale
-        # pass 4: FAR FIRST (было наоборот — дальние перекрывали ближние)
-        pts.sort(key=lambda p: -p[0])
         inv_vmax = 1.0 / max(vmax, 1e-12)
+
+        # ── ghost-трейлы (silk): предыдущие состояния, тусклые и тонкие
+        for (gr, gu, galpha) in ghosts:
+            gpts, gvmax, _ = sample_points(gr, gu)
+            gpts = [p for p in gpts if p[3] >= gvmax * 0.02] or gpts
+            gpts.sort(key=lambda p: -p[0])
+            for sz, sx_, sy_, m in gpts:
+                pxi = int(cx + sx_ * scale)
+                pyi = int(cy + sy_ * scale)
+                t_depth = (sz - sz_min) / span_z
+                base = cls._colormap(m, gvmax)
+                a_ = galpha * (1.0 - 0.3 * t_depth)
+                col = (int(base[0] * a_), int(base[1] * a_), int(base[2] * a_))
+                cls._fill_rect_fast(cv, pxi - 2, pyi - 2, pxi + 2, pyi + 2, col)
+
+        # ── halo-проход: двухслойное аддитивное свечение (bloom):
+        # внутренний ореол у каждой 5-й точки + широкий внешний купол
+        stride = max(1, s // 5)
+        for idx in range(0, len(pts), stride):
+            sz, sx_, sy_, m = pts[idx]
+            pxi = int(cx + sx_ * scale)
+            pyi = int(cy + sy_ * scale)
+            base = cls._colormap(m, vmax)
+            cls._glow_rect(cv, pxi - 10, pyi - 10, pxi + 10, pyi + 10,
+                           base, 0.28)
+        stride2 = max(1, s // 2)
+        for idx in range(0, len(pts), stride2):
+            sz, sx_, sy_, m = pts[idx]
+            pxi = int(cx + sx_ * scale)
+            pyi = int(cy + sy_ * scale)
+            base = cls._colormap(m, vmax)
+            cls._glow_rect(cv, pxi - 17, pyi - 17, pxi + 17, pyi + 17,
+                           base, 0.10)
+
+        # ── core-проход: FAR FIRST (painter's), white-hot + depth-тинт
+        pts.sort(key=lambda p: -p[0])
         for sz, sx_, sy_, m in pts:
             pxi = int(cx + sx_ * scale)
             pyi = int(cy + sy_ * scale)
             rr = 2 + int(3 * m * inv_vmax)
             base = cls._colormap(m, vmax)
-            # near = BRIGHT (t_depth 0 → 1.0), far тусклее (→ 0.55)
+            v_ = m * inv_vmax
+            if v_ > 0.82:                # white-hot: ядро скорости белеет
+                f = (v_ - 0.82) / 0.18 * 0.55
+                base = (base[0] + (255 - base[0]) * f,
+                        base[1] + (250 - base[1]) * f,
+                        base[2] + (238 - base[2]) * f)
             t_depth = (sz - sz_min) / span_z
-            fade = 1.0 - 0.45 * t_depth
+            if t_depth > 0.0:            # атмосферный тинт вдаль (синева)
+                f = 0.30 * t_depth
+                base = (base[0] + (70 - base[0]) * f,
+                        base[1] + (90 - base[1]) * f,
+                        base[2] + (140 - base[2]) * f)
+            fade = 1.0 - 0.42 * t_depth
             col = (int(base[0] * fade), int(base[1] * fade), int(base[2] * fade))
             cls._fill_rect_fast(cv, pxi - rr, pyi - rr, pxi + rr, pyi + rr, col)
-        # текст (ASCII: FONT3X5 не знает Γ/·/—)
-        vfa_draw_text(cv, title, 40, 24, (220, 225, 240), scale=4)
+
+        # ── даунсэмпл ×2 (box) + виньетка — одним сплавленным проходом
+        out = VFAPlot.Canvas(width, height, cls.BG_DARK)
+        vig = cls._vign_lut(width, height)
+        sb, ob = cv.buf, out.buf
+        W3 = W * 3
+        for yy in range(height):
+            row0 = yy * 2 * W
+            orow = yy * width
+            for xx in range(width):
+                p00 = (row0 + xx * 2) * 3
+                p01 = p00 + 3
+                p10 = p00 + W3
+                p11 = p10 + 3
+                f = vig[orow + xx]
+                o = (orow + xx) * 3
+                ob[o] = int(((sb[p00] + sb[p01] + sb[p10] + sb[p11]) >> 2) * f)
+                ob[o + 1] = int(((sb[p00 + 1] + sb[p01 + 1] + sb[p10 + 1]
+                                  + sb[p11 + 1]) >> 2) * f)
+                ob[o + 2] = int(((sb[p00 + 2] + sb[p01 + 2] + sb[p10 + 2]
+                                  + sb[p11 + 2]) >> 2) * f)
+
+        # ── HUD на финальном разрешении: хрустящий текст вне виньетки
+        F = cls._fill_rect_fast
+        ink_hi = (226, 231, 245)
+        ink_mid = (150, 160, 190)
+        ink_lo = (106, 116, 150)
+        F(out, 40, 56, width - 40, 56, (58, 66, 98))          # линейка
+        for (bx, by, dx, dy) in ((16, 16, 1, 1), (width - 16, 16, -1, 1),
+                                 (16, height - 16, 1, -1),
+                                 (width - 16, height - 16, -1, -1)):
+            F(out, bx, by, bx + 18 * dx, by, (70, 80, 112))    # скобки ¬¬
+            F(out, bx, by, bx, by + 18 * dy, (70, 80, 112))
+        vfa_draw_text(out, title, 40, 22, ink_hi, scale=4)
         if sub:
-            vfa_draw_text(cv, sub, 40, 52, (150, 160, 190), scale=3)
-        # overlay: числовые метрики стабилизации на каждом кадре (правый низ);
-        # шаг 20 при глифе 15 — строки не слипаются
+            vfa_draw_text(out, sub, 40, 64, ink_mid, scale=3)
         if overlay:
+            # общий right-align по САМОЙ длинной строке: иначе при пересечении
+            # L/E целых степеней десятки длина строки меняется и текст
+            # «плывёт» по кадрам на 12 px за символ
+            w_max = max(len(s) for s in overlay)
+            lx = width - 12 * w_max - 34
             for idx, line in enumerate(overlay):
-                vfa_draw_text(cv, line, W - 760, H - 62 - idx * 20,
-                              (200, 215, 240), scale=3)
-        vfa_draw_text(cv, f"|u|max = {vmax:.3g}", 40, H - 40, (220, 225, 240), scale=3)
-        # даунсэмпл ×2 — общий бокс-фильтр VFAPlot (§9)
-        return vfa_downsample(cv, 2)
+                vfa_draw_text(out, line, lx, height - 92 + idx * 18,
+                              (206, 219, 243), scale=3)
+        # легенда |u|: полоса-градиент (реальная _colormap) + подписи
+        lx0, ly0, lw = 40, height - 26, 150
+        for i in range(30):
+            F(out, lx0 + i * 5, ly0, lx0 + i * 5 + 4, ly0 + 3,
+              cls._colormap((i + 0.5) / 30 * vmax, vmax))
+        vfa_draw_text(out, "|u| = 0", lx0, ly0 - 15, ink_lo, scale=2)
+        vfa_draw_text(out, "vmax", lx0 + lw + 8, ly0 - 15, ink_lo, scale=2)
+        vfa_draw_text(out, f"|u|max = {vmax:.3g}", lx0, ly0 - 36,
+                      ink_hi, scale=3)
+        stamp = "RK4 BIOT-SAVART"
+        vfa_draw_text(out, stamp, width - 12 * len(stamp) - 30, height - 22,
+                      ink_lo, scale=2)
+        return out
+
+    @classmethod
+    def velocity_at(cls, x, rings, eps, gammas):
+        """Скорость в произвольной точке 3D (для валидации на оси кольца)."""
+        ux = uy = uz = 0.0
+        for ri, nodes in enumerate(rings):
+            M = len(nodes)
+            k = gammas[ri] / (4.0 * math.pi)
+            for j in range(M):
+                c = cls.seg_ind(x, nodes[j], nodes[(j + 1) % M], eps)
+                ux += c[0] * k; uy += c[1] * k; uz += c[2] * k
+        return (ux, uy, uz)
 
     @staticmethod
-    def analyze_evolution(hs, Ws, Gs0, T: float, nframes: int,
-                          h0: float = 1.0, W0: float = 1.0) -> dict:
-        """Полная временная серия метрик затухания + milestones + verdict.
-        Γ_i(t) = Γ0_i·exp(−b_i·t); Γ_total, v_peak (пик на кромке ядра),
-        %Γ(t), пороги t50/t10/t01, Γ-взвешенный mean_b."""
-        n = len(hs)
-        bs = [VFALayer3D.b_layer(hs[i], Ws[i], h0, W0) for i in range(n)]
-        halflife = [math.log(2.0) / b if b > 1e-12 else float("inf") for b in bs]
-        G0_tot = sum(Gs0)
-        frames = []
-        for fi in range(nframes):
-            frac = 0.0 if nframes == 1 else fi / (nframes - 1)
-            t = frac * T
-            Gs = [Gs0[i] * math.exp(-bs[i] * t) for i in range(n)]
-            G_tot = sum(Gs)
-            v_peak = max((Gs[i] / (2.0 * math.pi * max(Ws[i], 0.05))
-                          * (1.0 - math.exp(-1.0))) for i in range(n)) if n else 0.0
-            frames.append({"i": fi + 1, "frac": frac, "t": t,
-                           "G_total": G_tot, "v_peak": v_peak,
-                           "G_frac": (G_tot / G0_tot) if G0_tot > 1e-12 else 0.0})
+    def _seg_bs_truth(x, a, b, n: int = 800):
+        """«Истина» для валидации ядра: точный BS-интеграл по отрезку,
+        u = (b−a)×Q, Q = ∫₀¹ (x−x'(t))/|x−x'(t)|³ dt (Simpson)."""
+        dt = 1.0 / n
+        qx = qy = qz = 0.0
+        for i in range(n + 1):
+            f = i * dt
+            xp = (a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f,
+                  a[2] + (b[2] - a[2]) * f)
+            dx = (x[0] - xp[0], x[1] - xp[1], x[2] - xp[2])
+            r3 = (dx[0] * dx[0] + dx[1] * dx[1] + dx[2] * dx[2]) ** 1.5
+            w = 1.0 if (i == 0 or i == n) else (4.0 if i % 2 else 2.0)
+            qx += w * dx[0] / r3 * dt / 3.0
+            qy += w * dx[1] / r3 * dt / 3.0
+            qz += w * dx[2] / r3 * dt / 3.0
+        return ((b[1] - a[1]) * qz - (b[2] - a[2]) * qy,
+                (b[2] - a[2]) * qx - (b[0] - a[0]) * qz,
+                (b[0] - a[0]) * qy - (b[1] - a[1]) * qx)
 
-        def find_cross(target_frac: float):
-            target = target_frac * G0_tot
-            for f in frames:
-                if f["G_total"] <= target:
+    @classmethod
+    def _ring_speed_dimless(cls, M: int, R: float, q: float) -> float:
+        """Безразмерная самоскорость кольца U·4πR/Γ при ε = q·2πR/M
+        (средняя z-компонента скорости узлов на старте)."""
+        eps = q * 2.0 * math.pi * R / M
+        nodes = [(R * math.cos(2.0 * math.pi * i / M),
+                  R * math.sin(2.0 * math.pi * i / M), 0.0) for i in range(M)]
+        us = cls.velocity_all([nodes], eps, [1.0])[0]
+        return sum(u[2] for u in us) / M * 4.0 * math.pi * R
+
+    @classmethod
+    def validate_kernel(cls) -> dict:
+        """Валидация ядра Био–Савара против точной аналитики (selftest §27b
+        и отчёт): (1) сходимость блоб-суммы к точному отрезку при измельчении
+        сегментов, (2) тонкое кольцо на оси vs ΓR²/(2(R²+z²)^{3/2}),
+        (3) масштаб-инвариантность U·4πR/Γ, (4) лог-закон отсечки
+        d(U·4πR/Γ)/d ln q = −1 (режим q = ε/Δl ≥ 2)."""
+        # (1) блоб → точный интеграл: err(64) и отношение err(64)/err(8)
+        a, b = (0.0, -0.7, 0.3), (1.3, 0.4, 0.9)
+        x = (0.5, 0.9, -0.4)
+        tru = cls._seg_bs_truth(x, a, b)
+        nu_t = math.sqrt(sum(v * v for v in tru))
+        errs = []
+        for m in (8, 64):
+            acc = [0.0, 0.0, 0.0]
+            for i in range(m):
+                t0, t1 = i / m, (i + 1) / m
+                a_i = (a[0] + (b[0] - a[0]) * t0, a[1] + (b[1] - a[1]) * t0,
+                       a[2] + (b[2] - a[2]) * t0)
+                b_i = (a[0] + (b[0] - a[0]) * t1, a[1] + (b[1] - a[1]) * t1,
+                       a[2] + (b[2] - a[2]) * t1)
+                c = cls.seg_ind(x, a_i, b_i, 1e-12)
+                for k in range(3):
+                    acc[k] += c[k]
+            errs.append(math.sqrt(sum((acc[k] - tru[k]) ** 2
+                                      for k in range(3))) / nu_t)
+        conv_ratio = errs[1] / max(errs[0], 1e-30)
+        # (2) кольцо на оси: точная формула тонкого кольца
+        M = 64
+        nodes = [(math.cos(2.0 * math.pi * i / M),
+                  math.sin(2.0 * math.pi * i / M), 0.0) for i in range(M)]
+        axis_err = 0.0
+        for zz in (-1.2, 0.7):
+            uz = cls.velocity_at((0.0, 0.0, zz), [nodes], 1e-6, [1.0])[2]
+            exact = 1.0 / (2.0 * (1.0 + zz * zz) ** 1.5)
+            axis_err = max(axis_err, abs(uz - exact) / abs(exact))
+        # (3) масштаб-инвариантность
+        ys = [cls._ring_speed_dimless(24, R, 0.1) for R in (0.7, 1.3)]
+        spread = (max(ys) - min(ys)) / (abs(sum(ys) / len(ys)) + 1e-30)
+        # (4) лог-закон отсечки: y(q=2)−y(q=4) ≈ ln 2
+        y2 = cls._ring_speed_dimless(48, 1.0, 2.0)
+        y4 = cls._ring_speed_dimless(48, 1.0, 4.0)
+        slope_dev = abs((y2 - y4) / math.log(2.0) - 1.0)
+        return {"conv_err8": errs[0], "conv_err64": errs[1],
+                "conv_ratio": conv_ratio,
+                "ok_conv": errs[1] < 3e-3 and conv_ratio < 0.35,
+                "axis_err": axis_err, "ok_axis": axis_err < 1e-3,
+                "scale_spread": spread, "ok_scale": spread < 1e-10,
+                "slope_dev": slope_dev, "ok_slope": slope_dev < 0.10,
+                "all_ok": (errs[1] < 3e-3 and conv_ratio < 0.35
+                           and axis_err < 1e-3 and spread < 1e-10
+                           and slope_dev < 0.10)}
+
+    @classmethod
+    def simulate(cls, T: float, nframes: int, N: int,
+                 nu: float = NU, eps0: float = EPS0, dt: float = DT) -> dict:
+        """Полный прогон leapfrog: RK4 по узлам, core spreading ε²=ε₀²+4νt
+        (среднее по шагу — 2-й порядок расщепления), снимки кадров и честные
+        серии диагностик: длина филаментов, E_ind, v_peak, z-центроиды."""
+        if N < 24:
+            raise ValueError(f"N must be >= 24 (got {N})")
+        N = min(N, 64)                  # O(N²)·RK4·steps — guard скорости
+        nframes = max(2, min(240, nframes))
+        # шаг ≥ nframes-1: иначе при коротком T несколько fi попадают в один
+        # и тот же шаг и dict-комprehension теряет кадры (T=0.1, 24 кадров →
+        # было 11). first-write-wins — страховка от коллизий round().
+        steps = max(nframes - 1, min(900, math.ceil(T / dt)))
+        h = T / steps
+        rings, gammas = cls.leapfrog_preset(N)
+        eps0 = float(eps0)
+        frame_idx = {}
+        for fi in range(nframes):
+            s_i = round(fi * steps / (nframes - 1))
+            if s_i not in frame_idx:
+                frame_idx[s_i] = fi
+        frames_out = []
+        snapshots = []
+        L0 = cls.length_total(rings)
+        E0 = cls.energy_ind(rings, eps0, gammas)
+        for s_i in range(steps + 1):
+            t = s_i * h
+            eps_t = math.sqrt(eps0 * eps0 + 4.0 * nu * t)
+            if s_i in frame_idx:
+                fi = frame_idx[s_i]
+                us = cls.velocity_all(rings, eps_t, gammas)
+                v_peak = max(math.sqrt(u[0] * u[0] + u[1] * u[1]
+                                       + u[2] * u[2])
+                             for row in us for u in row)
+                L = cls.length_total(rings)
+                E = cls.energy_ind(rings, eps_t, gammas)
+                zc = [sum(p[2] for p in r) / len(r) for r in rings]
+                Lr = [cls.length_total([r]) for r in rings]
+                frames_out.append({"i": fi + 1,
+                                   "frac": fi / (nframes - 1), "t": t,
+                                   "eps": eps_t, "L_total": L,
+                                   "L_rings": Lr, "E_ind": E,
+                                   "v_peak": v_peak, "z_centroids": zc})
+                snapshots.append({"rings": rings, "us": us, "eps": eps_t,
+                                  "frac": fi / (nframes - 1)})
+            if s_i == steps:
+                break
+            if not all(math.isfinite(c) for r in rings for p in r for c in p):
+                raise RuntimeError("vortex: RK4 разошёлся (NaN/inf) — "
+                                   "уменьшите --vortex-T или N")
+            eps_mid = math.sqrt(eps0 * eps0 + 4.0 * nu * (t + 0.5 * h))
+            rings = cls.rk4_step(rings, eps_mid, gammas, h)
+        E_end = frames_out[-1]["E_ind"]
+        L_end = frames_out[-1]["L_total"]
+        # изменение конфигурационной энергии при фиксированном ядре ε₀ —
+        # отражает эволюцию ФОРМЫ колец (не ошибку интегратора: траектория
+        # dt-сходится, selftest 13g); истинное сохранение — selftest 13c (ν=0)
+        E_fix0 = cls.energy_ind(snapshots[0]["rings"], eps0, gammas)
+        E_fix1 = cls.energy_ind(snapshots[-1]["rings"], eps0, gammas)
+        E_variation = abs(E_fix1 - E_fix0) / max(abs(E_fix0), 1e-30)
+
+        def first(pred):
+            for f in frames_out:
+                if pred(f):
                     return f["t"]
             return None
 
-        milestones = {"t50": find_cross(0.50), "t10": find_cross(0.10),
-                      "t01": find_cross(0.01)}
-        w_sum = G0_tot
-        mean_b = (sum(Gs0[i] * bs[i] for i in range(n)) / w_sum
-                  if w_sum > 1e-12 else 0.0)
-        final_frac = frames[-1]["G_frac"] if frames else 1.0
-        verdict = ("STABILIZED" if final_frac < 0.01 else
-                   "DAMPED" if final_frac < 0.10 else
-                   "DECAYING" if final_frac < 0.50 else "PERSISTENT")
-        return {"n": n, "T": T, "nframes": nframes,
-                "layers": [{"i": i + 1, "h": hs[i], "W": Ws[i], "b": bs[i],
-                            "halflife": halflife[i], "G0": Gs0[i],
-                            "G_end": Gs0[i] * math.exp(-bs[i] * T)}
-                           for i in range(n)],
-                "frames": frames, "milestones": milestones,
-                "mean_b": mean_b, "final_frac": final_frac, "verdict": verdict}
+        t_stretch = first(lambda f: abs(f["L_total"] / L0 - 1.0) > 0.05)
+        t_pass = first(lambda f: f["z_centroids"][0] >= f["z_centroids"][1])
+        t_halfE = first(lambda f: f["E_ind"] < 0.5 * E0)
+        if E_end < 0.5 * E0:
+            verdict = "VISCOUS DECAY"
+        elif L_end > 1.05 * L0:
+            verdict = "STRETCHING"
+        elif t_pass is not None:
+            verdict = "LEAPFROG"
+        else:
+            verdict = "ACTIVE DYNAMICS"
+        analysis = {"model": "vortex-filament RK4 (Biot-Savart blob core)",
+                    "N": N, "T": T, "nframes": nframes, "nu": nu,
+                    "eps0": eps0, "dt": h, "steps": steps,
+                    "Re_Gamma": (gammas[0] / nu) if nu > 0 else None,
+                    "rings": [{"i": 1, "Gamma": gammas[0], "R": cls.RING_R,
+                               "z0": 0.0, "M": N},
+                              {"i": 2, "Gamma": gammas[1], "R": cls.RING_R,
+                               "z0": cls.RING_DZ, "M": N}],
+                    "frames": frames_out,
+                    "milestones": {"t_stretch": t_stretch, "t_pass": t_pass,
+                                   "t_halfE": t_halfE},
+                    "E_variation": E_variation, "L0": L0, "E0": E0,
+                    "verdict": verdict}
+        return {"analysis": analysis, "snapshots": snapshots}
 
-    @staticmethod
-    def vortex_preset(L: float = 4.0, nlayers: int = 20, G0: float = 2.0):
-        """Пресет профиля: Γ_i(z) = G0·(1 − 0.5·z/L)·(W_i²/0.25) — ядро
-        сильнее у поверхности. Возвращает (hs, Ws, Γs0)."""
-        zs, hs, Ws = VFALayer3D.default_profile(L=L, N=nlayers, W0=0.5)
-        Gs0 = [G0 * (1.0 - 0.5 * z / L) * (W * W / 0.25) for (z, W) in zip(zs, Ws)]
-        return hs, Ws, Gs0
-
-    @classmethod
     @staticmethod
     def frame_nonbg(cv: "VFAPlot.Canvas") -> int:
-        """Аудит (v1.3.1): число пикселей, отличных от фона BG_DARK.
+        """Аудит: число пикселей, отличных от фона BG_DARK.
         ~0 = пустой кадр — повод упасть с внятной ошибкой, а не молча
-        сохранить GIF, который viewer рисует одной строкой текста."""
+        сохранить GIF, который viewer рисует одной строкой текста.
+        (Стек @classmethod @staticmethod убран: на Python ≤3.9 он давал
+        TypeError, на 3.10+ работал случайно — хрупко без пользы.)"""
         b = cv.buf
         diff = 0
         for r, g, bl in zip(b[0::3], b[1::3], b[2::3]):
@@ -3041,51 +3564,66 @@ class VFAVortex3D:
 
     @classmethod
     def render_vortex_animation(cls, path, N: int = 48, nframes: int = 24,
-                                T: float = 40.0, h0: float = 1.0, W0: float = 1.0,
+                                T: float = 8.0, nu: float = NU,
+                                eps0: float = EPS0,
                                 width: int = 900, height: int = 640,
                                 callback=None) -> dict:
-        """Γ_i(t) = Γ_i(0)·exp(−b_i·t), t = frac·T — точное послойное
-        затухание. Дефолт T=40: при b≈0.03–0.06 даёт видимое затухание
-        до ~13% (при T=4 оставалось 87% — «вихрь не затухает»).
-        nframes клампится [2, 240] — TOML/env могли задать 0/1."""
-        if N < 24:
-            raise ValueError(f"N must be ≥ 24 (got {N})")
-        N = min(N, 256)                 # защита памяти
+        """Филаментная динамика (RK4 + core spreading) → снимки → кадры →
+        GIF. N ∈ [24, 64] (узлов на кольцо; O(N²)·RK4·steps — guard
+        скорости), nframes ∈ [2, 240]. Валидация ядра выполняется на каждом
+        прогоне и попадает в отчёт (analysis['validation']).
+        Камера — бесшовный цикл (азимут 2π·frac — последний кадр
+        совпадает с первым по ракурсу, GIF зацикливается без скачка),
+        дыхание элевации, ghost-трейлы двух предыдущих состояний."""
+        N = min(max(N, 24), 64)
         nframes = max(2, min(240, nframes))
-        hs, Ws, Gs0 = cls.vortex_preset(nlayers=20)
-        analysis = cls.analyze_evolution(hs, Ws, Gs0, T, nframes,
-                                         h0=h0, W0=W0)
-        frames = []
-        min_nonbg = None
         t0 = time.monotonic()
-        for fi, fm in enumerate(analysis["frames"], 1):
-            Gs = [Gs0[i] * math.exp(-analysis["layers"][i]["b"] * fm["t"])
-                  for i in range(len(hs))]
+        sim = cls.simulate(T, nframes, N, nu=nu, eps0=eps0)
+        analysis = sim["analysis"]
+        analysis["validation"] = cls.validate_kernel()
+        frames = []
+        min_active = None
+        snaps = sim["snapshots"]
+        for fi, snap in enumerate(snaps):
+            f = analysis["frames"][fi]
+            # fixed-width формат: одинаковая длина строк во всех кадрах,
+            # right-align в render_frame стабилен
             overlay = [
-                f"t={fm['t']:.2f}  G={fm['G_total']:.2f}  "
-                f"({100 * fm['G_frac']:.1f}%)",
-                f"vmax={fm['v_peak']:.3f}  {analysis['verdict']}",
+                f"t={f['t']:>5.2f}  eps={f['eps']:>5.3f}  nu={nu:.3f}",
+                f"L={f['L_total']:>7.3f}  E={f['E_ind']:>7.3f}",
+                f"vpk={f['v_peak']:>5.3f}  {analysis['verdict']:<16}",
             ]
+            w_max = max(len(s) for s in overlay)
+            overlay = [s.ljust(w_max) for s in overlay]
+            ghosts = ()
+            if fi >= 1:
+                g1 = snaps[fi - 1]
+                ghosts = ((g1["rings"], g1["us"], 0.25),)
+            if fi >= 2:
+                g2 = snaps[fi - 2]
+                ghosts = ghosts + ((g2["rings"], g2["us"], 0.11),)
             cv = cls.render_frame(
-                N, Gs, hs, Ws,
+                snap["rings"], snap["us"], snap["eps"],
                 width=width, height=height,
-                az=0.55 + 0.15 * math.sin(fm["frac"] * math.pi), el=0.42,
-                title="3D VORTEX - LAYERED B-CORRECTION",
-                sub=f"t/T = {fm['frac']:.2f}  N = {N}",
-                overlay=overlay)
-            nonbg = cls.frame_nonbg(cv)
-            if nonbg * 200 < cv.w * cv.h:   # < 0.5% не-фона — кадр пуст
+                az=0.55 + 2.0 * math.pi * f["frac"],
+                el=0.42 + 0.05 * math.sin(2.0 * math.pi * f["frac"]),
+                title=cls.TITLE,
+                sub=f"leapfrog  M = {N}/ring  t/T = {f['frac']:.2f}",
+                overlay=overlay, ghosts=ghosts)
+            active = cls.frame_active(cv)
+            if active * 200 < cv.w * cv.h:  # < 0.5% активных — кадр пуст
                 raise RuntimeError(
-                    f"vortex: кадр {fi}/{nframes} пуст "
-                    f"(non-bg {nonbg}/{cv.w * cv.h}) — render_frame/_lzw?")
-            min_nonbg = nonbg if min_nonbg is None else min(min_nonbg, nonbg)
+                    f"vortex: кадр {fi + 1}/{nframes} пуст "
+                    f"(active {active}/{cv.w * cv.h}) — render_frame/_lzw?")
+            min_active = (active if min_active is None
+                          else min(min_active, active))
             frames.append(cv)
             if callback is not None:
-                callback(fi, nframes)
+                callback(fi + 1, nframes)
         VFAPlot.save_gif(Path(path), frames, delay_cs=6)
         return {"path": str(path), "frames": nframes,
                 "sec": round(time.monotonic() - t0, 2),
-                "min_nonbg": min_nonbg,
+                "min_nonbg": min_active,
                 "analysis": analysis}
 
 
@@ -4546,50 +5084,89 @@ def _vfa_json_safe(o):
     return o
 
 
+def _vfa_spark(vals) -> str:
+    """Спарклайн ▁▂▃▄▅▆▇█ по серии значений (нормировка на min/max серии);
+    для отчёта и сводки — динамика видна одним взглядом."""
+    blocks = "▁▂▃▄▅▆▇█"
+    lo, hi = min(vals), max(vals)
+    rng = (hi - lo) or 1.0
+    return "".join(blocks[min(7, int((v - lo) / rng * 7.999))] for v in vals)
+
+
 def vfa_vortex_write_report(analysis: dict, gif_path) -> tuple[Path, Path]:
-    """§27b: companion-отчёт (MD + JSON) рядом с GIF: per-layer таблица,
-    milestones, временная серия, вердикт."""
+    """§27b: companion-отчёт (MD + JSON) рядом с GIF: модель, валидация
+    ядра Био–Савара, кольца, временная серия, milestones, вердикт."""
     p = Path(gif_path)
     md = p.with_suffix(".md")
     js = p.with_suffix(".json")
     ms = analysis["milestones"]
+    va = analysis["validation"]
     lines = [
-        "# 3D Vortex — Stabilization Report",
+        "# 3D Vortex — Filament Dynamics Report",
         "",
-        f"- layers: {analysis['n']}, frames: {analysis['nframes']}, "
+        f"- model: {analysis['model']}",
+        f"- rings: {len(analysis['rings'])} (leapfrog), "
+        f"nodes/ring M: {analysis['N']}, frames: {analysis['nframes']}, "
         f"T: {analysis['T']}",
-        f"- mean_b (Γ-weighted): {analysis['mean_b']:.6f}",
-        f"- final Γ/Γ₀: {100 * analysis['final_frac']:.2f}%",
+        f"- nu = {analysis['nu']:g}, eps0 = {analysis['eps0']:g}, "
+        f"dt = {analysis['dt']:.4f}, steps = {analysis['steps']}, "
+        f"Re_Gamma = {analysis['Re_Gamma']:.0f}",
+        f"- E_ind(eps0-kernel) variation: "
+        f"{100 * analysis['E_variation']:.3f}%  "
+        f"(L0 = {analysis['L0']:.3f}, E0 = {analysis['E0']:.3f})",
         f"- **verdict: {analysis['verdict']}**",
+        f"- v_peak: `{_vfa_spark([f['v_peak'] for f in analysis['frames']])}` "
+        f"{analysis['frames'][0]['v_peak']:.3f} → "
+        f"{analysis['frames'][-1]['v_peak']:.3f}",
+        f"- E_ind: `{_vfa_spark([f['E_ind'] for f in analysis['frames']])}` "
+        f"{analysis['frames'][0]['E_ind']:.3f} → "
+        f"{analysis['frames'][-1]['E_ind']:.3f}",
+        f"- L_total: `{_vfa_spark([f['L_total'] for f in analysis['frames']])}` "
+        f"{analysis['frames'][0]['L_total']:.3f} → "
+        f"{analysis['frames'][-1]['L_total']:.3f}",
         "",
-        "## Milestones",
+        "## Kernel validation (Biot-Savart)",
         "",
-        "| threshold | t |",
-        "|---|---|",
+        "| check | value | threshold | status |",
+        "|---|---|---|---|",
+        f"| blob->exact convergence err(64) | {va['conv_err64']:.2e} | "
+        f"< 3e-3 | {'PASS' if va['ok_conv'] else 'FAIL'} |",
+        f"| convergence ratio err(64)/err(8) | {va['conv_ratio']:.3f} | "
+        f"< 0.35 | {'PASS' if va['ok_conv'] else 'FAIL'} |",
+        f"| ring on-axis vs exact Gamma R^2/(2(R^2+z^2)^1.5) | "
+        f"{va['axis_err']:.2e} | < 1e-3 | "
+        f"{'PASS' if va['ok_axis'] else 'FAIL'} |",
+        f"| scale invariance spread | {va['scale_spread']:.1e} | "
+        f"< 1e-10 | {'PASS' if va['ok_scale'] else 'FAIL'} |",
+        f"| log-cutoff slope dev (q: 2->4) | {100 * va['slope_dev']:.1f}% "
+        f"| < 10% | {'PASS' if va['ok_slope'] else 'FAIL'} |",
+        "",
+        "## Rings",
+        "",
+        "| i | Gamma | R | z0 | M |",
+        "|---|---|---|---|---|",
     ]
-    for label, key in (("50% Γ (half-life)", "t50"),
-                       ("10% Γ", "t10"), ("1% Γ", "t01")):
-        v = ms[key]
-        lines.append(f"| {label} | "
-                     + (f"{v:.3f}" if v is not None else f"> T = {analysis['T']}")
-                     + " |")
-    lines += [
-        "", "## Per-layer",
-        "", "| i | h | W | b_i | half-life | Γ₀ | Γ_T |",
-        "|---|---|---|---|---|---|---|",
-    ]
-    for L in analysis["layers"]:
-        hl = "∞" if L["halflife"] == float("inf") else f"{L['halflife']:.2f}"
-        lines.append(f"| {L['i']} | {L['h']:.3f} | {L['W']:.3f} | "
-                     f"{L['b']:.5f} | {hl} | {L['G0']:.3f} | {L['G_end']:.4f} |")
+    for R in analysis["rings"]:
+        lines.append(f"| {R['i']} | {R['Gamma']:.3f} | {R['R']:.3f} | "
+                     f"{R['z0']:.3f} | {R['M']} |")
     lines += [
         "", "## Time series",
-        "", "| t | Γ_total | % of Γ₀ | v_peak |",
-        "|---|---|---|---|",
+        "", "| t | eps | L_total | L_A | L_B | E_ind | v_peak | z_A | z_B |",
+        "|---|---|---|---|---|---|---|---|---|",
     ]
     for f in analysis["frames"]:
-        lines.append(f"| {f['t']:.3f} | {f['G_total']:.4f} | "
-                     f"{100 * f['G_frac']:.2f}% | {f['v_peak']:.4f} |")
+        lines.append(f"| {f['t']:.3f} | {f['eps']:.3f} | {f['L_total']:.4f} | "
+                     f"{f['L_rings'][0]:.4f} | {f['L_rings'][1]:.4f} | "
+                     f"{f['E_ind']:.4f} | {f['v_peak']:.4f} | "
+                     f"{f['z_centroids'][0]:.3f} | {f['z_centroids'][1]:.3f} |")
+    lines += ["", "## Milestones", "", "| event | t |", "|---|---|"]
+    for label, key in (("stretch: L/L0-1 > 5%", "t_stretch"),
+                       ("leapfrog pass z_A >= z_B", "t_pass"),
+                       ("E_ind < 0.5 E0", "t_halfE")):
+        v = ms[key]
+        lines.append(f"| {label} | "
+                     + (f"{v:.3f}" if v is not None
+                        else f"> T = {analysis['T']}") + " |")
     md.write_text("\n".join(lines) + "\n", encoding="utf-8")
     js.write_text(json.dumps(_vfa_json_safe(analysis), indent=2,
                              ensure_ascii=False) + "\n", encoding="utf-8")
@@ -4597,29 +5174,27 @@ def vfa_vortex_write_report(analysis: dict, gif_path) -> tuple[Path, Path]:
 
 
 def vfa_vortex_print_summary(analysis: dict, stream=None) -> None:
-    """§27b: короткая числовая сводка стабилизации в stderr."""
+    """§27b: короткая числовая сводка динамики филаментов в stderr."""
     stream = stream or sys.stderr
     frames = analysis["frames"]
-    ms = analysis["milestones"]
-    print("\n  ── stabilization summary ──", file=stream)
-    print(f"  Γ_total: {frames[0]['G_total']:.3f} → "
-          f"{frames[-1]['G_total']:.4f} "
-          f"({100 * analysis['final_frac']:.2f}%)", file=stream)
-    print(f"  mean_b: {analysis['mean_b']:.6f}", file=stream)
-    for label, key in (("t50 (half-life)", "t50"),
-                       ("t10 (90% decayed)", "t10"),
-                       ("t01 (99% decayed)", "t01")):
-        v = ms[key]
-        print(f"  {label}: "
-              + (f"t = {v:.3f}" if v is not None
-                 else f"> T = {analysis['T']}"), file=stream)
+    va = analysis["validation"]
+    f0, f1 = frames[0], frames[-1]
+    print("\n  ── filament dynamics summary ──", file=stream)
+    print(f"  v_peak: {f0['v_peak']:.3f} → {f1['v_peak']:.3f}   "
+          f"eps: {f0['eps']:.3f} → {f1['eps']:.3f}", file=stream)
+    print(f"    v_peak {_vfa_spark([f['v_peak'] for f in frames])}   "
+          f"E_ind {_vfa_spark([f['E_ind'] for f in frames])}", file=stream)
+    print(f"  L_total: {f0['L_total']:.3f} → {f1['L_total']:.3f}   "
+          f"E_ind(eps0) variation: {100 * analysis['E_variation']:.3f}%",
+          file=stream)
+    print(f"  z-центроиды: "
+          f"{f0['z_centroids'][0]:.2f} → {f1['z_centroids'][0]:.2f}, "
+          f"{f0['z_centroids'][1]:.2f} → {f1['z_centroids'][1]:.2f}",
+          file=stream)
+    print(f"  kernel: conv {va['conv_err64']:.1e}, axis {va['axis_err']:.1e}, "
+          f"scale {va['scale_spread']:.1e}, slope {100 * va['slope_dev']:.1f}% "
+          f"({'ALL PASS' if va['all_ok'] else 'FAIL'})", file=stream)
     print(f"  verdict: {analysis['verdict']}", file=stream)
-    print(f"  {'i':>3} {'h':>7} {'W':>7} {'b':>9} {'halflife':>10} "
-          f"{'G_end':>10}", file=stream)
-    for L in analysis["layers"]:
-        hl = "∞" if L["halflife"] == float("inf") else f"{L['halflife']:.2f}"
-        print(f"  {L['i']:>3} {L['h']:>7.3f} {L['W']:>7.3f} {L['b']:>9.5f} "
-              f"{hl:>10} {L['G_end']:>10.4f}", file=stream)
     print(file=stream)
 
 
@@ -4632,6 +5207,9 @@ def vfa_vortex_cli(cfg: VfaConfig) -> None:
     width, height = 900, 640
     if cfg.vortex_quick:            # U-2: быстрое превью (CI-проверка вихря)
         N, nframes, width, height = 32, 8, 640, 440
+        # quick ускоряет и физику: без этого T=8 при dt=DT давал ~200 шагов
+        # RK4 и превью занимало десятки секунд
+        cfg.vortex_T = 2.0
     path = pdir / f"vortex_N{N}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.gif"
     t_bar = time.monotonic()
     print(VFAUI.bar_line(0, nframes, "vortex", f"  N={N}", t_bar),
@@ -4644,8 +5222,7 @@ def vfa_vortex_cli(cfg: VfaConfig) -> None:
 
     res = VFAVortex3D.render_vortex_animation(
         path, N=N, nframes=nframes, T=cfg.vortex_T,
-        h0=cfg.layer_h0, W0=cfg.layer_W0, width=width, height=height,
-        callback=cb)
+        width=width, height=height, callback=cb)
     done = fmt(cfg, "vortex_done", path=res["path"], frames=res["frames"],
                sec=res["sec"])
     print(f"\r  {done}", file=sys.stderr)
@@ -4671,9 +5248,9 @@ def vfa_menu_vortex(cfg: VfaConfig) -> None:
     if N < 24:
         print(f"  ? {fmt(cfg, 'vortex_bad')}")
         return
-    if N > 256:
+    if N > 64:
         print(f"  {fmt(cfg, 'vortex_clamp')}")
-        N = 256
+        N = 64
     try:
         f_raw = input(f"  {fmt(cfg, 'vortex_frames')}").strip()
     except (EOFError, KeyboardInterrupt):
@@ -4696,8 +5273,7 @@ def vfa_menu_vortex(cfg: VfaConfig) -> None:
                   end="", flush=True)
 
     res = VFAVortex3D.render_vortex_animation(
-        path, N=N, nframes=nframes, T=cfg.vortex_T,
-        h0=cfg.layer_h0, W0=cfg.layer_W0, callback=cb)
+        path, N=N, nframes=nframes, T=cfg.vortex_T, callback=cb)
     done = fmt(cfg, "vortex_done", path=res["path"], frames=res["frames"],
                sec=res["sec"])
     print(f"\r  {done}")
@@ -5008,31 +5584,37 @@ class VFATest:
             log.verdicts.clear()
             log.verdicts.update(saved_verdicts)
         r("self", "cross§32: вердикты/results.json-схема", ok13)
-        # 13b: vortex frame render (isolated, small grid, fast)
+        # 13b: vortex frame render (isolated, small ring resolution, fast)
         try:
-            hs, Ws, Gs0 = VFAVortex3D.vortex_preset(nlayers=8)
-            cv = VFAVortex3D.render_frame(48, Gs0, hs, Ws,
+            rings_v, gam_v = VFAVortex3D.leapfrog_preset(16)
+            us_v = VFAVortex3D.velocity_all(rings_v, 0.08, gam_v)
+            cv = VFAVortex3D.render_frame(rings_v, us_v, 0.08,
                                           width=320, height=240,
                                           title="selftest", sub="")
             ok_v = (cv.w == 320 and cv.h == 240
-                    and len(cv.buf) == 320 * 240 * 3)
+                    and len(cv.buf) == 320 * 240 * 3
+                    and VFAVortex3D.frame_active(cv) > 200)
         except Exception:
             ok_v = False
         r("self", "vortex§27b: изолированный рендер кадра", ok_v)
-        # 13c: analyze_evolution — монотонное затухание + валидный вердикт
+        # 13c: simulate — инварианты: (a) ν=0 — сохранение E_ind (RK4 и
+        # гамильтониан), (b) ν>0 — E(t; ε(t)) падает (core spreading),
+        # (c) живая скорость и валидный вердикт
         try:
-            hs, Ws, Gs0 = VFAVortex3D.vortex_preset(nlayers=8)
-            an = VFAVortex3D.analyze_evolution(hs, Ws, Gs0, T=40.0, nframes=12)
-            ok_a = (len(an["frames"]) == 12
-                    and an["frames"][-1]["G_total"] < an["frames"][0]["G_total"]
-                    and an["verdict"] in ("STABILIZED", "DAMPED",
-                                          "DECAYING", "PERSISTENT")
-                    and (an["milestones"]["t50"] is None
-                         or 0.0 < an["milestones"]["t50"] <= 40.0))
+            c0_v = VFAVortex3D.simulate(T=1.0, nframes=3, N=24,
+                                        nu=0.0)["analysis"]
+            d0_v = VFAVortex3D.simulate(T=1.0, nframes=3, N=24)["analysis"]
+            E0_v, E1_v = d0_v["frames"][0]["E_ind"], d0_v["frames"][-1]["E_ind"]
+            i0_v, i1_v = c0_v["frames"][0]["E_ind"], c0_v["frames"][-1]["E_ind"]
+            ok_a = (d0_v["frames"][-1]["v_peak"] > 0.0
+                    and abs(i1_v - i0_v) < 5e-3 * abs(i0_v)
+                    and E1_v < E0_v
+                    and d0_v["verdict"] in ("VISCOUS DECAY", "STRETCHING",
+                                            "LEAPFROG", "ACTIVE DYNAMICS"))
         except Exception:
             ok_a = False
-        r("self", "vortex§27b: analyze_evolution даёт монотонное затухание",
-          ok_a)
+        r("self", "vortex§27b: simulate — ν=0: |ΔE|<0.5% (RK4), ν>0: E "
+          "падает (вязкость)", ok_a)
         # 13d: LZW round-trip — регрессия 1.3.0 (ранний bump ширины кода
         # рассинхронизировал поток; PIL: broken data stream, «пустой GIF»)
         rnd = bytes(random.Random(2026).randrange(256) for _ in range(60_000))
@@ -5043,13 +5625,58 @@ class VFATest:
             ok_l = False
         r("self", "plot§9: GIF LZW encode→decode round-trip "
           "(рост 9→12, сброс 4096)", ok_l)
-        # 13e: frame_nonbg — аудит пустых кадров (v1.3.1)
+        # 13e: frame_nonbg — аудит пустых кадров
         blank = VFAPlot.Canvas(40, 30, VFAVortex3D.BG_DARK)
         dotted = VFAPlot.Canvas(40, 30, VFAVortex3D.BG_DARK)
         dotted.px(20, 15, (255, 140, 105))
         r("self", "vortex§27b: frame_nonbg отличает пустой кадр от точки",
           VFAVortex3D.frame_nonbg(blank) == 0
           and VFAVortex3D.frame_nonbg(dotted) == 1)
+        # 13f: ядро Био–Савара против точной аналитики: сходимость
+        # блоб-суммы к точному отрезку, кольцо на оси, масштаб-инвариантность,
+        # лог-закон отсечки d(U·4πR/Γ)/d ln q = −1
+        try:
+            ok_k = VFAVortex3D.validate_kernel()["all_ok"]
+        except Exception:
+            ok_k = False
+        r("self", "vortex§27b: ядро BS — отрезок/кольцо/масштаб/лог-отсечка",
+          ok_k)
+        # 13g: RK4 dt-сходимость траектории: dt и dt/4 дают z-центроиды и L
+        # до 1e-6 (замер: rel diff ~1e-12 — траектория сходится, «E_variation»
+        # в отчёте — эффект формы, не ошибка интегратора)
+        try:
+            a_g = VFAVortex3D.simulate(T=0.5, nframes=3, N=24,
+                                       dt=0.02)["analysis"]
+            b_g = VFAVortex3D.simulate(T=0.5, nframes=3, N=24,
+                                       dt=0.005)["analysis"]
+            za = a_g["frames"][-1]["z_centroids"]
+            zb = b_g["frames"][-1]["z_centroids"]
+            La = a_g["frames"][-1]["L_total"]
+            Lb = b_g["frames"][-1]["L_total"]
+            ok_g = (abs(za[0] - zb[0]) < 1e-6 and abs(za[1] - zb[1]) < 1e-6
+                    and abs(La - Lb) < 1e-6 * La)
+        except Exception:
+            ok_g = False
+        r("self", "vortex§27b: RK4 dt-сходимость z/L (dt → dt/4)", ok_g)
+        # 13h: ориентация глифов FONT3X5 — старший бит тройки = ЛЕВАЯ колонка
+        # (регрессия рендера текста: gx = bit%3 зеркалил каждый асимметричный
+        # глиф — заголовок вихря читался «EO … - RHP BIOT-3AVART»; симметричные
+        # глифы A/I/M/N/O/T/U/V/W/X/0/8 маскировали баг в коротких подписях)
+        def glyph_grid(ch):
+            g = VFAPlot.Canvas(3, 5, (0, 0, 0))
+            vfa_draw_text(g, ch, 0, 0, (255, 255, 255), 1)
+            return [[1 if g.buf[(y * 3 + x) * 3] else 0 for x in range(3)]
+                    for y in range(5)]
+        ok_f = (glyph_grid("P") == [[1, 1, 0], [1, 0, 1], [1, 1, 0],
+                                    [1, 0, 0], [1, 0, 0]]
+                and glyph_grid("L") == [[1, 0, 0], [1, 0, 0], [1, 0, 0],
+                                        [1, 0, 0], [1, 1, 1]])
+        r("self", "font§9: глифы 'P'/'L' — вертикаль слева, не зеркально", ok_f)
+        ok_f2 = (glyph_grid("3") == [[1, 1, 1], [0, 0, 1], [1, 1, 1],
+                                     [0, 0, 1], [1, 1, 1]]
+                 and glyph_grid("2") == [[1, 1, 1], [0, 0, 1], [1, 1, 1],
+                                         [1, 0, 0], [1, 1, 1]])
+        r("self", "font§9: глифы '3'/'2' — открыты справа, не зеркально", ok_f2)
 
     @classmethod
     def integration_check(cls, cfg: VfaConfig) -> None:
@@ -5759,10 +6386,11 @@ import тих (§16). Задачи: 1–10 — общий контракт с Ju
   --rlimit kind=v[,kind=v...] (as|cpu|fsize; best-effort; §10.6)
   --layers N --layer-model default|radial --layer-h0 x --layer-W0 y   (§27)
   --vortex N --vortex-frames K --vortex-T T   (§27b) GIF 3D-вихря, N ≥ 24
-             (до 256, кадры ≥ 2; T — горизонт времени, по умолчанию 40);
+             (узлов на кольцо, до 64; кадры ≥ 2; T — горизонт времени
+             физической динамики, по умолчанию 8);
              рендер в results/vortex/*.gif + отчёт *.md/*.json и выход
-  --vortex-quick        быстрое превью (N=32, 8 кадров, 640×440); без
-             --vortex N запускает превью само
+  --vortex-quick        быстрое превью (N=32, 8 кадров, 640×440, T=2);
+             без --vortex N запускает превью само
              NOTE: vortex_N, заданный в --config-file/TOML или env, тоже
              запускает рендер вихря ВМЕСТО обычного прогона задач — для
              параллельного рендера и прогоняйте отдельными вызовами
@@ -6667,7 +7295,7 @@ def vfa_main(argv: list[str] | None = None) -> int:
         print(VFA_HELP)
         return 0
     if cfg.version:
-        print(f"vfa {__version__}-py (python {sys.version.split()[0]}, "
+        print(f"vfa-py (python {sys.version.split()[0]}, "
               f"{VFA_PLATFORM()})")
         return 0
     if cfg.generate_completions:
