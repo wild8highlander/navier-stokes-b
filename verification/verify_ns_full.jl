@@ -240,7 +240,7 @@ module VFABanner
         push!(lines, "  Navier-Stokes-B " * sep * " full verification")
         isempty(subtitle) || push!(lines, "  " * subtitle)
         push!(lines, "  julia " * string(VERSION) * " " * sep * " " *
-                     Main.VFAMon.platform_tag() * " " * sep * " v1.3.0")
+                     Main.VFAMon.platform_tag() * " " * sep * " v1.3.1")
         return lines
     end
 
@@ -590,7 +590,10 @@ module VFAPlot
         return path
     end
 
-    # LZW для GIF89a — тот же алгоритм, что в Python-версии (LSB-first, 9→12)
+    # LZW для GIF89a — тот же алгоритм, что в Python-версии (LSB-first, 9→12).
+    # v1.3.1: рост ширины кода — ПОСЛЕ добавления записи со значением 2^cs
+    # (nxt == (1<<cs)+1): декодер добавляет записи на один код позже энкодера,
+    # ранний bump рассинхронизировал поток (PIL: broken data stream).
     function lzw(indices::Vector{UInt8}, min_code_size::Int = 8)
         clear = 1 << min_code_size
         eoi = clear + 1
@@ -612,7 +615,7 @@ module VFAPlot
             else
                 dict[wc] = nxt
                 nxt += 1
-                if nxt == (1 << cs) && cs < 12
+                if nxt == (1 << cs) + 1 && cs < 12
                     cs += 1
                 end
             end
@@ -632,6 +635,56 @@ module VFAPlot
             end
         end
         nb > 0 && push!(out, UInt8(acc & 0xFF))
+        return out
+    end
+
+    # Референсный GIF-LZW декодер, парный к lzw (selftest §9, v1.3.1):
+    # запись добавляется при приёме каждого кода (кроме первого после CLEAR),
+    # ширина растёт, когда next_code декодера достигает 1<<cs. Round-trip
+    # в selftest ловит любой рассинхрон ширины без внешних декодеров.
+    function lzw_decode_ref(data::Vector{UInt8}, min_code_size::Int,
+                            n_expect::Int)
+        clear = 1 << min_code_size
+        eoi = clear + 1
+        table = Dict{Int, Vector{UInt8}}(i => UInt8[i] for i in 0:clear - 1)
+        cs, nxt = min_code_size + 1, eoi + 1
+        out = UInt8[]
+        prev = nothing
+        acc, nb, pos = 0, 0, 1
+        while true
+            while nb < cs
+                pos > length(data) && error("LZW: поток кончился до EOI")
+                acc |= Int(data[pos]) << nb
+                pos += 1
+                nb += 8
+            end
+            code = acc & ((1 << cs) - 1)
+            acc >>= cs
+            nb -= cs
+            if code == clear
+                table = Dict{Int, Vector{UInt8}}(i => UInt8[i] for i in 0:clear - 1)
+                nxt, cs = eoi + 1, min_code_size + 1
+                prev = nothing
+                continue
+            elseif code == eoi
+                break
+            end
+            if prev === nothing
+                entry = table[code]
+            else
+                entry = haskey(table, code) ? table[code] : vcat(prev, prev[1:1])
+                if nxt < 4096
+                    table[nxt] = vcat(prev, entry[1:1])
+                    nxt += 1
+                    if nxt == (1 << cs) && cs < 12
+                        cs += 1
+                    end
+                end
+            end
+            append!(out, entry)
+            prev = entry
+            length(out) > n_expect && break
+        end
         return out
     end
 
@@ -1121,6 +1174,18 @@ module VFAVortex3D
     # точное послойное затухание. Дефолт T=40: при b≈0.03–0.06 даёт видимое
     # затухание до ~31% (при T=4 оставалось ~88% — «вихрь не затухает»).
     # nframes клампится [2, 240] — B-NEW-2: TOML/env могли задать 0/1.
+    # Аудит (v1.3.1): пиксели, отличные от BG_DARK (12,14,22); ~0 = пустой кадр.
+    function frame_nonbg(cv::Canvas)
+        n = 0
+        b = cv.buf
+        for i in 1:3:length(b) - 2
+            if b[i] != 12 || b[i + 1] != 14 || b[i + 2] != 22
+                n += 1
+            end
+        end
+        return n
+    end
+
     function render_vortex_animation(path::AbstractString;
                                      N::Int = 48,
                                      nframes::Int = 24,
@@ -1137,6 +1202,7 @@ module VFAVortex3D
         analysis = analyze_evolution(hs, Ws, Γs0, T, nframes;
                                      h0 = h0, W0 = W0)
         frames = Canvas[]
+        min_nonbg = -1
         t0 = time()
         for (fi, fmeta) in enumerate(analysis.frames)
             Γs = [Γs0[i] * exp(-analysis.layers[i].b * fmeta.t)
@@ -1153,12 +1219,19 @@ module VFAVortex3D
                               title = "3D VORTEX - LAYERED B-CORRECTION",
                               sub = "t/T = $(round(fmeta.frac; digits = 2))  N = $N",
                               overlay = overlay)
+            nonbg = frame_nonbg(cv)
+            if nonbg * 200 < cv.w * cv.h   # < 0.5% не-фона — кадр пуст
+                error("vortex: кадр $fi/$nframes пуст (non-bg $nonbg/" *
+                      "$(cv.w * cv.h)) — render_frame/lzw?")
+            end
+            min_nonbg = min_nonbg < 0 ? nonbg : min(min_nonbg, nonbg)
             push!(frames, cv)
             callback !== nothing && callback(fi, nframes)
         end
         save_gif(path, frames; delay_cs = 6)
         return (path = String(path), frames = nframes,
-                sec = round(time() - t0; digits = 2), analysis = analysis)
+                sec = round(time() - t0; digits = 2), min_nonbg = min_nonbg,
+                analysis = analysis)
     end
 end
 
@@ -3389,6 +3462,28 @@ function vfa_selftest(cfg::VfaConfig)
                             false
                         end
                         ok_a
+                    end))
+    push!(results, ("plot§9: GIF LZW encode→decode round-trip (рост 9→12, сброс 4096)",
+                    begin
+                        ok_l = try
+                            rnd = UInt8.(rand(MersenneTwister(2026), 0:255, 60000))
+                            dec = VFAPlot.lzw_decode_ref(VFAPlot.lzw(rnd, 8), 8,
+                                                         length(rnd))
+                            dec == rnd
+                        catch
+                            false
+                        end
+                        ok_l
+                    end))
+    push!(results, ("vortex§27b: frame_nonbg отличает пустой кадр от точки",
+                    begin
+                        blank_v = VFAPlot.Canvas(40, 30, VFAVortex3D.BG_DARK)
+                        dotted_v = VFAPlot.Canvas(40, 30, VFAVortex3D.BG_DARK)
+                        dotted_v.buf[(15 * 40 + 20) * 3 + 1] = 0xFF
+                        dotted_v.buf[(15 * 40 + 20) * 3 + 2] = 0x8C
+                        dotted_v.buf[(15 * 40 + 20) * 3 + 3] = 0x69
+                        VFAVortex3D.frame_nonbg(blank_v) == 0 &&
+                            VFAVortex3D.frame_nonbg(dotted_v) == 1
                     end))
     # §4.4: aurora-стиль отчёта самотеста (стикеры + спарклайн-вердикты)
     npass = count(r -> r[2], results)

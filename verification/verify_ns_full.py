@@ -78,7 +78,7 @@ from datetime import datetime
 from decimal import Decimal, getcontext, localcontext
 from pathlib import Path
 
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 VFA_FILE = Path(__file__).resolve().name if "__file__" in globals() else "verify_ns_full.py"
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -948,7 +948,13 @@ class VFAPlot:
         """Классический GIF-LZW: коды LSB-first, ширина кода растёт 9→12 бит.
         Ширина отслеживается в момент ВЫДАЧИ кода; при переполнении таблицы
         (nxt >= 4096) эмитится CLEAR. Начальный CLEAR и финальный EOI —
-        обязательны, иначе декодеры (PIL, браузеры) отвергают поток."""
+        обязательны, иначе декодеры (PIL, браузеры) отвергают поток.
+        v1.3.1: рост ширины — ПОСЛЕ добавления записи со значением 2^cs
+        (условие nxt == (1<<cs)+1), а не 2^cs−1: декодер добавляет записи
+        на один код позже энкодера, поэтому «наивный» ранний bump рассинхро-
+        низирует поток ровно на записи 511/512 (PIL: broken data stream;
+        воспроизведено и исправлено A/B-тестом против PIL, scripts/
+        lzw_variant_test.py)."""
         clear = 1 << min_code_size
         eoi = clear + 1
         dict_ = {bytes([i]): i for i in range(clear)}
@@ -970,7 +976,7 @@ class VFAPlot:
             else:
                 dict_[wc] = nxt
                 nxt += 1
-                if nxt == (1 << cs) and cs < 12:
+                if nxt == (1 << cs) + 1 and cs < 12:
                     cs += 1
             w_ = bytes([ch])
         if w_:
@@ -987,6 +993,55 @@ class VFAPlot:
                 nbits -= 8
         if nbits:
             out.append(acc & 0xFF)
+        return bytes(out)
+
+    @staticmethod
+    def _lzw_decode_ref(data: bytes, min_code_size: int,
+                        n_expect: int) -> bytes:
+        """Референсный GIF-LZW декодер, парный к _lzw (selftest §9, v1.3.1).
+        Каноническое правило декодера: запись добавляется при приёме каждого
+        кода (кроме первого после CLEAR), ширина кода растёт, когда next_code
+        декодера достигает 1<<cs. Декодер отстаёт от энкодера ровно на один
+        код — round-trip в selftest ловит любой рассинхрон ширины без PIL."""
+        clear = 1 << min_code_size
+        eoi = clear + 1
+        table: dict[int, bytes] = {i: bytes([i]) for i in range(clear)}
+        cs = min_code_size + 1
+        nxt = eoi + 1
+        out = bytearray()
+        prev: bytes | None = None
+        acc = nbits = pos = 0
+        while True:
+            while nbits < cs:
+                if pos >= len(data):
+                    raise ValueError("LZW: поток кончился до EOI")
+                acc |= data[pos] << nbits
+                pos += 1
+                nbits += 8
+            code = acc & ((1 << cs) - 1)
+            acc >>= cs
+            nbits -= cs
+            if code == clear:
+                table = {i: bytes([i]) for i in range(clear)}
+                nxt = eoi + 1
+                cs = min_code_size + 1
+                prev = None
+                continue
+            if code == eoi:
+                break
+            if prev is None:
+                entry = table[code]
+            else:
+                entry = table[code] if code in table else prev + prev[:1]
+                if nxt < 4096:
+                    table[nxt] = prev + entry[:1]
+                    nxt += 1
+                    if nxt == (1 << cs) and cs < 12:
+                        cs += 1
+            out += entry
+            prev = entry
+            if len(out) > n_expect:
+                break
         return bytes(out)
 
     @classmethod
@@ -2972,6 +3027,19 @@ class VFAVortex3D:
         return hs, Ws, Gs0
 
     @classmethod
+    @staticmethod
+    def frame_nonbg(cv: "VFAPlot.Canvas") -> int:
+        """Аудит (v1.3.1): число пикселей, отличных от фона BG_DARK.
+        ~0 = пустой кадр — повод упасть с внятной ошибкой, а не молча
+        сохранить GIF, который viewer рисует одной строкой текста."""
+        b = cv.buf
+        diff = 0
+        for r, g, bl in zip(b[0::3], b[1::3], b[2::3]):
+            if r != 12 or g != 14 or bl != 22:
+                diff += 1
+        return diff
+
+    @classmethod
     def render_vortex_animation(cls, path, N: int = 48, nframes: int = 24,
                                 T: float = 40.0, h0: float = 1.0, W0: float = 1.0,
                                 width: int = 900, height: int = 640,
@@ -2988,6 +3056,7 @@ class VFAVortex3D:
         analysis = cls.analyze_evolution(hs, Ws, Gs0, T, nframes,
                                          h0=h0, W0=W0)
         frames = []
+        min_nonbg = None
         t0 = time.monotonic()
         for fi, fm in enumerate(analysis["frames"], 1):
             Gs = [Gs0[i] * math.exp(-analysis["layers"][i]["b"] * fm["t"])
@@ -3004,12 +3073,19 @@ class VFAVortex3D:
                 title="3D VORTEX - LAYERED B-CORRECTION",
                 sub=f"t/T = {fm['frac']:.2f}  N = {N}",
                 overlay=overlay)
+            nonbg = cls.frame_nonbg(cv)
+            if nonbg * 200 < cv.w * cv.h:   # < 0.5% не-фона — кадр пуст
+                raise RuntimeError(
+                    f"vortex: кадр {fi}/{nframes} пуст "
+                    f"(non-bg {nonbg}/{cv.w * cv.h}) — render_frame/_lzw?")
+            min_nonbg = nonbg if min_nonbg is None else min(min_nonbg, nonbg)
             frames.append(cv)
             if callback is not None:
                 callback(fi, nframes)
         VFAPlot.save_gif(Path(path), frames, delay_cs=6)
         return {"path": str(path), "frames": nframes,
                 "sec": round(time.monotonic() - t0, 2),
+                "min_nonbg": min_nonbg,
                 "analysis": analysis}
 
 
@@ -4957,6 +5033,23 @@ class VFATest:
             ok_a = False
         r("self", "vortex§27b: analyze_evolution даёт монотонное затухание",
           ok_a)
+        # 13d: LZW round-trip — регрессия 1.3.0 (ранний bump ширины кода
+        # рассинхронизировал поток; PIL: broken data stream, «пустой GIF»)
+        rnd = bytes(random.Random(2026).randrange(256) for _ in range(60_000))
+        try:
+            dec = VFAPlot._lzw_decode_ref(VFAPlot._lzw(rnd, 8), 8, len(rnd))
+            ok_l = dec == rnd
+        except Exception:
+            ok_l = False
+        r("self", "plot§9: GIF LZW encode→decode round-trip "
+          "(рост 9→12, сброс 4096)", ok_l)
+        # 13e: frame_nonbg — аудит пустых кадров (v1.3.1)
+        blank = VFAPlot.Canvas(40, 30, VFAVortex3D.BG_DARK)
+        dotted = VFAPlot.Canvas(40, 30, VFAVortex3D.BG_DARK)
+        dotted.px(20, 15, (255, 140, 105))
+        r("self", "vortex§27b: frame_nonbg отличает пустой кадр от точки",
+          VFAVortex3D.frame_nonbg(blank) == 0
+          and VFAVortex3D.frame_nonbg(dotted) == 1)
 
     @classmethod
     def integration_check(cls, cfg: VfaConfig) -> None:
