@@ -6,7 +6,7 @@ import Mathlib.Tactic
 noncomputable section
 open Real
 
-namespace ResearchPapersVerification
+namespace Nsb
 
 def bCorrection : ℝ := Real.pi / (4 * Real.pi^2 + 2 * Real.pi * Real.sqrt 3)
 

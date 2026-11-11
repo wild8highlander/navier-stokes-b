@@ -1,49 +1,54 @@
 """
-verify_all.py — полный прогон вычислительного слоя Python.
+verify_all.py — полный прогон вычислительного слоя каталога code/code.
 
-  python3 verify_all.py              # всё; nse_3d_bkm ~10–20 мин
-  NSE3D_SKIP=1 python3 verify_all.py # без 3D-эталона (~1 мин)
-  NSE3D_SMALL=1 python3 verify_all.py # 3D в контрольном режиме N=24, T=1
+  python3 verify_all.py    # точные константы (mpmath, 50 знаков) + аудит Lean
 
-Каждый модуль пишет свой JSON в results/ при каждом запуске.
-Численные проверки НЕ заменяют формальные доказательства (../lean4/);
+Состав соответствует фактическому содержимому каталога: константная
+цепочка exact_constants.py (13 проверок, JSON в results/) и статический
+аудит формального ядра tools/audit/audit_lean.py (72 теоремы, ноль
+sorry/проектных аксиом, все импорты разрешаются). Полная цепочка
+L1–L5 живёт в scripts/python_levels/ (aggregate: `make verify-common`
+или `make verify-levels`); монолит — verify_ns_full.py в корне
+verification/.
+
+Численные проверки НЕ заменяют формальные доказательства (../../lean4/);
 они проверяют численные следствия доказанных теорем и воспроизводимость.
 """
-import os
+import json
+import subprocess
 import sys
 import time
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent))
+HERE = Path(__file__).resolve().parent
+VER = HERE.parents[1]
+sys.path.insert(0, str(HERE))
 
 
 def main():
     results = {}
     t0 = time.time()
+    print("=== code/code suite: exact constants + Lean audit")
 
     import exact_constants
     results["exact_constants"] = exact_constants.run()
 
-    import rotation_algebra
-    results["rotation_algebra"] = rotation_algebra.run()
-
-    import kirchhoff_vortices
-    results["kirchhoff_vortices"] = kirchhoff_vortices.run()
-
-    import nse_2d
-    results["nse_2d"] = nse_2d.run()
-
-    if os.environ.get("NSE3D_SKIP"):
-        print("nse_3d_bkm: SKIP (NSE3D_SKIP=1)")
-        results["nse_3d_bkm"] = None
-    else:
-        import nse_3d_bkm
-        results["nse_3d_bkm"] = nse_3d_bkm.run()
+    proc = subprocess.run(
+        [sys.executable, str(VER / "tools/audit/audit_lean.py")],
+        capture_output=True, text=True, timeout=300)
+    out = proc.stdout or ""
+    print(out.rstrip()[-1500:])
+    results["lean_audit"] = (proc.returncode == 0
+                             and '"ok": true' in out.replace("'", '"'))
 
     print("=" * 50)
     for k, v in results.items():
-        print(f"  {k}: {'PASS' if v else ('SKIP' if v is None else 'FAIL')}")
-    n_fail = sum(1 for v in results.values() if v is False)
+        print(f"  {k}: {'PASS' if v else 'FAIL'}")
+    n_fail = sum(1 for v in results.values() if v is not True)
+    verdict = {"suite": "code_code", "checks": results,
+               "all_passed": n_fail == 0,
+               "wall_time_s": round(time.time() - t0, 1)}
+    print(f"JSON: {json.dumps(verdict)}")
     print(f"Итого: {'ВСЕ МОДУЛИ PASS' if n_fail == 0 else f'ПРОВАЛЕНО: {n_fail}'} "
           f"за {time.time() - t0:.0f} c")
     return n_fail == 0

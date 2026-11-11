@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="224" viewBox="0 0 1280 224" role="img" aria-label="navier-stokes-b — VERIFY_NS_FULL monolith: CI run with PASS lines and a JSON verdict">
+<defs>
+  <linearGradient id="mBg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#0D1117"/><stop offset=".55" stop-color="#0A0E1A"/><stop offset="1" stop-color="#0B1226"/>
+  </linearGradient>
+  <linearGradient id="mWord" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#F59E0B"/>
+  </linearGradient>
+  <radialGradient id="mGlowC" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#00E5FF" stop-opacity=".35"/><stop offset="1" stop-color="#00E5FF" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="mGlowA" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#F59E0B" stop-opacity=".3"/><stop offset="1" stop-color="#F59E0B" stop-opacity="0"/>
+  </radialGradient>
+  <pattern id="mGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M40 0H0V40" fill="none" stroke="#16233F" stroke-width="1"/>
+  </pattern>
+  <filter id="mSoft" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur stdDeviation="4"/>
+  </filter>
+  <style>
+    .mono  { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; }
+    .line  { opacity: 0; animation: mReveal 12s linear infinite; }
+    .l1 { animation-delay: 0s; }  .l2 { animation-delay: 1.2s; }
+    .l3 { animation-delay: 2.4s; } .l4 { animation-delay: 3.6s; }
+    .l5 { animation-delay: 4.8s; } .l6 { animation-delay: 6.2s; }
+    @keyframes mReveal {
+      0% { opacity: 0; } 4% { opacity: 1; }
+      88% { opacity: 1; } 96% { opacity: 0; } 100% { opacity: 0; }
+    }
+    .cursor { animation: mBlink 1.05s steps(1) infinite; }
+    @keyframes mBlink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+    .verdict { animation: mPulseV 3s ease-in-out infinite; }
+    @keyframes mPulseV { 0%,100% { opacity: .82; } 50% { opacity: 1; } }
+    .chip { animation: mChip 12s linear infinite; }
+    @keyframes mChip {
+      0% { opacity: 0; transform: translateY(6px); }
+      5% { opacity: 1; transform: translateY(0); }
+      88% { opacity: 1; } 96% { opacity: 0; } 100% { opacity: 0; }
+    }
+  </style>
+</defs>
+
+<rect width="1280" height="224" fill="url(#mBg)"/>
+<rect width="1280" height="224" fill="url(#mGrid)" opacity=".55"/>
+<circle cx="1120" cy="30" r="130" fill="url(#mGlowC)"/>
+<circle cx="180" cy="210" r="150" fill="url(#mGlowA)"/>
+
+<!-- wordmark -->
+<text x="64" y="78" class="mono" font-size="40" font-weight="700" fill="url(#mWord)">verify_ns_full</text>
+<text x="64" y="112" class="mono" font-size="15" fill="#8B949E">self-contained verifier &#183; 22 tasks &#183; two-pass &#183; stdlib-only</text>
+<text x="64" y="140" class="mono" font-size="13" fill="#58A6FF">python3 verify_ns_full.py --ci</text>
+<text x="64" y="168" class="mono" font-size="13" fill="#8B949E">contract: banner &#8594; [PASS]/[FAIL] &#8594; JSON verdict &#8594; exit code</text>
+
+<!-- task chips -->
+<g class="mono" font-size="12">
+  <g class="chip"><rect x="64" y="182" rx="9" width="118" height="22" fill="#11203A" stroke="#1F3A5F"/><text x="76" y="197" fill="#3FB950">task 01 constants</text></g>
+  <g class="chip"><rect x="192" y="182" rx="9" width="130" height="22" fill="#11203A" stroke="#1F3A5F"/><text x="204" y="197" fill="#3FB950">task 02 smagorinsky</text></g>
+  <g class="chip"><rect x="332" y="182" rx="9" width="128" height="22" fill="#11203A" stroke="#1F3A5F"/><text x="344" y="197" fill="#3FB950">task 04 kdv</text></g>
+  <g class="chip"><rect x="470" y="182" rx="9" width="140" height="22" fill="#11203A" stroke="#1F3A5F"/><text x="482" y="197" fill="#3FB950">task 07 kirchhoff</text></g>
+  <g class="chip"><rect x="620" y="182" rx="9" width="146" height="22" fill="#11203A" stroke="#1F3A5F"/><text x="632" y="197" fill="#3FB950">task 16 taylor_green</text></g>
+  <g class="chip"><rect x="776" y="182" rx="9" width="104" height="22" fill="#11203A" stroke="#1F3A5F"/><text x="788" y="197" fill="#F59E0B">+ 17 more</text></g>
+</g>
+
+<!-- terminal panel -->
+<g>
+  <rect x="880" y="34" width="336" height="156" rx="12" fill="#0A0E1A" stroke="#1F3A5F" stroke-width="1.5"/>
+  <circle cx="902" cy="54" r="5" fill="#F85149"/><circle cx="920" cy="54" r="5" fill="#FBBF24"/><circle cx="938" cy="54" r="5" fill="#3FB950"/>
+  <text x="1004" y="59" class="mono" font-size="11" fill="#8B949E">CI preset &#183; tasks 1&#8211;15</text>
+  <g class="mono" font-size="12.5">
+    <text x="898" y="82"  fill="#8B949E" class="line l1">$ python3 verify_ns_full.py --ci</text>
+    <text x="898" y="102" fill="#3FB950" class="line l2">[PASS] task 01 [constants]</text>
+    <text x="898" y="122" fill="#3FB950" class="line l3">[PASS] task 02 [smagorinsky]</text>
+    <text x="898" y="142" fill="#3FB950" class="line l4">[PASS] task 07 [kirchhoff]</text>
+    <text x="898" y="162" fill="#3FB950" class="line l5">[PASS] task 15 [dynamic]</text>
+    <g class="verdict">
+      <text x="898" y="182" fill="#FBBF24" class="line l6">JSON: {"all_passed": true}</text>
+    </g>
+    <rect x="898" y="188" width="9" height="15" fill="#00E5FF" class="cursor"/>
+  </g>
+</g>
+</svg>

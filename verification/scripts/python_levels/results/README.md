@@ -14,9 +14,9 @@
 
 The pinned verdict JSONs of the L1–L5 chain runs. These files are the
 *mirror* of the authoritative baseline copies in
-[`data/results/baseline/`](../../../data/results/baseline/README.md); the
+[`data/results/baseline/`](../../../../data/results/baseline/README.md); the
 repository auditor
-([`verification/repo_integrity/`](../../repo_integrity/README.md)) checks
+([`verification/repo_integrity/`](../../../tools/audit/README.md)) checks
 the baseline copies on every run.
 
 | File | Level | Content |
@@ -27,9 +27,9 @@ the baseline copies on every run.
 | `l4_nse_2d.json` | L4 | the vorticity identity, energy preservation and balance residuals |
 | `l5_nse_3d_bkm.json` | L5 | the BKM protocol record: parameters, integrals, per-rotation energy |
 
-**Authoritative copies:** [`data/results/baseline/`](../../../data/results/baseline/README.md)
+**Authoritative copies:** [`data/results/baseline/`](../../../../data/results/baseline/README.md)
 (verified by `make verify-repo` and the CI manifest job).
 
 ## License
 
-Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../../../LICENSE.md)).
+Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../../../../LICENSE.md)).

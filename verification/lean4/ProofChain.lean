@@ -1,10 +1,9 @@
-import ResearchPapersVerification.Common.Foundation
-import ResearchPapersVerification.Section1_CorrectionB.Basic
+import Foundation
 import Mathlib.Data.Real.Pi.Bounds
 import Mathlib.Tactic
 
 noncomputable section
-open Real ResearchPapersVerification
+open Real Nsb
 
 namespace Section2
 

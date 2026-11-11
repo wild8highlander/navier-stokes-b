@@ -1,9 +1,9 @@
-import ResearchPapersVerification.Common.Foundation
+import Foundation
 import Mathlib.Data.Complex.Basic
 import Mathlib.Tactic
 
 noncomputable section
-open Real Complex ResearchPapersVerification
+open Real Complex Nsb
 
 namespace Section5
 

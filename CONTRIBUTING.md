@@ -10,11 +10,11 @@ contribute smoothly and what the maintainers check before merging.
 | Contribution type | Examples | Where |
 |---|---|---|
 | Reproduction reports | rerun P1–P6 or L1–L5 and confirm/refute the numbers | [verification request issue](https://github.com/wild8highlander/navier-stokes-b/issues/new?template=verification_request.yml) |
-| Bug fixes | path errors, platform quirks (Windows/Termux), API fixes | PR |
-| New verification ports | a section port in a new language | PR + issue first |
-| Formal proof work | closing a `sorry` from `verification/lean4/TODO_sorry.md` | PR + issue first |
+| Bug fixes | path errors, platform quirks (Windows/Termux), Makefile fixes | PR |
+| New verification ports | an existing suite re-implemented in a new language, same output contract | PR + issue first |
+| Formal proof work | strengthening the Lean core (`verification/lean4/` — formalize what `Soliton.lean` defines but does not yet prove) | PR + issue first |
 | Documentation | English clarifications, README fixes, site improvements | PR |
-| Tooling | Makefile targets, CI, Docker improvements | PR |
+| Tooling | Makefile targets, CI, the animation factory | PR |
 
 **Before opening a PR for a new feature**, open an issue or a Discussion first — this
 keeps the scope aligned with the research program.

@@ -13,37 +13,45 @@
 
 ## `main.py` — the aggregate runner
 
-Runs `verification/sectionN_*/python/verify.py` as a subprocess and
-enforces the repository-wide contract:
+Runs each registered suite as a **subprocess** (never an import — a
+crash becomes a verdict, not a traceback in the runner) and enforces the
+repository-wide contract:
 
 ```text
-banner  →  [PASS]/[FAIL] per assertion  →  JSON: {"section": N, …}  →  exit 0 iff all passed
+banner  →  [PASS]/[FAIL] per assertion  →  JSON: {...}  →  exit 0 iff all passed
 ```
 
 Usage:
 
 ```bash
-python main.py --section 1 --preset default
-python main.py --all              # every section 1..7
+python main.py --suite levels --preset default   # one suite
+python main.py --suite levels,monolith           # several suites
+python main.py --all                             # every suite, quick preset
+python main.py --list                            # the registry as TSV
 ```
+
+The last line is always an aggregate `JSON: {"suites": {...},
+"all_passed": …}` verdict.
 
 ## `config.py` — registry and presets
 
-| Preset | N | tolerance | max_iter |
-|---|---|---|---|
-| `quick` | 16 | 1e-3 | 1 000 |
-| `default` | 36 | 1e-10 | 10 000 |
-| `full` | 64 | 1e-14 | 50 000 |
-| `extreme` | 128 | 1e-16 | 100 000 |
+The registry maps suite names onto commands that exist in this
+repository (`scripts/python_levels/verify_all.py`, `verify_ns_full.py`,
+`code/code/exact_constants.py`, `tools/audit/audit_lean.py`); the
+auditor `tools/audit/verify_repo.py` fails if a registered command
+drifts away from the tree.
 
-Section names 1–7: Correction b · Preprint NSE · AB-Cloud · KdV · Klein
-attractor · Riemann zeros · **Smagorinsky–Kolmogorov**.
+| Preset | `levels` | `monolith` |
+|---|---|---|
+| `quick` | `NSE3D_SKIP=1` | `--task 9` |
+| `default` | `NSE3D_SKIP=1` | `--ci` |
+| `full` | L5 included (~10–20 min) | `--ci` |
 
 ## `verifier_base.py`
 
-The small base class the API and the demos use to parse a port's verdict
-line without re-implementing the contract.
+The small base class used by tooling that builds on the contract to
+parse a suite's verdict line without re-implementing the contract.
 
 ## License
 
-Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../LICENSE.md)).
+Part of **navier-stokes-b**, license IPL-RP-1.0. ([LICENSE.md](../../../LICENSE.md)).

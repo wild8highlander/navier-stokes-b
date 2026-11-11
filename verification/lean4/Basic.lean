@@ -1,10 +1,10 @@
-import ResearchPapersVerification.Common.Foundation
+import Foundation
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Real.Pi.Bounds
 import Mathlib.Tactic
 
 noncomputable section
-open Matrix Real ResearchPapersVerification
+open Matrix Real Nsb
 
 namespace Section1
 

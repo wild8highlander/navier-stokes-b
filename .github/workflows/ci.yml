@@ -43,18 +43,42 @@ jobs:
         run: python -m pytest verification/tests/ -v --tb=short
 
   verification-smoke:
-    name: Verification smoke (Python, section 1)
+    name: Verification smoke (all suites, quick preset)
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
-      # No third-party install needed: the section-1 verifier and the
-      # aggregate runner are stdlib-only (json/math/subprocess), so the job
-      # has no pip dependency at all and stays reproducible.
-      - name: Run section 1 (correction b) Python verification
-        run: python verification/common/python/main.py --section 1 --preset default
+      - name: Install numpy and mpmath (the L-chain and the constants suite need them)
+        run: pip install numpy mpmath
+      - name: Run the aggregate runner (levels L1-L4 + monolith pinned task + exact constants + Lean audit)
+        run: python verification/common/python/main.py --all
+
+  verification-monolith:
+    name: Verification monolith (verify_ns_full.py, CI preset)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      # The monolith is stdlib-only by contract: no pip install at all.
+      - name: Run the full CI preset (tasks 1-15, two-pass, ~2 min)
+        run: python verification/verify_ns_full.py --ci
+
+  verification-tree-audit:
+    name: Verification tree audit (5 evidence groups)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Install numpy and mpmath (group D re-runs the L-chain live)
+        run: pip install numpy mpmath
+      - name: Run the whole-tree auditor (structure, trust base, Lean core, L1-L4, Makefile hygiene)
+        run: python verification/tools/audit/verify_repo.py
 
   lab-smoke:
     name: Research lab smoke (N=16)

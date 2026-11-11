@@ -5,7 +5,7 @@
 
 # `julia_levels/` — the independent Julia chain (L1–L5 + L7)
 
-> **Navigation:** [repository root](../README.md) › [verification](../README.md) › **`julia_levels`**
+> **Navigation:** [repository root](../../README.md) › [verification](../README.md) › **`julia_levels`**
 
 ![Julia](https://img.shields.io/badge/Julia_stdlib--only-9558B2?style=flat-square)
 ![Chain](https://img.shields.io/badge/Levels_L1%E2%80%93L5_%2B_L7-2EA043?style=flat-square)
@@ -43,8 +43,7 @@ julia l7_smagorinsky_kolmogorov.jl   # section 7 standalone
 ```
 
 Pinned verdicts of the chain are mirrored in
-[`data/results/baseline/`](../../data/results/baseline/README.md) and in
-[`results/`](results/README.md).
+[`data/results/baseline/`](../../../data/results/baseline/README.md).
 
 ## Output contract
 
@@ -53,4 +52,4 @@ Banner → compute from the closed forms → per-assertion `[PASS]`/`[FAIL]`
 
 ## License
 
-Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../LICENSE.md)).
+Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../../../LICENSE.md)).

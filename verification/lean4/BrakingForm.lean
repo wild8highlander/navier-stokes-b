@@ -1,5 +1,5 @@
-import ResearchPapersVerification.Common.Foundation
-import ResearchPapersVerification.Section1_CorrectionB.Basic
+import Foundation
+import Basic
 import Mathlib.Tactic
 import Mathlib.Data.Real.Pi.Bounds
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
@@ -39,7 +39,7 @@ b из геометрии относительных равновесий Кир
 -/ 
 
 noncomputable section
-open Real Complex ResearchPapersVerification
+open Real Complex Nsb
 
 namespace Braking2D
 

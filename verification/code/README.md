@@ -5,15 +5,15 @@
 
 # `code/` — The Physics Runs P1–P6 and the Core Libraries
 
-> **Navigation:** [repository root](../README.md) › **`code`**
+> **Navigation:** [repository root](../../README.md) › [verification](../README.md) › **`code`**
 
 ![Runs](https://img.shields.io/badge/Runs-P1%E2%80%93P6-2EA043?style=flat-square)
 ![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=flat-square&logo=python&logoColor=white)
 ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
 Executable Python programs of the b-correction program. Every run writes a
-JSON protocol to [`data/results/`](../data/results/README.md) and its final
-figures to [`data/plots/`](../data/plots/README.md). **Every number quoted in
+JSON protocol to [`data/results/`](../../data/results/README.md) and its final
+figures to [`data/plots/`](../../data/plots/README.md). **Every number quoted in
 the root README comes from these programs** — nothing in the documentation is
 hand-written, and every protocol JSON stores the command, parameters,
 tolerances and wall-clock time of its run, so any figure can be traced back to
@@ -63,7 +63,7 @@ script and register a new protocol, not to edit the pinned one.
 ## Requirements
 
 Python **3.11+** (reference environment: 3.12) with `numpy`, `scipy`,
-`matplotlib`, `mpmath` — see [`environment.yml`](../environment.yml) or run
+`matplotlib`, `mpmath` — see [`environment.yml`](../../environment.yml) or run
 `make install` at the repository root. All heavy loops are vectorized with
 numpy; a modern laptop runs the full chain in tens of minutes and the P6
 universality sweep (a million Rodrigues rotations) in under a minute.
@@ -83,12 +83,12 @@ universality sweep (a million Rodrigues rotations) in under a minute.
 
 Each program is idempotent and deterministic on a fixed platform: rerunning
 it must reproduce the pinned values in
-[`data/results/`](../data/results/README.md) up to the stated tolerances.
+[`data/results/`](../../data/results/README.md) up to the stated tolerances.
 If a value differs, treat it as a bug and file a
 [verification request](https://github.com/wild8highlander/navier-stokes-b/issues/new?template=verification_request.yml)
 — reproduction failures are triaged as high-priority. The JSON protocols are
 **immutable evidence**: their sha256 is pinned in
-[`MANIFEST.json`](../MANIFEST.json) and re-checked by CI, and regenerating
+[`MANIFEST.json`](../../MANIFEST.json) and re-checked by CI, and regenerating
 them is allowed only together with a re-run and a matching documentation
 update in the same change.
 
@@ -96,22 +96,24 @@ update in the same change.
 
 The physics runs consume the closed-form constant and the rotation operator
 that the verification framework asserts independently:
-[`verification/python_levels/`](../verification/python_levels/README.md)
+[`verification/scripts/python_levels/`](../scripts/python_levels/README.md)
 re-derives the L1–L5 chain these runs rest on; the L4 identity
 `ω′ = cos(dt·θ_b)·ω` is exactly what P2 and P3 exercise through the
 `b_rotation` mode; and the open-problems appendices in
-[`monograph/open-problems/`](../monograph/README.md) quote these protocols
+[`monograph/open-problems/`](../../monograph/README.md) quote these protocols
 as their evidence base.
 
 Since the **NSB-96-UPGRADE** package (2026-09-30), the same protocols are
 re-executed at doubled and further resolution by the laboratory suite in
-[`research_col_smar/tools/`](../research_col_smar/tools/README.md): lab L4
+[`research_col_smar/tools/`](../../research_col_smar/tools/README.md): lab L4
 re-runs the P5 protocol at 96³ (Ω_max 1.29966, I_BKM 17.8786 — convergence
 to the 48³ values within 1.9×10⁻²), lab L5 at 112³, labs L11/L12/L16 redo
-the diagnostics at both resolutions, and the repository auditor
-([`verification/repo_integrity/`](../verification/repo_integrity/README.md)
-checks group **C** — the presence, `ok`-status and pinned values of every
-protocol this directory produces — on every run of `make verify-repo`.
+the diagnostics at both resolutions. The tree auditor
+([`verification/tools/audit/verify_repo.py`](../tools/audit/README.md))
+verifies this directory's structural integrity (every component of the
+table above present), and the pytest layer
+([`verification/tests/`](../tests/README.md)) binds the constants these
+runs consume to the formal core — both on every CI push.
 
 When you change anything here, the intended workflow
 is: rerun, let the JSONs and plots regenerate, then update the documentation
@@ -180,13 +182,13 @@ checking any quoted number.
 
 ## Reproduction workflow, end to end
 
-1. `python3 code/p2_grid_convergence.py` — the fastest full-fidelity run
+1. `python3 verification/code/p2_grid_convergence.py` — the fastest full-fidelity run
    (minutes); diff your `data/results/p2_grid_convergence.json` against
    the pinned one (they should match to the stored tolerances);
-2. `NSE3D_SKIP=1 python3 verification/python_levels/verify_all.py` — the
+2. `NSE3D_SKIP=1 python3 verification/scripts/python_levels/verify_all.py` — the
    L1–L4 chain in about a minute;
-3. `cd code && ./run_all.sh` — the whole program (~40 min);
-4. `python3 code/make_plots.py` — regenerate the figures from your JSONs;
+3. `cd verification/code && ./run_all.sh` — the whole program (~40 min);
+4. `python3 verification/code/make_plots.py` — regenerate the figures from your JSONs;
 5. `make verify-manifest` — confirm the tree (your regenerated evidence
    will legitimately differ; that is the moment to run `make manifest` and
    commit everything atomically, per the data-layer contract).
@@ -199,6 +201,6 @@ highest-priority bugs this repository knows.
 
 ---
 
-Navigation: [repository root](../README.md) · [results](../data/results/README.md) · [plots](../data/plots/README.md) · [verification](../verification/README.md) · [IPL-RP-1.0](../LICENSE.md)
+Navigation: [repository root](../../README.md) · [results](../../data/results/README.md) · [plots](../../data/plots/README.md) · [verification hub](../README.md) · [IPL-RP-1.0](../../LICENSE.md)
 
 *Part of [wild8highlander/navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b) — © 2026 Isaev Iskhak Khamzatovich, all rights reserved.*

@@ -20,10 +20,10 @@ treated as security-relevant:
 1. **Supply-chain integrity** — any way for a third party to alter `MANIFEST.json`,
    `SHA256SUMS`, release archives, or the CI workflows so that verification silently
    passes on modified content.
-2. **Injection in the REST API** (`verification/api/`) and the web dashboard
-   (`verification/web-dashboard/`) if they are run outside an isolated environment.
-3. **Container escape or privilege escalation** in `verification/docker/`.
-4. **Malicious content in notebooks** (`verification/notebooks/`).
+2. **Dependency compromise** in the scientific stack (numpy/scipy/matplotlib/mpmath)
+   that the verification suites import.
+3. **Script injection** via crafted data files (JSON protocols, GIF assets) read by
+   the verifiers, the auditors or the animation factory.
 
 ## How to report
 

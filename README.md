@@ -6,7 +6,7 @@
 
 ### The Universal b-Correction Program for the Navier–Stokes Equations
 
-**An analytical route to global regularity of the 3D Navier–Stokes equations, carried end-to-end: closed-form constant → Kirchhoff derivation → proof chain → executed numerical program → eleven-language verification → two research satellites (Smagorinsky–Kolmogorov constants · fluid-lab web app) → monographs in two languages.**
+**An analytical route to global regularity of the 3D Navier–Stokes equations, carried end-to-end: closed-form constant → Kirchhoff derivation → proof chain → executed numerical program → machine-checked, cross-language verification → two research satellites (Smagorinsky–Kolmogorov constants · fluid-lab web app) → monographs in two languages.**
 
 [![Release](https://img.shields.io/github/v/release/wild8highlander/navier-stokes-b?style=for-the-badge&logo=github&label=Release)](https://github.com/wild8highlander/navier-stokes-b/releases)
 [![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=for-the-badge)](LICENSE.md)
@@ -16,15 +16,15 @@
 [![CI](https://img.shields.io/github/actions/workflow/status/wild8highlander/navier-stokes-b/ci.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=CI)](https://github.com/wild8highlander/navier-stokes-b/actions/workflows/ci.yml)
 [![Manifest](https://img.shields.io/badge/Manifest-sha256_verified-2EA043?style=for-the-badge&logo=gnubash&logoColor=white)](MANIFEST.json)
 [![Docs hygiene](https://img.shields.io/badge/Docs_hygiene-check_readmes-2EA043?style=for-the-badge)](.github/scripts/check_readmes.py)
-[![Platforms](https://img.shields.io/badge/Platform-Linux_·_macOS_·_Android_Termux-1284BA?style=for-the-badge)](TERMUX_GUIDE.md)
+[![Platforms](https://img.shields.io/badge/Platform-Linux_·_macOS-1284BA?style=for-the-badge)]
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](environment.yml)
 
 [![Runs](https://img.shields.io/badge/Runs-P1%E2%80%93P7_executed-2EA043?style=for-the-badge)](data/results/README.md)
 [![Chain](https://img.shields.io/badge/Chain-L1%E2%80%93L5_pinned-2EA043?style=for-the-badge)](data/results/baseline/README.md)
 [![Labs](https://img.shields.io/badge/NSB--96_Labs-L1%E2%80%93L17_67WIN%2F7DRAW%2F2LOSS-2B579A?style=for-the-badge)](research_col_smar/reports/README.md)
-[![Languages](https://img.shields.io/badge/Verification-11_languages_·_7_sections-9558B2?style=for-the-badge)](verification/README.md)
-[![Open problems](https://img.shields.io/badge/Open_Problems-7_of_7_executed-1284BA?style=for-the-badge)](OPEN_PROBLEMS_7.md)
-[![Plots](https://img.shields.io/badge/Figures-11_%2B_4_animations-2EA043?style=for-the-badge)](assets/figures/README.md)
+[![Verification](https://img.shields.io/badge/Verification-Lean_4_·_Python_·_Julia-9558B2?style=for-the-badge)](verification/README.md)
+[![Open problems](https://img.shields.io/badge/Open_Problems-7_of_7_executed-1284BA?style=for-the-badge)](monograph/open-problems/OPEN_PROBLEMS_7.md)
+[![Plots](https://img.shields.io/badge/Figures-11_%2B_7_animations-2EA043?style=for-the-badge)](assets/figures/README.md)
 
 [![Stars](https://img.shields.io/github/stars/wild8highlander/navier-stokes-b?style=for-the-badge&logo=github&label=Stars)](https://github.com/wild8highlander/navier-stokes-b/stargazers)
 [![Forks](https://img.shields.io/github/forks/wild8highlander/navier-stokes-b?style=for-the-badge&logo=github&label=Forks)](https://github.com/wild8highlander/navier-stokes-b/network/members)
@@ -53,7 +53,7 @@
 8. [Repository architecture](#8-repository-architecture)
 9. [What to read first](#9-what-to-read-first)
 10. [Quick start: reproduce everything](#10-quick-start-reproduce-everything)
-11. [The eleven-language verification framework](#11-the-eleven-language-verification-framework)
+11. [The verification framework](#11-the-verification-framework)
 12. [The seven open problems program](#12-the-seven-open-problems-program)
 13. [Figure and animation gallery](#13-figure-and-animation-gallery)
 14. [Verification, provenance and integrity](#14-verification-provenance-and-integrity)
@@ -111,14 +111,17 @@ Concretely, the repository contains, in one place:
   monograph, the full journal-style paper on NSE regularity, a compact
   preprint, the KdV continuation chapter with its §16.29 exact-solver
   protocol — with compilable LaTeX sources for everything that was typeset.
-- **The verification framework.** Eleven programming languages and **seven
-  research sections** re-derive the same facts from a single contract:
-  four proof assistants (Lean 4, Coq, Isabelle, Agda) machine-check the
-  structural statements, seven computational languages (Python, C++, Rust,
-  Haskell, Julia and the per-section ports) recompute the numbers from
-  scratch, a cross-language validator fails CI on any disagreement, and a
-  **repository-integrity auditor** walks the whole tree and confirms every
-  section and folder in one deterministic run. See §11.
+- **The verification framework.** Three languages with different
+  foundations re-derive the same facts from a single output contract:
+  **Lean 4** machine-checks the structural theorems (72 theorems, zero
+  `sorry`, the axiom base of 30 core theorems printed by an audit file),
+  **Python** recomputes the numbers from first principles (the L1–L5
+  chain, the constants suite), **Julia** recomputes them again through an
+  independent arithmetic path (L1–L5 + the Smagorinsky–Kolmogorov L7,
+  stdlib-only with its own FFT), a self-contained **monolithic verifier**
+  re-checks the whole numerical stack in 22 tasks, and a **tree auditor**
+  re-derives the integrity of the whole `verification/` directory in one
+  deterministic run. See §11.
 
 The repository was assembled from
 [`wild8highlander/research-papers`](https://github.com/wild8highlander/research-papers)
@@ -131,8 +134,8 @@ want the one-paragraph version: **the constant is closed-form, the
 mechanism is energy-conserving, the regularity argument is analytical, the
 numerics are executed and pinned at three resolutions, the satellite
 program closes the turbulence-constants loop, and the verification is
-redundant by design — four proof kernels and seven arithmetics all have to
-agree before anything is merged.**
+redundant by design — a proof kernel, two independent arithmetics and a
+self-contained monolith all have to agree before anything is merged.**
 
 Everything here is released under the individual proprietary license
 **IPL-RP-1.0** — you are welcome to read, cite and verify; see
@@ -188,10 +191,11 @@ geometry, many systems.
 | `ln(1 + b)` | `0.060512798266558946517506769086256666761756410746892` |
 | `C_s(C_K=1.5) = 1/(π(9/4)^{3/4})` | `0.1732659558297058017568595667273903913207704370073762727` |
 
-Every one of these digits is recomputed by each of the eleven verification
-ports from the closed form alone — no port ever reads a constant from a
-file. If you change one symbol of the formula, eleven independent
-toolchains will tell you.
+Every one of these digits is recomputed from the closed form alone — no
+verifier ever reads a constant from a file: the Python chain (mpmath, 50
+digits), the Julia chain (BigFloat), the constants suite and the
+monolith's Decimal tasks all land on the same digits. If you change one
+symbol of the formula, toolchains in three languages will tell you.
 
 <p align="center">
   <img src="assets/charts/chart_b_digits.png" alt="b digits" width="100%"/>
@@ -211,7 +215,7 @@ toolchains will tell you.
 ## 3. Headline results
 
 The verification chain **L1–L5** (reference implementation:
-[`verification/python_levels/`](verification/python_levels/README.md),
+[`verification/scripts/python_levels/`](verification/scripts/python_levels/README.md),
 pinned verdicts: [`data/results/baseline/`](data/results/baseline/README.md)):
 
 | Level | What it establishes | Recorded outcome |
@@ -231,7 +235,7 @@ pinned verdicts: [`data/results/baseline/`](data/results/baseline/README.md)):
 The executed open-problems program **P1–P7** (protocols:
 [`data/results/`](data/results/README.md), plots:
 [`data/plots/`](data/plots/README.md), registry:
-[`OPEN_PROBLEMS_7.md`](OPEN_PROBLEMS_7.md)):
+[`monograph/open-problems/OPEN_PROBLEMS_7.md`](monograph/open-problems/OPEN_PROBLEMS_7.md)):
 
 | # | Problem | Outcome (registered criteria → recorded values) |
 |---|---|---|
@@ -241,7 +245,7 @@ The executed open-problems program **P1–P7** (protocols:
 | **P4** | ensemble dispersion at Re = 2000 (T = 4 realizations, 2000 tracers) | `\|Δσ_y\|/σ_y` = **9.3×10⁻⁷** against the 2s/σ visibility threshold 4.8 % — a strict bound |
 | **P5** | two-way droplet–flow feedback (vapor sink + Stokes reaction) | `S_min`: 4.2135 → **3.8746**; growth slowed by **1.16 %**; vapor balance error **0.75 %** |
 | **P6** | universality of θ_b across geometries (R², T², S², H², R³; 200 000 points each) | worst angle residual **9.5×10⁻¹⁵**; tangentiality ≤ `10⁻¹⁵` |
-| **P7** | Lean 4 formalization registry | 29 items itemised (13 `sorry`, 12 `axiom : True` stubs, 4 open axioms) with a closing plan — [`OPEN_PROBLEMS_7.md`](OPEN_PROBLEMS_7.md) |
+| **P7** | Lean 4 formalization registry | the historical registry is §P7 of the [master document](monograph/open-problems/OPEN_PROBLEMS_7.md); the current Lean core carries **0 `sorry` / 0 project axioms** — see [`verification/lean4/`](verification/lean4/README.md) |
 
 The program's honesty rule, fixed *before* the runs: **both outcomes are
 results** — a measurable effect or a strict bound; which one was obtained
@@ -331,11 +335,11 @@ C_K(α) calibration, a-priori tests on 96³ DNS), re-derived in **three
 languages** (Python, C++, Julia — agreement to 5–6 significant digits),
 and sealed by its own two-language monograph with the chapter-15
 reproduction at doubled resolution. The **verification bridge** into the
-parent framework is **Section 7**
-([`verification/section7_smagorinsky_kolmogorov/`](verification/section7_smagorinsky_kolmogorov/README.md)):
-the master relation at 50 digits, the exact −3/4 exponent law, the
-Cassini/family theorems of the φ-audit, all under the standard output
-contract.
+parent framework: the master relation is re-derived at 50 digits by the
+Julia chain's **L7**
+([`verification/scripts/julia_levels/`](verification/scripts/julia_levels/README.md))
+and by monolith task 2, with the exact −3/4 exponent law, all under the
+standard output contract.
 
 ![The master relation C_s(C_K) and its exact −3/4 exponent](assets/figures/fig_master_relation.png)
 
@@ -413,12 +417,14 @@ navier-stokes-b/
 │   ├── results/            #   JSON protocols of every run + summary_numbers.json
 │   │   └── baseline/       #   pinned verdicts of the L1–L5 chain
 │   └── plots/              #   five publication-grade plots at 300 dpi
-├── verification/           # the eleven-language verification framework
-│   ├── lean4/ coq/ isabelle/ agda/        # Tier 1 — formal proofs
-│   ├── section1_correction_b/ … section7_…/   # Python reference ports, per section
-│   ├── cpp/ rust/ haskell/ julia_levels/ python_levels/   # Tier 2 — recomputation
-│   ├── repo_integrity/     #   the repository-wide auditor (9 groups)
-│   ├── common/ api/ demo/ docker/ notebooks/ tests/ scripts/ docs/
+├── verification/           # the verification framework
+│   ├── lean4/              #   Tier 1 — the Lean 4 formal core (72 theorems)
+│   ├── scripts/            #   Tier 2 — python_levels (L1–L5), julia_levels
+│   │                       #   (L1–L5 + L7), julia_lab, make_animations.py
+│   ├── code/               #   the physics runs P1–P6 + the constants suite
+│   ├── common/             #   the contract-enforcing aggregate runner
+│   ├── tests/ tools/audit/ #   pytest layer + the whole-tree auditors
+│   ├── verify_ns_full.py/.jl   # the self-contained 22-task monolith
 │   └── README.md           #   the framework hub — start here
 ├── research_col_smar/      # SATELLITE: the Smagorinsky–Kolmogorov constants program
 │   ├── code/{python,cpp,julia}/   # three-language implementation
@@ -433,12 +439,9 @@ navier-stokes-b/
 ├── assets/                 # SVG brand + the academic figure set + GIF animations
 ├── site/                   # the tabbed GitHub Pages project site
 ├── .github/                # CI/Pages/Release workflows, issue forms, scripts
-├── OPEN_PROBLEMS_7.md      # the registry of the seven open problems
 ├── VERIFICATION.md         # the verification & provenance hub
 ├── MANIFEST.json           # sha256 + byte size of every file in the build
 ├── Makefile                # install / test / verify-* / verify-repo / manifest
-├── push_wild8highlander.sh # idempotent one-command push (Linux / macOS / Termux)
-├── TERMUX_GUIDE.md         # step-by-step Android instructions
 └── LICENSE.md / .ru / .zh  # IPL-RP-1.0 in three languages
 ```
 
@@ -451,7 +454,7 @@ flowchart TD
     R --> L["Leray projection absorbs the gradient part"]
     L --> REG["Analytical regularity argument<br/>(BKM criterion under the b-protocol)"]
 
-    B --> V["11-language verification<br/>sections 1–7"]
+    B --> V["verification framework<br/>Lean 4 · Python · Julia"]
     REG --> P["Open problems P1–P7<br/>(pre-registered, executed)"]
     P --> DATA["data/results/*.json<br/>pinned protocols"]
     REG --> NSB["NSB-96 labs L1–L17<br/>48³ → 96³ → 112³"]
@@ -466,7 +469,7 @@ flowchart TD
 
     DATA --> MONO["Monographs RU/EN<br/>+ KdV chapter"]
     NSB --> MONO
-    V --> INT["repo_integrity/verify_repo.py<br/>9-group full-tree audit"]
+    V --> INT["tools/audit/verify_repo.py<br/>5-group tree audit"]
     COL --> INT
 ```
 
@@ -474,10 +477,10 @@ Every directory carries its own detailed `README.md` — the repository
 keeps a **docs-hygiene gate**
 ([`check_readmes.py`](.github/scripts/check_readmes.py)) that fails CI if
 any directory loses its README or if any README drifts from the
-English-only policy, and the new **repository-integrity auditor**
-([`verification/repo_integrity/`](verification/repo_integrity/README.md))
-re-checks all nine evidence groups — constants, protocols, labs,
-monographs, sections 1–7, figures, services — in one command
+English-only policy, and the **whole-tree auditor**
+([`verification/tools/audit/verify_repo.py`](verification/tools/audit/README.md))
+re-checks five evidence groups — structure, trust base, the Lean core,
+a live L1–L4 run and Makefile hygiene — in one command
 (`make verify-repo`), so the documentation cannot quietly rot.
 
 | I want to… | Go to |
@@ -485,15 +488,14 @@ monographs, sections 1–7, figures, services — in one command
 | read the result in 15 minutes | [`papers/preprint/preprint_v2.pdf`](papers/preprint/README.md) |
 | check a specific number | [`data/results/summary_numbers.json`](data/results/README.md) |
 | see the plots and figures | [`data/plots/`](data/plots/README.md) · [`assets/figures/`](assets/figures/README.md) |
-| run the physics | [`code/`](code/README.md) → `./run_all.sh` |
+| run the physics | [`verification/code/`](verification/code/README.md) → `./run_all.sh` |
 | watch the fluid live | [`research_webapp_fluid/index.html`](research_webapp_fluid/README.md) |
 | explore the constants program | [`research_col_smar/`](research_col_smar/README.md) |
 | read the lab reports | [`research_col_smar/reports/`](research_col_smar/reports/README.md) |
-| audit the formal proofs | [`verification/lean4/`](verification/lean4/README.md) + [`TODO_sorry.md`](verification/lean4/TODO_sorry.md) |
+| audit the formal proofs | [`verification/lean4/`](verification/lean4/README.md) + [`Tests/AxiomAudit.lean`](verification/lean4/Tests/AxiomAudit.lean) |
 | run the whole verification matrix | [`verification/`](verification/README.md) → `make verify-all` |
-| audit the whole repository tree | [`make verify-repo`](verification/repo_integrity/README.md) |
+| audit the whole verification tree | [`make verify-repo`](verification/tools/audit/README.md) |
 | cite the work | [`CITATION.cff`](CITATION.cff) / [§19](#19-citation) |
-| mirror the repo from a phone | [`TERMUX_GUIDE.md`](TERMUX_GUIDE.md) |
 
 ## 9. What to read first
 
@@ -542,26 +544,25 @@ purpose: claim inventory → entry points → dispute protocol.
 ## 10. Quick start: reproduce everything
 
 Requirements: **Python 3.11+** (reference: 3.12) with `numpy`, `scipy`,
-`matplotlib`, `mpmath`. Install any of three ways —
-`pip install -r verification/api/requirements.txt`,
-`conda env create -f environment.yml`, or `make install`. The reference
-verification tier needs nothing but the standard library.
+`matplotlib`, `mpmath`. Install either via
+`conda env create -f environment.yml` or `make install`. The monolithic
+verifier needs nothing but the standard library.
 
 ```bash
 # 1) the physics chain P1–P6 + plots (sequential; P3 ~15 min on 2 cores)
-cd code && ./run_all.sh
+cd verification/code && ./run_all.sh
 
 # 2) a single run, if you want one number
-python3 code/p2_grid_convergence.py
+python3 verification/code/p2_grid_convergence.py
 
-# 3) the verification chain L1–L5 + L7 (~20 min on 2 cores; L5 may be skipped)
-python3 verification/python_levels/verify_all.py
-NSE3D_SKIP=1 python3 verification/python_levels/verify_all.py   # fast mode
+# 3) the verification chain L1–L5 (~8 s fast mode, ~20 min with L5)
+NSE3D_SKIP=1 python3 verification/scripts/python_levels/verify_all.py
+python3 verification/scripts/python_levels/verify_all.py        # full chain
 
-# 4) the seven Python reference sections (< 1 min total)
-make verify-all
+# 4) every verification suite through the aggregate runner (~30 s)
+make verify-python
 
-# 5) the repository-wide integrity audit — every section and folder (9 groups)
+# 5) the whole-tree integrity audit of verification/ (5 evidence groups)
 make verify-repo
 
 # 6) the NSB-96 laboratories (deterministic, ~10 min total)
@@ -571,14 +572,11 @@ bash research_col_smar/tools/nsb_lab.sh
 # 7) the Smagorinsky–Kolmogorov program P1–P4 (three languages)
 python3 research_col_smar/code/python/run_all.py
 
-# 8) the extended computational ring (needs the toolchains installed)
-make verify-extended          # C++17, Rust, Haskell + Lean/Coq builds
+# 8) the self-contained monolith, CI preset (tasks 1–15, two-pass, ~100 s)
+python3 verification/verify_ns_full.py --ci
 
-# 9) the formal tier, one kernel at a time
-cd verification/lean4 && lake build && lake exe check
-cd ../coq && coq_makefile -f _CoqProject -o Makefile && make
-cd ../isabelle && isabelle build -D .
-cd ../agda && agda --safe Section1_CorrectionB/CorrectionB.agda
+# 9) the formal tier (needs elan/lake; every other check is toolchain-free)
+cd verification/lean4 && lake build && lake env lean Tests/AxiomAudit.lean
 
 # 10) integrity: check the whole tree against MANIFEST.json
 make verify-manifest
@@ -597,64 +595,66 @@ stated tolerances — if it does not, that is treated as a bug, and the
 right response is a
 [verification request](https://github.com/wild8highlander/navier-stokes-b/issues/new?template=verification_request.yml).
 
-Typical wall-clock times on two cores: section ports seconds; L1–L4 about
-two minutes combined; L5 ten to twenty minutes; the NSB-96 extra labs
-about ten minutes; P3 about fifteen minutes; the full `run_all.sh` chain
-about forty minutes; the repository-integrity audit under one minute.
-Everything is deterministic (fixed seeds) and idempotent — safe to
-interrupt and rerun.
+Typical wall-clock times on two cores: L1–L4 about eight seconds
+combined (fast mode); L5 ten to twenty minutes; the monolith CI preset
+about one hundred seconds; the aggregate runner over all suites about
+thirty seconds; the NSB-96 extra labs about ten minutes; P3 about
+fifteen minutes; the full `run_all.sh` chain about forty minutes; the
+whole-tree audit under one minute. Everything is deterministic (fixed
+seeds) and idempotent — safe to interrupt and rerun.
 
-## 11. The eleven-language verification framework
+## 11. The verification framework
 
 <p align="center">
-  <img src="assets/brand/lanes11_animated.svg" alt="eleven verification lanes converging into one checksum-verified node" width="100%"/>
+  <img src="assets/brand/lanes11_animated.svg" alt="verification lanes converging into one checksum-verified node" width="100%"/>
 </p>
 <p align="center">
   <img src="assets/charts/chart_verification_matrix.png" alt="verification matrix" width="100%"/>
 </p>
 
-Every headline claim of the program is re-derived in **eleven languages
-across seven research sections** from a single shared contract, organized
-as two tiers plus infrastructure. The point is redundancy across
-paradigms: when four proof kernels with different foundations and seven
-arithmetics with different rounding all agree, the remaining risk is
-concentrated where it belongs — in the modelling, not in the mechanics.
+Every headline claim of the program is re-derived by the verification
+framework — three languages, two tiers, one shared output contract —
+plus a self-contained monolith and a whole-tree auditor. The point is
+redundancy across paradigms: when a proof kernel, two arithmetics with
+different rounding and a verifier that trusts nobody all agree, the
+remaining risk is concentrated where it belongs — in the modelling, not
+in the mechanics. The full map lives in
+[`verification/README.md`](verification/README.md).
 
-![The verification matrix — sections 1–7 in every language](assets/figures/fig_verification_matrix.png)
+![The verification matrix — what is verified where](assets/figures/fig_verification_matrix.png)
 
 | Tier | Languages & toolchains | Where |
 |---|---|---|
-| **Formal (Tier 1)** | Lean 4 (v4.14, Mathlib4) · Coq/Rocq 8.18 (`Reals` + `lra`) · Isabelle-HOL 2024 (`Complex_Main`, Isar) · Agda 2.6 (constructive, explicit trust base) | [`verification/lean4/`](verification/lean4/README.md) · [`coq/`](verification/coq/README.md) · [`isabelle/`](verification/isabelle/README.md) · [`agda/`](verification/agda/README.md) |
-| **Computational (Tier 2)** | Python (stdlib reference) · C++17 (BLAS/LAPACK + pseudospectral) · Rust (std-only workspace) · Haskell (GHC 9.4, pure) · Julia (stdlib-only, own FFT) | [`verification/python_levels/`](verification/python_levels/README.md) · [`cpp/`](verification/cpp/README.md) · [`rust/`](verification/rust/README.md) · [`haskell/`](verification/haskell/README.md) · [`julia_levels/`](verification/julia_levels/README.md) |
-| **Sections (per-topic ports)** | Sections 1–7 re-ported per language | [`verification/section1_correction_b/`](verification/section1_correction_b/README.md) … [`section7_smagorinsky_kolmogorov/`](verification/section7_smagorinsky_kolmogorov/README.md) |
-| **Integrity (whole tree)** | the repository auditor — 9 evidence groups, all folders | [`verification/repo_integrity/`](verification/repo_integrity/README.md) |
-| **Infrastructure** | REST API · Gradio/Streamlit demos · 7 pinned Docker images · Jupyter · pytest suite · shell scripts | [`verification/api/`](verification/api/README.md) · [`demo/`](verification/demo/README.md) · [`docker/`](verification/docker/README.md) · [`notebooks/`](verification/notebooks/README.md) · [`tests/`](verification/tests/README.md) · [`scripts/`](verification/scripts/README.md) |
+| **Formal (Tier 1)** | Lean 4 v4.14 + Mathlib v4.14.0 — 72 theorems, 0 `sorry`, 0 project axioms, the axiom base of 30 theorems printed by `Tests/AxiomAudit.lean` | [`verification/lean4/`](verification/lean4/README.md) |
+| **Computational (Tier 2)** | Python (mpmath 50 digits, pseudo-spectral NSE, the L1–L5 chain) · Julia (stdlib-only, own radix-2 FFT, L1–L5 + L7) | [`verification/scripts/python_levels/`](verification/scripts/python_levels/README.md) · [`verification/scripts/julia_levels/`](verification/scripts/julia_levels/README.md) |
+| **The monolith** | one stdlib-only file, 22 tasks, two-pass, own PNG/GIF/SVG/PDF renderer (Python mirror of the same contract in Julia) | [`verification/verify_ns_full.py`](verification/verify_ns_full.py) · [`.jl`](verification/verify_ns_full.jl) |
+| **Physics runs** | P1–P6: microphysics, convergence, buoyancy, ensemble, droplets, universality — JSON protocols, deterministic seeds | [`verification/code/`](verification/code/README.md) |
+| **Integrity (whole tree)** | the auditor — 5 evidence groups: structure, trust base, Lean core, live L1–L4 run, Makefile hygiene | [`verification/tools/audit/`](verification/tools/audit/README.md) |
+| **Cross-layer tests** | pytest: Lean structure + numerical consistency, seconds, every push | [`verification/tests/`](verification/tests/README.md) |
 | **Research lab (dynamics)** | 3D pseudospectral NSE solver · BKM blow-up monitors · dt/N extrapolation protocols · b-rotation audit · EN/RU switchable | [`research_lab/`](research_lab/README.md) ([RU](research_lab/README.ru.md)) |
 
-The seven sections map one-to-one onto the research program: **1** — the
-polarization correction *b* itself; **2** — the NSE regularity chain of
-the preprint; **3** — the AB-Cloud Hofstadter Hamiltonian; **4** — KdV
-soliton interactions; **5** — the Klein attractor; **6** — the
-Riemann-zeros correspondence; **7** — the Smagorinsky–Kolmogorov master
-relation and the φ-audit theorems of the satellite program. The same
-assertions appear in every language — `b_pos`, `b_lt_one`, `sin_θ_b_eq_b`,
-the rotation algebra, the master relation, the per-section identities — so
-a reviewer diffs *mathematical content* across systems, not code style.
+The framework verifies the claims that the current program rests on:
+the constant and its bounds (`b_pos`, `b_lt_one`, `0.062 < b < 0.063`),
+`sin θ_b = b`, the Rodrigues rotation algebra, the braking protocol on
+Leray modes with its γ_eff limit, the proof chain `α = √168/(2π)`,
+`L_min`, `γ = b`, the KdV soliton, the Klein bridge, and — numerically —
+the Smagorinsky–Kolmogorov master relation (Julia L7 + monolith task 2).
+The same assertion appears in every tier under the same name, so a
+reviewer diffs *mathematical content* across systems, not code style.
 
-The **output contract** is what makes the matrix mechanical: banner →
+The **output contract** is what makes the framework mechanical: banner →
 compute from closed forms (no data files) → per-assertion
 `[PASS]`/`[FAIL]` → one `JSON: {…}` verdict line → exit 0 only if
-everything passed. The cross-language validator
-([`verification/tests/`](verification/tests/README.md)) parses every
-port's verdict and fails CI on any disagreement; the formal tier mirrors
-the contract with lemma names, and its admitted gaps are public:
-[`verification/lean4/TODO_sorry.md`](verification/lean4/TODO_sorry.md)
-itemises every `sorry`, mechanical `axiom : True` stub and genuine
-open-problem axiom, each with a difficulty estimate and a closing plan —
-including the new Section-7 ledger entries (`S7-CASSINI`, `S7-EXPLAW`,
-`S7-ANTI`). Nothing is hidden behind unconditional assumptions — the
-trust base is enumerable, and in Agda it is literally two postulates
-(π and √3) plus the Section-7 sign induction.
+everything passed. The cross-layer pytest suite
+([`verification/tests/`](verification/tests/README.md)) binds the layers
+and fails CI on any disagreement; the formal tier mirrors the contract
+with lemma names, and its trust base is public and enumerable:
+[`verification/lean4/Tests/AxiomAudit.lean`](verification/lean4/Tests/AxiomAudit.lean)
+prints the axiom dependencies of 30 core theorems (only the standard
+`propext`, `Quot.sound`, `Classical.choice` are allowed), the static
+audit confirms zero `sorry`/`admit`/project axioms, and what is *not*
+formalized is stated openly in the modules — nothing is hidden behind
+unconditional assumptions.
 
 ## 12. The seven open problems program
 
@@ -665,7 +665,7 @@ trust base is enumerable, and in Agda it is literally two postulates
 The research program was operationalized as seven open problems, each
 pre-registered with a statement, a step plan and success criteria
 *before* execution; the registry lives in
-[`OPEN_PROBLEMS_7.md`](OPEN_PROBLEMS_7.md) and every number in it comes
+[`monograph/open-problems/OPEN_PROBLEMS_7.md`](monograph/open-problems/OPEN_PROBLEMS_7.md) and every number in it comes
 from a real run of 2026-09-16 (protocols in
 [`monograph/open-problems/results/`](monograph/open-problems/results/README.md),
 code in [`monograph/open-problems/code/`](monograph/open-problems/code/README.md),
@@ -680,8 +680,10 @@ protocols, never the other way round.
 ## 13. Figure and animation gallery
 
 The repository ships a self-contained academic figure set (300 dpi PNG,
-[`assets/figures/`](assets/figures/README.md)) and four physics
-animations (GIF, [`assets/animations/`](assets/animations/README.md)).
+[`assets/figures/`](assets/figures/README.md)) and seven physics
+animations (GIF, [`assets/animations/`](assets/animations/README.md),
+regenerated by
+[`verification/scripts/make_animations.py`](verification/scripts/make_animations.py)).
 GitHub renders all of them natively — every claim above has its picture.
 
 | Figure | Shows |
@@ -726,14 +728,16 @@ checkable without trusting the author**. Concretely:
   size of every file. `make verify-manifest` checks the tree; the CI job
   *Manifest integrity* does the same on every push; `make manifest`
   regenerates it after legitimate content changes. On top of the byte
-  checksums, the **repository auditor** (`make verify-repo`) re-derives
-  the constants, re-runs the sections, and walks every folder — see
-  [`verification/repo_integrity/`](verification/repo_integrity/README.md).
+  checksums, the **whole-tree auditor** (`make verify-repo`) re-derives
+  the integrity of the verification framework in five evidence groups —
+  structure, trust base, Lean core, a live L1–L4 run, Makefile hygiene —
+  see [`verification/tools/audit/`](verification/tools/audit/README.md).
 - **Continuous integration.** The
   [CI workflow](https://github.com/wild8highlander/navier-stokes-b/actions/workflows/ci.yml)
-  runs four jobs on every push and PR: advisory ruff lint over the legacy
-  research code, pytest on Python 3.11 + 3.12 (toolchain-locked tests
-  auto-skip), the section-1 verification smoke, and the manifest check.
+  runs seven jobs on every push and PR: ruff lint, pytest on Python
+  3.11 + 3.12 (`verification/tests/`, toolchain-locked tests auto-skip),
+  the aggregate verification smoke, the monolith's CI preset, the
+  whole-tree audit, the research-lab smoke, and the manifest check.
   Pages and Release workflows deploy [`site/`](site/README.md) and cut
   tagged archives with `SHA256SUMS.txt`.
 - **Citable provenance.** The work carries a Zenodo DOI
@@ -761,20 +765,21 @@ the verification layer usable without installing anything:
   (overview · verify · download) deployed automatically by
   [`pages.yml`](.github/workflows/README.md) when `site/` or `assets/`
   change.
-- **REST API** — [`verification/api/server.py`](verification/api/README.md)
-  exposes every section verifier (now including **section 7**) over HTTP
-  with the same PASS/JSON contract, so monitoring jobs and CI can audit
-  from any language.
-- **Interactive demos** — [`verification/demo/`](verification/demo/README.md)
-  provides Gradio and Streamlit front-ends over the same verifiers.
-- **Containers** — [`verification/docker/`](verification/docker/README.md)
-  pins one image per formal/extended toolchain (Lean 4, Coq, Isabelle,
-  Agda, C++, Rust, Haskell); `make docker-build && make docker-up`
-  reproduces the CI environment locally.
-- **Notebooks** — [`verification/notebooks/`](verification/notebooks/README.md)
-  is the Jupyter entry point for interactive exploration.
-- **Dashboard manifest** — [`verification/web-dashboard/`](verification/web-dashboard/README.md)
-  registers the JS dashboard package.
+- **Browser fluid lab** —
+  [`research_webapp_fluid/index.html`](research_webapp_fluid/README.md),
+  a self-contained in-browser Navier–Stokes laboratory.
+- **The Julia laboratory app** —
+  [`verification/scripts/julia_lab/`](verification/scripts/julia_lab/README.md),
+  an interactive solver/diagnostics/report application
+  (`run.sh`, EN/RU interface, PDF reports).
+- **The animation factory** —
+  [`verification/scripts/make_animations.py`](verification/scripts/make_animations.py)
+  rebuilds all seven GIFs of [`assets/animations/`](assets/animations/README.md)
+  from the repository's own solvers in ~2 minutes.
+- **The aggregate runner** —
+  [`verification/common/python/main.py`](verification/common/README.md)
+  executes every verification suite under one output contract and
+  one exit code, ready for cron/CI reuse.
 
 ## 16. Contributing
 

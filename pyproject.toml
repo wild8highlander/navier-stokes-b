@@ -58,15 +58,12 @@ extend-exclude = [
     "nsb-lab-research",
     "papers",
     "research_col_smar",
-    "verification/python_levels",
-    "verification/section1_correction_b",
-    "verification/section2_preprint",
-    "verification/section3_ab_cloud",
-    "verification/section4_kdv",
-    "verification/section5_klein_attractor",
-    "verification/section6_riemann_zeros",
-    "verification/section7_smagorinsky_kolmogorov",
-    "verification/patch_docx.py",
+    # the physics verifiers moved under verification/scripts at the
+    # restructuring; the monolith is a self-contained legacy-style file
+    "verification/scripts/python_levels",
+    "verification/verify_ns_full.py",
+    # the symbolic companion of the Lean core keeps Lean-lemma-style names
+    "verification/lean4/braking_symbolic_check.py",
 ]
 
 [tool.ruff.lint]

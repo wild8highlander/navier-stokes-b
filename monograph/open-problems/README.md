@@ -36,8 +36,8 @@ python3 code/make_figures.py  # regenerates the figures from the JSONs
 ```
 
 The root-level twin of this program — with the same master document and
-the Lean 4 registry (P7) — is [`OPEN_PROBLEMS_7.md`](../../OPEN_PROBLEMS_7.md)
-at the repository root; the extension line (P4b, P5b) continues in
+the Lean 4 registry (P7) — is the master document [`OPEN_PROBLEMS_7.md`](OPEN_PROBLEMS_7.md)
+in this package; the extension line (P4b, P5b) continues in
 [`open-problems-b/`](../open-problems-b/README.md).
 
 ---

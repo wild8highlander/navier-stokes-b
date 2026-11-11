@@ -1,8 +1,8 @@
-import ResearchPapersVerification.Common.Foundation
+import Foundation
 import Mathlib.Tactic
 
 noncomputable section
-open Real ResearchPapersVerification
+open Real Nsb
 
 namespace Section4
 

@@ -5,44 +5,67 @@
 
 # `assets/animations/` — the physics animation set
 
-> **Navigation:** [repository root](../README.md) › [assets](../README.md) › **`animations`**
+> **Navigation:** [repository root](../../README.md) › [assets](../README.md) › **`animations`**
 
-![Count](https://img.shields.io/badge/Animations-4_GIF-2EA043?style=flat-square)
-![Renders](https://img.shields.io/badge/GitHub-native--rendering-2B579A?style=flat-square)
+![Count](https://img.shields.io/badge/Animations-7_GIF-2EA043?style=flat-square)
+![Generator](https://img.shields.io/badge/Regenerator-make__animations.py-2B579A?style=flat-square)
 ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
 ---
 
 GitHub renders GIF files natively in Markdown, so this directory is the
-repository's **moving-figure layer**: four animations, each produced by a
-real solver or an exact solution, embedded in the root README so that the
+repository's **moving-figure layer**: seven animations, each produced by
+a real solver or an exact closed form, embedded in the root README and
+in [`verification/README.md`](../../verification/README.md) so that the
 physics can be *watched*, not just asserted.
 
 | Animation | What you see | How it is produced |
 |---|---|---|
-| [`anim_b_rotation.gif`](anim_b_rotation.gif) | a vector field on a shell rotated **stepwise by `θ_b` = 3.5765013°** about the vortex axis `ω̂`; the cumulative angle counter climbs one θ_b per frame while `‖u′‖ = ‖u‖` holds at every step — the energy-neutrality statement made visible | the exact Rodrigues form, 40 steps, deterministic seed 20260916 |
-| [`anim_kdv_collision.gif`](anim_kdv_collision.gif) | the **exact Hirota two-soliton collision** of the KdV equation: the tall and the shallow soliton approach, pass through each other, and separate with unchanged shapes — the §16.29 benchmark in one loop | the closed-form Hirota solution `u = 2 ∂²ₓ ln F`, 96 frames |
-| [`anim_taylor_green.gif`](anim_taylor_green.gif) | the **2D Taylor–Green decay** — the symmetric vortex lattice of the L4/L5 protocols dissolving under viscosity, colored by vorticity, with live `t` and `E` readouts | a real pseudo-spectral solver (N = 96, ν = 10⁻³, RK2, 2/3-dealiasing, Leray projection) |
-| [`anim_spectrum_cascade.gif`](anim_spectrum_cascade.gif) | the **angle-averaged spectrum `E(k, t)`** of the same run: the energy migrating downscale, the spectral slopes emerging against the k⁻⁵/³ and k⁻³ reference lines | the shell spectrum of the same solver's frames |
+| [`anim_b_rotation.gif`](anim_b_rotation.gif) | a vector field on a sphere rotated **stepwise by `θ_b` = 3.5765013°** about `ω̂ = ẑ`; the counter climbs one θ_b per frame while `max |‖u′‖ − ‖u‖|` stays at machine zero — the energy-neutrality statement made visible | the exact Rodrigues form, 40 steps, deterministic seed 20260916 |
+| [`anim_kdv_collision.gif`](anim_kdv_collision.gif) | the **exact Hirota two-soliton collision** of the KdV equation: the tall and the shallow soliton approach, pass through each other, and separate with unchanged shapes and amplitudes | the closed form `u = 2 ∂²ₓ ln F`, 96 frames |
+| [`anim_taylor_green.gif`](anim_taylor_green.gif) | the **2D Taylor–Green decay** — the symmetric vortex lattice dissolving under viscosity, colored by vorticity, with live `t` and `E` readouts | the repository's own [`code/tg2d_core.py`](../../verification/code/tg2d_core.py) pseudo-spectral solver (N = 96, ν = 10⁻³, RK4, 2/3-dealiasing, Leray projection) |
+| [`anim_spectrum_cascade.gif`](anim_spectrum_cascade.gif) | the **angle-averaged spectrum `E(k, t)`** of the same run: the energy migrating downscale against the k⁻⁵ᐟ³ and k⁻³ reference lines | the shell spectrum of the same solver's frames |
+| [`anim_rayleigh_benard.gif`](anim_rayleigh_benard.gif) | **Rayleigh–Bénard convection** at Gr·Pr = 7.1·10⁵: thermal plumes rising and falling, live `Nu_hot` readout growing past 8, CFL ≤ 0.187 | the registered P3 equations ([`code/p3_buoyancy.py`](../../verification/code/p3_buoyancy.py)): ψ–ω Boussinesq, free-slip, Nz = 144, dt = 1.5·10⁻⁶ |
+| [`anim_vortex_filaments.gif`](anim_vortex_filaments.gif) | two vortex rings **leapfrogging through each other** along their axis: the rear ring contracts, the front one expands, they exchange places | segment Biot–Savart with a blob core ε² = ε₀² + 4νt, RK4 (the §27b machinery), 24 nodes per ring |
+| [`anim_layered_braking.gif`](anim_layered_braking.gif) | the **layered braking model** (§27): twelve layer circulations Γᵢ decaying as dΓᵢ/dt = −bᵢΓᵢ/T, with the braking torque τ = −Σ bᵢΓᵢΔz and its log-decrement against mean(b) | the exact solution of the model the monolith's tasks 11–14 verify |
+
+## Regenerating
+
+One command rebuilds the entire set — deterministic seeds, self-checking
+(frame counts, sizes, a non-blank-pixel assertion), a `JSON: {…}`
+verdict and a non-zero exit on any failure:
+
+```bash
+python3 verification/scripts/make_animations.py             # all 7, ~2 min
+python3 verification/scripts/make_animations.py --only rayleigh_benard
+```
+
+The generator lives in the verification framework
+([`verification/scripts/make_animations.py`](../../verification/scripts/make_animations.py))
+and imports the repository's own physics cores, so what you can watch is
+what the verifiers check. Requires the scientific stack from
+[`environment.yml`](../../environment.yml).
 
 ## Relation to the pinned protocols
 
 The animations are *illustrative physics*, computed with the same
-numerical ideas as the pinned protocols (pseudo-spectral discretization,
-2/3 dealiasing, Leray projection) but at visual-grade parameters — they
-are not the protocols themselves, and the repository is careful about the
-distinction: the auditable numbers live in
-[`data/results/`](../../data/results/README.md) and
+numerical ideas — and, for Taylor–Green and Rayleigh–Bénard, the same
+solver code — as the pinned protocols, at visual-grade parameters where
+noted. The repository is careful about the distinction: the auditable
+numbers live in [`data/results/`](../../data/results/README.md) and
 [`research_col_smar/results/`](../../research_col_smar/results/README.md);
 these GIFs exist so a reader can *see* the mechanisms those numbers
 describe.
 
 ## Technical notes
 
-- Format: GIF 8 fps-ish (`PillowWriter`), sizes 0.3–1.6 MB, loop forever.
-- Deterministic: fixed seeds, no random palettes — a regeneration run
-  reproduces the files.
-- The static companion set is [`assets/figures/`](../figures/README.md).
+- Format: GIF89a via matplotlib's `PillowWriter`, 8–16 fps, loop
+  forever; total set ≈ 6.6 MB, the heaviest file 2.4 MB.
+- Deterministic: fixed seeds everywhere (`20260916`, solver seed 7) — a
+  regeneration run reproduces the files bit-for-bit up to PNG/GIF
+  encoder metadata.
+- The static companion set is [`assets/figures/`](../figures/README.md);
+  the brand headers are [`assets/brand/`](../brand/README.md).
 
 ## License
 

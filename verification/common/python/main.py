@@ -1,85 +1,87 @@
-"""Main entry point for the Python verification aggregate.
+"""Main entry point of the verification aggregate.
 
-Runs the per-section reference verifier (verification/sectionN_*/python/verify.py)
-as a subprocess and enforces the repository-wide output contract:
+Runs a verification suite as a subprocess and enforces the
+repository-wide output contract:
 
     banner -> per-assertion [PASS]/[FAIL] -> JSON: {...} verdict line
-    exit 0 only if every assertion of the section passed.
+    exit 0 only if every assertion of the suite passed.
+
+The runner never imports suite code — every suite is executed as a
+subprocess so that a crash, a hang or a broken interpreter is a verdict,
+not an exception inside the runner.
 
 Usage:
-    python main.py --section 1 --preset default
-    python main.py --all              # run every section 1..7
+    python main.py --suite levels --preset default
+    python main.py --all                      # every suite, quick preset
+    python main.py --list                     # suite registry as TSV
 """
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
 
-COMMON_DIR = Path(__file__).parent
-VERIFICATION_DIR = COMMON_DIR.parent.parent
-
-SECTION_DIRS = {
-    1: "section1_correction_b",
-    2: "section2_preprint",
-    3: "section3_ab_cloud",
-    4: "section4_kdv",
-    5: "section5_klein_attractor",
-    6: "section6_riemann_zeros",
-    7: "section7_smagorinsky_kolmogorov",
-}
-
-try:
-    from config import SECTION_NAMES  # section display names
-except ImportError:  # fallback when run from another working directory
-    sys.path.insert(0, str(COMMON_DIR))
-    from config import SECTION_NAMES
+sys.path.insert(0, str(Path(__file__).parent))
+from config import SUITE_NAMES, get_config  # noqa: E402
 
 
-def run_section(section: int, preset: str) -> bool:
-    """Run one section verifier; return True iff it passed."""
-    print(f"Section {section}: {SECTION_NAMES.get(section, 'Unknown')}")
-    print(f"Preset: {preset}")
-
-    verifier = (VERIFICATION_DIR / SECTION_DIRS[section] / "python" / "verify.py").resolve()
-    if not verifier.is_file():
-        print(f"[FAIL] verifier not found: {verifier.relative_to(VERIFICATION_DIR)}")
-        print(json.dumps({"section": section, "language": "python",
-                          "values": {}, "all_passed": False}))
+def run_suite(suite: str, preset: str) -> bool:
+    """Run one suite; return True iff it passed under the contract."""
+    argv, env, name = get_config(suite, preset)
+    print(f"=== {suite}: {name}")
+    print(f"preset: {preset}")
+    proc_env = dict(os.environ)
+    proc_env.update(env)
+    try:
+        proc = subprocess.run(
+            [sys.executable, *argv], capture_output=True, text=True,
+            env=proc_env, timeout=3600)
+    except subprocess.TimeoutExpired:
+        print("[FAIL] suite timed out")
+        print(json.dumps({"suite": suite, "all_passed": False}))
         return False
-
-    proc = subprocess.run(
-        [sys.executable, str(verifier), "--preset", preset],
-        capture_output=True, text=True,
-    )
     out = proc.stdout or ""
     if out:
         print(out.rstrip())
     if proc.returncode != 0 and proc.stderr:
-        print(proc.stderr.rstrip())
+        print(proc.stderr.rstrip()[-2000:])
 
     passed = proc.returncode == 0 and "FAIL" not in out
-    # forward the verifier's own JSON verdict line; synthesise one if absent
-    json_lines = [ln for ln in out.splitlines() if ln.startswith("JSON: ")]
-    if not json_lines:
-        verdict = {"section": section, "language": "python",
-                   "values": {}, "all_passed": passed}
-        print(f"JSON: {json.dumps(verdict)}")
+    if not any(ln.startswith("JSON: ") for ln in out.splitlines()):
+        print(f"JSON: {json.dumps({'suite': suite, 'all_passed': passed})}")
     return passed
 
 
 def main() -> int:
     argv = sys.argv[1:]
-    sections = list(SECTION_DIRS)
-    if "--section" in argv:
-        section = int(argv[argv.index("--section") + 1])
-        if section not in SECTION_DIRS:
-            print(f"ERROR: unknown section {section} (valid: 1..6)")
-            return 2
-        sections = [section]
-    preset = argv[argv.index("--preset") + 1] if "--preset" in argv else "default"
+    if "--list" in argv:
+        for key, name in SUITE_NAMES.items():
+            print(f"{key}\t{name}")
+        return 0
 
-    ok = all(run_section(s, preset) for s in sections)
-    if not ok:
+    suites = list(SUITE_NAMES)
+    if "--suite" in argv:
+        idx = argv.index("--suite") + 1
+        if idx >= len(argv):
+            print("ERROR: --suite expects a value")
+            return 2
+        suites = argv[idx].split(",")
+        unknown = [s for s in suites if s not in SUITE_NAMES]
+        if unknown:
+            print(f"ERROR: unknown suite(s) {unknown} (valid: {sorted(SUITE_NAMES)})")
+            return 2
+    preset = argv[argv.index("--preset") + 1] if "--preset" in argv else "default"
+    if "--all" in argv:
+        preset = "quick"
+
+    results = {}
+    for suite in suites:
+        results[suite] = run_suite(suite, preset)
+
+    verdict = {"suites": results, "preset": preset,
+               "all_passed": all(results.values())}
+    print(f"JSON: {json.dumps(verdict)}")
+    if not verdict["all_passed"]:
         print("VERIFICATION: FAILED")
         return 1
     print("VERIFICATION: all assertions passed")

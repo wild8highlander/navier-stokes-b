@@ -5,7 +5,7 @@
 
 # `python_levels/` — the L1–L5 reference chain
 
-> **Navigation:** [repository root](../README.md) › [verification](../README.md) › **`python_levels`**
+> **Navigation:** [repository root](../../README.md) › [verification](../README.md) › **`python_levels`**
 
 ![Python](https://img.shields.io/badge/Python_3.11%2B-3776AB?style=flat-square)
 ![Chain](https://img.shields.io/badge/Levels_L1%E2%80%93L5-2EA043?style=flat-square)
@@ -34,10 +34,10 @@ the NSB-96 laboratories) is required to agree with this directory.
 ## Run
 
 ```bash
-python3 verification/python_levels/verify_all.py               # full chain (~20 min)
-NSE3D_SKIP=1 python3 verification/python_levels/verify_all.py  # fast mode (skip L5)
-NSE3D_SMALL=1 python3 verification/python_levels/verify_all.py # L5 control mode
-python3 verification/python_levels/l2_rotation_algebra.py      # one level
+python3 verification/scripts/python_levels/verify_all.py               # full chain (~20 min)
+NSE3D_SKIP=1 python3 verification/scripts/python_levels/verify_all.py  # fast mode (skip L5)
+NSE3D_SMALL=1 python3 verification/scripts/python_levels/verify_all.py # L5 control mode
+python3 verification/scripts/python_levels/l2_rotation_algebra.py      # one level
 ```
 
 Wall-clock on two cores: L1–L4 about two minutes combined; L5 ten to
@@ -46,8 +46,8 @@ twenty minutes. Deterministic (fixed seeds), idempotent, safe to interrupt.
 ## Pinned verdicts
 
 [`results/`](results/README.md) mirrors the verdict JSONs; the baseline
-copies live in [`data/results/baseline/`](../../data/results/baseline/README.md).
+copies live in [`data/results/baseline/`](../../../data/results/baseline/README.md).
 
 ## License
 
-Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../LICENSE.md)).
+Part of **navier-stokes-b**, license IPL-RP-1.0 ([LICENSE.md](../../../LICENSE.md)).
