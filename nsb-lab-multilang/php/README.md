@@ -45,7 +45,7 @@ php nsb_lab.php --experiment tg --n 16 --t 0.5
 php nsb_lab.php --flow katrina
 php nsb_lab.php --roadmap                   # FFT benchmark
 php nsb_lab.php --list-flows
-php nsb_lab.php                             # interactive TUI (9 = язык)
+php nsb_lab.php                             # interactive TUI (9 = language)
 ```
 
 Results land in `~/nsb_lab_results/{logs,data,plots,reports}`.
@@ -92,7 +92,7 @@ Shared grammar (root README §5) with the experiment set `tg|abc|baudit`
 documented deviation). Options: `--quick --suite normal|hard
 --experiment --flow <id|all|list> --roadmap --selftest --list-flows
 --report --n --nu --dt --t --gif --lang --out --seed --no-color --ascii
---help --version`. TUI as everywhere; item 9 switches язык/English
+--help --version`. TUI as everywhere; item 9 switches Russian/English
 live.
 
 ## The self-test

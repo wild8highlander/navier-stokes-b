@@ -125,7 +125,9 @@ runs on every push:
 4. **Verification monolith** — `verify_ns_full.py --ci` (tasks 1–15, two-pass);
 5. **Verification tree audit** — `tools/audit/verify_repo.py`, 5 evidence groups;
 6. **Research lab smoke** — the four lab experiments at N = 16;
-7. **Manifest integrity** — sha256 check of the whole tree.
+7. **Docs hygiene** — every directory has a README, primary READMEs are
+   English-only;
+8. **Manifest integrity** — sha256 check of the whole tree.
 
 A green badge ⇔ the tree on `main` matches its manifest and the core checks pass.
 

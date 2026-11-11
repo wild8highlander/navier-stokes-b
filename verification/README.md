@@ -82,6 +82,7 @@ verification/
 | [`scripts/julia_levels/`](scripts/README.md) | Julia | L1–L5 + L7 through an independent arithmetic path | `julia verify_all.jl` |
 | [`scripts/julia_lab/`](scripts/README.md) | Julia | interactive laboratory app (solvers, diagnostics, reports) | `./run.sh` |
 | [`scripts/make_animations.py`](scripts/README.md) | Python | regenerates every GIF in [`assets/animations/`](../assets/animations/README.md) | `python3 make_animations.py` |
+| [`scripts/make_charts.py`](scripts/README.md) | Python | regenerates the verification charts (coverage matrix ×2, CI gates, P1–P7) from live JSON/Lean sources | `python3 make_charts.py` |
 | [`common/python/`](common/README.md) | Python | aggregate runner enforcing the output contract | `main.py --all` |
 | [`code/`](code/README.md) | Python | physics runs **P1–P6** (microphysics, convergence, buoyancy, ensemble, droplets, universality) | `run_all.sh` |
 | [`verify_ns_full.py`](verify_ns_full.py) | Python | the 22-task monolith + TUI/CLI + own PNG/GIF/SVG/PDF renderer | `--ci` · `--task N` · `--menu` |
@@ -234,9 +235,10 @@ stock footage. The full annotated set lives in
   <img src="../assets/animations/anim_vortex_filaments.gif" alt="two vortex rings leapfrogging, segment Biot–Savart" width="49%"/>
 </p>
 <p align="center">
-  <img src="../assets/animations/anim_kdv_collision.gif" alt="exact Hirota two-soliton collision" width="32%"/>
-  <img src="../assets/animations/anim_spectrum_cascade.gif" alt="E(k,t) against k^-5/3 and k^-3" width="32%"/>
-  <img src="../assets/animations/anim_layered_braking.gif" alt="layered braking dΓ/dt = −bΓ/T" width="32%"/>
+  <img src="../assets/animations/anim_kdv_collision.gif" alt="exact Hirota two-soliton collision" width="24%"/>
+  <img src="../assets/animations/anim_spectrum_cascade.gif" alt="E(k,t) against k^-5/3 and k^-3" width="24%"/>
+  <img src="../assets/animations/anim_layered_braking.gif" alt="layered braking dΓ/dt = −bΓ/T" width="24%"/>
+  <img src="../assets/animations/anim_klein_orbit.gif" alt="the Klein bridge: orbit of rotation by θ_b, three gaps, Weyl uniformity" width="24%"/>
 </p>
 
 | Animation | Produced by |
@@ -248,6 +250,7 @@ stock footage. The full annotated set lives in
 | `anim_kdv_collision` | the exact Hirota two-soliton `u = 2 ∂²ₓ ln F` |
 | `anim_spectrum_cascade` | shell spectrum E(k, t) of the same tg2d_core run vs k⁻⁵ᐟ³ and k⁻³ |
 | `anim_layered_braking` | exact solution of dΓᵢ/dt = −bᵢΓᵢ/T with τ = −Σ bᵢΓᵢΔz (§27) |
+| `anim_klein_orbit` | the Klein bridge: uniform filling by the rotation θ_b, three-gap classes, Weyl D_k — monolith task 5 |
 
 ## 9. How to run everything
 
@@ -262,7 +265,8 @@ make -C verification verify-repo       # the whole-tree auditor (5 groups)
 make -C verification audit             # the static Lean audit
 
 make verify-repo                       # the same targets exist in the root Makefile
-python3 verification/scripts/make_animations.py   # regenerate all 7 GIFs (~2 min)
+python3 verification/scripts/make_animations.py   # regenerate all 8 GIFs (~2 min)
+python3 verification/scripts/make_charts.py       # regenerate the verification charts (~2 s)
 ```
 
 Timings above are from two vCPU cores. Everything is deterministic

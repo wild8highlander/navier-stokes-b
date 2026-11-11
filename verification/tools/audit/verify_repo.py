@@ -70,7 +70,8 @@ def group_a_structure():
         + [f"code/{f}" for f in CODE_FILES]
         + ["verify_ns_full.py", "verify_ns_full.jl", "verify_ns_full_codes.zip",
            "tests/test_lean_core.py", "tests/test_numerical_consistency.py",
-           "tools/audit/audit_lean.py", "tools/audit/verify_repo.py"]
+           "tools/audit/audit_lean.py", "tools/audit/verify_repo.py",
+           "scripts/make_animations.py", "scripts/make_charts.py"]
         + ["README.md", "Makefile", "CODEOWNERS"]
     )
     missing = [p for p in required if not (VER / p).is_file()]

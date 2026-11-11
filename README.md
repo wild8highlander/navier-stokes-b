@@ -24,7 +24,7 @@
 [![Labs](https://img.shields.io/badge/NSB--96_Labs-L1%E2%80%93L17_67WIN%2F7DRAW%2F2LOSS-2B579A?style=for-the-badge)](research_col_smar/reports/README.md)
 [![Verification](https://img.shields.io/badge/Verification-Lean_4_·_Python_·_Julia-9558B2?style=for-the-badge)](verification/README.md)
 [![Open problems](https://img.shields.io/badge/Open_Problems-7_of_7_executed-1284BA?style=for-the-badge)](monograph/open-problems/OPEN_PROBLEMS_7.md)
-[![Plots](https://img.shields.io/badge/Figures-11_%2B_7_animations-2EA043?style=for-the-badge)](assets/figures/README.md)
+[![Plots](https://img.shields.io/badge/Figures-11_%2B_8_animations-2EA043?style=for-the-badge)](assets/figures/README.md)
 
 [![Stars](https://img.shields.io/github/stars/wild8highlander/navier-stokes-b?style=for-the-badge&logo=github&label=Stars)](https://github.com/wild8highlander/navier-stokes-b/stargazers)
 [![Forks](https://img.shields.io/github/forks/wild8highlander/navier-stokes-b?style=for-the-badge&logo=github&label=Forks)](https://github.com/wild8highlander/navier-stokes-b/network/members)
@@ -606,7 +606,7 @@ seeds) and idempotent — safe to interrupt and rerun.
 ## 11. The verification framework
 
 <p align="center">
-  <img src="assets/brand/lanes11_animated.svg" alt="verification lanes converging into one checksum-verified node" width="100%"/>
+  <img src="assets/brand/lanes_verification_animated.svg" alt="five verification lanes — Lean 4, Python, Julia, the monolith and the tree auditor — converging into one checksum-verified node" width="100%"/>
 </p>
 <p align="center">
   <img src="assets/charts/chart_verification_matrix.png" alt="verification matrix" width="100%"/>
@@ -621,7 +621,7 @@ remaining risk is concentrated where it belongs — in the modelling, not
 in the mechanics. The full map lives in
 [`verification/README.md`](verification/README.md).
 
-![The verification matrix — what is verified where](assets/figures/fig_verification_matrix.png)
+![Verification coverage — what each component establishes](assets/figures/fig_verification_matrix.png)
 
 | Tier | Languages & toolchains | Where |
 |---|---|---|
@@ -721,6 +721,10 @@ GitHub renders all of them natively — every claim above has its picture.
 
 ## 14. Verification, provenance and integrity
 
+<p align="center">
+  <img src="assets/brand/ci_pipeline_animated.svg" alt="the eight CI gates lighting up in sequence, 8/8 PASS" width="100%"/>
+</p>
+
 The repository is engineered around one principle: **every claim must be
 checkable without trusting the author**. Concretely:
 
@@ -734,10 +738,11 @@ checkable without trusting the author**. Concretely:
   see [`verification/tools/audit/`](verification/tools/audit/README.md).
 - **Continuous integration.** The
   [CI workflow](https://github.com/wild8highlander/navier-stokes-b/actions/workflows/ci.yml)
-  runs seven jobs on every push and PR: ruff lint, pytest on Python
+  runs eight gates on every push and PR: ruff lint, pytest on Python
   3.11 + 3.12 (`verification/tests/`, toolchain-locked tests auto-skip),
   the aggregate verification smoke, the monolith's CI preset, the
-  whole-tree audit, the research-lab smoke, and the manifest check.
+  whole-tree audit, the research-lab smoke, the docs-hygiene README
+  gate, and the manifest check.
   Pages and Release workflows deploy [`site/`](site/README.md) and cut
   tagged archives with `SHA256SUMS.txt`.
 - **Citable provenance.** The work carries a Zenodo DOI

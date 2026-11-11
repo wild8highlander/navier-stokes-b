@@ -583,6 +583,87 @@ def anim_layered_braking(outdir: Path, fps: int = 12, n_frames: int = 80):
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+# 8. Орбита Клейна: поворот на θ_b, three-gap и равномерность (Вейль)
+# ═══════════════════════════════════════════════════════════════════════════
+def anim_klein_orbit(outdir: Path, fps: int = 10, n_frames: int = 96):
+    """Мост Клейна (монолит, задача 5): θ_b/π иррационально (Нивен), поэтому
+    орбита поворота на θ_b заполняет окружность равномерно (теорема Вейля),
+    а длины интервалов между точками принимают не более трёх значений
+    (теорема о трёх интервалах). Всё считается точно, кадр за кадром."""
+    b = 1.0 / (4 * math.pi + 2 * math.sqrt(3))
+    theta_b = math.asin(b)
+    frames = []
+    for k in range(1, n_frames + 1):
+        angles = np.sort(theta_b * np.arange(k))
+        gaps = np.diff(np.concatenate([angles, [2 * np.pi]]))
+        ug = np.unique(np.round(gaps, 12))
+        # расхождение Вейля D_k по сетке из k точек
+        grid = np.sort(angles)
+        emp = np.arange(1, k + 1) / k
+        uni = grid / (2 * np.pi)
+        dk = float(np.max(np.abs(emp - uni)))
+        frames.append((angles, np.sort(gaps), len(ug), dk, k))
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(9.6, 5.0), dpi=110,
+                                   gridspec_kw={"width_ratios": [1, 1.1]})
+    fig.subplots_adjust(left=0.05, right=0.97, top=0.84, bottom=0.10,
+                        wspace=0.25)
+    for a in (ax1, ax2):
+        a.set_facecolor(BG)
+        for s in a.spines.values():
+            s.set_color(GRID)
+    th = np.linspace(0, 2 * np.pi, 200)
+    ax1.plot(np.cos(th), np.sin(th), color=GRID, lw=1.2)
+    ax1.set_aspect("equal")
+    ax1.set_xlim(-1.25, 1.25)
+    ax1.set_ylim(-1.25, 1.25)
+    ax1.set_axis_off()
+    ax1.scatter([1.0], [0.0], s=26, color=AMBER, zorder=5)
+    sc = ax1.scatter([], [], s=14, zorder=4)
+    sc.set_clim(0, n_frames)
+    ax2.set_xlim(0, 2 * np.pi)
+    ax2.set_ylim(0, 1.12)
+    ax2.set_xlabel("gap length (rad)", fontsize=9, color=FG)
+    ax2.set_ylabel("gap / max gap", fontsize=9, color=FG)
+    ax2.grid(alpha=0.3, lw=0.4)
+    dots = ax2.scatter([], [], s=6, color="#4a5872", zorder=2)
+    txt = fig.text(0.5, 0.945, "", ha="center", fontsize=10.5,
+                   family="monospace", color=AMBER)
+    ax1.set_title("orbit {k·θ_b mod 2π} on the circle", fontsize=10, color=FG)
+    ax2.set_title("gaps between consecutive points (three-gap: ≤ 3 classes)",
+                  fontsize=10, color=FG)
+
+    def update(i):
+        angles, sgaps, n_distinct, dk, k = frames[i]
+        sc.set_offsets(np.column_stack([np.cos(angles), np.sin(angles)]))
+        sc.set_array(np.arange(k))
+        dots.set_offsets(np.column_stack([sgaps, sgaps / sgaps.max()]))
+        mx = sgaps.max()
+        # vlines возвращает LineCollection, который живёт в ax2.collections —
+        # чистим именно их, иначе стебли накапливаются кадр за кадром
+        from matplotlib.collections import LineCollection
+        for c in list(ax2.collections):
+            if isinstance(c, LineCollection):
+                c.remove()
+        for g in np.unique(np.round(sgaps, 12)):
+            ax2.vlines(g, 0, g / mx, color=AMBER, lw=9)
+        txt.set_text(
+            f"k = {k:3d} · Σθ = {math.degrees(k * theta_b):7.1f}° · "
+            f"gap classes ≤ 3 → {n_distinct} · "
+            f"Weyl D_k = {dk:.3f}")
+        return sc, dots, txt
+
+    anim = FuncAnimation(fig, update, frames=len(frames), blit=False,
+                         interval=1000 // fps)
+    path = outdir / "anim_klein_orbit.gif"
+    _save_gif(fig, anim, path, fps)
+    return path, (f"rotation by θ_b = {math.degrees(theta_b):.7f}°: the "
+                  f"Niven irrationality of θ_b/π forces uniform filling "
+                  f"(Weyl) and the three-gap structure — monolith task 5 "
+                  f"in one loop, {n_frames} frames")
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 BUILDERS = {
     "b_rotation": anim_b_rotation,
     "kdv_collision": anim_kdv_collision,
@@ -591,6 +672,7 @@ BUILDERS = {
     "rayleigh_benard": anim_rayleigh_benard,
     "vortex_filaments": anim_vortex_filaments,
     "layered_braking": anim_layered_braking,
+    "klein_orbit": anim_klein_orbit,
 }
 
 

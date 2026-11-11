@@ -7,7 +7,7 @@
 
 > **Navigation:** [repository root](../../README.md) › [assets](../README.md) › **`animations`**
 
-![Count](https://img.shields.io/badge/Animations-7_GIF-2EA043?style=flat-square)
+![Count](https://img.shields.io/badge/Animations-8_GIF-2EA043?style=flat-square)
 ![Generator](https://img.shields.io/badge/Regenerator-make__animations.py-2B579A?style=flat-square)
 ![License](https://img.shields.io/badge/License-IPL--RP--1.0-red?style=flat-square)
 
@@ -28,6 +28,7 @@ physics can be *watched*, not just asserted.
 | [`anim_rayleigh_benard.gif`](anim_rayleigh_benard.gif) | **Rayleigh–Bénard convection** at Gr·Pr = 7.1·10⁵: thermal plumes rising and falling, live `Nu_hot` readout growing past 8, CFL ≤ 0.187 | the registered P3 equations ([`code/p3_buoyancy.py`](../../verification/code/p3_buoyancy.py)): ψ–ω Boussinesq, free-slip, Nz = 144, dt = 1.5·10⁻⁶ |
 | [`anim_vortex_filaments.gif`](anim_vortex_filaments.gif) | two vortex rings **leapfrogging through each other** along their axis: the rear ring contracts, the front one expands, they exchange places | segment Biot–Savart with a blob core ε² = ε₀² + 4νt, RK4 (the §27b machinery), 24 nodes per ring |
 | [`anim_layered_braking.gif`](anim_layered_braking.gif) | the **layered braking model** (§27): twelve layer circulations Γᵢ decaying as dΓᵢ/dt = −bᵢΓᵢ/T, with the braking torque τ = −Σ bᵢΓᵢΔz and its log-decrement against mean(b) | the exact solution of the model the monolith's tasks 11–14 verify |
+| [`anim_klein_orbit.gif`](anim_klein_orbit.gif) | the **Klein bridge**: the orbit {k·θ_b mod 2π} filling the circle uniformly, the gap classes collapsing to ≤ 3 (the three-gap theorem), the Weyl discrepancy D_k shrinking — monolith task 5 in one loop | the exact rotation by θ_b with Niven's irrationality; gaps and D_k computed per frame |
 
 ## Regenerating
 
@@ -36,7 +37,7 @@ One command rebuilds the entire set — deterministic seeds, self-checking
 verdict and a non-zero exit on any failure:
 
 ```bash
-python3 verification/scripts/make_animations.py             # all 7, ~2 min
+python3 verification/scripts/make_animations.py             # all 8, ~2 min
 python3 verification/scripts/make_animations.py --only rayleigh_benard
 ```
 
@@ -60,7 +61,7 @@ describe.
 ## Technical notes
 
 - Format: GIF89a via matplotlib's `PillowWriter`, 8–16 fps, loop
-  forever; total set ≈ 6.6 MB, the heaviest file 2.4 MB.
+  forever; total set ≈ 7.2 MB, the heaviest file 2.4 MB.
 - Deterministic: fixed seeds everywhere (`20260916`, solver seed 7) — a
   regeneration run reproduces the files bit-for-bit up to PNG/GIF
   encoder metadata.

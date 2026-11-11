@@ -23,7 +23,7 @@ streamlines and mathematical glyph work.
 | Hero | `hero_animated.svg` | turbulent chaos resolving into ordered vortex rings; the constants strip |
 | Identity | `logo_animated.svg`, `avatar_animated.svg` | rotating vortex + `b` monogram (512×512, rounded / circular) |
 | Section headers | `header_*.svg` (15) | one animated miniature scene per README topic — verification matrix, eleven lanes, NSB-96 scoreboard, KdV solitons, fluid lab, evidence layer, monographs, research lab, papers, satellites, output contract, sections 1–7 |
-| Diagrams | `chaos_order_animated.svg`, `pipeline_animated.svg`, `lanes11_animated.svg`, `b_dial_animated.svg`, `scoreboard_animated.svg`, `spectrum_animated.svg`, `kdv_collision_animated.svg`, `fluid_vortex_animated.svg` | the program's core stories as seamless loops: chaos→order, the seven-module pipeline, the 11-language convergence, the θ_b rotation dial, the lab scoreboard, the spectral slopes, the two-soliton collision, vortex merging |
+| Diagrams | `chaos_order_animated.svg`, `pipeline_animated.svg`, `lanes_verification_animated.svg`, `ci_pipeline_animated.svg`, `b_dial_animated.svg`, `scoreboard_animated.svg`, `spectrum_animated.svg`, `kdv_collision_animated.svg`, `fluid_vortex_animated.svg` | the program's core stories as seamless loops: chaos→order, the module pipeline, the five verification lanes converging into the checksum node, the seven CI gates, the θ_b rotation dial, the lab scoreboard, the spectral slopes, the two-soliton collision, vortex merging |
 
 ## Design tokens
 

@@ -7,7 +7,7 @@
 
 > **Navigation:** [repository root](../README.md) › **`research_lab`**
 
-**Language: EN** | [RU — Русская версия](README.ru.md)
+**Language: EN** | [RU — Russian version](README.ru.md)
 
 ![status](https://img.shields.io/badge/CI-lab--smoke-blue?style=flat-square)
 ![numpy](https://img.shields.io/badge/stack-numpy%20only-9cf?style=flat-square)

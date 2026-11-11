@@ -8,7 +8,7 @@
 <img src="assets/logo.png" width="150" alt="b-volume research logo"/>
 
 # The b-Correction & the Vortex Volume
-### Поправка «б» и объём вихря — quantitative research for [navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b)
+### The b-correction and vortex volume — quantitative research for [navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b)
 
 **What volume of water corresponds to ONE b-correction?**
 One vortex — one correction. Merging vortices add their corrections.
@@ -135,7 +135,7 @@ master table of numbers — is available as two full monographs:
 
 | Language | PDF | DOCX |
 |---|---|---|
-| 🇷🇺 Русская | [`monographs/RU/Монография_Поправка_б_и_объём_вихря_RU.pdf`](monographs/RU/Монография_Поправка_б_и_объём_вихря_RU.pdf) | [`Монография_..._RU.docx`](monographs/RU/Монография_Поправка_б_и_объём_вихря_RU.docx) |
+| 🇷🇺 Russian | [`monographs/RU/Монография_Поправка_б_и_объём_вихря_RU.pdf`](monographs/RU/Монография_Поправка_б_и_объём_вихря_RU.pdf) | [`Монография_..._RU.docx`](monographs/RU/Монография_Поправка_б_и_объём_вихря_RU.docx) |
 | 🇬🇧 English | [`monographs/EN/Monograph_b_correction_and_vortex_volume_EN.pdf`](monographs/EN/Monograph_b_correction_and_vortex_volume_EN.pdf) | [`Monograph_..._EN.docx`](monographs/EN/Monograph_b_correction_and_vortex_volume_EN.docx) |
 
 Each monograph: dark scholarly cover, clickable TOC, 13 chapters +
@@ -193,21 +193,6 @@ Snippets and the porting recipe: [`lab-monitor/README.md`](lab-monitor/README.md
                   RU/EN monographs, lab monitor v2.2.0}
 }
 ```
-
-## 🇷🇺 Кратко по-русски
-
-В репозитории [navier-stokes-b](https://github.com/wild8highlander/navier-stokes-b)
-поправка «б» — чисто математический угол, а вода занимает объём. Здесь
-гипотеза автора («один вихрь — одна поправка; при слиянии поправки
-складываются; всё зависит от объёма жидкости») превращена в
-количественную теорию: введён **б-заряд** B = ∫|n_b·ω|dV, доказано
-**точное тождество** div(R_b u) = +sin θ_b·(n_b·ω) + (1−cos θ_b)·(n_b·∇)(n_b·u),
-показано, что одна поправка при единичной завихренности — это объём
-**V₁ = 4π+2√3 ≈ 16.02** (6.46% ячейки), а в реальной воде — от капли тумана
-до тысяч кубометров в зависимости от якоря завихренности. Двенадцать
-детерминированных опытов (включая динамическую аннигиляцию на Хоу–Ло) —
-все PASS; монографии на русском и английском (PDF + DOCX) — в
-[`monographs/`](monographs/).
 
 ---
 

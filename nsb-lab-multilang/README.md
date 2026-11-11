@@ -59,7 +59,7 @@ C, C++, Rust, Go and PHP** — the strongest smoke test this repo has.
 ## What problem does this lab study?
 
 <p align="center">
-  <img src="../assets/brand/lanes11_animated.svg" alt="eleven verification lanes converging into one checksum-verified node" width="100%"/>
+  <img src="../assets/brand/lanes_verification_animated.svg" alt="five verification lanes converging into one checksum-verified node" width="100%"/>
 </p>
 
 The three-dimensional incompressible Euler equations,

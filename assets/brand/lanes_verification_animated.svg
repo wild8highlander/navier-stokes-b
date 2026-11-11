@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" role="img" aria-label="navier-stokes-b — verification lanes: Lean 4, Python, Julia, monolith and the tree auditor converging into one checksum-verified node">
+<defs>
+  <linearGradient id="lvBg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#0D1117"/><stop offset=".55" stop-color="#0A0E1A"/><stop offset="1" stop-color="#0B1226"/>
+  </linearGradient>
+  <linearGradient id="lvAm" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#00E5FF"/><stop offset="1" stop-color="#F59E0B"/>
+  </linearGradient>
+  <radialGradient id="lvGlowC" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#00E5FF" stop-opacity=".5"/><stop offset="1" stop-color="#00E5FF" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="lvGlowA" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#F59E0B" stop-opacity=".45"/><stop offset="1" stop-color="#F59E0B" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="lvGlowP" cx=".5" cy=".5" r=".5">
+    <stop offset="0" stop-color="#A855F7" stop-opacity=".4"/><stop offset="1" stop-color="#A855F7" stop-opacity="0"/>
+  </radialGradient>
+  <pattern id="lvGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M40 0H0V40" fill="none" stroke="#16233F" stroke-width="1"/>
+  </pattern>
+  <filter id="lvSoft" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur stdDeviation="3"/>
+  </filter>
+  <filter id="lvSoft16" x="-120%" y="-120%" width="340%" height="340%">
+    <feGaussianBlur stdDeviation="16"/>
+  </filter>
+  <style>
+    .mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; }
+    .laneLabel { font-size: 15px; font-weight: 700; letter-spacing: 1px; }
+    .flow  { stroke-dasharray: 7 9; animation: lvDash 1.15s linear infinite; }
+    @keyframes lvDash { to { stroke-dashoffset: -32; } }
+    .comet { animation: lvComet 3.4s linear infinite; }
+    .c2 { animation-delay: .5s; } .c3 { animation-delay: 1.1s; }
+    .c4 { animation-delay: 1.7s; } .c5 { animation-delay: 2.3s; }
+    @keyframes lvComet {
+      0%   { offset-distance: 0%;   opacity: 0; }
+      6%   { opacity: 1; }
+      92%  { opacity: 1; }
+      100% { offset-distance: 100%; opacity: 0; }
+    }
+    .nodeGlow { animation: lvBreath 2.6s ease-in-out infinite; }
+    @keyframes lvBreath { 0%,100% { opacity: .75; } 50% { opacity: 1; } }
+    .tick   { animation: lvPop 2.6s ease-in-out infinite; }
+    @keyframes lvPop { 0%,100% { opacity: .8; } 50% { opacity: 1; } }
+    .badge  { animation: lvBadgeIn 1s ease-out both, lvBreathe 3s ease-in-out 1s infinite; }
+    @keyframes lvBadgeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes lvBreathe { 0%,100% { opacity: 1; } 50% { opacity: .86; } }
+    .cap { animation: lvFlick 4.5s ease-in-out infinite; }
+    @keyframes lvFlick { 0%,100% { opacity: .55; } 50% { opacity: .95; } }
+  </style>
+</defs>
+
+<rect width="1280" height="420" fill="url(#lvBg)"/>
+<rect width="1280" height="420" fill="url(#lvGrid)" opacity=".55"/>
+<circle cx="880" cy="210" r="150" fill="url(#lvGlowC)" filter="url(#lvSoft16)"/>
+<circle cx="880" cy="210" r="60"  fill="url(#lvGlowA)" filter="url(#lvSoft16)"/>
+<circle cx="200" cy="360" r="120" fill="url(#lvGlowP)" filter="url(#lvSoft16)" opacity=".5"/>
+
+<!-- caption -->
+<text x="56" y="56" class="mono" font-size="22" font-weight="700" fill="url(#lvAm)">the verification framework</text>
+<text x="56" y="82" class="mono" font-size="13" fill="#8B949E">one output contract · five independent lanes · every claim re-derived</text>
+
+<!-- lanes: LEAN 4, PYTHON, JULIA, MONOLITH, AUDITOR -->
+<g>
+  <!-- lane paths (from x=250 to x=820), converging to the node -->
+  <path class="flow" d="M250 140 H820" stroke="#A855F7" stroke-width="2.2" fill="none" opacity=".8"/>
+  <path class="flow" d="M250 190 H820" stroke="#22D3EE" stroke-width="2.2" fill="none" opacity=".8"/>
+  <path class="flow" d="M250 240 H820" stroke="#22D3EE" stroke-width="2.2" fill="none" opacity=".8"/>
+  <path class="flow" d="M250 290 H820" stroke="#F59E0B" stroke-width="2.2" fill="none" opacity=".8"/>
+  <path class="flow" d="M250 340 H820" stroke="#3FB950" stroke-width="2.2" fill="none" opacity=".8"/>
+
+  <!-- comets travelling each lane -->
+  <g class="comet">
+    <circle cx="250" cy="140" r="4" fill="#A855F7" filter="url(#lvSoft)"/>
+    <animateMotion dur="3.4s" begin="0.5s" repeatCount="indefinite" path="M250 140 H820"/>
+  </g>
+  <g class="comet c2">
+    <circle cx="250" cy="190" r="4" fill="#22D3EE" filter="url(#lvSoft)"/>
+    <animateMotion dur="3.4s" begin="1.1s" repeatCount="indefinite" path="M250 190 H820"/>
+  </g>
+  <g class="comet c3">
+    <circle cx="250" cy="240" r="4" fill="#22D3EE" filter="url(#lvSoft)"/>
+    <animateMotion dur="3.4s" begin="1.7s" repeatCount="indefinite" path="M250 240 H820"/>
+  </g>
+  <g class="comet c4">
+    <circle cx="250" cy="290" r="4" fill="#F59E0B" filter="url(#lvSoft)"/>
+    <animateMotion dur="3.4s" begin="2.3s" repeatCount="indefinite" path="M250 290 H820"/>
+  </g>
+  <g class="comet c5">
+    <circle cx="250" cy="340" r="4" fill="#3FB950" filter="url(#lvSoft)"/>
+    <animateMotion dur="3.4s" repeatCount="indefinite" path="M250 340 H820"/>
+  </g>
+
+  <!-- lane labels -->
+  <g class="mono">
+    <g><rect x="60" y="122" width="182" height="36" rx="9" fill="#1A1033" stroke="#A855F7" stroke-width="1.4"/>
+       <text x="76" y="146" class="laneLabel" fill="#C4B5FD">LEAN 4 · 72 THM</text></g>
+    <g><rect x="60" y="172" width="182" height="36" rx="9" fill="#0E2A4A" stroke="#22D3EE" stroke-width="1.4"/>
+       <text x="76" y="196" class="laneLabel" fill="#A5F3FC">PYTHON · L1–L5</text></g>
+    <g><rect x="60" y="222" width="182" height="36" rx="9" fill="#0E2A4A" stroke="#22D3EE" stroke-width="1.4"/>
+       <text x="76" y="246" class="laneLabel" fill="#A5F3FC">JULIA · L1–L5+L7</text></g>
+    <g><rect x="60" y="272" width="182" height="36" rx="9" fill="#2A1D06" stroke="#F59E0B" stroke-width="1.4"/>
+       <text x="76" y="296" class="laneLabel" fill="#FCD34D">MONOLITH · 22</text></g>
+    <g><rect x="60" y="322" width="182" height="36" rx="9" fill="#0E2F1D" stroke="#3FB950" stroke-width="1.4"/>
+       <text x="76" y="346" class="laneLabel" fill="#86EFAC">AUDITOR · 5 GRP</text></g>
+  </g>
+</g>
+
+<!-- convergence node -->
+<g>
+  <circle cx="900" cy="240" r="56" fill="none" stroke="#1F3A5F" stroke-width="2" class="nodeGlow"/>
+  <circle cx="900" cy="240" r="44" fill="none" stroke="#F59E0B" stroke-width="2.5" stroke-dasharray="4 6">
+    <animateTransform attributeName="transform" type="rotate" from="0 900 240" to="360 900 240" dur="9s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="900" cy="240" r="30" fill="#0A0E1A" stroke="#F59E0B" stroke-width="2" filter="url(#lvSoft)"/>
+  <path class="tick" d="M886 240 l10 11 l20 -24" stroke="#3FB950" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g class="badge">
+  <rect x="1000" y="212" width="216" height="56" rx="12" fill="#0A0E1A" stroke="#1F3A5F" stroke-width="1.5"/>
+  <text x="1108" y="236" text-anchor="middle" class="mono" font-size="14" font-weight="700" fill="#3FB950">checksum</text>
+  <text x="1108" y="256" text-anchor="middle" class="mono" font-size="14" font-weight="700" fill="#3FB950">verified</text>
+</g>
+
+<!-- bottom contract line -->
+<text x="900" y="322" text-anchor="middle" class="mono cap" font-size="12" fill="#8B949E">banner → [PASS]/[FAIL] → JSON: {…} → exit 0</text>
+<text x="56" y="398" class="mono" font-size="12" fill="#4A5872">lean4/ · scripts/python_levels · scripts/julia_levels · verify_ns_full.py · tools/audit</text>
+</svg>
