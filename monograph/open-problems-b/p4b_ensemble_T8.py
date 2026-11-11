@@ -292,6 +292,10 @@ def main():
             return float("nan")
         if T == 8:
             return sig_base[:, -1].std(ddof=1) / math.sqrt(8)
+        if T == 1:
+            # SE среднего по одной реализации — само с.к.о. по зёрнам;
+            # std с ddof=1 по блоку из ОДНОГО элемента дал бы NaN (0/0)
+            return float(sig_base[:, -1].std(ddof=1))
         blocks = sig_base[:, -1].reshape(-1, T)
         return float(np.mean(blocks.std(axis=1, ddof=1) / math.sqrt(T)))
     se8 = se_T(8); se4 = se_T(4); se2 = se_T(2); se1 = se_T(1)
@@ -380,7 +384,8 @@ def main():
                              "SE2_over_SE8": ratio_table["SE2/SE8"],
                              "SE4_over_SE8": ratio_table["SE4/SE8"],
                              "CLT_guide": guide,
-                             "sigma_at_T8_mean": float(mean_base[-1])},
+                             "sigma_at_T8_mean": float(mean_base[-1]),
+                             "SE8_over_SE8": ratio_table["SE8/SE8"]},
         "growth": {"exponent_p": float(p_fit),
                    "per_seed_min": min(p_seeds), "per_seed_max": max(p_seeds)},
         "dt_convergence": k3_detail,

@@ -16,7 +16,11 @@ b-rotation-invariance check) and the **P5b duplex protocol** (the
 b-protocol in a full-duplex communication experiment with Weyl–Dirichlet
 sums and Monte-Carlo BER). Master document:
 [`OPEN_PROBLEMS_EXT_B.md`](OPEN_PROBLEMS_EXT_B.md); the base line lives in
-[`open-problems/`](../open-problems/README.md).
+[`open-problems/`](../open-problems/README.md). Note: the base package v2
+has since folded this extension line into its own registry (P1-b, P4-b
+T = 2..8, P4-c T = 16/32, P5-b duplex, P5-c K = 8 — all RUN ✓ there);
+this package keeps the earlier standalone runs and the finer 8-seed
+P4b chain pinned as executed on 2026-09-15.
 
 ## Files
 
@@ -38,7 +42,13 @@ python3 p4b_ensemble_T8.py          # ~6–10 min on 2 cores
 
 Each script prints its protocol, checks the registered success criteria and
 overwrites its own JSON + figures — every number in the master document
-comes from these runs.
+comes from these runs. The scripts exit non-zero when a registered
+criterion is not met; that is a recorded outcome, not a broken run —
+P4-b's K4 fixed a measurable b-trace ≈ 5% (the sub-diffusive growth
+exponent p = 0.646 is quoted in the master document), so the honest
+verdict line is `ЕСТЬ НЕПРОЙДЕННЫЕ КРИТЕРИИ` ("there are unmet criteria"). Re-run on 2026-11-11:
+P5-b all five criteria PASS, and every P4-b metric is byte-identical to
+the pinned 2026-09-15 run (only `wall_seconds` differs).
 
 ---
 

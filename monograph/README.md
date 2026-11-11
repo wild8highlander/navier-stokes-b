@@ -31,7 +31,7 @@ hadron-collider scale discussion.
 | `MONOGRAPH_EN.pdf` / `MONOGRAPH_EN.docx` | English monograph — full derivation, all runs, tables and plots |
 | `MONOGRAPH_RU.pdf` / `MONOGRAPH_RU.docx` | Russian monograph — same content, including the hadron-collider chapter |
 | `cover_en.html` / `cover_ru.html` | print-ready cover layouts used to typeset the editions |
-| [`open-problems/`](open-problems/README.md) | appendix: the seven-open-problem program — master document, runnable code, JSON results, figures |
+| [`open-problems/`](open-problems/README.md) | appendix: the seven-open-problem program — master document, runnable code, JSON results, figures; fully executed, every status row RUN ✓ |
 | [`open-problems-b/`](open-problems-b/README.md) | appendix extension: the P4b ensemble (T = 8) and the P5b full-duplex b-protocol |
 
 The PDF is the citable edition; the DOCX is the editorial source edition

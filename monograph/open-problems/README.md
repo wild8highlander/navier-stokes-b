@@ -19,6 +19,13 @@ master document; the program's rule is that **both outcomes count as
 results** — a measured effect or a strict bound — and which one was
 obtained is recorded explicitly.
 
+**Status: fully executed and closed.** Every row of the status table
+(§1 of the master document) is RUN ✓ — the base seven plus the extension
+line P1-b / P4-b / P4-c / P5-b / P5-c, all folded into this same
+package. The full chain was re-run on 2026-11-11: all nine steps PASS
+and every regenerated JSON is byte-identical to the pinned one (fixed
+seeds, no timestamps in the outputs).
+
 ## Layout
 
 | Item | Contents |
@@ -35,10 +42,12 @@ python3 code/run_all.py       # runs everything, ~10 min, regenerates the JSONs
 python3 code/make_figures.py  # regenerates the figures from the JSONs
 ```
 
-The root-level twin of this program — with the same master document and
-the Lean 4 registry (P7) — is the master document [`OPEN_PROBLEMS_7.md`](OPEN_PROBLEMS_7.md)
-in this package; the extension line (P4b, P5b) continues in
-[`open-problems-b/`](../open-problems-b/README.md).
+Related packages: the earlier standalone −b runs (P4b T = 8 with its
+fine 8-seed chain, P5b duplex pair, executed 2026-09-15) stay pinned in
+[`open-problems-b/`](../open-problems-b/README.md); the mechanism-level
+twin of this program — the same b-claims re-derived by the independent
+verification framework — lives in [`verification/`](../../verification/README.md)
+with its runs pinned under [`data/results/`](../../data/results/README.md).
 
 ---
 

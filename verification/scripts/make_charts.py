@@ -20,6 +20,7 @@
 """
 import json
 import re
+import sys
 import time
 from pathlib import Path
 
@@ -286,6 +287,99 @@ def draw_open_problems(path: Path):
     return _save(fig, path)
 
 
+# ═════════════════════════════════════════════════════════════════════════
+# chart_residuals — заголовочные невязки исполненной программы
+# (L-цепь + P1–P6 из data/results + свежий прогон задачи 4 монолита)
+# ═════════════════════════════════════════════════════════════════════════
+def monolith_kdv_residual() -> float:
+    """Свежий детерминированный прогон задачи 4 монолита: max-невязка ОДЕ
+    бегущей волны KdV. Единственный бар, который считается в момент
+    генерации — источник тот же, что у CI-задачи Verification monolith."""
+    import subprocess
+
+    out = subprocess.run(
+        [sys.executable, str(VER / "verify_ns_full.py"), "--quiet", "--task", "4"],
+        capture_output=True, text=True, timeout=180, check=True).stdout
+    for line in out.splitlines():
+        if "max residual" in line:
+            return float(line.rsplit("=", 1)[1].strip().rstrip(")"))
+    raise RuntimeError("monolith task 4 did not print a max residual")
+
+
+def draw_residuals(path: Path):
+    res = REPO / "data" / "results"
+
+    def metric(json_name, *keys):
+        d = json.loads((res / json_name).read_text(encoding="utf-8"))
+        cur = d
+        for k in keys:
+            cur = cur[k]
+        return abs(float(cur))
+
+    bars = [  # (label, value, kind) — kind: identity / bound / effect
+        ("L2 rotation\nalgebra", metric("summary_numbers.json",
+         "l2", "R^T R = I, макс. невязка"), "identity"),
+        ("L4 energy\nerror", metric("summary_numbers.json",
+         "l4", "энергия при повороте: |E'−E|/E"), "identity"),
+        ("KdV ODE residual\n(monolith T4, live)",
+         monolith_kdv_residual(), "identity"),
+        ("P1 droplet growth\nvs analytics", metric("p1_3d_microphysics.json",
+         "criteria", "C1_рост_vs_аналитика_отн_ошибка"), "identity"),
+        ("P2 factor F\ngrid identity", metric("p2_grid_convergence.json",
+         "criteria", "C2_stabilnost_F_po_setke_abs"), "identity"),
+        ("L4 NSE residuals\n(ω′ = cosθ_b·ω)", metric("summary_numbers.json",
+         "l4", "тождество ω' = cos θ_b·ω, макс. невязка (200 полей)"),
+         "identity"),
+        ("P6 θ_b residual\n(5 geometries)", metric("p6_b_universality.json",
+         "criteria", "C1_worst_angle_residual"), "identity"),
+        ("L5 |ΔE| per\nrotation", metric("summary_numbers.json",
+         "l5", "max_dE_per_rotation"), "identity"),
+        ("P3 Nu shift\n(b-effect bound)", abs(metric("p3_buoyancy.json",
+         "criteria", "C3_delta_Nu_b_rel")), "bound"),
+        ("P4 ensemble\nΔσ_y", metric("p4_ensemble_sigma_y.json",
+         "analysis", "delta_sigma_y"), "identity"),
+        ("P5 growth slowdown\n(two-way feedback)", metric(
+         "p5_droplet_feedback.json", "criteria", "C2_замедление_роста_отн"),
+         "effect"),
+    ]
+    fig, ax = plt.subplots(figsize=(13.8, 5.8), dpi=200)
+    labels = [b[0] for b in bars]
+    vals = [b[1] for b in bars]
+    cols = [{"identity": CYAN, "bound": AMBER, "effect": PURPLE}[b[2]]
+            for b in bars]
+    x = np.arange(len(vals))
+    ax.bar(x, vals, color=cols, width=0.66)
+    ax.set_yscale("log")
+    ax.set_ylim(1e-17, 1e0)
+    for xi, v in zip(x, vals):
+        txt = f"{v:.1e}" if v < 1e-2 else f"{v:.4f}"
+        ax.text(xi, v * 1.35, txt, ha="center", fontsize=9.6,
+                color="#e6edf3", fontweight="bold")
+    ax.axhline(1e-6, color=AMBER, ls="--", lw=1.3, alpha=0.85)
+    ax.text(len(vals) - 0.4, 3.2e-6, "1e-6 engineering reference",
+            ha="right", fontsize=9.3, color=AMBER)
+    ax.set_xticks(x, labels, fontsize=8.6)
+    ax.set_ylabel("recorded residual / relative deviation", fontsize=10)
+    ax.set_facecolor("#0d1117")
+    ax.grid(color="#21293d", lw=0.5, which="both")
+    ax.set_title("Headline residuals of the executed program", fontsize=17,
+                 fontweight="bold", loc="left", pad=26)
+    ax.text(0, 1.015, "values read live from data/results/*.json and "
+            "summary_numbers.json · the KdV bar is a fresh monolith task-4 "
+            "run at chart-build time · everything below the 1e-6 line",
+            transform=ax.transAxes, fontsize=9.3, color=GREY)
+    handles = [plt.Rectangle((0, 0), 1, 1, fc=c)
+               for c in (CYAN, AMBER, PURPLE)]
+    ax.legend(handles, ["machine-identity residual", "strict bound",
+                        "measured effect"],
+              loc="upper left", fontsize=9, framealpha=0.15,
+              labelcolor="#e6edf3")
+    for s in ("top", "right"):
+        ax.spines[s].set_visible(False)
+    fig.subplots_adjust(left=0.07, right=0.985, top=0.86, bottom=0.14)
+    return _save(fig, path)
+
+
 def main() -> int:
     charts = REPO / "assets" / "charts"
     figs = REPO / "assets" / "figures"
@@ -294,6 +388,7 @@ def main() -> int:
         ("fig_verification_matrix.png", figs, lambda p: draw_matrix(False, p)),
         ("chart_ci_pipeline.png", charts, draw_ci),
         ("chart_open_problems.png", charts, draw_open_problems),
+        ("chart_residuals.png", charts, draw_residuals),
     ]
     results, t0 = {}, time.time()
     for name, outdir, fn in jobs:

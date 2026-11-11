@@ -659,7 +659,7 @@ unconditional assumptions.
 ## 12. The seven open problems program
 
 <p align="center">
-  <img src="assets/charts/chart_residuals.png" alt="residuals" width="100%"/>
+  <img src="assets/charts/chart_residuals.png" alt="headline residuals of the executed program: eleven recorded values, every machine-identity bar at 1e-9 or below" width="100%"/>
 </p>
 
 The research program was operationalized as seven open problems, each
@@ -670,12 +670,21 @@ from a real run of 2026-09-16 (protocols in
 [`monograph/open-problems/results/`](monograph/open-problems/results/README.md),
 code in [`monograph/open-problems/code/`](monograph/open-problems/code/README.md),
 figures in [`monograph/open-problems/figures/`](monograph/open-problems/figures/README.md)).
-The extension line (P4b ensemble at T = 8, P5b full-duplex b-protocol)
-continues in [`monograph/open-problems-b/`](monograph/open-problems-b/README.md)
-with its own pinned results. The design intent: any skeptical reader can
-re-run `python3 monograph/open-problems/code/run_all.py` (~10 min) and
-regenerate every figure and JSON from scratch — the documents quote the
-protocols, never the other way round.
+**The program is fully executed and closed: every row of the registry's
+status table is RUN ✓** — the base seven (L1–L3, P1, P2, P3, P4, P5, P6,
+P7) plus the whole extension line that was folded into the same package:
+P1-b (vapor feedback), P4-b (ensemble T = 2..8), P4-c (ensemble
+T = 16/32), P5-b (full-duplex b-protocol) and P5-c (K = 8 multi-beam);
+§11 of the registry lists exactly what these runs fix. The earlier
+standalone −b package — the P4b T = 8 ensemble with its fine 8-seed
+chain and the P5b duplex pair, executed 2026-09-15 — is kept pinned in
+[`monograph/open-problems-b/`](monograph/open-problems-b/README.md).
+The design intent is kept alive: any skeptical reader can re-run
+`python3 monograph/open-problems/code/run_all.py` (~10 min) and
+regenerate every figure and JSON from scratch — re-done in full on
+2026-11-11, all nine steps PASS and every regenerated JSON is
+byte-identical to the pinned one (fixed seeds, no timestamps) — the
+documents quote the protocols, never the other way round.
 
 ## 13. Figure and animation gallery
 
