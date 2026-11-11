@@ -31,8 +31,6 @@ hadron-collider scale discussion.
 | `MONOGRAPH_EN.pdf` / `MONOGRAPH_EN.docx` | English monograph — full derivation, all runs, tables and plots |
 | `MONOGRAPH_RU.pdf` / `MONOGRAPH_RU.docx` | Russian monograph — same content, including the hadron-collider chapter |
 | `cover_en.html` / `cover_ru.html` | print-ready cover layouts used to typeset the editions |
-| [`open-problems/`](open-problems/README.md) | appendix: the seven-open-problem program — master document, runnable code, JSON results, figures; fully executed, every status row RUN ✓ |
-| [`open-problems-b/`](open-problems-b/README.md) | appendix extension: the P4b ensemble (T = 8) and the P5b full-duplex b-protocol |
 
 The PDF is the citable edition; the DOCX is the editorial source edition
 (kept in sync with the circulating form); the cover HTML files are the
@@ -44,10 +42,9 @@ print layout used for both languages. All four documents are pinned by
 The monograph is self-contained. Start with the introduction and the
 chapter on the constant b; the middle chapters walk the verification chain
 L1–L5 and the physics runs P1–P6 exactly as registered in
-[`data/results/`](../data/results/README.md); the open-problems appendices
-then show the *executable* form of the program — every problem P1–P7 has
-code, a JSON protocol and a figure, and re-running
-`python3 open-problems/code/run_all.py` (~10 min) regenerates them all.
+[`data/results/`](../data/results/README.md) — every problem has code, a
+JSON protocol and a figure, and the runners in
+[`verification/code/`](../verification/code/README.md) regenerate them all.
 The monograph quotes the protocols; the protocols never quote the
 monograph.
 
@@ -56,7 +53,6 @@ monograph.
 - Papers (preprint → full paper → KdV chapter): [`papers/`](../papers/README.md)
 - LaTeX sources of the articles: [`src/`](../src/README.md)
 - Data and plots of the runs: [`data/`](../data/README.md)
-- The P7 registry at the repository root: [`OPEN_PROBLEMS_7.md`](../OPEN_PROBLEMS_7.md)
 - The verification framework backing every number: [`verification/`](../verification/README.md)
 
 
@@ -70,8 +66,8 @@ and each chapter has a corresponding evidence pointer in the repository:
 | The constant | derivation from the Kirchhoff system; the Rodrigues form; the Leray absorption | [`data/results/baseline/l1–l3`](../data/results/baseline/README.md); [verification section 1](../verification/README.md) |
 | The chain | L1–L5 with full parameter tables | [`data/results/baseline/`](../data/results/baseline/README.md) |
 | The runs | P1–P6, each with its registered criteria and outcomes | [`data/results/p*.json`](../data/results/README.md); [`code/`](../code/README.md) |
-| Applications | the hadron-collider chapter and the communication protocol | [`monograph/open-problems/`](open-problems/README.md) (P7) |
-| Open problems | the program itself: statements, plans, criteria, outcomes | [`OPEN_PROBLEMS_7.md`](../OPEN_PROBLEMS_7.md); [`open-problems/`](open-problems/README.md) |
+| Applications | the hadron-collider chapter and the communication protocol | the chapters themselves in [`MONOGRAPH_EN.pdf`](MONOGRAPH_EN.pdf) / [`MONOGRAPH_RU.pdf`](MONOGRAPH_RU.pdf) |
+| Open problems | the program itself: statements, criteria, outcomes | [`data/results/`](../data/results/README.md); the §3 table of the root [README](../README.md) |
 
 ## Which edition for which purpose
 

@@ -99,9 +99,7 @@ that the verification framework asserts independently:
 [`verification/scripts/python_levels/`](../scripts/python_levels/README.md)
 re-derives the L1–L5 chain these runs rest on; the L4 identity
 `ω′ = cos(dt·θ_b)·ω` is exactly what P2 and P3 exercise through the
-`b_rotation` mode; and the open-problems appendices in
-[`monograph/open-problems/`](../../monograph/README.md) quote these protocols
-as their evidence base.
+`b_rotation` mode.
 
 Since the **NSB-96-UPGRADE** package (2026-09-30), the same protocols are
 re-executed at doubled and further resolution by the laboratory suite in

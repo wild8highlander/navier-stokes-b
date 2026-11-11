@@ -14,9 +14,8 @@
 The provenance layer of the repository: everything produced by the runs in
 [`code/`](../code/README.md), preserved exactly as recorded on **2026-09-16**.
 This directory is the single point of truth for every quantitative claim made
-anywhere else in the repository — the root README, the papers, the monograph
-and the open-problems registry all quote these files, never the other way
-round. If a number in any document disagrees with a JSON here, **the JSON is
+anywhere else in the repository — the root README, the papers and the
+monograph all quote these files, never the other way round. If a number in any document disagrees with a JSON here, **the JSON is
 authoritative** and the document is wrong.
 
 Two properties make this layer trustworthy. First, it is **complete**: each

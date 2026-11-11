@@ -23,7 +23,7 @@
 [![Chain](https://img.shields.io/badge/Chain-L1%E2%80%93L5_pinned-2EA043?style=for-the-badge)](data/results/baseline/README.md)
 [![Labs](https://img.shields.io/badge/NSB--96_Labs-L1%E2%80%93L17_67WIN%2F7DRAW%2F2LOSS-2B579A?style=for-the-badge)](research_col_smar/reports/README.md)
 [![Verification](https://img.shields.io/badge/Verification-Lean_4_·_Python_·_Julia-9558B2?style=for-the-badge)](verification/README.md)
-[![Open problems](https://img.shields.io/badge/Open_Problems-7_of_7_executed-1284BA?style=for-the-badge)](monograph/open-problems/OPEN_PROBLEMS_7.md)
+[![Open problems](https://img.shields.io/badge/Open_Problems-7_of_7_executed-1284BA?style=for-the-badge)](#3-headline-results)
 [![Plots](https://img.shields.io/badge/Figures-11_%2B_8_animations-2EA043?style=for-the-badge)](assets/figures/README.md)
 
 [![Stars](https://img.shields.io/github/stars/wild8highlander/navier-stokes-b?style=for-the-badge&logo=github&label=Stars)](https://github.com/wild8highlander/navier-stokes-b/stargazers)
@@ -48,19 +48,18 @@
 3. [Headline results](#3-headline-results)
 4. [The NSB-96 upgrade: thirteen laboratories, one scoreboard](#4-the-nsb-96-upgrade-thirteen-laboratories-one-scoreboard)
 5. [The Smagorinsky–Kolmogorov satellite: two constants, one relation](#5-the-smagorinskykolmogorov-satellite-two-constants-one-relation)
-6. [The KdV continuation: chapter 16, §16.29](#6-the-kdv-continuation-chapter-16-§1629)
+6. [The KdV continuation: chapter 16, §16.29](#6-the-kdv-continuation-chapter-16-1629)
 7. [The fluid laboratory (web app)](#7-the-fluid-laboratory-web-app)
 8. [Repository architecture](#8-repository-architecture)
 9. [What to read first](#9-what-to-read-first)
 10. [Quick start: reproduce everything](#10-quick-start-reproduce-everything)
 11. [The verification framework](#11-the-verification-framework)
-12. [The seven open problems program](#12-the-seven-open-problems-program)
-13. [Figure and animation gallery](#13-figure-and-animation-gallery)
-14. [Verification, provenance and integrity](#14-verification-provenance-and-integrity)
-15. [Repository services](#15-repository-services)
-16. [Contributing](#16-contributing)
-17. [License](#18-license)
-18. [Citation](#19-citation)
+12. [Figure and animation gallery](#12-figure-and-animation-gallery)
+13. [Verification, provenance and integrity](#13-verification-provenance-and-integrity)
+14. [Repository services](#14-repository-services)
+15. [Contributing](#15-contributing)
+16. [License](#16-license)
+17. [Citation](#17-citation)
 
 ---
 
@@ -234,8 +233,7 @@ pinned verdicts: [`data/results/baseline/`](data/results/baseline/README.md)):
 
 The executed open-problems program **P1–P7** (protocols:
 [`data/results/`](data/results/README.md), plots:
-[`data/plots/`](data/plots/README.md), registry:
-[`monograph/open-problems/OPEN_PROBLEMS_7.md`](monograph/open-problems/OPEN_PROBLEMS_7.md)):
+[`data/plots/`](data/plots/README.md)):
 
 | # | Problem | Outcome (registered criteria → recorded values) |
 |---|---|---|
@@ -245,7 +243,7 @@ The executed open-problems program **P1–P7** (protocols:
 | **P4** | ensemble dispersion at Re = 2000 (T = 4 realizations, 2000 tracers) | `\|Δσ_y\|/σ_y` = **9.3×10⁻⁷** against the 2s/σ visibility threshold 4.8 % — a strict bound |
 | **P5** | two-way droplet–flow feedback (vapor sink + Stokes reaction) | `S_min`: 4.2135 → **3.8746**; growth slowed by **1.16 %**; vapor balance error **0.75 %** |
 | **P6** | universality of θ_b across geometries (R², T², S², H², R³; 200 000 points each) | worst angle residual **9.5×10⁻¹⁵**; tangentiality ≤ `10⁻¹⁵` |
-| **P7** | Lean 4 formalization registry | the historical registry is §P7 of the [master document](monograph/open-problems/OPEN_PROBLEMS_7.md); the current Lean core carries **0 `sorry` / 0 project axioms** — see [`verification/lean4/`](verification/lean4/README.md) |
+| **P7** | Lean 4 formalization registry | the current Lean core carries **0 `sorry` / 0 project axioms** — see [`verification/lean4/`](verification/lean4/README.md) |
 
 The program's honesty rule, fixed *before* the runs: **both outcomes are
 results** — a measurable effect or a strict bound; which one was obtained
@@ -253,6 +251,14 @@ is recorded verbatim, and "bound" outcomes are not painted as effects.
 
 <p align="center">
   <img src="assets/charts/chart_open_problems.png" alt="open problems" width="100%"/>
+</p>
+
+The headline residuals of the same program — eleven recorded values,
+every machine-identity bar at 1e-9 or below; the KdV bar is a fresh
+monolith task-4 run taken at chart-build time:
+
+<p align="center">
+  <img src="assets/charts/chart_residuals.png" alt="headline residuals of the executed program: eleven recorded values, every machine-identity bar at 1e-9 or below" width="100%"/>
 </p>
 
 
@@ -408,10 +414,8 @@ navier-stokes-b/
 ├── src/                    # compilable LaTeX sources of the papers
 │   ├── main/               #   main.tex, main_v2.tex, main_v3.tex
 │   └── preprint/           #   preprint.tex, preprint_v3.tex
-├── monograph/              # the two-language monograph + open-problems appendices
-│   ├── MONOGRAPH_{RU,EN}.{pdf,docx}
-│   ├── open-problems/      #   P1–P7 package: master doc, code, results, figures
-│   └── open-problems-b/    #   extension line: P4b ensemble, P5b duplex
+├── monograph/              # the two-language monograph (RU/EN, PDF/DOCX) + covers
+│   └── MONOGRAPH_{RU,EN}.{pdf,docx}
 ├── code/                   # the physics runs P1–P6 (Python) + run_all.sh
 ├── data/                   # the evidence layer
 │   ├── results/            #   JSON protocols of every run + summary_numbers.json
@@ -523,7 +527,7 @@ command that produced it.
 [`monograph/MONOGRAPH_RU.pdf`](monograph/README.md) or
 [`MONOGRAPH_EN.pdf`](monograph/README.md) is the book-length treatment:
 all runs with their parameter tables, the hadron-collider chapter, and
-the open-problems appendices with their registered success criteria.
+the seven-problem program with its registered success criteria.
 Follow it with the KdV chapter [`papers/kdv/`](papers/kdv/README.md) — the
 same constant surfacing in soliton interactions — and then with the
 constants monograph [`research_col_smar/monograph/`](research_col_smar/monograph/README.md),
@@ -656,37 +660,8 @@ audit confirms zero `sorry`/`admit`/project axioms, and what is *not*
 formalized is stated openly in the modules — nothing is hidden behind
 unconditional assumptions.
 
-## 12. The seven open problems program
 
-<p align="center">
-  <img src="assets/charts/chart_residuals.png" alt="headline residuals of the executed program: eleven recorded values, every machine-identity bar at 1e-9 or below" width="100%"/>
-</p>
-
-The research program was operationalized as seven open problems, each
-pre-registered with a statement, a step plan and success criteria
-*before* execution; the registry lives in
-[`monograph/open-problems/OPEN_PROBLEMS_7.md`](monograph/open-problems/OPEN_PROBLEMS_7.md) and every number in it comes
-from a real run of 2026-09-16 (protocols in
-[`monograph/open-problems/results/`](monograph/open-problems/results/README.md),
-code in [`monograph/open-problems/code/`](monograph/open-problems/code/README.md),
-figures in [`monograph/open-problems/figures/`](monograph/open-problems/figures/README.md)).
-**The program is fully executed and closed: every row of the registry's
-status table is RUN ✓** — the base seven (L1–L3, P1, P2, P3, P4, P5, P6,
-P7) plus the whole extension line that was folded into the same package:
-P1-b (vapor feedback), P4-b (ensemble T = 2..8), P4-c (ensemble
-T = 16/32), P5-b (full-duplex b-protocol) and P5-c (K = 8 multi-beam);
-§11 of the registry lists exactly what these runs fix. The earlier
-standalone −b package — the P4b T = 8 ensemble with its fine 8-seed
-chain and the P5b duplex pair, executed 2026-09-15 — is kept pinned in
-[`monograph/open-problems-b/`](monograph/open-problems-b/README.md).
-The design intent is kept alive: any skeptical reader can re-run
-`python3 monograph/open-problems/code/run_all.py` (~10 min) and
-regenerate every figure and JSON from scratch — re-done in full on
-2026-11-11, all nine steps PASS and every regenerated JSON is
-byte-identical to the pinned one (fixed seeds, no timestamps) — the
-documents quote the protocols, never the other way round.
-
-## 13. Figure and animation gallery
+## 12. Figure and animation gallery
 
 The repository ships a self-contained academic figure set (300 dpi PNG,
 [`assets/figures/`](assets/figures/README.md)) and seven physics
@@ -728,7 +703,7 @@ GitHub renders all of them natively — every claim above has its picture.
   <img src="assets/charts/chart_ci_pipeline.png" alt="ci pipeline" width="100%"/>
 </p>
 
-## 14. Verification, provenance and integrity
+## 13. Verification, provenance and integrity
 
 <p align="center">
   <img src="assets/brand/ci_pipeline_animated.svg" alt="the eight CI gates lighting up in sequence, 8/8 PASS" width="100%"/>
@@ -770,7 +745,7 @@ checkable without trusting the author**. Concretely:
 The full policy, including the claim inventory and the exact commands, is
 [`VERIFICATION.md`](VERIFICATION.md).
 
-## 15. Repository services
+## 14. Repository services
 
 Beyond the static documents, the repository ships small services that make
 the verification layer usable without installing anything:
@@ -795,7 +770,7 @@ the verification layer usable without installing anything:
   executes every verification suite under one output contract and
   one exit code, ready for cron/CI reuse.
 
-## 16. Contributing
+## 15. Contributing
 
 This is a **proprietary** repository (IPL-RP-1.0), which shapes the
 workflow: contributions are accepted as *offers* to the copyright holder
@@ -812,7 +787,7 @@ structured issue forms (bug report, feature request, verification
 request). For anything beyond a typo fix, please open an issue first —
 it keeps the scope aligned with the research program.
 
-## 17. License
+## 16. License
 
 **Individual Proprietary License (IPL-RP-1.0).** The entire repository —
 code, papers, monographs, data, plots, figures, animations, site and this
@@ -835,7 +810,7 @@ review process, a translation — ask:
 [open an issue](https://github.com/wild8highlander/navier-stokes-b/issues/new?template=feature_request.yml)
 or contact the author directly.
 
-## 18. Citation
+## 17. Citation
 
 If this repository contributed to your work, cite it as:
 
